@@ -1,0 +1,40 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: TestSendInput - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\Yedaoq\LOCALS~1\Temp\RSP152.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/TestSendInput.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"G:\My Projects\Visual C++6\CPPTest\TestSendInput\TestSendInputDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\Yedaoq\LOCALS~1\Temp\RSP152.tmp" 
+Creating temporary file "C:\DOCUME~1\Yedaoq\LOCALS~1\Temp\RSP153.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/TestSendInput.pdb" /debug /machine:I386 /out:"Debug/TestSendInput.exe" /pdbtype:sept 
+".\Debug\StdAfx.obj"
+".\Debug\TestSendInput.obj"
+".\Debug\TestSendInputDlg.obj"
+".\Debug\TestSendInput.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\Yedaoq\LOCALS~1\Temp\RSP153.tmp"
+<h3>Output Window</h3>
+Compiling...
+TestSendInputDlg.cpp
+G:\My Projects\Visual C++6\CPPTest\TestSendInput\TestSendInputDlg.cpp(119) : warning C4101: 'shift' : unreferenced local variable
+G:\My Projects\Visual C++6\CPPTest\TestSendInput\TestSendInputDlg.cpp(118) : warning C4101: 'vk' : unreferenced local variable
+Linking...
+Creating command line "bscmake.exe /nologo /o"Debug/TestSendInput.bsc"  ".\Debug\StdAfx.sbr" ".\Debug\TestSendInput.sbr" ".\Debug\TestSendInputDlg.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+TestSendInput.exe - 0 error(s), 2 warning(s)
+</pre>
+</body>
+</html>
