@@ -2,6 +2,7 @@
 
 #include "DBRecord.h"
 #include <vector>
+#include <stdarg.h>
 
 namespace NSDBModule
 {
@@ -72,37 +73,37 @@ protected:
 };
 
 
-class CDBRecordLessThan : public ILessThan<CDBRecordBase>
-{
-public:
-	bool operator(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
-	{
-		return Comparison_(lhs, rhs) < 0;
-	}
-
-	CDBRecordComparison Comparison_;
-};
-
-class CDBRecordGreaterThan
-{
-public:
-	bool operator(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
-	{
-		return Comparison_(lhs, rhs) > 0;
-	}
-
-	CDBRecordComparison Comparison_;
-};
-
-class CDBRecordEqual
-{
-public:
-	bool operator(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
-	{
-		return 0 == Comparison_(lhs, rhs);
-	}
-
-	CDBRecordComparison Comparison_;
-};
+//class CDBRecordLessThan : public ILessThan<CDBRecordBase>
+//{
+//public:
+//	bool operator(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
+//	{
+//		return Comparison_(lhs, rhs) < 0;
+//	}
+//
+//	CDBRecordComparison Comparison_;
+//};
+//
+//class CDBRecordGreaterThan
+//{
+//public:
+//	bool operator(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
+//	{
+//		return Comparison_(lhs, rhs) > 0;
+//	}
+//
+//	CDBRecordComparison Comparison_;
+//};
+//
+//class CDBRecordEqual
+//{
+//public:
+//	bool operator(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
+//	{
+//		return 0 == Comparison_(lhs, rhs);
+//	}
+//
+//	CDBRecordComparison Comparison_;
+//};
 
 }

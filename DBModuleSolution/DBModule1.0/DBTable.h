@@ -15,45 +15,47 @@ class CDBRecordBase;
 class CDBTableSchema;
 class CDBRecordComparison;
 class CDBRecordLessThan;
-class IDBCommandBuilder;
-class CDBSchema;
+class CDBModule;
+
+interface IDBCommandBuilder;
 
 typedef std::auto_ptr<IEnumerator<CDBRecordBase>>				DBRecordEnumPtr;
-typedef std::auto_ptr<IDBCommandBuilder>						DBCommandBuilderPtr;
 typedef std::set<CDBRecordBase, IComparison<CDBRecordBase>&>	DBRecordSet;
 typedef DBRecordSet::const_iterator								RecIterator;
+typedef std::auto_ptr<IDBCommandBuilder>						DBCommandBuilderPtr;
+typedef CComparisonToLessThen<CDBRecordBase>					CDBRecordLessThan;
 
 class CDBTable
 {
 public:
 	CDBTable();
 
-	const tstring&		GetName()	{ return Schema_.Name; }
-	const tstring&		GetDBName()	{ return Schema_.DBName; }
+	const tstring&					GetName()		{ return Schema_.Name; }
+	const tstring&					GetDBName()		{ return Schema_.DBName; }
+	const CDBRecordComparison&		GetComparison() { return Comparison_; }
+	const CDBTableSchema&			GetSchema()		{ return Schema_; }
 
-	const CDBRecordComparison& GetComparison() { return Comparison_; }
+	ColumnSchemaEnumPtr				EnumColumn();
+	DBRecordEnumPtr					EnumRecord();
 
-	ColumnSchemaEnumPtr EnumColumn();
-	DBRecordEnumPtr		EnumRecord();
-
-	int					LoadData();
-	int					FindData(CDBRecordBase& rec);
-	int					FindData(const CDBRecordBase& rec, const CDBRecordComparison& cmp);
+	int								LoadData();
+	int								Find(CDBRecordBase& rec);
+	int								Find(const CDBRecordBase& rec, const CDBRecordComparison& cmp);
 	
-	int					Update(const CDBRecordBase& cur, const CDBRecordBase& ori);
-	int					Insert(const CDBRecordBase& rec);
-	int					Delete(const CDBRecordBase& rec);
+	int								Update(const CDBRecordBase& cur, const CDBRecordBase& ori);
+	int								Insert(const CDBRecordBase& rec);
+	int								Delete(const CDBRecordBase& rec);
 
 protected:
-	CDBSchema*			DBSchema_;
-	CDBTableSchema		Schema_;
-	CDBRecordComparison	Comparison_;
-	CComparisonToLessThen<CDBRecordBase> LessThan_;
+	CDBModule*						DBModule_;
+	CDBTableSchema					Schema_;
+	CDBRecordComparison				Comparison_;
+	CDBRecordLessThan				LessThan_;
 
-	DBRecordSet			Records_;
-	DBCommandBuilderPtr	Command_;
+	DBRecordSet						Records_;
+	DBCommandBuilderPtr				CommandBuilder_;
+	bool							FlagLoaded_;
 
-	bool				FlagLoaded_;
 };
 
 }

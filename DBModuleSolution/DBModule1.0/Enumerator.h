@@ -283,3 +283,22 @@ CFilterEnumerator<T, Ff> make_filter_enumerator(IEnumerator<T> *source, Ff conve
 {
 	return CFilterEnumerator<T, Ff>(source, converter);
 }
+
+template<typename T>
+CIteratorEnumerator<T>* new_iterator_enumerator(T begin, T end)
+{
+	return new CIteratorEnumerator<T>(begin, end);
+}
+
+template<typename Tt, typename Ts, typename Fc>
+CConvertEnumerator<Tt, Ts, Fc>* new_convert_enumerator(IEnumerator<Ts> *source, Fc converter)
+{
+	return new CConvertEnumerator<Tt, Ts, Fc>(source, converter);
+}
+
+template<typename T, typename Ff>
+CFilterEnumerator<T, Ff>* new_filter_enumerator(IEnumerator<T> *source, Ff converter)
+{
+	return new CFilterEnumerator<T, Ff>(source, converter);
+}
+
