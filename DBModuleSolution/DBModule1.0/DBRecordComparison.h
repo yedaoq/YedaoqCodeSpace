@@ -18,7 +18,7 @@ public:
 			return false;
 		}
 
-		ASSERT(KeyFields_.size());
+		_ASSERT(KeyFields_.size());
 
 		for(int i = 0; i < KeyFields_.size(); ++i)
 		{

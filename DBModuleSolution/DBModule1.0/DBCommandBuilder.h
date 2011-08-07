@@ -20,14 +20,12 @@ namespace NSDBModule
 		virtual int GetCmdSelect(IDBCommand**) = 0;
 
 		virtual int GetCmdInsert(const CDBRecordBase&, IDBCommand**) = 0;
-
-		virtual int GetCmdUpdate(const CDBRecordBase&, IDBCommand**) = 0;
-		//virtual int GetCmdUpdate(const CDBRecordBase&, const CDBRecordComparison&, IDBCommand**) = 0;
-
 		virtual int GetCmdDelete(const CDBRecordBase&, IDBCommand**) = 0;
-		//virtual int GetCmdDelete(const CDBRecordBase&,const CDBRecordComparison&, IDBCommand**) = 0;
+		virtual int GetCmdUpdate(const CDBRecordBase&, const CDBRecordBase&, IDBCommand**) = 0;
 
 		virtual int GetCmdCreate() = 0;
+
+		virtual int ReleaseCmd(IDBCommand *, bool)
 	};
 
 	class CDBCommandBuilderBase : public IDBCommandBuilder
@@ -36,16 +34,20 @@ namespace NSDBModule
 		CDBCommandBuilderBase(CDBTableSchema const* schema)
 			: TableSchema_(0)
 		{}
-		
-		virtual int Initialize(CDBTableSchema const*);
 
-		virtual int GetCmdSelect(const CDBRecordBase&, const CDBRecordComparison&);
-		virtual int GetCmdInsert(const CDBRecordBase&);
-		virtual int GetCmdUpdate(const CDBRecordBase&);
-		virtual int GetCmdDelete(const CDBRecordBase&);
+		virtual int Initialize(CDBTableSchema const*) = 0;
+
+		virtual int GetCmdSelect(const CDBRecordBase&, const CDBRecordComparison&, IDBCommand**) = 0;
+		virtual int GetCmdSelect(IDBCommand**) = 0;
+
+		virtual int GetCmdInsert(const CDBRecordBase&, IDBCommand**) = 0;
+		virtual int GetCmdDelete(const CDBRecordBase&, IDBCommand**) = 0;
+		virtual int GetCmdUpdate(const CDBRecordBase&, const CDBRecordBase&, IDBCommand**) = 0;
+
+		virtual int GetCmdCreate() = 0;
 
 	protected:
-		CDBTableSchema const* TableSchema_;
+		CDBTableSchema*		TableSchema_;
 	};
 
 }

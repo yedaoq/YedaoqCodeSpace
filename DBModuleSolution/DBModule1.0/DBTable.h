@@ -7,6 +7,7 @@
 #include "mytype.h"
 #include "DBTableSchema.h"
 #include "DBRecordComparison.h"
+#include "DBCollection.h"
 
 namespace NSDBModule
 {
@@ -23,12 +24,15 @@ typedef std::auto_ptr<IEnumerator<CDBRecordBase>>				DBRecordEnumPtr;
 typedef std::set<CDBRecordBase, IComparison<CDBRecordBase>&>	DBRecordSet;
 typedef DBRecordSet::const_iterator								RecIterator;
 typedef std::auto_ptr<IDBCommandBuilder>						DBCommandBuilderPtr;
-typedef CComparisonToLessThen<CDBRecordBase>					CDBRecordLessThan;
+typedef CBoolComparisonAdapter4Int<CDBRecordBase, CINTCompareResultToBool::ToLessThan>	CDBRecordLessThan;
+typedef CIteratorEnumerator<DBRecordSet::iterator>				DBRecordEnumerator;
 
 class CDBTable
 {
 public:
 	CDBTable();
+
+	int Initialize();
 
 	const tstring&					GetName()		{ return Schema_.Name; }
 	const tstring&					GetDBName()		{ return Schema_.DBName; }
@@ -39,8 +43,10 @@ public:
 	DBRecordEnumPtr					EnumRecord();
 
 	int								LoadData();
+
 	int								Find(CDBRecordBase& rec);
-	int								Find(const CDBRecordBase& rec, const CDBRecordComparison& cmp);
+	int								Find(CDBRecordBase& rec, const CDBRecordComparison& cmp);
+	RecEnumPtr						FindAll(const CDBRecordBase& rec, const CDBRecordComparison& cmp);
 	
 	int								Update(const CDBRecordBase& cur, const CDBRecordBase& ori);
 	int								Insert(const CDBRecordBase& rec);
