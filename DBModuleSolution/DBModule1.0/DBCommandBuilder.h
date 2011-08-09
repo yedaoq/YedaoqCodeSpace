@@ -25,7 +25,7 @@ namespace NSDBModule
 
 		virtual int GetCmdCreate() = 0;
 
-		virtual int ReleaseCmd(IDBCommand *, bool)
+		virtual int ReleaseCmd(IDBCommand *, bool);
 	};
 
 	class CDBCommandBuilderBase : public IDBCommandBuilder
@@ -45,6 +45,11 @@ namespace NSDBModule
 		virtual int GetCmdUpdate(const CDBRecordBase&, const CDBRecordBase&, IDBCommand**) = 0;
 
 		virtual int GetCmdCreate() = 0;
+
+		virtual int ReleaseCmd(IDBCommand *, bool);
+
+	protected:
+		virtual int GenerateConditionStr(const CDBRecordBase&, const CDBRecordComparison&);
 
 	protected:
 		CDBTableSchema*		TableSchema_;

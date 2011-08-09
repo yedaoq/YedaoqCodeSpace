@@ -18,6 +18,7 @@ const DBColumnSchema& CDBTableSchema::operator[](index_t col)
 {
 	if(col < ColumnSchema.size())
 	{
+		ASSERT(ColumnSchema[col].Index == col);
 		return ColumnSchema[col];
 	}
 

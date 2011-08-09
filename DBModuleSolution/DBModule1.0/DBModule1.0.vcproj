@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBCommand.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DBCommandBuilder.h"
 				>
 			</File>

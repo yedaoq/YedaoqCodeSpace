@@ -82,6 +82,8 @@
     <ClCompile Include="DBTable.cpp" />
     <ClCompile Include="DBTableSchema.cpp" />
     <ClCompile Include="Enumerator.cpp" />
+    <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="StringBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Comaprison.h" />
@@ -97,8 +99,10 @@
     <ClInclude Include="DBTable.h" />
     <ClInclude Include="DBTableSchema.h" />
     <ClInclude Include="Enumerator.h" />
+    <ClInclude Include="Helper.h" />
     <ClInclude Include="mytype.h" />
     <ClInclude Include="Singlton.h" />
+    <ClInclude Include="StringBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
