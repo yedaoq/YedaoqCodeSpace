@@ -181,6 +181,10 @@
 				RelativePath=".\Enumerator.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\StringBuilder.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -237,6 +241,10 @@
 			</File>
 			<File
 				RelativePath=".\Singlton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\StringBuilder.h"
 				>
 			</File>
 		</Filter>

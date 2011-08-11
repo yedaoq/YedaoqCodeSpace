@@ -21,10 +21,8 @@ int CDBCommandBuilderBase::GetCmdSelect(const CDBRecordBase& rec, const CDBRecor
 
 	*cmd = new CDBCommandBase(EnumDBCommandType::Sql);
 	tstring strSql;
-	strSql += TEXT("SELECT * FROM ");
-	strSql += this->TableSchema_.Name;
-	strSql += TEXT(" WHERE ");
-	strSql += 
+	strSql.append(TEXT("SELECT * FROM "));
+	strSql.append(TableSchema_.Name);
 	
 }
 
@@ -53,7 +51,27 @@ int CDBCommandBuilderBase::GetCmdCreate()
 
 }
 
-int CDBCommandBuilderBase::GenerateConditionStr(const CDBRecordBase& rec, const CDBRecordComparison& cmp)
+int CDBCommandBuilderBase::GenerateConditionStr(const CDBRecordBase& rec, const CDBRecordComparison& cmp, tstring& buffer)
 {
+	if(cmp.KeyFields_.size() > 0)
+	{
+		buffer.append(TEXT(" WHERE "));
+		
+		for (int i = 0; i < cmp.KeyFields_.size(); ++i)
+		{
 
+		}
+		
+	}
+}
+
+virtual int CDBCommandBuilderBase::GenerateFieldAssignmentStr(const CDBRecordBase& rec, index_t field, tstring& buffer)
+{
+	if(field >= rec.GetFieldCount())
+	{
+		ASSERT(field < rec.GetFieldCount());
+		return 0;
+	}
+	
+	buffer.append(TableSchema_[field].DBName);
 }

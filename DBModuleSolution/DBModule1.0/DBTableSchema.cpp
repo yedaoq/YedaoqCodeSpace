@@ -1,6 +1,8 @@
 #include "DBTableSchema.h"
 #include <stdexcept>
 
+using namespace NSDBModule;
+
 const DBColumnSchema& CDBTableSchema::operator[](const tstring& col)
 {
 	for (DBColumnSchemaVct::iterator iter = ColumnSchema.begin(); iter != ColumnSchema.end(); ++iter)
@@ -18,14 +20,14 @@ const DBColumnSchema& CDBTableSchema::operator[](index_t col)
 {
 	if(col < ColumnSchema.size())
 	{
-		ASSERT(ColumnSchema[col].Index == col);
+		_ASSERT(ColumnSchema[col].Index == col);
 		return ColumnSchema[col];
 	}
 
 	throw std::out_of_range("");
 }
 
-CDBTableSchema::ColumnSchemaEnumPtr CDBTableSchema::GetColumnSchemaEnumerator()
-{
-	return ColumnSchemaEnumPtr(new CIteratorEnumerator<DBColumnSchema>(ColumnSchema.begin(), ColumnSchema.end()));
-}
+//CDBTableSchema::ColumnSchemaEnumPtr CDBTableSchema::GetColumnSchemaEnumerator()
+//{
+//	return CIteratorEnumerator<DBColumnSchema>(ColumnSchema.begin(), ColumnSchema.end());
+//}

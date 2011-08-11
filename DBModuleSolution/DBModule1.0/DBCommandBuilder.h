@@ -49,7 +49,8 @@ namespace NSDBModule
 		virtual int ReleaseCmd(IDBCommand *, bool);
 
 	protected:
-		virtual int GenerateConditionStr(const CDBRecordBase&, const CDBRecordComparison&);
+		virtual int GenerateConditionStr(const CDBRecordBase&, const CDBRecordComparison&, tstring& buffer);
+		virtual int GenerateFieldAssignmentStr(const CDBRecordBase&, index_t field, tstring& buffer);
 
 	protected:
 		CDBTableSchema*		TableSchema_;

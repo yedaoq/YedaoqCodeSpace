@@ -9,6 +9,16 @@
 
 namespace NSDBModule
 {
+enum EnumCppDataType
+{
+	CPPINT32,
+	CPPUINT32,
+	CPPDOUBLE,
+	CPPFLOAT,
+	CPPSTRING,
+	CPPBINARY,
+	CPPBOOL,
+};
 
 interface DBColumnSchema
 {
@@ -35,6 +45,7 @@ interface DBColumnSchema
 	bool IsPrimaryKey() { return Flag & PrimaryKey; }
 	bool IsNullable()	{ return Flag & Nullable; }
 	bool IsUnique()		{ return Flag & Unique; }
+	void SetPrimaryKey(bool val){  }
 
 	static DBColumnSchema Invalid;
 };

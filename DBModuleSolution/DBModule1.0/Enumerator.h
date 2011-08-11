@@ -4,8 +4,27 @@
 #define interface struct
 #endif
 
+//#define REFCOUNTCLONEABLE
+
+#ifdef REFCOUNTCLONEABLE
+	#define DERIVEFROMIREFOBJECT : public IRefObject
+#else
+	#define DERIVEFROMIREFOBJECT
+#endif
+
+#ifdef REFCOUNTCLONEABLE
+	#define IMPIREFOBJECT(x) CRefObjectImpl<x>
+#else
+	#define IMPIREFOBJECT(x) x
+#endif
+
+interface ICloneable DERIVEFROMIREFOBJECT
+{
+	virtual ICloneable* Clone() const = 0;
+};
+
 template<typename T>
-interface IEnumerator
+interface IEnumerator : public ICloneable
 {
 	virtual ~IEnumerator() = 0 {}
 
@@ -13,11 +32,11 @@ interface IEnumerator
 	virtual bool		MoveNext(T&)	= 0;
 	virtual const T&	Current()		= 0;
 	virtual void		Reset()			= 0;
-	
+
 };
 
 template<typename Tt, typename Ts, typename Fc>
-class CConvertEnumerator : public IEnumerator<Tt>
+class CConvertEnumerator : public IMPIREFOBJECT(IEnumerator<Tt>)
 {
 public:
 	CConvertEnumerator()
@@ -76,7 +95,7 @@ public:
 };
 
 template<typename T, typename Ff>
-class CFilterEnumerator : public IEnumerator<T>
+class CFilterEnumerator : public IMPIREFOBJECT(IEnumerator<T>)
 {
 public:
 	CFilterEnumerator()
@@ -141,17 +160,19 @@ public:
 };
 
 template<typename iter_t>
-class CIteratorEnumerator : public IEnumerator<typename iter_t::value_type>
+class CIteratorEnumerator : public IMPIREFOBJECT(IEnumerator<typename iter_t::value_type>)
 {
 public:
-	CIteratorEnumerator(){}
+	CIteratorEnumerator()
+		: iter_(last_), beforefirst_(false)
+	{}
 
 	CIteratorEnumerator(const iter_t& begin, const iter_t& end)
-		: first_(begin), last_(end), iter_(begin)
+		: first_(begin), last_(end), iter_(begin), beforefirst_(true)
 	{}
 
 	CIteratorEnumerator(const CIteratorEnumerator& other)
-		: first_(other.first_), last_(other.last_), iter_(other.iter_) 
+		: first_(other.first_), last_(other.last_), iter_(other.iter_), beforefirst_(true)
 	{}
 
 	CIteratorEnumerator& operator=(const CIteratorEnumerator& other)
@@ -159,20 +180,24 @@ public:
 		first_ = other.first_;
 		last_ = other.last_;
 		iter_ = other.iter_;
+		beforefirst_ = other.beforefirst_;
 
 		return *this;
 	}
 
 	virtual bool MoveNext()
 	{
-		iter_t tmp = iter_;
-
-		if(++tmp != last_)
+		if(beforefirst_)
 		{
-			iter_ = tmp;
-			return true;
+			beforefirst_ = false;
+			iter_ = first_;
 		}
-		return false;
+		else if(iter_ != last_)
+		{
+			++iter_;
+		}
+
+		return iter_ != last_;
 	}
 
 	virtual bool MoveNext(typename iter_t::value_type& obj)
@@ -187,56 +212,68 @@ public:
 
 	virtual const typename iter_t::value_type& Current()
 	{
-		_ASSERT(iter_ != last_)
+		_ASSERT(!beforefirst_ && iter_ != last_);
 		return *iter_ ;
 	}
 
 	virtual void Reset()
 	{
-		iter_ = first_;
+		beforefirst_ = true;
+	}
+
+	virtual ICloneable* Clone() const
+	{
+		return new CIteratorEnumerator(*this);
 	}
 
 protected:
-	iter_t first_;
-	iter_t last_;
-	iter_t iter_;
+	iter_t	first_;
+	iter_t	last_;
+	iter_t	iter_;
+	bool	beforefirst_;
 };
 
 template<typename _Container, typename _Ele>
-class CIteratorEnumeratorEx : public IEnumerator<_Ele>
+class CIteratorEnumeratorEx : public IMPIREFOBJECT(IEnumerator<_Ele>)
 {
 public:
-	typedef _Container<_Ele>::iterator iterator;
+	typedef _Container<_Ele>::iterator iter_t;
 
-	CIteratorEnumeratorEx(){}
-
-	CIteratorEnumeratorEx(const iterator& begin, const iterator& end)
-		: first_(begin), last_(end), iter_(begin)
+	CIteratorEnumerator()
+		: iter_(last_), beforefirst_(false)
 	{}
 
-	CIteratorEnumeratorEx(const CIteratorEnumeratorEx& other)
-		: first_(other.first_), last_(other.last_), iter_(other.iter_) 
+	CIteratorEnumerator(const iter_t& begin, const iter_t& end)
+		: first_(begin), last_(end), iter_(begin), beforefirst_(true)
 	{}
 
-	CIteratorEnumeratorEx& operator=(const CIteratorEnumeratorEx& other)
+	CIteratorEnumerator(const CIteratorEnumerator& other)
+		: first_(other.first_), last_(other.last_), iter_(other.iter_), beforefirst_(true)
+	{}
+
+	CIteratorEnumerator& operator=(const CIteratorEnumerator& other)
 	{
 		first_ = other.first_;
 		last_ = other.last_;
 		iter_ = other.iter_;
+		beforefirst_ = other.beforefirst_;
 
 		return *this;
 	}
 
 	virtual bool MoveNext()
 	{
-		iterator tmp = iter_;
-
-		if(++tmp != last_)
+		if(beforefirst_)
 		{
-			iter_ = tmp;
-			return true;
+			beforefirst_ = false;
+			iter_ = first_;
 		}
-		return false;
+		else if(iter_ != last_)
+		{
+			++iter_;
+		}
+
+		return iter_ != last_;
 	}
 
 	virtual bool MoveNext(typename iter_t::value_type& obj)
@@ -251,19 +288,25 @@ public:
 
 	virtual const typename iter_t::value_type& Current()
 	{
-		_ASSERT(iter_ != last_)
-			return *iter_ ;
+		_ASSERT(!beforefirst_ && iter_ != last_);
+		return *iter_ ;
 	}
 
 	virtual void Reset()
 	{
-		iter_ = first_;
+		beforefirst_ = true;
+	}
+
+	virtual ICloneable* Clone() const
+	{
+		return new CIteratorEnumerator(*this);
 	}
 
 protected:
-	iterator first_;
-	iterator last_;
-	iterator iter_;
+	iter_t	first_;
+	iter_t	last_;
+	iter_t	iter_;
+	bool	beforefirst_;
 };
 
 template<typename T>

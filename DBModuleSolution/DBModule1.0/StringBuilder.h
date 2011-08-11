@@ -5,9 +5,16 @@
 class CStringBuilder
 {
 public:
-	bool Append(const tstring&);
-	bool Append(LPCTSTR);
-	bool Append(char);
+	//bool Append(const tstring& str);
+	bool Append(LPCTSTR str, int num = 1);
+	bool AppendFormat(LPCTSTR fmt, ...);
+	bool Append(char val, int num = 1);
+	bool Append(int val, int num = 1);
+	bool Append(long val, int num = 1);
+	bool Append(unsigned int val, int num = 1);
+	bool Append(unsigned int val, int num = 1);
+	bool Append(float val, int num = 1);
+	bool Append(double val, int num = 1);
 
 	int Trim();
 	int Trim(int trimCharCount, ...);

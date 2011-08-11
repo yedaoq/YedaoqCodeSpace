@@ -92,6 +92,7 @@
     <ClInclude Include="DBCommand.h" />
     <ClInclude Include="DBCommandBuilder.h" />
     <ClInclude Include="DBDataAdapter.h" />
+    <ClInclude Include="DBDataType.h" />
     <ClInclude Include="DBModule.h" />
     <ClInclude Include="DBProvider.h" />
     <ClInclude Include="DBRecord.h" />
