@@ -154,15 +154,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\DBCollection.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\DBCommandBuilder.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\DBDataAdapter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DBDataTypeProviderBase.cpp"
 				>
 			</File>
 			<File
@@ -192,14 +192,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Comaprison.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DBCollection.h"
-				>
-			</File>
-			<File
 				RelativePath=".\DBColumnSchema.h"
 				>
 			</File>
@@ -213,6 +205,14 @@
 			</File>
 			<File
 				RelativePath=".\DBDataAdapter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBDataType.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBDataTypeProviderBase.h"
 				>
 			</File>
 			<File

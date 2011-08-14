@@ -10,16 +10,21 @@
 
 namespace NSDBModule
 {
+	interface IDBDataType;
+
 	enum EnumCppDataType
 	{
-		CPPINT32,
-		CPPUINT32,
-		CPPDOUBLE,
-		CPPFLOAT,
-		CPPSTRING,
-		CPPBINARY,
-		CPPBOOL,
+		CppUnknow,
+		CppInt32,
+		CppUint32,
+		CppDouble,
+		CppFloat,
+		CppString,
+		CppBinary,
+		CppBool,
 	};
+
+#define CPPDATATYPECOUNT CppBool
 
 	struct DBColumnSchema
 	{
@@ -34,18 +39,18 @@ namespace NSDBModule
 			Unique		= 0x0008,
 		};
 
-		tstring DBName;
-		tstring DBType;
+		tstring			Name;
+		EnumCppDataType Type;
 
-		tstring Name;
-		tstring Type;
+		tstring			DBName;
+		IDBDataType*	DBType;
 
 		index_t	Index;
 		flag_t  Flag;
 
-		bool IsPrimaryKey() { return Flag & PrimaryKey; }
-		bool IsNullable()	{ return Flag & Nullable; }
-		bool IsUnique()		{ return Flag & Unique; }
+		bool IsPrimaryKey() const	{ return Flag & PrimaryKey; }
+		bool IsNullable() const		{ return Flag & Nullable; }
+		bool IsUnique()	const		{ return Flag & Unique; }
 		
 		void SetPrimaryKey(bool val)
 		{
@@ -79,6 +84,7 @@ namespace NSDBModule
 	};
 
 	typedef std::vector<DBColumnSchema> DBColumnSchemaVct;
+	typedef CIteratorEnumerator<DBColumnSchemaVct::iterator> DBColumnSchemaEnumerator;
 
 	class CDBTableSchema
 	{
@@ -87,10 +93,16 @@ namespace NSDBModule
 		tstring				Name;
 		DBColumnSchemaVct	ColumnSchema;
 
-		const DBColumnSchema& operator[](const tstring& col);
-		const DBColumnSchema& operator[](index_t col);
-		//ColumnSchemaEnumPtr	  GetColumnSchemaEnumerator();
+		const DBColumnSchema& operator[](const tstring& col) const
+		{
+			return const_cast<CDBTableSchema&>(*this)[col];
+		}
+		const DBColumnSchema& operator[](index_t col) const
+		{
+			return const_cast<CDBTableSchema&>(*this)[col];
+		}
+		
+		DBColumnSchema& operator[](const tstring& col);
+		DBColumnSchema& operator[](index_t col);
 	};
-
-
 }

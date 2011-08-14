@@ -21,10 +21,9 @@ class CDBModule;
 interface IDBCommandBuilder;
 
 typedef std::auto_ptr<IEnumerator<CDBRecordBase>>				DBRecordEnumPtr;
-typedef std::set<CDBRecordBase, IComparison<CDBRecordBase>&>	DBRecordSet;
+typedef std::set<CDBRecordBase, IBoolComparison<CDBRecordBase>&>	DBRecordSet;
 typedef DBRecordSet::const_iterator								RecIterator;
 typedef std::auto_ptr<IDBCommandBuilder>						DBCommandBuilderPtr;
-typedef CBoolComparisonAdapter4Int<CDBRecordBase, CINTCompareResultToBool::ToLessThan>	CDBRecordLessThan;
 typedef CIteratorEnumerator<DBRecordSet::iterator>				DBRecordEnumerator;
 
 class CDBTable
@@ -39,7 +38,7 @@ public:
 	const CDBRecordComparison&		GetComparison() { return Comparison_; }
 	const CDBTableSchema&			GetSchema()		{ return Schema_; }
 
-	ColumnSchemaEnumPtr				EnumColumn();
+	DBColumnSchemaEnumerator		EnumColumn();
 	DBRecordEnumPtr					EnumRecord();
 
 	int								LoadData();

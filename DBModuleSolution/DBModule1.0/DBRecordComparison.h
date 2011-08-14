@@ -72,38 +72,67 @@ protected:
 	std::vector<unsigned int> KeyFields_;
 };
 
+class CDBRecordLessThan : public IBoolComparison<CDBRecordBase>
+{
+public:
+	bool operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
+	{
+		return Comparison_(lhs, rhs) < 0;
+	}
 
-//class CDBRecordLessThan : public ILessThan<CDBRecordBase>
-//{
-//public:
-//	bool operator(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
-//	{
-//		return Comparison_(lhs, rhs) < 0;
-//	}
-//
-//	CDBRecordComparison Comparison_;
-//};
-//
-//class CDBRecordGreaterThan
-//{
-//public:
-//	bool operator(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
-//	{
-//		return Comparison_(lhs, rhs) > 0;
-//	}
-//
-//	CDBRecordComparison Comparison_;
-//};
-//
-//class CDBRecordEqual
-//{
-//public:
-//	bool operator(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
-//	{
-//		return 0 == Comparison_(lhs, rhs);
-//	}
-//
-//	CDBRecordComparison Comparison_;
-//};
+	CDBRecordLessThan(){}
+
+	CDBRecordLessThan(const CDBRecordComparison& cmp)
+		: Comparison_(cmp)
+	{}
+
+	CDBRecordLessThan(const CDBRecordLessThan& other)
+		: Comparison_(other.Comparison_)
+	{}
+
+	CDBRecordComparison Comparison_;
+};
+
+class CDBRecordGreaterThan : public IBoolComparison<CDBRecordBase>
+{
+public:
+	bool operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
+	{
+		return Comparison_(lhs, rhs) > 0;
+	}
+
+	CDBRecordGreaterThan(){}
+
+	CDBRecordGreaterThan(const CDBRecordComparison& cmp)
+		: Comparison_(cmp)
+	{}
+
+	CDBRecordGreaterThan(const CDBRecordGreaterThan& other)
+		: Comparison_(other.Comparison_)
+	{}
+
+	CDBRecordComparison Comparison_;
+};
+
+class CDBRecordEqual : public IBoolComparison<CDBRecordBase>
+{
+public:
+	bool operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
+	{
+		return 0 == Comparison_(lhs, rhs);
+	}
+
+	CDBRecordEqual(){}
+
+	CDBRecordEqual(const CDBRecordComparison& cmp)
+		: Comparison_(cmp)
+	{}
+
+	CDBRecordEqual(const CDBRecordEqual& other)
+		: Comparison_(other.Comparison_)
+	{}
+
+	CDBRecordComparison Comparison_;
+};
 
 }

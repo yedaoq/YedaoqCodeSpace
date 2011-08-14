@@ -88,7 +88,6 @@
   <ItemGroup>
     <ClInclude Include="Comaprison.h" />
     <ClInclude Include="DBCollection.h" />
-    <ClInclude Include="DBColumnSchema.h" />
     <ClInclude Include="DBCommand.h" />
     <ClInclude Include="DBCommandBuilder.h" />
     <ClInclude Include="DBDataAdapter.h" />

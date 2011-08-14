@@ -25,12 +25,12 @@ CDBTable::CDBTable()
 
 int CDBTable::Initialize()
 {
-
+	
 }
 
-ColumnSchemaEnumPtr CDBTable::EnumColumn()
+DBColumnSchemaEnumerator CDBTable::EnumColumn()
 {
-	return Schema_.GetColumnSchemaEnumerator();
+	return make_iterator_enumerator(Schema_.ColumnSchema.begin(), Schema_.ColumnSchema.end());
 }
 
 DBRecordEnumPtr	CDBTable::EnumRecord()

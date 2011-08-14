@@ -4,11 +4,20 @@
 #define interface struct
 #endif
 
-interface IDBCommand;
-interface IDBDataAdapter;
-
-interface IDBProvider
+namespace NSDBModule
 {
-	virtual IDBCommand*		CreateDBCommand();
-	virtual IDBDataAdapter*	CreateDBAdapter();
-};
+	interface IDBCommand;
+	interface IDBDataAdapter;
+	interface IDBCommandBuilder;
+	interface IDBDataTypeProvider;
+
+	interface IDBFactory
+	{
+		virtual IDBDataAdapter*			CreateDBAdapter();
+		virtual IDBCommand*				CreateDBCommand();
+		virtual IDBCommandBuilder*		CreateDBCommandBuilder();
+		virtual IDBDataTypeProvider*	CreateDBDataTypeProvider();
+
+	};
+
+}

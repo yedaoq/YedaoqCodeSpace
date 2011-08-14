@@ -3,7 +3,7 @@
 
 using namespace NSDBModule;
 
-const DBColumnSchema& CDBTableSchema::operator[](const tstring& col)
+DBColumnSchema& CDBTableSchema::operator[](const tstring& col)
 {
 	for (DBColumnSchemaVct::iterator iter = ColumnSchema.begin(); iter != ColumnSchema.end(); ++iter)
 	{
@@ -16,7 +16,7 @@ const DBColumnSchema& CDBTableSchema::operator[](const tstring& col)
 	throw std::out_of_range("");
 }
 
-const DBColumnSchema& CDBTableSchema::operator[](index_t col)
+DBColumnSchema& CDBTableSchema::operator[](index_t col)
 {
 	if(col < ColumnSchema.size())
 	{

@@ -7,20 +7,29 @@
 
 namespace NSDBModule
 {
-	interface IDBProvider;
+	interface IDBFactory;
 	interface IDBDataAdapter;
 
 class CDBModule
 {
 public:
 	CDBModule(void);
-	virtual int Initialize(IDBProvider& provider);
+
+	virtual int Initialize();
+
+	virtual int AttachToDatabase(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory);
+
+	virtual int ClearSchema();
+	virtual int RefreshSchema();
+
+	virtual int ClearData();
+	virtual int RefreshData();
 
 	virtual IDBDataAdapter* DBAdapter() { return DBAdapter_; }
-	virtual int	SetDataAdapter(IDBDataAdapter* adapter, bool bResetSchema, bool bResetData);
 
 protected:
 	IDBDataAdapter* DBAdapter_;
+	bool			
 };
 
 }
