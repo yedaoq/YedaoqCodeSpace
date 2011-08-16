@@ -50,6 +50,6 @@ interface DBColumnSchema
 	static DBColumnSchema Invalid;
 };
 
-typedef std::vector<DBColumnSchema> DBColumnSchemaVct;
+typedef std::vector<DBColumnSchema> DBColumnSchemaCollection;
 
 }

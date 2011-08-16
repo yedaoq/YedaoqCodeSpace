@@ -30,7 +30,7 @@ int CDBTable::Initialize()
 
 DBColumnSchemaEnumerator CDBTable::EnumColumn()
 {
-	return make_iterator_enumerator(Schema_.ColumnSchema.begin(), Schema_.ColumnSchema.end());
+	return make_iterator_enumerator(Schema_.Columns.begin(), Schema_.Columns.end());
 }
 
 DBRecordEnumPtr	CDBTable::EnumRecord()

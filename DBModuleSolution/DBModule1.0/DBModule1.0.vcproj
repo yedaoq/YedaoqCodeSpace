@@ -166,6 +166,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBModule.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DBNameMapping.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DBRecord.cpp"
 				>
 			</File>
@@ -213,6 +221,14 @@
 			</File>
 			<File
 				RelativePath=".\DBDataTypeProviderBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBModule.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBNameMapping.h"
 				>
 			</File>
 			<File

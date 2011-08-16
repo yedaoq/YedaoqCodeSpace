@@ -17,9 +17,9 @@ int CDBCommandBuilderBase::Initialize(const CDBTableSchema* schema)
 	{
 		if(!schema) break;
 		if(schema->DBName.empty()) break;
-		if(schema->ColumnSchema.size()  == 0) break;
+		if(schema->Columns.size()  == 0) break;
 
-		const int fieldCount = schema->ColumnSchema.size();
+		const int fieldCount = schema->Columns.size();
 		int i = 0;
 		for (; i < fieldCount; ++i)
 		{
@@ -125,18 +125,18 @@ int CDBCommandBuilderBase::GenerateSqlInsert(const CDBRecordBase& rec, tstring& 
 
 	buffer.append(TEXT(" ("));
 
-	for (int i = 0; i < TableSchema_->ColumnSchema.size(); ++i)
+	for (int i = 0; i < TableSchema_->Columns.size(); ++i)
 	{
-		WrapperIdentifier(TableSchema_->ColumnSchema[i].DBName.c_str(), buffer);
+		WrapperIdentifier(TableSchema_->Columns[i].DBName.c_str(), buffer);
 		buffer.append(TEXT(", "));
 	}
 	
 	*(buffer.end() - 2) = ')';
 	buffer.append(TEXT("VALUES ("));
 
-	for (int i = 0; i < TableSchema_->ColumnSchema.size(); ++i)
+	for (int i = 0; i < TableSchema_->Columns.size(); ++i)
 	{
-		WrapperValue(rec.GetField(i), TableSchema_->ColumnSchema[i].DBType, buffer);
+		WrapperValue(rec.GetField(i), TableSchema_->Columns[i].DBType, buffer);
 		buffer.append(TEXT(", "));
 	}
 
@@ -156,9 +156,9 @@ int CDBCommandBuilderBase::GenerateSqlUpdate(const CDBRecordBase& ori, const CDB
 	WrapperIdentifier(TableSchema_->DBName.c_str());
 	buffer.append(TEXT(" SET "));
 
-	for (int i = 0; i < TableSchema_->ColumnSchema.size(); ++i)
+	for (int i = 0; i < TableSchema_->Columns.size(); ++i)
 	{
-		GenerateFieldAssignmentStr(TableSchema_->ColumnSchema[i], cur.GetField(i), buffer);
+		GenerateFieldAssignmentStr(TableSchema_->Columns[i], cur.GetField(i), buffer);
 		buffer.append(TEXT(", "));
 	}
 

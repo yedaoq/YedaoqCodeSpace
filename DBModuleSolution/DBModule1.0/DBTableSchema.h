@@ -14,7 +14,7 @@ namespace NSDBModule
 
 	enum EnumCppDataType
 	{
-		CppUnknow,
+		CppUnknow = 0,
 		CppInt32,
 		CppUint32,
 		CppDouble,
@@ -24,7 +24,7 @@ namespace NSDBModule
 		CppBool,
 	};
 
-#define CPPDATATYPECOUNT CppBool
+	#define CPPDATATYPECOUNT CppBool
 
 	struct DBColumnSchema
 	{
@@ -33,24 +33,35 @@ namespace NSDBModule
 
 		enum EnumFlag
 		{
-			None		= 0x0001,
-			PrimaryKey	= 0x0002,
-			Nullable	= 0x0004,	
-			Unique		= 0x0008,
+			None		= 0x0000,
+			PrimaryKey	= 0x0001,
+			Nullable	= 0x0002,
+			Unique		= 0x0004,
+
+			DBPrimaryKey= 0x0010;
+			DBNullable	= 0x0020;
+			DBUnique	= 0x0040;
+
+			BuildIn		= 0x0100;
+			DBExist		= 0x0200;
 		};
 
-		tstring			Name;
-		EnumCppDataType Type;
+		index_t			Index;		// index of column in CDBRecordBase object
+		tstring			Name;		// name of col in App
+		EnumCppDataType Type;		// type of col in App(C++ type)
 
-		tstring			DBName;
-		IDBDataType*	DBType;
+		index_t			DBIndex;	// index of column in database table schema
+		tstring			DBName;		// name of column in database table schema
+		IDBDataType*	DBType;		// type of column in database table schema
 
-		index_t	Index;
+		
 		flag_t  Flag;
 
 		bool IsPrimaryKey() const	{ return Flag & PrimaryKey; }
 		bool IsNullable() const		{ return Flag & Nullable; }
 		bool IsUnique()	const		{ return Flag & Unique; }
+		bool IsBuildin() const		{ return Flag & BuildIn; }
+		bool IsDBExist() const		{ return Flag & DBExist; }
 		
 		void SetPrimaryKey(bool val)
 		{
@@ -67,7 +78,6 @@ namespace NSDBModule
 			SetFlag(EnumFlag::Unique, val);
 		}
 
-	protected:
 		void SetFlag(EnumFlag flag, bool bAppend)
 		{
 			if(bAppend)
@@ -80,29 +90,47 @@ namespace NSDBModule
 			}
 		}
 
+		bool CompatibleWith(const DBColumnSchema& other);
+
+	protected:
+		
 		static DBColumnSchema Invalid;
 	};
 
-	typedef std::vector<DBColumnSchema> DBColumnSchemaVct;
-	typedef CIteratorEnumerator<DBColumnSchemaVct::iterator> DBColumnSchemaEnumerator;
+	typedef std::vector<DBColumnSchema>								DBColumnSchemaCollection;
+	typedef CIteratorEnumerator<DBColumnSchemaCollection::iterator> DBColumnSchemaEnumerator;
 
 	class CDBTableSchema
 	{
 	public:
-		tstring				DBName;
-		tstring				Name;
-		DBColumnSchemaVct	ColumnSchema;
+		tstring						DBName;
+		tstring						Name;
+		DBColumnSchemaCollection	Columns;
 
-		const DBColumnSchema& operator[](const tstring& col) const
+	public:
+		//CDBTableSchema(){}
+
+		CDBTableSchema(const tstring& dbName, const tstring& name)
+			: DBName(dbName), Name(name), Columns(0)
+		{}
+
+		DBColumnSchema&			operator[](const tstring& dbCol);
+		DBColumnSchema&			operator[](index_t col);
+
+		const DBColumnSchema&	operator[](const tstring& dbCol) const
 		{
 			return const_cast<CDBTableSchema&>(*this)[col];
 		}
-		const DBColumnSchema& operator[](index_t col) const
+		const DBColumnSchema&	operator[](index_t col) const
 		{
 			return const_cast<CDBTableSchema&>(*this)[col];
 		}
-		
-		DBColumnSchema& operator[](const tstring& col);
-		DBColumnSchema& operator[](index_t col);
+
+		bool					find(const tstring& dbCol, DBColumnSchema** colSchema);
+		bool					find(index_t colIdx, DBColumnSchema** colSchema);
+
+		bool					Validate();
+		void					Clear();
+		bool					Load(IDBDataAdapter* dbAdapter);
 	};
 }
