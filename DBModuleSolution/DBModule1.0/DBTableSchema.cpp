@@ -3,35 +3,50 @@
 
 using namespace NSDBModule;
 
-bool CDBTableSchema::find(const tstring& dbCol, DBColumnSchema** colSchema)
+bool CDBTableSchema::FindByDBName(const tstring& col, DBColumnSchema& colSchema)
 {
-	for (DBColumnSchemaCollection::iterator iter = Columns.begin(); iter != Columns.end(); ++iter)
+	for (ColumnCollection::iterator iter = Columns.begin(); iter != Columns.end(); ++iter)
 	{
-		if(dbCol == iter->DBName)
+		if(col == iter->DBName)
 		{
-			*colSchema = &(*iter);
+			colSchema = *iter;
 			return true;
 		}
 	}
-
-	*colSchema = 0;
 	return false;
 }
 
-bool CDBTableSchema::find(index_t colIdx, DBColumnSchema** colSchema)
+bool CDBTableSchema::FindByIndex(index_t col, DBColumnSchema& colSchema)
 {
-	if(colIdx < Columns.size())
+	if(col < Columns.size())
 	{
-		_ASSERT(Columns[colIdx].Index == colIdx);
-		colSchema = &Columns[colIdx];
+		_ASSERT(Columns[col].Index == col);
+		colSchema = Columns[col];
 		return true;
 	}
 	return false;
 }
 
+bool CDBTableSchema::SetColumn(const DBColumnSchema& col)
+{
+	if(col.Index < Columns.size())
+	{
+		Columns[col.Index] = col;
+		return true;
+	}
+
+	return false;
+}
+
+bool CDBTableSchema::AddColumn(DBColumnSchema& col)
+{
+	col.Index = Columns.size();
+	Columns.push_back(col);
+}
+
 DBColumnSchema& CDBTableSchema::operator[](const tstring& dbCol)
 {
-	for (DBColumnSchemaCollection::iterator iter = Columns.begin(); iter != Columns.end(); ++iter)
+	for (ColumnCollection::iterator iter = Columns.begin(); iter != Columns.end(); ++iter)
 	{
 		if(dbCol == iter->DBName)
 		{
@@ -53,7 +68,7 @@ DBColumnSchema& CDBTableSchema::operator[](index_t col)
 	throw std::out_of_range("");
 }
 
-bool CDBTableSchema::Validate(IDBDataAdapter* dbAdapter)
+bool CDBTableSchema::BuildInSchemaValidate()
 {
 	bool bValid = false;
 
@@ -61,7 +76,7 @@ bool CDBTableSchema::Validate(IDBDataAdapter* dbAdapter)
 	{
 		if(DBName.empty()) break;
 
-		DBColumnSchemaCollection::iterator iter;
+		ColumnCollection::iterator iter;
 		for (iter = Columns.begin(); iter != Columns.end(); ++iter)
 		{
 			if(iter->DBName.empty() || !iter->DBType || iter->DBType->CompatibleWith(iter->Type))
@@ -84,18 +99,18 @@ void CDBTableSchema::Clear()
 	// remove all not buildin column
 	Columns.erase
 		(
-		std::remove_if
-		(
-		Columns.begin(), Columns.end(), 
-		std::not1(std::mem_fun(&DBColumnSchema::IsBuildin))
-		),
-		Columns.end()
+			std::remove_if
+			(
+				Columns.begin(), Columns.end(), 
+				std::not1(std::mem_fun(&DBColumnSchema::IsBuildin))
+			),
+			Columns.end()
 		);
 
-	// clear the DBExist flag of all column
-	for(DBColumnSchemaCollection::iterator iter = Columns.begin(); iter != Columns.end(); ++iter)
+	// reset flag of all column
+	for(ColumnCollection::iterator iter = Columns.begin(); iter != Columns.end(); ++iter)
 	{
-		iter->SetFlag(DBColumnSchema::DBExist, false);
+		iter->Flag = DBColumnSchema::BuildIn;
 	}
 }
 
@@ -104,7 +119,7 @@ bool CDBTableSchema::Load(IDBDataAdapter* dbAdapter)
 	Clear();
 
 	// get database columns
-	DBColumnEnumPtr pEnum = dbAdapter->EnumColumn(this->DBName);
+	DBColumnEnumPtr pEnum = dbAdapter->EnumColumn(DBName);
 	if(!pEnum.get())
 	{
 		//assert
@@ -112,24 +127,23 @@ bool CDBTableSchema::Load(IDBDataAdapter* dbAdapter)
 	}
 
 	// merge columns schema
-	DBColumnSchema dbCol;
 	pEnum->Reset();
-	while(pEnum->MoveNext(dbCol))
+	while(pEnum->MoveNext())
 	{
-		DBColumnSchema* col;
-		if(!this->find(dbCol.DBName, &col))
+		const DBColumnSchema& dbCol = pEnum->Current();
+		DBColumnSchema col;
+		if(!FindByDBName(dbCol.DBName, col))
 		{
-			dbCol.Index = Columns.size();
-			dbCol.Name = dbCol.DBName;
-			dbCol.Type = dbCol.DBType->PreferredCppDataType();
+			col.Name = dbCol.DBName;			
 			Columns.push_back(dbCol);
-			col = &Columns[Columns.size() - 1];
 		}
 
-		col->SetFlag(DBColumnSchema::DBExist, true);
-		col->SetFlag(DBColumnSchema::DBPrimaryKey, dbCol.IsPrimaryKey());
-		col->SetFlag(DBColumnSchema::DBNullable, dbCol.IsNullable());
-		col->SetFlag(DBColumnSchema::DBUnique, dbCol.IsUnique());
+		dbCol.SetFlag(DBColumnSchema::BuildIn, false);
+		dbCol.SetFlag(DBColumnSchema::KeyColumn, false);
+
+		col.Type = dbCol.DBType->PreferredCppDataType();
+		col.Flag |= DBExist | dbCol.Flag;
+		SetColumn(col);
 	}
 
 	//

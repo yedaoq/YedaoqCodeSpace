@@ -17,7 +17,7 @@ namespace NSDBModule
 		virtual IDBCommand*				CreateDBCommand();
 		virtual IDBCommandBuilder*		CreateDBCommandBuilder();
 		virtual IDBDataTypeProvider*	CreateDBDataTypeProvider();
-
+		virtual IDBNameMapping*			CreateDBNameMapping();
 	};
 
 }

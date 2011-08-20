@@ -74,10 +74,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DBCollection.cpp" />
+    <ClCompile Include="BuildInSchemaValidater.cpp" />
     <ClCompile Include="DBCommandBuilder.cpp" />
     <ClCompile Include="DBDataAdapter.cpp" />
+    <ClCompile Include="DBDataTypeProviderBase.cpp" />
     <ClCompile Include="DBModule.cpp" />
+    <ClCompile Include="DBNameMapping.cpp" />
     <ClCompile Include="DBRecord.cpp" />
     <ClCompile Include="DBTable.cpp" />
     <ClCompile Include="DBTableSchema.cpp" />
@@ -86,22 +88,23 @@
     <ClCompile Include="StringBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BuildInSchemaValidater.h" />
     <ClInclude Include="Comaprison.h" />
-    <ClInclude Include="DBCollection.h" />
+    <ClInclude Include="DBColumnSchema.h" />
     <ClInclude Include="DBCommand.h" />
     <ClInclude Include="DBCommandBuilder.h" />
     <ClInclude Include="DBDataAdapter.h" />
     <ClInclude Include="DBDataType.h" />
+    <ClInclude Include="DBDataTypeProviderBase.h" />
     <ClInclude Include="DBModule.h" />
+    <ClInclude Include="DBNameMapping.h" />
     <ClInclude Include="DBProvider.h" />
     <ClInclude Include="DBRecord.h" />
     <ClInclude Include="DBRecordComparison.h" />
     <ClInclude Include="DBTable.h" />
     <ClInclude Include="DBTableSchema.h" />
-    <ClInclude Include="Enumerator.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="mytype.h" />
-    <ClInclude Include="Singlton.h" />
     <ClInclude Include="StringBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

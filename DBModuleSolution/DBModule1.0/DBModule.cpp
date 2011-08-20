@@ -1,5 +1,6 @@
 #include "DBModule.h"
 #include "DBDataAdapter.h"
+#include "Enumerator.h"
 
 using namespace NSDBModule;
 
@@ -32,6 +33,11 @@ int CDBModule::DetachFromDataBase()
 	DBAdapter_ = 0;
 	DBFactory_ = 0;
 	SchemaValidity_ = Unknow;
+}
+
+CDBModule::DBTableEnumerator CDBModule::EnumTable() const
+{
+	return make_iterator_enumerator(Tables_.begin(), Tables_.end());
 }
 
 int	CDBModule::ValidateSchema()
