@@ -4,6 +4,8 @@
 #define interface struct
 #endif
 
+class tstring;
+
 #include <memory>
 
 namespace NSDBModule
@@ -15,7 +17,6 @@ namespace NSDBModule
 	class DBRecordSet;
 	class DBRecordEnumPtr;
 	class CDBRecordBase;
-	class tstring;
 	class CDBRecordComparison;
 
 	typedef std::auto_ptr<IEnumerator<tstring>> DBTableEnumPtr;

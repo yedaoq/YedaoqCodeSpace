@@ -1,6 +1,7 @@
 #pragma once
 #include "vector"
 #include "Enumerator.h"
+#include "BuildInSchemaValidater.h"
 
 #ifndef interface
 #define interface struct
@@ -11,7 +12,6 @@ namespace NSDBModule
 	interface	IDBFactory;
 	interface	IDBDataAdapter;
 	class		CDBTable;
-	class		CBuildInSchemaValidater;
 
 class CDBModule
 {
@@ -24,8 +24,8 @@ public:
 		SchemaConflict			// the buildin schema is conflict with the schema of database attached
 	};
 
-	typedef std::vector<CDBTable>								DBTableCollection;
-	typedef CIteratorEnumerator<DBTableCollection::iterator>	DBTableEnumerator;
+	typedef std::vector<CDBTable*>									DBTableCollection;
+	typedef CIteratorEnumerator<DBTableCollection::const_iterator>	DBTableEnumerator;
 
 public:
 	CDBModule(void)
@@ -48,14 +48,12 @@ public:
 	// module state
 	virtual bool			BindingToAnyDataBase() const { return 0 != DBAdapter_; }	// whether the module has binding to any database
 	virtual EnumSchemaValidity SchemaValidity() const {return SchemaValidity_; }		// get the schema validation state
-	//virtual bool			Initialized() const {return Initialized_; }				// whether the module has initialized
 	virtual bool			Accessable() const {return BindingToAnyDataBase() && Valid == SchemaValidity(); /*&& Initialized()*/ }
 
 	DBTableEnumerator		EnumTable() const;
 
 	// schema operation
-	virtual int				ValidateSchema();
-	virtual int				ClearSchema();
+	virtual int				Clear();
 	virtual int				RefreshSchema();
 	
 	// data operation
@@ -68,7 +66,6 @@ protected:
 	bool					WithBuildinSchema_;
 				
 	EnumSchemaValidity		SchemaValidity_;
-	bool					Initialized_;
 
 	DBTableCollection		Tables_;
 	CBuildInSchemaValidater Validater_;

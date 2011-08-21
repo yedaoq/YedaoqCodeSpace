@@ -24,12 +24,13 @@ typedef std::auto_ptr<IEnumerator<CDBRecordBase>>				DBRecordEnumPtr;
 typedef std::set<CDBRecordBase, IBoolComparison<CDBRecordBase>&>	DBRecordSet;
 typedef DBRecordSet::const_iterator								RecIterator;
 typedef std::auto_ptr<IDBCommandBuilder>						DBCommandBuilderPtr;
-typedef CIteratorEnumerator<DBRecordSet::iterator>				DBRecordEnumerator;
+typedef CIteratorEnumerator<DBRecordSet::const_iterator>		DBRecordEnumerator;
 
 class CDBTable
 {
 public:
-	CDBTable();
+	CDBTable(CDBModule* module);
+	CDBTable(const CDBTable& other);
 
 	int Initialize();
 
@@ -38,10 +39,11 @@ public:
 	const CDBRecordComparison&		GetComparison() { return Comparison_; }
 	const CDBTableSchema&			GetSchema()		{ return Schema_; }
 
-	DBColumnSchemaEnumerator		EnumColumn();
-	DBRecordEnumPtr					EnumRecord();
+	CDBTableSchema::ColumnEnumerator EnumColumn();
+	DBRecordEnumerator				EnumRecord();
 
 	int								LoadData();
+	int								ClearData();
 
 	int								Find(CDBRecordBase& rec);
 	int								Find(CDBRecordBase& rec, const CDBRecordComparison& cmp);
@@ -52,6 +54,8 @@ public:
 	int								Delete(const CDBRecordBase& rec);
 
 protected:
+	CDBTable& operator=(const CDBTable&);
+
 	CDBModule*						DBModule_;
 	CDBTableSchema					Schema_;
 	CDBRecordComparison				Comparison_;

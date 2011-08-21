@@ -1,8 +1,22 @@
 #include "DBModule.h"
 #include "DBDataAdapter.h"
 #include "Enumerator.h"
+#include "DBTable.h"
+#include <algorithm>
 
 using namespace NSDBModule;
+
+int	CDBModule::Initialize()
+{
+	int iRet = 0;
+	
+	do
+	{
+		if(iRet = InitializeBuildinSchema() <= 0) break;
+
+	}while(false);
+	
+}
 
 int CDBModule::AttachToDatabase(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory)
 {
@@ -22,14 +36,13 @@ int CDBModule::AttachToDatabase(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory
 
 	DBAdapter_ = dbAdapter;
 	DBFactory_ = dbFactory;
-	SchemaValidity_ = Unknow;
-	Initialized_ = false;
+	
+	RefreshSchema();
 }
 
 int CDBModule::DetachFromDataBase()
 {
 	// deal with the uncommit data as so on
-
 	DBAdapter_ = 0;
 	DBFactory_ = 0;
 	SchemaValidity_ = Unknow;
@@ -40,50 +53,22 @@ CDBModule::DBTableEnumerator CDBModule::EnumTable() const
 	return make_iterator_enumerator(Tables_.begin(), Tables_.end());
 }
 
-int	CDBModule::ValidateSchema()
+int	CDBModule::Clear()
 {
-	if(!BindingToAnyDataBase())
+	DBTableCollection::iterator iter = Tables_.begin();
+	while ( iter != Tables_.end())
 	{
-		return -1;
-	}
-
-	if(Unknow != SchemaValidity())
-	{
-		return 1;
-	}
-
-	for(DBTableCollection::iterator iter = Tables_.begin(); iter != Tables_.end(); ++iter)
-	{
-		if(!iter->Schema_.Validate())
+		if(!(*iter)->GetSchema().IsBuildin())
 		{
-			return 0;
-		}
-	}
-}
-
-int	CDBModule::ClearSchema()
-{
-	for (DBTableCollection::iterator iter = Tables_.begin(); iter != Tables_.end(); ++iter)
-	{
-		if(WithBuildinSchema())
-		{
-			
-		}
-		else
-		{
-
+			break;
 		}
 	}
 	
-
-	if(WithBuildinSchema())
+	if(iter != Tables_.end())
 	{
-		
+		std::for_each(iter, Tables_.end(), std::ptr_fun(
 	}
-	else
-	{
-
-	}
+	
 }
 
 int	CDBModule::RefreshSchema()

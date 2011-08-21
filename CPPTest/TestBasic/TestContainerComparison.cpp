@@ -29,31 +29,31 @@ protected:
 int mainContainComparison()
 {
 	{
-		typedef cmpA cmp;
-		std::set<int,cmp> a;
-		a.insert(1);
-		std::set<int,cmp> b = a;
+// 		typedef cmpA cmp;
+// 		std::set<int,cmp> a;
+// 		a.insert(1);
+// 		std::set<int,cmp> b = a;
 	}
 
 	{
-		typedef cmpB cmp;
-		std::set<int,cmp> a;
-		a.insert(1);
-		std::set<int,cmp> b = a;
+// 		typedef cmpB cmp;
+// 		std::set<int,cmp> a;
+// 		a.insert(1);
+// 		std::set<int,cmp> b = a;
 	}
 	
 	{
-		typedef cmpA& cmp;
-		std::set<int,cmp> a;
-		a.insert(1);
-		std::set<int,cmp> b = a;
+// 		typedef cmpA& cmp;
+// 		std::set<int,cmp> a;
+// 		a.insert(1);
+// 		std::set<int,cmp> b = a;
 	}
 
 	{
-		typedef cmpB& cmp;
-		std::set<int,cmp> a;
-		a.insert(1);
-		std::set<int,cmp> b = a;
+// 		typedef cmpB& cmp;
+// 		std::set<int,cmp> a;
+// 		a.insert(1);
+// 		std::set<int,cmp> b = a;
 	}
 	
 	return 1;

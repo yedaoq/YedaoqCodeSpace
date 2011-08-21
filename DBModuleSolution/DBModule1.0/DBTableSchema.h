@@ -11,6 +11,8 @@
 
 namespace NSDBModule
 {
+	interface IDBDataAdapter;
+
 	class CDBTableSchema
 	{
 	public:
@@ -45,8 +47,21 @@ namespace NSDBModule
 		}
 
 		CDBTableSchema(const tstring& dbName, const tstring& name)
-			: DBName(dbName), Name(name), Columns(0)
-		{}		
+			: DBName(dbName), Name(name), Columns(0), Flag(None)
+		{}
+
+		CDBTableSchema(const CDBTableSchema& other)
+			: DBName(other.DBName), Name(other.Name), Columns(other.Columns), Flag(other.Flag)
+		{}
+
+		CDBTableSchema& operator=(const CDBTableSchema& other)
+		{
+			DBName = other.DBName;
+			Name = other.Name;
+			Flag = other.Flag;
+			Columns.swap(ColumnCollection(other.Columns));
+		}
+
 		bool IsBuildin() const		{ return Flag & BuildIn; }
 		bool IsDBExist() const		{ return Flag & DBExist; }
 

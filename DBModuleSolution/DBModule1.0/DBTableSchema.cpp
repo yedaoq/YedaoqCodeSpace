@@ -1,5 +1,7 @@
 #include "DBTableSchema.h"
 #include <stdexcept>
+#include <algorithm>
+#include "DBDataAdapter.h"
 
 using namespace NSDBModule;
 
@@ -66,32 +68,6 @@ DBColumnSchema& CDBTableSchema::operator[](index_t col)
 	}
 
 	throw std::out_of_range("");
-}
-
-bool CDBTableSchema::BuildInSchemaValidate()
-{
-	bool bValid = false;
-
-	do 
-	{
-		if(DBName.empty()) break;
-
-		ColumnCollection::iterator iter;
-		for (iter = Columns.begin(); iter != Columns.end(); ++iter)
-		{
-			if(iter->DBName.empty() || !iter->DBType || iter->DBType->CompatibleWith(iter->Type))
-			{
-				break;
-			}
-		}
-
-		if(iter != Columns.end()) break;
-
-		bValid = true;
-
-	} while (false);
-	
-	return bValid;
 }
 
 void CDBTableSchema::Clear()

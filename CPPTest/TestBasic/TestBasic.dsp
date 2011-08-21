@@ -126,6 +126,10 @@ SOURCE=.\Operator_AddAssign.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ptr_fun_delete.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\ReferenceMemberAndCopyDestructor.cpp
 # End Source File
 # Begin Source File

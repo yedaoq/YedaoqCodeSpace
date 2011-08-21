@@ -19,8 +19,12 @@ using namespace NSDBModule;
 		}														\
 	}
 
-CDBTable::CDBTable()
-	: FlagLoaded_(false), LessThan_(Comparison_), Records_(LessThan_)	  
+CDBTable::CDBTable(CDBModule* module)
+	: DBModule_(module), FlagLoaded_(false), LessThan_(Comparison_), Records_(LessThan_)	  
+{}
+
+CDBTable::CDBTable(const CDBTable& other)
+	: DBModule_(other.DBModule_), FlagLoaded_(false), LessThan_(Comparison_), Records_(LessThan_)	
 {}
 
 int CDBTable::Initialize()
@@ -28,19 +32,21 @@ int CDBTable::Initialize()
 	
 }
 
-DBColumnSchemaEnumerator CDBTable::EnumColumn()
+CDBTableSchema::ColumnEnumerator CDBTable::EnumColumn()
 {
-	return make_iterator_enumerator(Schema_.Columns.begin(), Schema_.Columns.end());
+	return Schema_.EnumColumn();
 }
 
-DBRecordEnumPtr	CDBTable::EnumRecord()
+DBRecordEnumerator CDBTable::EnumRecord()
 {
 	if(!FlagLoaded_)
 	{
 		LoadData();
 	}
 
-	return DBRecordEnumPtr(new_iterator_enumerator(Records_.begin(), Records_.end()));
+	return make_iterator_enumerator(Records_.begin(), Records_.end());
+
+	//return DBRecordEnumPtr(new_iterator_enumerator(Records_.begin(), Records_.end()));
 }
 
 int	CDBTable::LoadData()

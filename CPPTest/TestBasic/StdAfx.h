@@ -14,7 +14,7 @@
 
 #include <stdio.h>
 
-#define mainContainComparison main
+#define mainPtrFunDelete main
 
 // TODO: reference additional headers your program requires here
 
