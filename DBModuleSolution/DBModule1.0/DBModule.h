@@ -2,6 +2,8 @@
 #include "vector"
 #include "Enumerator.h"
 #include "BuildInSchemaValidater.h"
+#include <atlcomcli.h>
+#include <memory>
 
 #ifndef interface
 #define interface struct
@@ -24,7 +26,7 @@ public:
 		SchemaConflict			// the buildin schema is conflict with the schema of database attached
 	};
 
-	typedef std::vector<CDBTable*>									DBTableCollection;
+	typedef std::vector<ATL::CAdapt<std::tr1::shared_ptr<CDBTable>>> DBTableCollection;
 	typedef CIteratorEnumerator<DBTableCollection::const_iterator>	DBTableEnumerator;
 
 public:
@@ -68,7 +70,7 @@ protected:
 	EnumSchemaValidity		SchemaValidity_;
 
 	DBTableCollection		Tables_;
-	CBuildInSchemaValidater Validater_;
+	CDBSchemaValidater Validater_;
 };
 
 }

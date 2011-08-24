@@ -46,7 +46,7 @@ namespace NSDBModule
 		bool IsDBNullable() const	{ return Flag & DBNullable; }
 		bool IsDBPrimaryKey() const { return Flag & DBPrimaryKey; }
 
-		void SetFlag(EnumFlag flag, bool bAppend)
+		void SetFlag(flag_t flag, bool bAppend)
 		{
 			if(bAppend)
 			{

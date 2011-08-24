@@ -11,60 +11,65 @@
 
 namespace NSDBModule
 {
+	class CDBRecordBase;
+	class CDBTableSchema;
+	class CDBRecordComparison;
+	class CDBRecordLessThan;
+	class CDBModule;
+	class CDBSchemaLoader;
 
-class CDBRecordBase;
-class CDBTableSchema;
-class CDBRecordComparison;
-class CDBRecordLessThan;
-class CDBModule;
+	interface IDBCommandBuilder;
 
-interface IDBCommandBuilder;
+	typedef std::auto_ptr<IEnumerator<CDBRecordBase>>				DBRecordEnumPtr;
+	typedef std::set<CDBRecordBase, IBoolComparison<CDBRecordBase>&>	DBRecordSet;
+	typedef DBRecordSet::const_iterator								RecIterator;
+	typedef std::auto_ptr<IDBCommandBuilder>						DBCommandBuilderPtr;
+	typedef CIteratorEnumerator<DBRecordSet::const_iterator>		DBRecordEnumerator;
 
-typedef std::auto_ptr<IEnumerator<CDBRecordBase>>				DBRecordEnumPtr;
-typedef std::set<CDBRecordBase, IBoolComparison<CDBRecordBase>&>	DBRecordSet;
-typedef DBRecordSet::const_iterator								RecIterator;
-typedef std::auto_ptr<IDBCommandBuilder>						DBCommandBuilderPtr;
-typedef CIteratorEnumerator<DBRecordSet::const_iterator>		DBRecordEnumerator;
+	class CDBTable
+	{
+		friend class CDBSchemaLoader;
+	public:
+		CDBTable(CDBModule* module, const CDBTableSchema& schema);
+		CDBTable(CDBModule* module);
+		CDBTable(const CDBTable& other);
 
-class CDBTable
-{
-public:
-	CDBTable(CDBModule* module);
-	CDBTable(const CDBTable& other);
+		int Initialize();
 
-	int Initialize();
+		const tstring&					GetName() const			{ return Schema_.Name; }
+		const tstring&					GetDBName() const		{ return Schema_.DBName; }
+		const CDBRecordComparison&		GetComparison() const	{ return Comparison_; }
+		const CDBTableSchema&			GetSchema()	const		{ return Schema_; }
+		CDBTableSchema&					GetSchema()				{ return Schema_; }
 
-	const tstring&					GetName()		{ return Schema_.Name; }
-	const tstring&					GetDBName()		{ return Schema_.DBName; }
-	const CDBRecordComparison&		GetComparison() { return Comparison_; }
-	const CDBTableSchema&			GetSchema()		{ return Schema_; }
+		//void SetComparison(const CDBRecordComparison& cmp)		{ Comparison_ = cmp; }
 
-	CDBTableSchema::ColumnEnumerator EnumColumn();
-	DBRecordEnumerator				EnumRecord();
+		CDBTableSchema::ColumnEnumerator EnumColumn() const;
+		DBRecordEnumerator				EnumRecord() const;
 
-	int								LoadData();
-	int								ClearData();
+		int								LoadData();
+		int								ClearData();
 
-	int								Find(CDBRecordBase& rec);
-	int								Find(CDBRecordBase& rec, const CDBRecordComparison& cmp);
-	RecEnumPtr						FindAll(const CDBRecordBase& rec, const CDBRecordComparison& cmp);
+		int								Find(CDBRecordBase& rec) const;
+		int								Find(CDBRecordBase& rec, const CDBRecordComparison& cmp) const;
+		RecEnumPtr						FindAll(const CDBRecordBase& rec, const CDBRecordComparison& cmp) const;
 	
-	int								Update(const CDBRecordBase& cur, const CDBRecordBase& ori);
-	int								Insert(const CDBRecordBase& rec);
-	int								Delete(const CDBRecordBase& rec);
+		int								Update(const CDBRecordBase& cur, const CDBRecordBase& ori);
+		int								Insert(const CDBRecordBase& rec);
+		int								Delete(const CDBRecordBase& rec);
 
-protected:
-	CDBTable& operator=(const CDBTable&);
+	protected:
+		CDBTable& operator=(const CDBTable&);
 
-	CDBModule*						DBModule_;
-	CDBTableSchema					Schema_;
-	CDBRecordComparison				Comparison_;
-	CDBRecordLessThan				LessThan_;
+		CDBModule*						DBModule_;
+		CDBTableSchema					Schema_;
+		CDBRecordComparison				Comparison_;
+		CDBRecordLessThan				LessThan_;
 
-	DBRecordSet						Records_;
-	DBCommandBuilderPtr				CommandBuilder_;
-	bool							FlagLoaded_;
+		DBRecordSet						Records_;
+		DBCommandBuilderPtr				CommandBuilder_;
+		bool							FlagLoaded_;
 
-};
+	};
 
 }

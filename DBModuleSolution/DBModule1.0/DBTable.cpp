@@ -19,7 +19,11 @@ using namespace NSDBModule;
 		}														\
 	}
 
-CDBTable::CDBTable(CDBModule* module)
+CDBTable::CDBTable(CDBModule* module, const CDBTableSchema& schema)
+	: DBModule_(module), Schema_(schema), FlagLoaded_(false), LessThan_(Comparison_), Records_(LessThan_)	  
+{}
+
+CDBTable::CDBTable(CDBModule* module, const CDBTableSchema& schema)
 	: DBModule_(module), FlagLoaded_(false), LessThan_(Comparison_), Records_(LessThan_)	  
 {}
 

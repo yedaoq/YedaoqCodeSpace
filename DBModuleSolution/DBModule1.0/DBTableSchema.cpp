@@ -86,7 +86,8 @@ void CDBTableSchema::Clear()
 	// reset flag of all column
 	for(ColumnCollection::iterator iter = Columns.begin(); iter != Columns.end(); ++iter)
 	{
-		iter->Flag = DBColumnSchema::BuildIn;
+		iter->SetFlag(DBColumnSchema::DBExist | DBColumnSchema::DBPrimaryKey, false);
+		iter->SetFlag(DBColumnSchema::DBNullable, true);
 	}
 }
 

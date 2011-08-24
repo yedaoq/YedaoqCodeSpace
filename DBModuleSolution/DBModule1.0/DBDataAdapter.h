@@ -7,6 +7,7 @@
 class tstring;
 
 #include <memory>
+#include "mytype.h"
 
 namespace NSDBModule
 {

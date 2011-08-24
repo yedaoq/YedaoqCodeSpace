@@ -60,6 +60,8 @@ namespace NSDBModule
 			Name = other.Name;
 			Flag = other.Flag;
 			Columns.swap(ColumnCollection(other.Columns));
+
+			return *this;
 		}
 
 		bool IsBuildin() const		{ return Flag & BuildIn; }
