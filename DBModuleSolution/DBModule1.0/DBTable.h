@@ -50,6 +50,10 @@ namespace NSDBModule
 		int								LoadData();
 		int								ClearData();
 
+		bool							DataLoaded() const { return FlagLoaded_; }
+		bool							DataDirty() const { return FlagDirty_; }
+		bool							Invalidate() { FlagDirty_ = true; }
+
 		int								Find(CDBRecordBase& rec) const;
 		int								Find(CDBRecordBase& rec, const CDBRecordComparison& cmp) const;
 		RecEnumPtr						FindAll(const CDBRecordBase& rec, const CDBRecordComparison& cmp) const;
@@ -69,7 +73,7 @@ namespace NSDBModule
 		DBRecordSet						Records_;
 		DBCommandBuilderPtr				CommandBuilder_;
 		bool							FlagLoaded_;
-
+		bool							FlagDirty_;
 	};
 
 }

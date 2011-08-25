@@ -1,9 +1,11 @@
 #pragma once
 #include "vector"
 #include "Enumerator.h"
-#include "BuildInSchemaValidater.h"
+#include "DBSchemaValidater.h"
+#include "DBSchemaLoader.h"
 #include <atlcomcli.h>
 #include <memory>
+#include "DBTableCollection.h"
 
 #ifndef interface
 #define interface struct
@@ -23,11 +25,8 @@ public:
 		Unknow,					// have not validate the schema yet
 		Valid,					// the schema is valid
 		InvalidBuildinSchema,	// the buildin schema is invalidate
-		SchemaConflict			// the buildin schema is conflict with the schema of database attached
+		SchemaConflict,			// the buildin schema is conflict with the schema of database attached
 	};
-
-	typedef std::vector<ATL::CAdapt<std::tr1::shared_ptr<CDBTable>>> DBTableCollection;
-	typedef CIteratorEnumerator<DBTableCollection::const_iterator>	DBTableEnumerator;
 
 public:
 	CDBModule(void)
@@ -52,16 +51,17 @@ public:
 	virtual EnumSchemaValidity SchemaValidity() const {return SchemaValidity_; }		// get the schema validation state
 	virtual bool			Accessable() const {return BindingToAnyDataBase() && Valid == SchemaValidity(); /*&& Initialized()*/ }
 
-	DBTableEnumerator		EnumTable() const;
-
 	// schema operation
 	virtual int				Clear();
 	virtual int				RefreshSchema();
-	
+
 	// data operation
 	virtual int				ClearData();
 	virtual int				RefreshData();
 
+	CDBTableCollection&		Tables() { return Tables_; }
+	const CDBTableCollection& Tables() const { return Tables_; }
+	
 protected:
 	IDBDataAdapter*			DBAdapter_;
 	IDBFactory*				DBFactory_;
@@ -69,8 +69,8 @@ protected:
 				
 	EnumSchemaValidity		SchemaValidity_;
 
-	DBTableCollection		Tables_;
-	CDBSchemaValidater Validater_;
+	CDBTableCollection		Tables_;
+	CDBSchemaValidater		Validater_;
 };
 
 }

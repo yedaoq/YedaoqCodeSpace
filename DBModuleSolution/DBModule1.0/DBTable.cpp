@@ -55,7 +55,7 @@ DBRecordEnumerator CDBTable::EnumRecord()
 
 int	CDBTable::LoadData()
 {
-	if(FlagLoaded_)
+	if(FlagLoaded_ && !FlagDirty_)
 	{
 		return 1;
 	}

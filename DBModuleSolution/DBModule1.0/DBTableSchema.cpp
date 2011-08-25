@@ -5,11 +5,11 @@
 
 using namespace NSDBModule;
 
-bool CDBTableSchema::FindByDBName(const tstring& col, DBColumnSchema& colSchema)
+bool CDBTableSchema::FindByName(const tstring& col, DBColumnSchema& colSchema)
 {
 	for (ColumnCollection::iterator iter = Columns.begin(); iter != Columns.end(); ++iter)
 	{
-		if(col == iter->DBName)
+		if(col == iter->Name)
 		{
 			colSchema = *iter;
 			return true;
@@ -29,7 +29,7 @@ bool CDBTableSchema::FindByIndex(index_t col, DBColumnSchema& colSchema)
 	return false;
 }
 
-bool CDBTableSchema::SetColumn(const DBColumnSchema& col)
+bool CDBTableSchema::ModifyColumn(const DBColumnSchema& col)
 {
 	if(col.Index < Columns.size())
 	{
@@ -40,7 +40,7 @@ bool CDBTableSchema::SetColumn(const DBColumnSchema& col)
 	return false;
 }
 
-bool CDBTableSchema::AddColumn(DBColumnSchema& col)
+bool CDBTableSchema::AppendColumn(DBColumnSchema& col)
 {
 	col.Index = Columns.size();
 	Columns.push_back(col);
@@ -72,6 +72,9 @@ DBColumnSchema& CDBTableSchema::operator[](index_t col)
 
 void CDBTableSchema::Clear()
 {
+	DBName.clear();
+	SetFlag(DBExist, false);
+
 	// remove all not buildin column
 	Columns.erase
 		(
@@ -88,6 +91,7 @@ void CDBTableSchema::Clear()
 	{
 		iter->SetFlag(DBColumnSchema::DBExist | DBColumnSchema::DBPrimaryKey, false);
 		iter->SetFlag(DBColumnSchema::DBNullable, true);
+		iter->UniqueMask = 0;
 	}
 }
 
@@ -109,7 +113,7 @@ bool CDBTableSchema::Load(IDBDataAdapter* dbAdapter)
 	{
 		const DBColumnSchema& dbCol = pEnum->Current();
 		DBColumnSchema col;
-		if(!FindByDBName(dbCol.DBName, col))
+		if(!FindByName(dbCol.DBName, col))
 		{
 			col.Name = dbCol.DBName;			
 			Columns.push_back(dbCol);
@@ -120,7 +124,7 @@ bool CDBTableSchema::Load(IDBDataAdapter* dbAdapter)
 
 		col.Type = dbCol.DBType->PreferredCppDataType();
 		col.Flag |= DBExist | dbCol.Flag;
-		SetColumn(col);
+		ModifyColumn(col);
 	}
 
 	//

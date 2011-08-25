@@ -33,18 +33,11 @@ namespace NSDBModule
 		ColumnCollection		Columns;
 		
 	public:
-		DBColumnSchema&			operator[](const tstring& dbCol);
-		DBColumnSchema&			operator[](index_t col);
+		DBColumnSchema&	operator[](const tstring& dbCol);
+		DBColumnSchema&	operator[](index_t col);
 
-		const DBColumnSchema&	operator[](const tstring& dbCol) const
-		{
-			return const_cast<CDBTableSchema&>(*this)[dbCol];
-		}
-
-		const DBColumnSchema&	operator[](index_t col) const
-		{
-			return const_cast<CDBTableSchema&>(*this)[col];
-		}
+		const DBColumnSchema& operator[](const tstring& dbCol) const { return const_cast<const DBColumnSchema&>(*this)[dbCol]; }
+		const DBColumnSchema& operator[](index_t col) const { return const_cast<const DBColumnSchema&>(*this)[col];	}
 
 		CDBTableSchema(const tstring& dbName, const tstring& name)
 			: DBName(dbName), Name(name), Columns(0), Flag(None)
@@ -64,18 +57,29 @@ namespace NSDBModule
 			return *this;
 		}
 
-		bool IsBuildin() const		{ return Flag & BuildIn; }
-		bool IsDBExist() const		{ return Flag & DBExist; }
+		bool IsBuildin() const { return Flag & BuildIn; }
+		bool IsDBExist() const { return Flag & DBExist; }
 
 		ColumnEnumerator EnumColumn() const { return make_iterator_enumerator(Columns.begin(), Columns.end()); }
 
-		bool FindByDBName(const tstring& col, DBColumnSchema& colSchema);
-		bool FindByIndex(index_t col, DBColumnSchema& colSchema);
+		bool FindByName(const tstring& col, DBColumnSchema& colSchema) const;
+		bool FindByIndex(index_t col, DBColumnSchema& colSchema) const;
 		
-		bool SetColumn(const DBColumnSchema& col);
-		bool AddColumn(DBColumnSchema& col);
+		bool ModifyColumn(const DBColumnSchema& col);
+		bool AppendColumn(DBColumnSchema& col);
 
-		bool Validate();
+		void SetFlag(flag_t flag, bool bAppend)
+		{
+			if(bAppend)
+			{
+				Flag |= flag;
+			}
+			else
+			{
+				Flag ^= flag;
+			}
+		}
+
 		void Clear();
 		bool Load(IDBDataAdapter* dbAdapter);
 	};

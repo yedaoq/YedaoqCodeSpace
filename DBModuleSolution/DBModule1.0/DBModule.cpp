@@ -50,25 +50,24 @@ int CDBModule::DetachFromDataBase()
 
 CDBModule::DBTableEnumerator CDBModule::EnumTable() const
 {
-	return make_iterator_enumerator(Tables_.begin(), Tables_.end());
+	//return make_iterator_enumerator(Tables_.begin(), Tables_.end());
 }
 
 int	CDBModule::Clear()
 {
 	DBTableCollection::iterator iter = Tables_.begin();
-	while ( iter != Tables_.end())
+	if(WithBuildinSchema())
 	{
-		if(!(*iter)->GetSchema().IsBuildin())
+		while ( iter != Tables_.end())
 		{
-			break;
+			if(!((DBTablePtr)(*iter))->GetSchema().IsBuildin())
+			{
+				break;
+			}
 		}
 	}
 	
-	if(iter != Tables_.end())
-	{
-		std::for_each(iter, Tables_.end(), std::ptr_fun(
-	}
-	
+	Tables_.erase(iter, Tables_.end());
 }
 
 int	CDBModule::RefreshSchema()

@@ -154,10 +154,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\BuildInSchemaValidater.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\DBCommandBuilder.cpp"
 				>
 			</File>
@@ -182,7 +178,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBSchemaLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DBSchemaValidater.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DBTable.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DBTableCollection.cpp"
 				>
 			</File>
 			<File
@@ -203,10 +211,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\BuildInSchemaValidater.h"
-				>
-			</File>
 			<File
 				RelativePath=".\DBColumnSchema.h"
 				>
@@ -252,7 +256,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBSchemaLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBSchemaValidater.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DBTable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBTableCollection.h"
 				>
 			</File>
 			<File
