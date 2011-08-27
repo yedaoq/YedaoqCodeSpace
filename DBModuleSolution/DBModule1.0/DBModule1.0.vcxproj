@@ -86,7 +86,6 @@
     <ClCompile Include="DBTableCollection.cpp" />
     <ClCompile Include="DBTableSchema.cpp" />
     <ClCompile Include="Enumerator.cpp" />
-    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -107,7 +106,6 @@
     <ClInclude Include="DBTable.h" />
     <ClInclude Include="DBTableCollection.h" />
     <ClInclude Include="DBTableSchema.h" />
-    <ClInclude Include="Helper.h" />
     <ClInclude Include="mytype.h" />
     <ClInclude Include="StringBuilder.h" />
   </ItemGroup>

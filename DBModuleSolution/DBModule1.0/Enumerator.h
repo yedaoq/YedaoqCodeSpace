@@ -233,81 +233,81 @@ protected:
 	bool	beforefirst_;
 };
 
-template<typename _Container, typename _Ele>
-class CIteratorEnumeratorEx : public IMPIREFOBJECT(IEnumerator<_Ele>)
-{
-public:
-	typedef _Container<_Ele>::iterator iter_t;
-
-	CIteratorEnumerator()
-		: iter_(last_), beforefirst_(false)
-	{}
-
-	CIteratorEnumerator(const iter_t& begin, const iter_t& end)
-		: first_(begin), last_(end), iter_(begin), beforefirst_(true)
-	{}
-
-	CIteratorEnumerator(const CIteratorEnumerator& other)
-		: first_(other.first_), last_(other.last_), iter_(other.iter_), beforefirst_(true)
-	{}
-
-	CIteratorEnumerator& operator=(const CIteratorEnumerator& other)
-	{
-		first_ = other.first_;
-		last_ = other.last_;
-		iter_ = other.iter_;
-		beforefirst_ = other.beforefirst_;
-
-		return *this;
-	}
-
-	virtual bool MoveNext()
-	{
-		if(beforefirst_)
-		{
-			beforefirst_ = false;
-			iter_ = first_;
-		}
-		else if(iter_ != last_)
-		{
-			++iter_;
-		}
-
-		return iter_ != last_;
-	}
-
-	virtual bool MoveNext(typename iter_t::value_type& obj)
-	{
-		if(MoveNext())
-		{
-			obj = Current();
-			return true;
-		}
-		return false;
-	}
-
-	virtual const typename iter_t::value_type& Current()
-	{
-		_ASSERT(!beforefirst_ && iter_ != last_);
-		return *iter_ ;
-	}
-
-	virtual void Reset()
-	{
-		beforefirst_ = true;
-	}
-
-	virtual ICloneable* Clone() const
-	{
-		return new CIteratorEnumerator(*this);
-	}
-
-protected:
-	iter_t	first_;
-	iter_t	last_;
-	iter_t	iter_;
-	bool	beforefirst_;
-};
+//template<typename _Container, typename _Ele>
+//class CIteratorEnumeratorEx : public IMPIREFOBJECT(IEnumerator<_Ele>)
+//{
+//public:
+//	typedef typename _Container<_Ele>::iterator iter_t;
+//
+//	CIteratorEnumerator()
+//		: iter_(last_), beforefirst_(false)
+//	{}
+//
+//	CIteratorEnumerator(const iter_t& begin, const iter_t& end)
+//		: first_(begin), last_(end), iter_(begin), beforefirst_(true)
+//	{}
+//
+//	CIteratorEnumerator(const CIteratorEnumerator& other)
+//		: first_(other.first_), last_(other.last_), iter_(other.iter_), beforefirst_(true)
+//	{}
+//
+//	CIteratorEnumerator& operator=(const CIteratorEnumerator& other)
+//	{
+//		first_ = other.first_;
+//		last_ = other.last_;
+//		iter_ = other.iter_;
+//		beforefirst_ = other.beforefirst_;
+//
+//		return *this;
+//	}
+//
+//	virtual bool MoveNext()
+//	{
+//		if(beforefirst_)
+//		{
+//			beforefirst_ = false;
+//			iter_ = first_;
+//		}
+//		else if(iter_ != last_)
+//		{
+//			++iter_;
+//		}
+//
+//		return iter_ != last_;
+//	}
+//
+//	virtual bool MoveNext(typename iter_t::value_type& obj)
+//	{
+//		if(MoveNext())
+//		{
+//			obj = Current();
+//			return true;
+//		}
+//		return false;
+//	}
+//
+//	virtual const typename iter_t::value_type& Current()
+//	{
+//		_ASSERT(!beforefirst_ && iter_ != last_);
+//		return *iter_ ;
+//	}
+//
+//	virtual void Reset()
+//	{
+//		beforefirst_ = true;
+//	}
+//
+//	virtual ICloneable* Clone() const
+//	{
+//		return new CIteratorEnumerator(*this);
+//	}
+//
+//protected:
+//	iter_t	first_;
+//	iter_t	last_;
+//	iter_t	iter_;
+//	bool	beforefirst_;
+//};
 
 template<typename T>
 CIteratorEnumerator<T> make_iterator_enumerator(T begin, T end)

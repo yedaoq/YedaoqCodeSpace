@@ -19,7 +19,7 @@ namespace NSDBModule
 	class CDBSchemaLoader
 	{
 	public:
-		CDBSchemaLoader(CDBModule& module)
+		CDBSchemaLoader(CDBModule* module)
 			: DBModule(module)
 		{}
 
@@ -29,7 +29,7 @@ namespace NSDBModule
 		bool LoadTable(const tstring& dbName, const DBTablePtr& pTbl);
 
 	protected:
-		CDBModule& DBModule;
+		CDBModule*		DBModule;
 		IDBNameMapping* DBNameMapping;
 	};
 }

@@ -30,7 +30,7 @@ public:
 
 public:
 	CDBModule(void)
-		: DBAdapter_(0), DBFactory_(0), WithBuildinSchema_(false), Tables_(0), Validater_(*this)
+		: DBAdapter_(0), DBFactory_(0), WithBuildinSchema_(false), Validater_(*this)
 	{}
 
 	// initialize for access	

@@ -4,6 +4,7 @@
 #include <vector>
 #include <atlcomcli.h>
 #include "mytype.h"
+#include "Enumerator.h"
 
 namespace NSDBModule
 {
@@ -30,11 +31,11 @@ namespace NSDBModule
 		DBTablePtr				Remove(const tstring& name);
 		DBTablePtr				Remove(index_t tbl);
 
-		DBTablePtr operator[](const tstring& tbl);
-		DBTablePtr operator[](index_t tbl);
+		DBTablePtr_const operator[](const tstring& tbl) const;
+		DBTablePtr_const operator[](index_t tbl) const;
 
-		const DBTablePtr_const operator[](const tstring& tbl) const { return std::tr1::const_pointer_cast<const CDBTable, CDBTable>((*this)[tbl]); }
-		const DBTablePtr_const operator[](index_t tbl) const {	return std::tr1::const_pointer_cast<const CDBTable, CDBTable>((*this)[tbl]); }
+		DBTablePtr operator[](const tstring& tbl) { return std::tr1::const_pointer_cast<CDBTable,const CDBTable>(const_cast<const CDBTableCollection&>(*this)[tbl]); }
+		DBTablePtr operator[](index_t tbl) { return std::tr1::const_pointer_cast<CDBTable, const CDBTable>(const_cast<const CDBTableCollection&>(*this)[tbl]); }
 
 	protected:
 		DBTableCollection Tables;

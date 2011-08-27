@@ -39,12 +39,12 @@ namespace NSDBModule
 		flag_t			UniqueMask;	// every bit of value '1' of this member indicate that this column is unique in group of all other columns that with value '1' at the same bit
 		flag_t			Flag;
 
-		bool IsBuildin() const		{ return Flag & BuildIn; }
-		bool IsDBExist() const		{ return Flag & DBExist; }
-		bool IsKeyColumn() const	{ return Flag & KeyColumn; }
+		bool IsBuildin() const		{ return static_cast<bool>(Flag & BuildIn); }
+		bool IsDBExist() const		{ return static_cast<bool>(Flag & DBExist); }
+		bool IsKeyColumn() const	{ return static_cast<bool>(Flag & KeyColumn); }
 
-		bool IsDBNullable() const	{ return Flag & DBNullable; }
-		bool IsDBPrimaryKey() const { return Flag & DBPrimaryKey; }
+		bool IsDBNullable() const	{ return static_cast<bool>(Flag & DBNullable); }
+		bool IsDBPrimaryKey() const { return static_cast<bool>(Flag & DBPrimaryKey); }
 
 		void SetFlag(flag_t flag, bool bAppend)
 		{
@@ -56,6 +56,31 @@ namespace NSDBModule
 			{
 				Flag ^= flag;
 			}
+		}
+
+		void SetBuildInInfo(const tstring& name, EnumCppDataType type, bool bBuildIn, bool bKeyColumn)
+		{
+			Name = name;
+			Type = type;
+			SetFlag(BuildIn, bBuildIn);
+			SetFlag(KeyColumn, bKeyColumn);
+		}
+
+		void SetExternInfo(const tstring& dbName, IDBDataType* dbType, bool bExist, bool bPK, bool bNullable)
+		{
+			DBName = dbName;
+			DBType = dbType;
+			SetFlag(DBExist, bExist);
+			SetFlag(DBPrimaryKey, bPK);
+			SetFlag(DBNullable, bNullable);
+		}
+
+		void ResetExternInfo()
+		{
+			DBName.clear();
+			DBType = 0;
+			SetFlag(DBPrimaryKey, false);
+			SetFlag(DBNullable, true);
 		}
 	};
 

@@ -7,7 +7,6 @@
 #include "mytype.h"
 #include "DBTableSchema.h"
 #include "DBRecordComparison.h"
-#include "DBCollection.h"
 
 namespace NSDBModule
 {
@@ -20,10 +19,10 @@ namespace NSDBModule
 
 	interface IDBCommandBuilder;
 
-	typedef std::auto_ptr<IEnumerator<CDBRecordBase>>				DBRecordEnumPtr;
 	typedef std::set<CDBRecordBase, IBoolComparison<CDBRecordBase>&>	DBRecordSet;
-	typedef DBRecordSet::const_iterator								RecIterator;
-	typedef std::auto_ptr<IDBCommandBuilder>						DBCommandBuilderPtr;
+	typedef DBRecordSet::const_iterator								DBRecordIterator;
+	typedef std::tr1::shared_ptr<IEnumerator<CDBRecordBase>>		DBRecordEnumPtr;
+	typedef std::tr1::shared_ptr<IDBCommandBuilder>					DBCommandBuilderPtr;
 	typedef CIteratorEnumerator<DBRecordSet::const_iterator>		DBRecordEnumerator;
 
 	class CDBTable
@@ -45,7 +44,7 @@ namespace NSDBModule
 		//void SetComparison(const CDBRecordComparison& cmp)		{ Comparison_ = cmp; }
 
 		CDBTableSchema::ColumnEnumerator EnumColumn() const;
-		DBRecordEnumerator				EnumRecord() const;
+		DBRecordEnumerator				EnumRecord() /*const*/;
 
 		int								LoadData();
 		int								ClearData();
@@ -54,9 +53,9 @@ namespace NSDBModule
 		bool							DataDirty() const { return FlagDirty_; }
 		bool							Invalidate() { FlagDirty_ = true; }
 
-		int								Find(CDBRecordBase& rec) const;
-		int								Find(CDBRecordBase& rec, const CDBRecordComparison& cmp) const;
-		RecEnumPtr						FindAll(const CDBRecordBase& rec, const CDBRecordComparison& cmp) const;
+		int								Find(CDBRecordBase& rec) /*const*/;
+		int								Find(CDBRecordBase& rec, const CDBRecordComparison& cmp) /*const*/;
+		DBRecordEnumerator				FindAll(const CDBRecordBase& rec, const CDBRecordComparison& cmp) /*const*/;
 	
 		int								Update(const CDBRecordBase& cur, const CDBRecordBase& ori);
 		int								Insert(const CDBRecordBase& rec);

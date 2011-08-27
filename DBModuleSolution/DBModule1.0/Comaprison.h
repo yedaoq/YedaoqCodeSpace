@@ -7,15 +7,15 @@
 template<typename T>
 interface IComparison
 {
-	virtual int operator()(const T& lhs, const T&rhs) = 0;
+	virtual int operator()(const T& lhs, const T&rhs) const = 0;
 	virtual ~IComparison(){}
 };
 
 template<typename T>
 interface IBoolComparison
 {
-	virtual bool operator()(const T& lhs, const T&rhs) = 0;
-	virtual ~IComparison(){}
+	virtual bool operator()(const T& lhs, const T&rhs) const = 0;
+	virtual ~IBoolComparison(){}
 };
 
 static enum EnumBoolComparison
@@ -81,7 +81,7 @@ public:
 protected:
 	IComparison<T>& Comaprison_;
 
-	CComparisonToLessThen& operator =(const CComparisonToLessThan&);
+	CComparisonToLessThen& operator =(const CComparisonToLessThen&);
 };
 
 template<typename T>
@@ -103,8 +103,7 @@ public:
 
 protected:
 	IComparison<T>& Comaprison_;
-
-	CComparisonToGreaterThen& operator =(const CComparisonToLessThan&);
+	CComparisonToGreaterThen& operator =(const CComparisonToGreaterThen&);
 };
 
 template<typename T>
@@ -126,6 +125,5 @@ public:
 
 protected:
 	IComparison<T>& Comaprison_;
-
-	CComparisonToEqual& operator =(const CComparisonToLessThan&);
+	CComparisonToEqual& operator =(const CComparisonToEqual&);
 };

@@ -11,7 +11,7 @@ class CDBRecordComparison : public IComparison<CDBRecordBase>
 {
 public:
 
-	int operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
+	int operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs) const
 	{
 		if(lhs.GetFieldCount() != rhs.GetFieldCount())
 		{
@@ -75,7 +75,7 @@ protected:
 class CDBRecordLessThan : public IBoolComparison<CDBRecordBase>
 {
 public:
-	bool operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
+	bool operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs) const
 	{
 		return Comparison_(lhs, rhs) < 0;
 	}

@@ -33,11 +33,15 @@ namespace NSDBModule
 		ColumnCollection		Columns;
 		
 	public:
-		DBColumnSchema&	operator[](const tstring& dbCol);
-		DBColumnSchema&	operator[](index_t col);
+		const DBColumnSchema&	operator[](const tstring& dbCol) const;
+		const DBColumnSchema&	operator[](index_t col) const;
 
-		const DBColumnSchema& operator[](const tstring& dbCol) const { return const_cast<const DBColumnSchema&>(*this)[dbCol]; }
-		const DBColumnSchema& operator[](index_t col) const { return const_cast<const DBColumnSchema&>(*this)[col];	}
+		DBColumnSchema& operator[](const tstring& dbCol) { return const_cast<DBColumnSchema&>(const_cast<const CDBTableSchema&>(*this)[dbCol]); }
+		DBColumnSchema& operator[](index_t col) { return const_cast<DBColumnSchema&>(const_cast<const CDBTableSchema&>(*this)[col]);	}
+
+		CDBTableSchema()
+			: Columns(0), Flag(None)
+		{}
 
 		CDBTableSchema(const tstring& dbName, const tstring& name)
 			: DBName(dbName), Name(name), Columns(0), Flag(None)
@@ -57,8 +61,8 @@ namespace NSDBModule
 			return *this;
 		}
 
-		bool IsBuildin() const { return Flag & BuildIn; }
-		bool IsDBExist() const { return Flag & DBExist; }
+		bool IsBuildin() const { return static_cast<bool>(Flag & BuildIn); }
+		bool IsDBExist() const { return static_cast<bool>(Flag & DBExist); }
 
 		ColumnEnumerator EnumColumn() const { return make_iterator_enumerator(Columns.begin(), Columns.end()); }
 

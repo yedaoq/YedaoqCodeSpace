@@ -1,6 +1,7 @@
 #include "DBTable.h"
 #include "DBModule.h"
 #include "DBCommandBuilder.h"
+#include "DBDataAdapter.h"
 #include "DBRecordComparison.h"
 #include <crtdbg.h>
 
@@ -19,13 +20,15 @@ using namespace NSDBModule;
 		}														\
 	}
 
+CDBTable::CDBTable(CDBModule* module)
+	: DBModule_(module), FlagLoaded_(false), LessThan_(Comparison_), Records_(LessThan_)	  
+{}
+
 CDBTable::CDBTable(CDBModule* module, const CDBTableSchema& schema)
 	: DBModule_(module), Schema_(schema), FlagLoaded_(false), LessThan_(Comparison_), Records_(LessThan_)	  
 {}
 
-CDBTable::CDBTable(CDBModule* module, const CDBTableSchema& schema)
-	: DBModule_(module), FlagLoaded_(false), LessThan_(Comparison_), Records_(LessThan_)	  
-{}
+
 
 CDBTable::CDBTable(const CDBTable& other)
 	: DBModule_(other.DBModule_), FlagLoaded_(false), LessThan_(Comparison_), Records_(LessThan_)	
@@ -36,12 +39,12 @@ int CDBTable::Initialize()
 	
 }
 
-CDBTableSchema::ColumnEnumerator CDBTable::EnumColumn()
+CDBTableSchema::ColumnEnumerator CDBTable::EnumColumn() const
 {
 	return Schema_.EnumColumn();
 }
 
-DBRecordEnumerator CDBTable::EnumRecord()
+DBRecordEnumerator CDBTable::EnumRecord() /*const*/
 {
 	if(!FlagLoaded_)
 	{
@@ -77,19 +80,19 @@ int	CDBTable::LoadData()
 		throw std::exception();
 	}
 	
-	return DBModule_->DBAdapter()->Fill(Records_);
+	//return DBModule_->DBAdapter()->Fill(Records_);
 
-	return 1;
+	return 0;
 }
 
-int	CDBTable::Find(CDBRecordBase& rec)
+int	CDBTable::Find(CDBRecordBase& rec) /*const*/
 {
 	if(!FlagLoaded_)
 	{
 		LoadData();
 	}
 
-	RecIterator iter = Records_.find(rec);
+	DBRecordIterator iter = Records_.find(rec);
 	if(iter != Records_.end())
 	{
 		rec = *iter;
@@ -106,7 +109,7 @@ int	CDBTable::Find(CDBRecordBase& rec, const CDBRecordComparison& cmp)
 		LoadData();
 	}
 
-	for (RecIterator iter = Records_.begin(); iter != Records_.end(); ++iter)
+	for (DBRecordIterator iter = Records_.begin(); iter != Records_.end(); ++iter)
 	{
 		if(0 == cmp(rec, *iter))
 		{
@@ -117,21 +120,21 @@ int	CDBTable::Find(CDBRecordBase& rec, const CDBRecordComparison& cmp)
 	return 0;
 }
 
-RecEnumPtr CDBTable::FindAll(const CDBRecordBase& rec, const CDBRecordComparison& cmp)
+DBRecordEnumerator CDBTable::FindAll(const CDBRecordBase& rec, const CDBRecordComparison& cmp) /*const*/
 {
 	if(!FlagLoaded_)
 	{
 		LoadData();
 	}
-
-
+	throw std::exception();
+	//return make_iterator_enumerator();
 }
 
 int	CDBTable::Update(const CDBRecordBase& cur, const CDBRecordBase& ori)
 {
 	DBPREPARE;
 
-	RecIterator iOri = Records_.find(ori);
+	DBRecordIterator iOri = Records_.find(ori);
 	if(iOri == Records_.end())
 	{
 		// data non exist
@@ -149,7 +152,7 @@ int	CDBTable::Update(const CDBRecordBase& cur, const CDBRecordBase& ori)
 
 	// update to database
 	IDBCommand* cmd;
-	CommandBuilder_->GetCmdUpdate(cur, ori, &cmd);
+	CommandBuilder_->GetCmdUpdate(cur, ori, Comparison_, &cmd);
 
 	if(DBModule_->DBAdapter()->Execute(*cmd))
 	{
@@ -162,14 +165,13 @@ int	CDBTable::Update(const CDBRecordBase& cur, const CDBRecordBase& ori)
 	Records_.insert(cur);
 
 	return 1;
-	
 }
 
 int	CDBTable::Insert(const CDBRecordBase& rec)
 {
 	DBPREPARE;
 
-	RecIterator iOri = Records_.find(rec);
+	DBRecordIterator iOri = Records_.find(rec);
 	if(iOri != Records_.end())
 	{
 		// data exist
@@ -196,7 +198,7 @@ int	CDBTable::Delete(const CDBRecordBase& rec)
 {
 	DBPREPARE;
 
-	RecIterator iOri = Records_.find(rec);
+	DBRecordIterator iOri = Records_.find(rec);
 	if(iOri == Records_.end())
 	{
 		// data non exist
@@ -205,7 +207,7 @@ int	CDBTable::Delete(const CDBRecordBase& rec)
 
 	// update to database
 	IDBCommand* cmd;
-	CommandBuilder_->GetCmdDelete(rec, &cmd);
+	CommandBuilder_->GetCmdDelete(rec, Comparison_, &cmd);
 
 	if(DBModule_->DBAdapter()->Execute(*cmd))
 	{

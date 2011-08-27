@@ -6,7 +6,7 @@
 
 using namespace NSDBModule;
 
-DBTablePtr CDBTableCollection::operator[](const tstring& tbl)
+DBTablePtr_const CDBTableCollection::operator[](const tstring& tbl) const
 {
 	if(tbl.empty())
 	{
@@ -14,7 +14,7 @@ DBTablePtr CDBTableCollection::operator[](const tstring& tbl)
 		return 0;
 	}
 
-	for (DBTableCollection::iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
+	for (DBTableCollection::const_iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
 	{
 		if(((DBTablePtr)(*iter))->GetName() == tbl)
 		{
@@ -25,7 +25,7 @@ DBTablePtr CDBTableCollection::operator[](const tstring& tbl)
 	return 0;
 }
 
-DBTablePtr CDBTableCollection::operator[](index_t tbl)
+DBTablePtr_const CDBTableCollection::operator[](index_t tbl) const
 {
 	if(tbl < 0 || tbl >= Tables.size())
 	{
@@ -40,6 +40,7 @@ DBTablePtr CDBTableCollection::operator[](index_t tbl)
 DBTableEnumerator CDBTableCollection::Enum() const
 {
 	//return make_iterator_enumerator(Tables_.begin(), Tables_.end());
+	return make_iterator_enumerator(Tables.begin(), Tables.end());
 }
 
 DBTablePtr CDBTableCollection::Append(const tstring& name, CDBModule* module, bool bBuildIn )
@@ -59,7 +60,7 @@ DBTablePtr CDBTableCollection::Append(const tstring& name, CDBModule* module, bo
 	return (DBTablePtr)Tables[Tables.size() - 1];
 }
 
-DBTablePtr CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* module, bool bBuildIn = false)
+DBTablePtr CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* module, bool bBuildIn)
 {
 	if(schema.Name.empty() || !module)
 	{
@@ -77,7 +78,7 @@ DBTablePtr CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* m
 DBTablePtr CDBTableCollection::Remove(const tstring& name)
 {
 	int idx = 0;
-	for (DBTableCollection::iterator iter = Tables.begin(); iter != Tables(); ++iter)
+	for (DBTableCollection::const_iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
 	{
 		if(((DBTablePtr)(*iter))->GetName() == name)
 		{
@@ -115,4 +116,6 @@ int	CDBTableCollection::Clear(bool bBuildIn)
 	{
 		((DBTablePtr)(*iter))->GetSchema().Clear();
 	}
+
+	return 1;
 }

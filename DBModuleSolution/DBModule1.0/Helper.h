@@ -2,6 +2,7 @@
 #include <tchar.h>
 #include "mytype.h"
 #include "Enumerator.h"
+#include <winuser.h>
 
 void WTRACE(wchar_t const* pszFmt, ...);
 

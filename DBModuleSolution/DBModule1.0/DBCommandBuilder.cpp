@@ -5,7 +5,7 @@
 #include <winnt.h>
 #include "DBRecord.h"
 #include "DBDataType.h"
-#include <tchar.h>
+//#include <tchar.h>
 
 using namespace NSDBModule;
 

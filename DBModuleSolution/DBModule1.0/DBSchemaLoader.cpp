@@ -4,6 +4,8 @@
 #include "DBNameMapping.h"
 #include "DBTableCollection.h"
 #include "DBTable.h"
+#include "DBColumnSchema.h"
+#include "mytype.h"
 
 using namespace NSDBModule;
 
@@ -11,12 +13,12 @@ bool CDBSchemaLoader::Load()
 {
 	bool bRet = true;
 
-	if(!DBModule.BindingToAnyDataBase())
+	if(!DBModule->BindingToAnyDataBase())
 	{
 		return false;
 	}
 
-	DBNameMapping = DBModule.DBFactory()->CreateDBNameMapping();
+	DBNameMapping = DBModule->DBFactory()->CreateDBNameMapping();
 	if(!DBNameMapping)
 	{
 		return false;
@@ -34,9 +36,9 @@ bool CDBSchemaLoader::LoadAllTable()
 {
 	bool bRet;
 
-	DBModule.Tables().Clear();
+	DBModule->Tables().Clear();
 
-	DBTableEnumPtr etor = DBModule.DBAdapter()->EnumTable();
+	DBTableEnumPtr etor = DBModule->DBAdapter()->EnumTable();
 	if(!etor.get())
 	{
 		return false;
@@ -53,10 +55,10 @@ bool CDBSchemaLoader::LoadAllTable()
 			continue;
 		}
 
-		DBTablePtr pTable = DBModule.Tables()[name];
+		DBTablePtr pTable = DBModule->Tables()[name];
 		if(!pTable)
 		{
-			pTable = DBModule.Tables().Append(name, &DBModule, false);
+			pTable = DBModule->Tables().Append(name, DBModule, false);
 		}
 
 		if(!LoadTable(dbName, pTable))
@@ -75,7 +77,7 @@ bool CDBSchemaLoader::LoadTable(const tstring& dbName, const DBTablePtr& pTbl)
 	schema.Clear();
 	schema.DBName = dbName;
 
-	DBColumnEnumPtr etor = DBModule.DBAdapter()->EnumColumn(dbName);
+	DBColumnEnumPtr etor = DBModule->DBAdapter()->EnumColumn(dbName);
 	if(!etor.get())
 	{
 		return false;
@@ -92,8 +94,12 @@ bool CDBSchemaLoader::LoadTable(const tstring& dbName, const DBTablePtr& pTbl)
 		dbCol.Name = DBNameMapping->FromDBName(dbCol.DBName, context);
 		if(!schema.FindByName(dbCol.Name, exCol))
 		{
+			exCol.SetBuildInInfo(dbCol.Name, dbCol.DBType->PreferredCppDataType(), false, false);
+			exCol.ResetExternInfo();
 			schema.AppendColumn(exCol);
 		}
+		exCol.SetExternInfo(dbCol.DBName, dbCol.DBType, true, dbCol.IsDBPrimaryKey(), dbCol.IsDBNullable());
+		schema.ModifyColumn(exCol);
 	}
 
 }

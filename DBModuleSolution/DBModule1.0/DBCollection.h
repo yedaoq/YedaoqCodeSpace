@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DBRecord.h"
-#include "ColumnSchema.h"
+#include "DBColumnSchema.h"
 #include "Enumerator.h"
 
 #include <set>
@@ -16,7 +16,7 @@ namespace NSDBModule
 {
 
 typedef std::vector<CDBRecordBase>	RecordVector;
-typedef std::vector<ColumnSchema>	ColumnSchemaVector;
+typedef std::vector<DBColumnSchema>	ColumnSchemaVector;
 typedef std::auto_ptr<IEnumerator<CDBRecordBase>> RecEnumPtr;
 
 interface IDBCollection

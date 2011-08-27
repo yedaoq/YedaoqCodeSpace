@@ -1,6 +1,6 @@
-#include "StdAfx.h"
 #include "Helper.h"
 #include <objbase.h>
+#include <winnt.h>
 
 EnumMessageBoxResult MsgboxPrompt(LPCTSTR format, ...)
 {
