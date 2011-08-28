@@ -9,6 +9,7 @@
 
 namespace NSDBModule
 {
+	struct DBColumnSchema;
 	class CDBTableSchema;
 	class CDBRecordBase;
 	class CDBRecordComparison;
@@ -53,8 +54,8 @@ namespace NSDBModule
 
 		virtual int ReleaseCmd(IDBCommand *, bool);
 
-		virtual int WrapperValue(LPCTSTR val, IDBDataType const* type, tstring& buffer);
-		virtual int WrapperIdentifier(LPCTSTR val, tstring& buffer);
+		virtual int WrapperValue(const tchar* val, IDBDataType const* type, tstring& buffer);
+		virtual int WrapperIdentifier(const tchar* val, tstring& buffer);
 
 	protected:
 		virtual int GenerateDBCommand(IDBCommand** cmd, EnumDBCommandType type, const tstring& text);

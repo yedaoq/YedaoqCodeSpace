@@ -6,6 +6,7 @@
 
 #include <memory>
 #include "mytype.h"
+#include "Enumerator.h"
 
 namespace NSDBModule
 {
@@ -13,6 +14,7 @@ namespace NSDBModule
 	interface IDBCommand;
 
 	class CDBRecordBase;
+	struct DBColumnSchema;
 	class CDBRecordComparison;
 
 interface IDBDataAdapter
@@ -25,15 +27,13 @@ public:
 public:
 	virtual ~IDBDataAdapter() = 0 {}
 
-	//virtual	int				FillSchema(const CDBModule& module) = 0;
-	virtual DBTableEnumPtr	EnumTable() = 0;
-	virtual DBColumnEnumPtr EnumColumn(const tstring& tblName) = 0;
+	virtual DBTableEnumPtr		EnumTable() = 0;
+	virtual DBColumnEnumPtr		EnumColumn(const tstring& tblName) = 0;
 
-	//virtual int				Fill(DBRecordSet& recs) = 0;
-	virtual DBRecordEnumPtr Select(const CDBRecordBase& condition, const CDBRecordComparison& comparison) = 0;
-	virtual DBRecordEnumPtr Select(const IDBCommand& cmd) = 0;
+	virtual DBRecordEnumPtr		Select(const CDBRecordBase& condition, const CDBRecordComparison& comparison) = 0;
+	virtual DBRecordEnumPtr		Select(const IDBCommand& cmd) = 0;
 	
-	virtual int				Execute(const IDBCommand& cmd) = 0;
+	virtual int					Execute(const IDBCommand& cmd) = 0;
 };
 
 }

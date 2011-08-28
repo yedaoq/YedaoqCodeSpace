@@ -12,7 +12,9 @@ namespace NSDBModule
 	enum EnumDBDataTypeClass { DBValue, DBString, DBBlob };
 
 	interface IDBDataType : ICloneable
-	{
+	{	
+		virtual ~IDBDataType() {};
+
 		virtual EnumDBDataTypeClass Class() const = 0;									// 
 		virtual tstring				ToString() const = 0;								// get the datatype str
 		virtual bool				IsNull(const tchar* val) const = 0;						// whether a val of this type is a db null 
@@ -27,13 +29,15 @@ namespace NSDBModule
 
 	interface IDBDataTypeProvider
 	{
+		typedef std::tr1::shared_ptr<IEnumerator<IDBDataType*>> DBDataTypeEnumPtr;
+
+		virtual ~IDBDataTypeProvider() {};
+
 		virtual IDBDataType*		ParseDBTypeStr(const tstring& type) = 0;
 		virtual IDBDataType*		GetPreferredDBType(EnumCppDataType type) = 0;
 
 		virtual bool				DBTypeEnumerable() = 0;
-		virtual IEnumerator<IDBDataType*> GetEnumerator() = 0;
+		virtual DBDataTypeEnumPtr	GetEnumerator() = 0;
 	};
-
-	
 }
 

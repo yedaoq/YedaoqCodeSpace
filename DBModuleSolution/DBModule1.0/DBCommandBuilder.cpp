@@ -1,11 +1,11 @@
 #include "DBCommandBuilder.h"
 #include "DBTableSchema.h"
+#include "DBColumnSchema.h"
 #include <crtdbg.h>
 #include "DBCommand.h"
-#include <winnt.h>
 #include "DBRecord.h"
 #include "DBDataType.h"
-//#include <tchar.h>
+#include "DBRecordComparison.h"
 
 using namespace NSDBModule;
 
@@ -55,6 +55,7 @@ int CDBCommandBuilderBase::Initialize(const CDBTableSchema* schema)
 int CDBCommandBuilderBase::GenerateDBCommand(IDBCommand** cmd, EnumDBCommandType type, const tstring& text)
 {
 	*cmd = new CDBCommandBase(text, type);
+	return 1;
 }
 
 int CDBCommandBuilderBase::GetCmdSelect(const CDBRecordBase& rec, const CDBRecordComparison& cmp, IDBCommand** cmd)
@@ -110,12 +111,16 @@ int CDBCommandBuilderBase::GenerateSqlSelect(const CDBRecordBase& rec , const CD
 	buffer.append(TEXT("SELECT * FROM "));
 	WrapperIdentifier(TableSchema_->DBName.c_str(), buffer);
 	GenerateConditionStr(rec, cmp, buffer);
+
+	return 1;
 }
 
 int CDBCommandBuilderBase::GenerateSqlSelect(tstring& buffer)
 {
 	buffer.append(TEXT("SELECT * FROM "));
 	WrapperIdentifier(TableSchema_->DBName.c_str(), buffer);
+
+	return 1;
 }
 
 int CDBCommandBuilderBase::GenerateSqlInsert(const CDBRecordBase& rec, tstring& buffer)
@@ -136,11 +141,13 @@ int CDBCommandBuilderBase::GenerateSqlInsert(const CDBRecordBase& rec, tstring& 
 
 	for (int i = 0; i < TableSchema_->Columns.size(); ++i)
 	{
-		WrapperValue(rec.GetField(i), TableSchema_->Columns[i].DBType, buffer);
+		WrapperValue(rec.GetField(i).c_str(), TableSchema_->Columns[i].DBType, buffer);
 		buffer.append(TEXT(", "));
 	}
 
 	*(buffer.end() - 2) = ')';
+
+	return 1;
 }
 
 int CDBCommandBuilderBase::GenerateSqlDelete(const CDBRecordBase& rec, const CDBRecordComparison& cmp, tstring& buffer)
@@ -148,12 +155,14 @@ int CDBCommandBuilderBase::GenerateSqlDelete(const CDBRecordBase& rec, const CDB
 	buffer.append(TEXT("DELETE FROM "));
 	WrapperIdentifier(TableSchema_->DBName.c_str(), buffer);
 	GenerateConditionStr(rec, cmp, buffer);
+
+	return 1;
 }
 
 int CDBCommandBuilderBase::GenerateSqlUpdate(const CDBRecordBase& ori, const CDBRecordBase& cur, const CDBRecordComparison& cmp, tstring& buffer)
 {
 	buffer.append(TEXT("UPDATE "));
-	WrapperIdentifier(TableSchema_->DBName.c_str());
+	WrapperIdentifier(TableSchema_->DBName.c_str(), buffer);
 	buffer.append(TEXT(" SET "));
 
 	for (int i = 0; i < TableSchema_->Columns.size(); ++i)
@@ -164,6 +173,8 @@ int CDBCommandBuilderBase::GenerateSqlUpdate(const CDBRecordBase& ori, const CDB
 
 	*(buffer.end() - 2) = ' ';
 	GenerateConditionStr(ori, cmp, buffer);
+
+	return 1;
 }
 
 int CDBCommandBuilderBase::GenerateSqlCreate(tstring& buffer)
@@ -171,7 +182,7 @@ int CDBCommandBuilderBase::GenerateSqlCreate(tstring& buffer)
 	throw std::exception();
 }
 
-int CDBCommandBuilderBase::WrapperValue(LPCTSTR val, IDBDataType const* type, tstring& buffer)
+int CDBCommandBuilderBase::WrapperValue(const tchar* val, IDBDataType const* type, tstring& buffer)
 {
 	_ASSERT(type && val);
 	if(type->IsNull(val))
@@ -187,10 +198,10 @@ int CDBCommandBuilderBase::WrapperValue(LPCTSTR val, IDBDataType const* type, ts
 				buffer.append(TEXT("'"));
 
 				// convert '\'' to "''"
-				PTSTR pTail = val + _tcslen(val);
-				PTSTR pPosPre = val;
-				PTSTR pPosCur = 0;
-				while(pPosPre < pTail && (pPosCur = _tcschr(pPosPre, '\'') != NULL))
+				const tchar* pTail = val + _tcslen(val);
+				const tchar* pPosPre = val;
+				const tchar* pPosCur = 0;
+				while(pPosPre < pTail && (pPosCur = _tcschr(pPosPre, '\'')) != NULL)
 				{
 					if(pPosCur - pPosPre > 1)
 					{
@@ -223,9 +234,9 @@ int CDBCommandBuilderBase::WrapperValue(LPCTSTR val, IDBDataType const* type, ts
 	return 1;
 }
 
-int CDBCommandBuilderBase::WrapperIdentifier(LPCTSTR val, tstring& buffer)
+int CDBCommandBuilderBase::WrapperIdentifier(const tchar* val, tstring& buffer)
 {
-	PTSTR pTail;
+	const tchar* pTail;
 
 	if(!val || val >= (pTail = val + _tcslen(val))) // Identifier should not be null
 	{
@@ -235,18 +246,20 @@ int CDBCommandBuilderBase::WrapperIdentifier(LPCTSTR val, tstring& buffer)
 	//buffer.append(TEXT("["));
 	buffer.append(val);
 	//buffer.append(TEXT("]"));
+
+	return 1;
 }
 
 void CDBCommandBuilderBase::GenerateConditionStr(const CDBRecordBase& rec, const CDBRecordComparison& cmp, tstring& buffer)
 {
-	if(cmp.KeyFields_.size() > 0)
+	if(cmp.KeyFields().size() > 0)
 	{
 		buffer.append(TEXT(" WHERE "));
 
-		for (int i = 0; i < cmp.KeyFields_.size(); ++i)
+		for (int i = 0; i < cmp.KeyFields().size(); ++i)
 		{					
-			int field = cmp.KeyFields_[i];
-			GenerateFieldConditionStr(TableSchema_[field], rec.GetField(field), buffer);
+			int field = cmp.KeyFields()[i];
+			GenerateFieldConditionStr((*TableSchema_)[field], rec.GetField(field), buffer);
 			buffer.append(TEXT(" AND "));
 		}
 
@@ -258,7 +271,7 @@ void CDBCommandBuilderBase::GenerateFieldAssignmentStr(const DBColumnSchema& col
 {
 	buffer.append(col.DBName);
 
-	if(col.DBType->IsNull(val))
+	if(col.DBType->IsNull(val.c_str()))
 	{
 		buffer.append(TEXT(" = null"));
 	}
@@ -267,15 +280,13 @@ void CDBCommandBuilderBase::GenerateFieldAssignmentStr(const DBColumnSchema& col
 		buffer.append(TEXT(" = "));
 		WrapperValue(val.c_str(), col.DBType, buffer);		
 	}
-
-	return 1;
 }
 
 void CDBCommandBuilderBase::GenerateFieldConditionStr(const DBColumnSchema& col,const tstring& val, tstring& buffer)
 {
 	buffer.append(col.DBName);
 
-	if(col.DBType->IsNull(val))
+	if(col.DBType->IsNull(val.c_str()))
 	{
 		buffer.append(TEXT(" IS null"));
 	}
@@ -284,6 +295,4 @@ void CDBCommandBuilderBase::GenerateFieldConditionStr(const DBColumnSchema& col,
 		buffer.append(TEXT(" = "));
 		WrapperValue(val.c_str(), col.DBType, buffer);		
 	}
-
-	return 1;
 }

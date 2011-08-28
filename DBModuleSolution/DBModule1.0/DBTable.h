@@ -3,6 +3,7 @@
 #include <set>
 #include <memory>
 #include "Enumerator.h"
+#include "DBRecord.h"
 #include "Comaprison.h"
 #include "mytype.h"
 #include "DBTableSchema.h"

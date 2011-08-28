@@ -26,8 +26,6 @@ namespace NSDBModule
 	protected:
 		const CDBModule& DBModule;
 	};
-
-	//enum EnumBuildInSchemaValidity
 }
 
 

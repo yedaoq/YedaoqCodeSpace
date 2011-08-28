@@ -16,6 +16,7 @@ int	CDBModule::Initialize()
 
 	}while(false);
 	
+	return 1;
 }
 
 int CDBModule::AttachToDatabase(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory)
@@ -46,41 +47,28 @@ int CDBModule::DetachFromDataBase()
 	DBAdapter_ = 0;
 	DBFactory_ = 0;
 	SchemaValidity_ = Unknow;
-}
 
-CDBModule::DBTableEnumerator CDBModule::EnumTable() const
-{
-	//return make_iterator_enumerator(Tables_.begin(), Tables_.end());
+	return 1;
 }
 
 int	CDBModule::Clear()
 {
-	DBTableCollection::iterator iter = Tables_.begin();
-	if(WithBuildinSchema())
-	{
-		while ( iter != Tables_.end())
-		{
-			if(!((DBTablePtr)(*iter))->GetSchema().IsBuildin())
-			{
-				break;
-			}
-		}
-	}
-	
-	Tables_.erase(iter, Tables_.end());
+	Tables().Clear();
+
+	return 1;
 }
 
 int	CDBModule::RefreshSchema()
 {
-	
+	return 0;
 }
 
 int	CDBModule::ClearData()
 {
-
+	return 0;
 }
 
 int	CDBModule::RefreshData()
 {
-
+	return 0;
 }

@@ -2,6 +2,7 @@
 #include "DBModule.h"
 #include "DBColumnSchema.h"
 #include "DBDataType.h"
+#include "DBTable.h"
 
 using namespace NSDBModule;
 
@@ -9,10 +10,10 @@ bool CDBSchemaValidater::Validate()
 {
 	bool bRet = true;
 
-	IEnumerator<CDBTable>& etor = DBModule.EnumTable();
+	DBTableEnumerator etor = DBModule.Tables().Enum();
 	while (etor.MoveNext())
 	{
-		if(ValidateTable(etor.Current().GetSchema()))
+		if(ValidateTable(etor.Current()->GetSchema()))
 		{
 			bRet = false;
 		}

@@ -6,6 +6,8 @@
 #include "DBTable.h"
 #include "DBColumnSchema.h"
 #include "mytype.h"
+#include "DBProvider.h"
+#include "DBDataType.h"
 
 using namespace NSDBModule;
 
@@ -38,8 +40,8 @@ bool CDBSchemaLoader::LoadAllTable()
 
 	DBModule->Tables().Clear();
 
-	DBTableEnumPtr etor = DBModule->DBAdapter()->EnumTable();
-	if(!etor.get())
+	IDBDataAdapter::DBTableEnumPtr etor = DBModule->DBAdapter()->EnumTable();
+	if(!etor)
 	{
 		return false;
 	}
@@ -77,8 +79,8 @@ bool CDBSchemaLoader::LoadTable(const tstring& dbName, const DBTablePtr& pTbl)
 	schema.Clear();
 	schema.DBName = dbName;
 
-	DBColumnEnumPtr etor = DBModule->DBAdapter()->EnumColumn(dbName);
-	if(!etor.get())
+	IDBDataAdapter::DBColumnEnumPtr etor = DBModule->DBAdapter()->EnumColumn(dbName);
+	if(!etor)
 	{
 		return false;
 	}

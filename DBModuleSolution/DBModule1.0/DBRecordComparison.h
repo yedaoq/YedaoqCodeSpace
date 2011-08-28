@@ -3,6 +3,7 @@
 #include "DBRecord.h"
 #include <vector>
 #include <stdarg.h>
+#include "Comaprison.h"
 
 namespace NSDBModule
 {
@@ -68,8 +69,10 @@ public:
 		return *this;
 	}
 
+	const std::vector<index_t> KeyFields() const { return KeyFields_; }
+
 protected:
-	std::vector<unsigned int> KeyFields_;
+	std::vector<index_t> KeyFields_;
 };
 
 class CDBRecordLessThan : public IBoolComparison<CDBRecordBase>

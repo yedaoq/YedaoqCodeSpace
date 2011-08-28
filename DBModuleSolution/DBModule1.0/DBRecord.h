@@ -4,26 +4,30 @@
 #include <vector>
 #include <crtdefs.h>
 
+#ifndef interface
+#define interface struct
+#endif
+
 namespace NSDBModule
 {
 
 interface IDBRecord
 {
-	virtual const tstring& GetField(unsigned int) const = 0;
-	virtual int SetField(unsigned int, const tstring& val) = 0;
-	virtual int GetFieldCount() const = 0;
+	virtual const tstring&	GetField(unsigned int) const = 0;
+	virtual int				SetField(unsigned int, const tstring& val) = 0;
+	virtual index_t			GetFieldCount() const = 0;
 };
 
 class CDBRecordBase : public IDBRecord
 {
 protected:
 	std::vector<tstring> Fields_;
-	int FieldCount_;
+	unsigned int FieldCount_;
 
 public:
 	CDBRecordBase() : Fields_(0), FieldCount_(0) {}
 
-	CDBRecordBase(int fieldCount) 
+	CDBRecordBase(index_t fieldCount) 
 		: Fields_(fieldCount), FieldCount_(fieldCount) { }
 
 	CDBRecordBase(const CDBRecordBase& other) 
@@ -36,9 +40,9 @@ public:
 		return *this;
 	}
 
-	virtual const tstring& GetField(unsigned int idx) const { return Fields_[idx];	}
-	virtual int SetField(unsigned int idx, const tstring& val) { Fields_[idx] = val; return 1; }
-	virtual int GetFieldCount() const { return FieldCount_; }
+	virtual const tstring&	GetField(index_t idx) const { return Fields_[idx];	}
+	virtual int				SetField(index_t idx, const tstring& val) { Fields_[idx] = val; return 1; }
+	virtual index_t			GetFieldCount() const { return FieldCount_; }
 };
 
 class CDBRecordAuto : public CDBRecordBase
@@ -68,7 +72,7 @@ public:
 		return *this;
 	}
 
-	virtual int GetFieldCount() { return FieldCount_; }
+	virtual index_t GetFieldCount() const { return FieldCount_; }
 
 	virtual int SetField(unsigned int idx, const tstring& val)
 	{
@@ -81,7 +85,7 @@ public:
 		return 1;
 	}
 
-	virtual const tstring& GetField(unsigned int idx)
+	virtual const tstring& GetField(unsigned int idx) const
 	{
 		static tstring empty;
 		if(idx >= FieldCount_)

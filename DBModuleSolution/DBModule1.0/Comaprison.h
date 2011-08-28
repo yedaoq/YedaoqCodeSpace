@@ -45,7 +45,7 @@ template<typename T, CINTCompareResultToBool::ConvertBoolFromInt ADAPTER>
 class CBoolComparisonAdapter4Int : public IBoolComparison<T>
 {
 public:
-	virtual bool operator()(const T& lhs, const T&rhs){ return ADAPTER(Comparison_(lhs, rhs)); }
+	virtual bool operator()(const T& lhs, const T&rhs) const { return ADAPTER(Comparison_(lhs, rhs)); }
 
 	CBoolComparisonAdapter4Int(IComparison& cmp)
 		: Comparison_(cmp)
@@ -73,7 +73,7 @@ public:
 		: Comaprison_(other.Comaprison_)
 	{}
 
-	virtual bool operator()(const T& lhs, const T&rhs)
+	virtual bool operator()(const T& lhs, const T&rhs) const
 	{
 		return Comaprison_(lhs, rhs) < 0;
 	}
@@ -96,7 +96,7 @@ public:
 		: Comaprison_(other.Comaprison_)
 	{}
 
-	virtual bool operator()(const T& lhs, const T&rhs)
+	virtual bool operator()(const T& lhs, const T&rhs) const
 	{
 		return Comaprison_(lhs, rhs) > 0;
 	}
@@ -118,7 +118,7 @@ public:
 		: Comaprison_(other.Comaprison_)
 	{}
 
-	virtual bool operator()(const T& lhs, const T&rhs)
+	virtual bool operator()(const T& lhs, const T&rhs) const
 	{
 		return Comaprison_(lhs, rhs) > 0;
 	}

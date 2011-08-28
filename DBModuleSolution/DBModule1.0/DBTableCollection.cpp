@@ -16,7 +16,7 @@ DBTablePtr_const CDBTableCollection::operator[](const tstring& tbl) const
 
 	for (DBTableCollection::const_iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
 	{
-		if(((DBTablePtr)(*iter))->GetName() == tbl)
+		if((*iter)->GetName() == tbl)
 		{
 			return (DBTablePtr)(*iter);
 		}
@@ -80,7 +80,7 @@ DBTablePtr CDBTableCollection::Remove(const tstring& name)
 	int idx = 0;
 	for (DBTableCollection::const_iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
 	{
-		if(((DBTablePtr)(*iter))->GetName() == name)
+		if((*iter)->GetName() == name)
 		{
 			return Remove(idx);
 		}
