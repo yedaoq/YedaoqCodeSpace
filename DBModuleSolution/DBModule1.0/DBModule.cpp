@@ -53,14 +53,27 @@ int CDBModule::DetachFromDataBase()
 
 int	CDBModule::Clear()
 {
-	Tables().Clear();
+	Tables().Clear(false);
 
 	return 1;
 }
 
 int	CDBModule::RefreshSchema()
 {
-	return 0;
+	Clear();
+
+	CDBSchemaLoader loader(this);
+	
+	if(loader.Load())
+	{
+		return -1;
+	}
+
+	CDBSchemaValidater validater(*this);
+
+	SchemaValidity_ = validater.Validate();
+
+	return 1;
 }
 
 int	CDBModule::ClearData()

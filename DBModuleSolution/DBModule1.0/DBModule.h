@@ -30,7 +30,7 @@ public:
 
 public:
 	CDBModule(void)
-		: DBAdapter_(0), DBFactory_(0), WithBuildinSchema_(false), Validater_(*this)
+		: DBAdapter_(0), DBFactory_(0), WithBuildinSchema_(false)
 	{}
 
 	// initialize for access	
@@ -48,7 +48,7 @@ public:
 	
 	// module state
 	virtual bool			BindingToAnyDataBase() const { return 0 != DBAdapter_; }	// whether the module has binding to any database
-	virtual EnumSchemaValidity SchemaValidity() const {return SchemaValidity_; }		// get the schema validation state
+	virtual bool			SchemaValidity() const {return SchemaValidity_; }		// get the schema validation state
 	virtual bool			Accessable() const {return BindingToAnyDataBase() && Valid == SchemaValidity(); /*&& Initialized()*/ }
 
 	// schema operation
@@ -66,11 +66,9 @@ protected:
 	IDBDataAdapter*			DBAdapter_;
 	IDBFactory*				DBFactory_;
 	bool					WithBuildinSchema_;
-				
-	EnumSchemaValidity		SchemaValidity_;
+	bool					SchemaValidity_;
 
 	CDBTableCollection		Tables_;
-	CDBSchemaValidater		Validater_;
 };
 
 }

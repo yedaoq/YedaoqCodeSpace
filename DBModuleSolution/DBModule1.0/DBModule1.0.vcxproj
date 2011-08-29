@@ -75,17 +75,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DBCommandBuilder.cpp" />
-    <ClCompile Include="DBDataAdapter.cpp" />
     <ClCompile Include="DBDataTypeProviderBase.cpp" />
     <ClCompile Include="DBModule.cpp" />
-    <ClCompile Include="DBNameMapping.cpp" />
-    <ClCompile Include="DBRecord.cpp" />
     <ClCompile Include="DBSchemaLoader.cpp" />
     <ClCompile Include="DBSchemaValidater.cpp" />
     <ClCompile Include="DBTable.cpp" />
     <ClCompile Include="DBTableCollection.cpp" />
     <ClCompile Include="DBTableSchema.cpp" />
-    <ClCompile Include="Enumerator.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
