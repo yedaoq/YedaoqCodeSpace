@@ -74,7 +74,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DBCommandBuilder.cpp" />
+    <ClCompile Include="DBCommandBuilderBase.cpp" />
     <ClCompile Include="DBDataTypeProviderBase.cpp" />
     <ClCompile Include="DBModule.cpp" />
     <ClCompile Include="DBSchemaLoader.cpp" />
@@ -88,9 +88,12 @@
     <ClInclude Include="Comaprison.h" />
     <ClInclude Include="DBColumnSchema.h" />
     <ClInclude Include="DBCommand.h" />
+    <ClInclude Include="DBCommandBase.h" />
     <ClInclude Include="DBCommandBuilder.h" />
+    <ClInclude Include="DBCommandBuilderBase.h" />
     <ClInclude Include="DBDataAdapter.h" />
     <ClInclude Include="DBDataType.h" />
+    <ClInclude Include="DBDataTypeCommon.h" />
     <ClInclude Include="DBDataTypeProviderBase.h" />
     <ClInclude Include="DBModule.h" />
     <ClInclude Include="DBNameMapping.h" />

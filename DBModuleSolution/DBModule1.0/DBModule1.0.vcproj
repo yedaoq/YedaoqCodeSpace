@@ -149,72 +149,14 @@
 	</References>
 	<Files>
 		<Filter
-			Name="源文件"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="资源文件"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-			<File
-				RelativePath=".\DBCommandBuilder.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBDataAdapter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBDataTypeProviderBase.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBModule.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBNameMapping.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBRecord.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBSchemaLoader.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBSchemaValidater.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBTable.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBTableCollection.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBTableSchema.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Enumerator.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\StringBuilder.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
-			Name="头文件"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			Name="DBInterface"
 			>
-			<File
-				RelativePath=".\DBColumnSchema.h"
-				>
-			</File>
 			<File
 				RelativePath=".\DBCommand.h"
 				>
@@ -232,19 +174,55 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DBDataTypeProviderBase.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DBModule.h"
-				>
-			</File>
-			<File
 				RelativePath=".\DBNameMapping.h"
 				>
 			</File>
 			<File
 				RelativePath=".\DBProvider.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="DBCommon"
+			>
+			<File
+				RelativePath=".\DBCommandBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBCommandBuilderBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DBCommandBuilderBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBDataTypeCommon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBDataTypeProviderBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DBDataTypeProviderBase.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Module"
+			>
+			<File
+				RelativePath=".\DBColumnSchema.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBModule.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DBModule.h"
 				>
 			</File>
 			<File
@@ -256,7 +234,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBSchemaLoader.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DBSchemaLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBSchemaValidater.cpp"
 				>
 			</File>
 			<File
@@ -264,7 +250,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBTable.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DBTable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBTableCollection.cpp"
 				>
 			</File>
 			<File
@@ -272,19 +266,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DBTableSchema.h"
+				RelativePath=".\DBTableSchema.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Enumerator.h"
+				RelativePath=".\DBTableSchema.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Util"
+			>
 			<File
 				RelativePath=".\mytype.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Singlton.h"
+				RelativePath=".\StringBuilder.cpp"
 				>
 			</File>
 			<File
@@ -293,9 +291,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="资源文件"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			Name="Sqlite"
 			>
 		</Filter>
 	</Files>

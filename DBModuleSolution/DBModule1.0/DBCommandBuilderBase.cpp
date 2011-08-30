@@ -191,9 +191,9 @@ int CDBCommandBuilderBase::WrapperValue(const tchar* val, IDBDataType const* typ
 	}
 	else
 	{
-		switch(type->Class())
+		switch(type->Category())
 		{
-		case EnumDBDataTypeClass::DBString:
+		case EnumDBDataTypeCategory::DBString:
 			{
 				buffer.append(TEXT("'"));
 
@@ -220,12 +220,12 @@ int CDBCommandBuilderBase::WrapperValue(const tchar* val, IDBDataType const* typ
 				buffer.append(TEXT("'"));
 			}
 			break;
-		case EnumDBDataTypeClass::DBValue:
+		case EnumDBDataTypeCategory::DBValue:
 			{
 				buffer.append(val);
 			}
 			break;
-		case EnumDBDataTypeClass::DBBlob:
+		case EnumDBDataTypeCategory::DBBlob:
 			throw std::exception();
 			break;
 		}
