@@ -2,6 +2,7 @@
 #include "DBDataAdapter.h"
 #include "Enumerator.h"
 #include "DBTable.h"
+#include "DBFactory.h"
 #include <algorithm>
 
 using namespace NSDBModule;

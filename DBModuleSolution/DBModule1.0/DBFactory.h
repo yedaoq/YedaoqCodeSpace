@@ -13,6 +13,7 @@ namespace NSDBModule
 
 	interface IDBFactory
 	{
+		~IDBFactory() = 0 {};
 		virtual IDBDataAdapter*			CreateDBAdapter();
 		virtual IDBCommand*				CreateDBCommand();
 		virtual IDBCommandBuilder*		CreateDBCommandBuilder();

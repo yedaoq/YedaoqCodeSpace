@@ -12,7 +12,7 @@ namespace NSDBModule
 
 	interface IDBDataType
 	{	
-		virtual ~IDBDataType() {};
+		virtual ~IDBDataType() = 0 {};
 
 		virtual EnumDBDataTypeCategory Category() const = 0;								// 
 		virtual const tstring&		ToString() const = 0;	// get the datatype str
