@@ -20,7 +20,7 @@ namespace NSDBModule
 
 	interface IDBCommandBuilder;
 
-	typedef std::set<CDBRecordBase, IBoolComparison<CDBRecordBase>&>	DBRecordSet;
+	typedef std::set<CDBRecordBase, CDBRecordLessThan&>				DBRecordSet;
 	typedef DBRecordSet::const_iterator								DBRecordIterator;
 	typedef std::tr1::shared_ptr<IEnumerator<CDBRecordBase>>		DBRecordEnumPtr;
 	typedef std::tr1::shared_ptr<IDBCommandBuilder>					DBCommandBuilderPtr;

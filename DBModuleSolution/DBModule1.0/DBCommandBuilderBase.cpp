@@ -220,7 +220,7 @@ int CDBCommandBuilderBase::WrapperValue(const tchar* val, IDBDataType const* typ
 				buffer.append(TEXT("'"));
 			}
 			break;
-		case EnumDBDataTypeCategory::DBValue:
+		case EnumDBDataTypeCategory::DBNumeric:
 			{
 				buffer.append(val);
 			}

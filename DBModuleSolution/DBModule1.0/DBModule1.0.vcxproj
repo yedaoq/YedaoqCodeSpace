@@ -75,6 +75,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DBCommandBuilderBase.cpp" />
+    <ClCompile Include="DBDataTypeParser.cpp" />
     <ClCompile Include="DBDataTypeProviderBase.cpp" />
     <ClCompile Include="DBModule.cpp" />
     <ClCompile Include="DBSchemaLoader.cpp" />
@@ -82,6 +83,10 @@
     <ClCompile Include="DBTable.cpp" />
     <ClCompile Include="DBTableCollection.cpp" />
     <ClCompile Include="DBTableSchema.cpp" />
+    <ClCompile Include="SqlConstituentWrapper.cpp" />
+    <ClCompile Include="Sqlite\SqliteDataAdapter.cpp" />
+    <ClCompile Include="Sqlite\SqliteDataTypeProvider.cpp" />
+    <ClCompile Include="Sqlite\SqliteProvider.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +99,7 @@
     <ClInclude Include="DBDataAdapter.h" />
     <ClInclude Include="DBDataType.h" />
     <ClInclude Include="DBDataTypeCommon.h" />
+    <ClInclude Include="DBDataTypeParser.h" />
     <ClInclude Include="DBDataTypeProviderBase.h" />
     <ClInclude Include="DBModule.h" />
     <ClInclude Include="DBNameMapping.h" />
@@ -106,6 +112,10 @@
     <ClInclude Include="DBTableCollection.h" />
     <ClInclude Include="DBTableSchema.h" />
     <ClInclude Include="mytype.h" />
+    <ClInclude Include="SqlConstituentWrapper.h" />
+    <ClInclude Include="Sqlite\SqliteDataAdapter.h" />
+    <ClInclude Include="Sqlite\SqliteDataTypeProvider.h" />
+    <ClInclude Include="Sqlite\SqliteProvider.h" />
     <ClInclude Include="StringBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

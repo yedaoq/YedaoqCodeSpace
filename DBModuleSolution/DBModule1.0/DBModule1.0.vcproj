@@ -202,11 +202,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBDataTypeParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DBDataTypeParser.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DBDataTypeProviderBase.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\DBDataTypeProviderBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SqlConstituentWrapper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SqlConstituentWrapper.h"
 				>
 			</File>
 		</Filter>
@@ -293,6 +309,14 @@
 		<Filter
 			Name="Sqlite"
 			>
+			<File
+				RelativePath=".\Sqlite\SqliteDataAdapter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sqlite\SqliteDataAdapter.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
