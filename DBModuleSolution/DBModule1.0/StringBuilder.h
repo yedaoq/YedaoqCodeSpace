@@ -5,9 +5,8 @@
 class CStringBuilder
 {
 public:
-	bool Append(const tstring& str);
-	//bool Append(LPCTSTR str, int num = 1);
-	//bool AppendFormat(LPCTSTR fmt, ...);
+	bool Append(const tchar* str);
+	bool Append(const tchar* format, ...);
 	bool Append(char val, int num = 1);
 	bool Append(int val, int num = 1);
 	bool Append(long val, int num = 1);
@@ -31,6 +30,6 @@ public:
 	tstring ToString();
 
 protected:
-
+	tstring Story;
 };
 

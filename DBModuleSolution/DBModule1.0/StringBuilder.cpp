@@ -1,22 +1,28 @@
 #include "StringBuilder.h"
+#include <crtdefs.h>
 
-bool CStringBuilder::Append(const tstring& str)
+bool CStringBuilder::Append(const tchar* str)
 {
-	return false;
+	Story.append(str);
+	return true;
 }
 
-//bool CStringBuilder::Append(LPCTSTR str, int num)
-//{
-//
-//}
+bool CStringBuilder::Append(const tchar* format, ...)
+{
+	va_list args(format);
+
+	return true;
+}
 
 bool CStringBuilder::Append(char val, int num)
 {
+	Story.append(num, val);
 	return false;
 }
 
 bool CStringBuilder::Append(int val, int num)
 {
+	Story.append()
 	return false;
 }
 

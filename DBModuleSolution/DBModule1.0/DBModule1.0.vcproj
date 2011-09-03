@@ -40,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="D:\boost_1_46_1"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -174,11 +175,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DBNameMapping.h"
+				RelativePath=".\DBFactory.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DBProvider.h"
+				RelativePath=".\DBNameMapping.h"
 				>
 			</File>
 		</Filter>
@@ -294,6 +295,14 @@
 			Name="Util"
 			>
 			<File
+				RelativePath=".\Enumerator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Enumerator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\mytype.h"
 				>
 			</File>
@@ -310,11 +319,39 @@
 			Name="Sqlite"
 			>
 			<File
+				RelativePath=".\Sqlite\CppSQLite3U.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sqlite\CppSQLite3U.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sqlite\I_DBControl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sqlite\SqliteDataAdapter.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Sqlite\SqliteDataAdapter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sqlite\SqliteDataTypeProvider.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sqlite\SqliteDataTypeProvider.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sqlite\SqliteFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sqlite\SqliteFactory.h"
 				>
 			</File>
 		</Filter>

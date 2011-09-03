@@ -8,7 +8,7 @@
 
 namespace NSDBModule
 {
-	enum EnumDBDataTypeCategory { DBNumeric, DBString, DBBlob };
+	enum EnumDBDataTypeCategory { DBNumeric, DBString, DBBlob, Unknow };
 
 	interface IDBDataType
 	{	

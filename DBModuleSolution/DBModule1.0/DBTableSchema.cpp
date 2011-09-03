@@ -73,26 +73,32 @@ const DBColumnSchema& CDBTableSchema::operator[](index_t col) const
 	throw std::out_of_range("");
 }
 
-void CDBTableSchema::Clear()
+void CDBTableSchema::Clear(bool bBuildIn)
 {
 	DBName.clear();
 	SetFlag(DBExist, false);
 
-	// remove all not buildin column
-	Columns.erase
-		(
+	if(bBuildIn)
+	{
+		Columns.clear();
+	}
+	{
+		// remove all not buildin column
+		Columns.erase
+			(
 			std::remove_if
 			(
-				Columns.begin(), Columns.end(), 
-				std::not1(std::mem_fun_ref(&(DBColumnSchema::IsBuildin)))
+			Columns.begin(), Columns.end(), 
+			std::not1(std::mem_fun_ref(&(DBColumnSchema::IsBuildin)))
 			),
 			Columns.end()
-		);
+			);
 
-	// reset flag of all column
-	for(ColumnCollection::iterator iter = Columns.begin(); iter != Columns.end(); ++iter)
-	{
-		iter->ResetExternInfo();
-		//iter
+		// reset flag of all column
+		for(ColumnCollection::iterator iter = Columns.begin(); iter != Columns.end(); ++iter)
+		{
+			iter->ResetExternInfo();
+		}
 	}
+	
 }

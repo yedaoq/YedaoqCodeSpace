@@ -84,7 +84,7 @@ namespace NSDBModule
 			}
 		}
 
-		void Clear();
+		void Clear(bool bBuildIn = false);
 		bool Load(IDBDataAdapter* dbAdapter);
 	};
 }

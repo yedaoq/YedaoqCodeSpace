@@ -106,6 +106,8 @@
     <ClInclude Include="DBFactory.h" />
     <ClInclude Include="DBRecord.h" />
     <ClInclude Include="DBRecordComparison.h" />
+    <ClInclude Include="DBSchemaCppMicro.h" />
+    <ClInclude Include="DBSchemaHeaderMicro.h" />
     <ClInclude Include="DBSchemaLoader.h" />
     <ClInclude Include="DBSchemaValidater.h" />
     <ClInclude Include="DBTable.h" />
