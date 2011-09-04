@@ -1,5 +1,6 @@
 #include "StringBuilder.h"
 #include <crtdefs.h>
+//#include <wchar.h>
 
 bool CStringBuilder::Append(const tchar* str)
 {
@@ -9,7 +10,7 @@ bool CStringBuilder::Append(const tchar* str)
 
 bool CStringBuilder::Append(const tchar* format, ...)
 {
-	va_list args(format);
+	//va_list args(format);
 
 	return true;
 }
@@ -22,7 +23,7 @@ bool CStringBuilder::Append(char val, int num)
 
 bool CStringBuilder::Append(int val, int num)
 {
-	Story.append()
+	//Story.append()
 	return false;
 }
 

@@ -6,6 +6,7 @@
 #include "DBRecord.h"
 #include "DBDataType.h"
 #include "DBRecordComparison.h"
+#include "DBCommandBase.h"
 
 using namespace NSDBModule;
 

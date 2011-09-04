@@ -1,4 +1,5 @@
 #include "SqliteDataTypeProvider.h"
+#include "..\DBDataTypeCommon.h"
 
 using namespace NSDBModule;
 

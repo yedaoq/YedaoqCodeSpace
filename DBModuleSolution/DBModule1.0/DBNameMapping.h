@@ -20,7 +20,7 @@ namespace NSDBModule
 
 	interface IDBNameMapping
 	{
-		~IDBNameMapping() = 0 {}
+		virtual ~IDBNameMapping() = 0 {}
 
 		virtual tstring FromDBName(const tstring& dbName, const ContextDBNameMapping& context);
 		virtual tstring ToDBName(const tstring& name, const ContextDBNameMapping& context);

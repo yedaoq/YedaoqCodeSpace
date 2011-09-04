@@ -84,6 +84,7 @@
     <ClCompile Include="DBTableCollection.cpp" />
     <ClCompile Include="DBTableSchema.cpp" />
     <ClCompile Include="SqlConstituentWrapper.cpp" />
+    <ClCompile Include="Sqlite\CppSQLite3U.cpp" />
     <ClCompile Include="Sqlite\SqliteDataAdapter.cpp" />
     <ClCompile Include="Sqlite\SqliteDataTypeProvider.cpp" />
     <ClCompile Include="Sqlite\SqliteFactory.cpp" />
@@ -115,6 +116,9 @@
     <ClInclude Include="DBTableSchema.h" />
     <ClInclude Include="mytype.h" />
     <ClInclude Include="SqlConstituentWrapper.h" />
+    <ClInclude Include="Sqlite\CppSQLite3U.h" />
+    <ClInclude Include="Sqlite\I_DBControl.h" />
+    <ClInclude Include="Sqlite\sqlite3.h" />
     <ClInclude Include="Sqlite\SqliteDataAdapter.h" />
     <ClInclude Include="Sqlite\SqliteDataTypeProvider.h" />
     <ClInclude Include="Sqlite\SqliteFactory.h" />

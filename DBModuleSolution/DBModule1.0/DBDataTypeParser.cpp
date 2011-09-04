@@ -28,7 +28,7 @@ IDBDataType* CDBDataTypeStringParser::Parse(const tstring& type)
 	if(std::tr1::regex_match(type, match, reg))
 	{
 		tstring name = match[0].str();
-		index_t len = match[1].str();
+		index_t len =  match[1].str(); 
 		bool	bUnicode = (name[0] == 'n');
 		bool	bFixedWidth = (name.substr(bUnicode? 1 : 0, 3) == TEXT("var"));
 		return new CDBDataTypeString(len, bFixedWidth, bUnicode);

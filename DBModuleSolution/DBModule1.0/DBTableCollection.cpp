@@ -18,11 +18,11 @@ DBTablePtr_const CDBTableCollection::operator[](const tstring& tbl) const
 	{
 		if((*iter)->GetName() == tbl)
 		{
-			return DBTablePtr_const(*iter);
+			return DBTablePtr(*iter);
 		}
 	}
 
-	return DBTablePtr_const(0);
+	return DBTablePtr(0);
 }
 
 DBTablePtr_const CDBTableCollection::operator[](index_t tbl) const

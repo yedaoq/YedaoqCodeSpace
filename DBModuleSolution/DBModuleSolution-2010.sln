@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBModule1.0", "DBModule1.0\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBSchemaMaintainer", "DBSchemaMaintainer\DBSchemaMaintainer.vcxproj", "{BD54E175-D37D-4637-BD85-FD46354B29E0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PPSGridCtrl", "PPSGridCtrl\PPSGridCtrl.vcxproj", "{E024DD40-C04B-498F-8222-9DD2F5611113}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{BD54E175-D37D-4637-BD85-FD46354B29E0}.Debug|Win32.Build.0 = Debug|Win32
 		{BD54E175-D37D-4637-BD85-FD46354B29E0}.Release|Win32.ActiveCfg = Release|Win32
 		{BD54E175-D37D-4637-BD85-FD46354B29E0}.Release|Win32.Build.0 = Release|Win32
+		{E024DD40-C04B-498F-8222-9DD2F5611113}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E024DD40-C04B-498F-8222-9DD2F5611113}.Debug|Win32.Build.0 = Debug|Win32
+		{E024DD40-C04B-498F-8222-9DD2F5611113}.Release|Win32.ActiveCfg = Release|Win32
+		{E024DD40-C04B-498F-8222-9DD2F5611113}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,7 +6,7 @@
 #include "DBTable.h"
 #include "DBColumnSchema.h"
 #include "mytype.h"
-#include "DBProvider.h"
+#include "DBFactory.h"
 #include "DBDataType.h"
 
 using namespace NSDBModule;

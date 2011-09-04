@@ -36,7 +36,7 @@ CDBTable::CDBTable(const CDBTable& other)
 
 int CDBTable::Initialize()
 {
-	
+	return 0;
 }
 
 CDBTableSchema::ColumnEnumerator CDBTable::EnumColumn() const

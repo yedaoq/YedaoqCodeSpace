@@ -124,7 +124,7 @@ namespace NSDBModule
 	class CDBDataTypeDecimal : public CDBDataTypeBase
 	{
 	public:
-		CDBDataTypeString(int len, int precision)
+		CDBDataTypeDecimal(int len, int precision)
 			: Category_(EnumDBDataTypeCategory::DBString), CompatibleCPPTypes_(5),
 			Length_(len), Precision_(precision)
 		{

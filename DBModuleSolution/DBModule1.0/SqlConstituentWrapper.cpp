@@ -2,7 +2,7 @@
 
 bool CSqlConstituentWrapper::WrapValue4DBInteger(const tchar* val, tstring& buf)
 {
-	if(val.empty())
+	if(!val || _tcslen(val) <= 0)
 	{
 		buf.append(TEXT("null"));
 	}
@@ -15,7 +15,7 @@ bool CSqlConstituentWrapper::WrapValue4DBInteger(const tchar* val, tstring& buf)
 
 bool CSqlConstituentWrapper::WrapValue4DBFloat(const tchar* val, tstring& buf)
 {
-	if(val.empty())
+	if(!val || _tcslen(val) <= 0)
 	{
 		buf.append(TEXT("null"));
 	}
@@ -28,7 +28,7 @@ bool CSqlConstituentWrapper::WrapValue4DBFloat(const tchar* val, tstring& buf)
 
 bool CSqlConstituentWrapper::WrapValue4DBDouble(const tchar* val, tstring& buf)
 {
-	if(val.empty())
+	if(!val || _tcslen(val) <= 0)
 	{
 		buf.append(TEXT("null"));
 	}
@@ -41,7 +41,7 @@ bool CSqlConstituentWrapper::WrapValue4DBDouble(const tchar* val, tstring& buf)
 
 bool CSqlConstituentWrapper::WrapValue4DBDecimal(const tchar* val, int length, int precision, tstring& buf)
 {
-	if(val.empty())
+	if(!val || _tcslen(val) <= 0)
 	{
 		buf.append(TEXT("null"));
 	}
@@ -55,7 +55,7 @@ bool CSqlConstituentWrapper::WrapValue4DBDecimal(const tchar* val, int length, i
 
 bool CSqlConstituentWrapper::WrapValue4DBString(const tchar* val, int length, tstring& buf)
 {
-	buf.reserve(buf.length() + val.length() + 10);
+	buf.reserve(buf.length() + _tcslen(val) + 10);
 	buf.append(TEXT("'"));
 
 	// convert '\'' to "''"
