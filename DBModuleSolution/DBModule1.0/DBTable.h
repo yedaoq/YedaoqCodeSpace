@@ -11,7 +11,7 @@
 
 namespace NSDBModule
 {
-	class CDBRecordBase;
+	class IDBRecord;
 	class CDBTableSchema;
 	class CDBRecordComparison;
 	class CDBRecordLessThan;
@@ -20,11 +20,11 @@ namespace NSDBModule
 
 	interface IDBCommandBuilder;
 
-	typedef std::set<CDBRecordBase, CDBRecordLessThan&>				DBRecordSet;
-	typedef DBRecordSet::const_iterator								DBRecordIterator;
-	typedef std::tr1::shared_ptr<IEnumerator<CDBRecordBase>>		DBRecordEnumPtr;
-	typedef std::tr1::shared_ptr<IDBCommandBuilder>					DBCommandBuilderPtr;
-	typedef CIteratorEnumerator<DBRecordSet::const_iterator>		DBRecordEnumerator;
+	typedef std::set<IDBRecord, CDBRecordLessThan>				DBRecordSet;
+	typedef DBRecordSet::const_iterator							DBRecordIterator;
+	typedef std::tr1::shared_ptr<IEnumerator<IDBRecord>>		DBRecordEnumPtr;
+	typedef std::tr1::shared_ptr<IDBCommandBuilder>				DBCommandBuilderPtr;
+	typedef CIteratorEnumerator<DBRecordSet::const_iterator>	DBRecordEnumerator;
 
 	class CDBTable
 	{
@@ -54,13 +54,13 @@ namespace NSDBModule
 		bool							DataDirty() const { return FlagDirty_; }
 		bool							Invalidate() { FlagDirty_ = true; }
 
-		int								Find(CDBRecordBase& rec) /*const*/;
-		int								Find(CDBRecordBase& rec, const CDBRecordComparison& cmp) /*const*/;
-		DBRecordEnumerator				FindAll(const CDBRecordBase& rec, const CDBRecordComparison& cmp) /*const*/;
+		int								Find(IDBRecord& rec) /*const*/;
+		int								Find(IDBRecord& rec, const CDBRecordComparison& cmp) /*const*/;
+		DBRecordEnumerator				FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp) /*const*/;
 	
-		int								Update(const CDBRecordBase& cur, const CDBRecordBase& ori);
-		int								Insert(const CDBRecordBase& rec);
-		int								Delete(const CDBRecordBase& rec);
+		int								Update(const IDBRecord& cur, const IDBRecord& ori);
+		int								Insert(const IDBRecord& rec);
+		int								Delete(const IDBRecord& rec);
 
 	protected:
 		CDBTable& operator=(const CDBTable&);

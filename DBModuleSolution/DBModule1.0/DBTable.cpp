@@ -85,7 +85,7 @@ int	CDBTable::LoadData()
 	return 0;
 }
 
-int	CDBTable::Find(CDBRecordBase& rec) /*const*/
+int	CDBTable::Find(IDBRecord& rec) /*const*/
 {
 	if(!FlagLoaded_)
 	{
@@ -102,7 +102,7 @@ int	CDBTable::Find(CDBRecordBase& rec) /*const*/
 	return 0;
 }
 
-int	CDBTable::Find(CDBRecordBase& rec, const CDBRecordComparison& cmp)
+int	CDBTable::Find(IDBRecord& rec, const CDBRecordComparison& cmp)
 {
 	if(!FlagLoaded_)
 	{
@@ -120,7 +120,7 @@ int	CDBTable::Find(CDBRecordBase& rec, const CDBRecordComparison& cmp)
 	return 0;
 }
 
-DBRecordEnumerator CDBTable::FindAll(const CDBRecordBase& rec, const CDBRecordComparison& cmp) /*const*/
+DBRecordEnumerator CDBTable::FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp) /*const*/
 {
 	if(!FlagLoaded_)
 	{
@@ -130,7 +130,7 @@ DBRecordEnumerator CDBTable::FindAll(const CDBRecordBase& rec, const CDBRecordCo
 	//return make_iterator_enumerator();
 }
 
-int	CDBTable::Update(const CDBRecordBase& cur, const CDBRecordBase& ori)
+int	CDBTable::Update(const IDBRecord& cur, const IDBRecord& ori)
 {
 	DBPREPARE;
 
@@ -167,7 +167,7 @@ int	CDBTable::Update(const CDBRecordBase& cur, const CDBRecordBase& ori)
 	return 1;
 }
 
-int	CDBTable::Insert(const CDBRecordBase& rec)
+int	CDBTable::Insert(const IDBRecord& rec)
 {
 	DBPREPARE;
 
@@ -194,7 +194,7 @@ int	CDBTable::Insert(const CDBRecordBase& rec)
 	return 1;
 }
 
-int	CDBTable::Delete(const CDBRecordBase& rec)
+int	CDBTable::Delete(const IDBRecord& rec)
 {
 	DBPREPARE;
 

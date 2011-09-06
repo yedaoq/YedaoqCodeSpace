@@ -59,7 +59,7 @@ int CDBCommandBuilderBase::GenerateDBCommand(IDBCommand** cmd, EnumDBCommandType
 	return 1;
 }
 
-int CDBCommandBuilderBase::GetCmdSelect(const CDBRecordBase& rec, const CDBRecordComparison& cmp, IDBCommand** cmd)
+int CDBCommandBuilderBase::GetCmdSelect(const IDBRecord& rec, const CDBRecordComparison& cmp, IDBCommand** cmd)
 {
 	tstring strSql;
 	GenerateSqlSelect(rec, cmp, strSql);
@@ -75,7 +75,7 @@ int CDBCommandBuilderBase::GetCmdSelect(IDBCommand** cmd)
 	return 1;
 }
 
-int CDBCommandBuilderBase::GetCmdInsert(const CDBRecordBase& rec, IDBCommand** cmd)
+int CDBCommandBuilderBase::GetCmdInsert(const IDBRecord& rec, IDBCommand** cmd)
 {
 	tstring strSql;
 	GenerateSqlInsert(rec, strSql);
@@ -83,7 +83,7 @@ int CDBCommandBuilderBase::GetCmdInsert(const CDBRecordBase& rec, IDBCommand** c
 	return 1;
 }
 
-int CDBCommandBuilderBase::GetCmdDelete(const CDBRecordBase& rec, const CDBRecordComparison& cmp, IDBCommand** cmd)
+int CDBCommandBuilderBase::GetCmdDelete(const IDBRecord& rec, const CDBRecordComparison& cmp, IDBCommand** cmd)
 {
 	tstring strSql;
 	GenerateSqlDelete(rec, cmp, strSql);
@@ -91,7 +91,7 @@ int CDBCommandBuilderBase::GetCmdDelete(const CDBRecordBase& rec, const CDBRecor
 	return 1;
 }
 
-int CDBCommandBuilderBase::GetCmdUpdate(const CDBRecordBase& ori, const CDBRecordBase& cur, const CDBRecordComparison& cmp, IDBCommand** cmd)
+int CDBCommandBuilderBase::GetCmdUpdate(const IDBRecord& ori, const IDBRecord& cur, const CDBRecordComparison& cmp, IDBCommand** cmd)
 {
 	tstring strSql;
 	GenerateSqlUpdate(ori, cur, cmp, strSql);
@@ -107,7 +107,7 @@ int CDBCommandBuilderBase::GetCmdCreate(IDBCommand** cmd)
 	return 1;
 }
 
-int CDBCommandBuilderBase::GenerateSqlSelect(const CDBRecordBase& rec , const CDBRecordComparison& cmp, tstring& buffer)
+int CDBCommandBuilderBase::GenerateSqlSelect(const IDBRecord& rec , const CDBRecordComparison& cmp, tstring& buffer)
 {
 	buffer.append(TEXT("SELECT * FROM "));
 	WrapperIdentifier(TableSchema_->DBName.c_str(), buffer);
@@ -124,7 +124,7 @@ int CDBCommandBuilderBase::GenerateSqlSelect(tstring& buffer)
 	return 1;
 }
 
-int CDBCommandBuilderBase::GenerateSqlInsert(const CDBRecordBase& rec, tstring& buffer)
+int CDBCommandBuilderBase::GenerateSqlInsert(const IDBRecord& rec, tstring& buffer)
 {
 	buffer.append(TEXT("INSERT INTO "));
 	WrapperIdentifier(TableSchema_->DBName.c_str(), buffer);
@@ -151,7 +151,7 @@ int CDBCommandBuilderBase::GenerateSqlInsert(const CDBRecordBase& rec, tstring& 
 	return 1;
 }
 
-int CDBCommandBuilderBase::GenerateSqlDelete(const CDBRecordBase& rec, const CDBRecordComparison& cmp, tstring& buffer)
+int CDBCommandBuilderBase::GenerateSqlDelete(const IDBRecord& rec, const CDBRecordComparison& cmp, tstring& buffer)
 {
 	buffer.append(TEXT("DELETE FROM "));
 	WrapperIdentifier(TableSchema_->DBName.c_str(), buffer);
@@ -160,7 +160,7 @@ int CDBCommandBuilderBase::GenerateSqlDelete(const CDBRecordBase& rec, const CDB
 	return 1;
 }
 
-int CDBCommandBuilderBase::GenerateSqlUpdate(const CDBRecordBase& ori, const CDBRecordBase& cur, const CDBRecordComparison& cmp, tstring& buffer)
+int CDBCommandBuilderBase::GenerateSqlUpdate(const IDBRecord& ori, const IDBRecord& cur, const CDBRecordComparison& cmp, tstring& buffer)
 {
 	buffer.append(TEXT("UPDATE "));
 	WrapperIdentifier(TableSchema_->DBName.c_str(), buffer);
@@ -251,7 +251,7 @@ int CDBCommandBuilderBase::WrapperIdentifier(const tchar* val, tstring& buffer)
 	return 1;
 }
 
-void CDBCommandBuilderBase::GenerateConditionStr(const CDBRecordBase& rec, const CDBRecordComparison& cmp, tstring& buffer)
+void CDBCommandBuilderBase::GenerateConditionStr(const IDBRecord& rec, const CDBRecordComparison& cmp, tstring& buffer)
 {
 	if(cmp.KeyFields().size() > 0)
 	{

@@ -2,7 +2,7 @@
 
 using namespace NSDBModule;
 
-IDBDataType* CDBDataTypeProvider::ParseDBTypeStr(const tstring& type)
+const IDBDataType* CDBDataTypeProvider::ParseDBTypeStr(const tstring& type)
 {
 	for(DBDataTypeVct::iterator iter = DataTypes.begin(); iter != DataTypes.end(); ++iter)
 	{
@@ -17,7 +17,7 @@ IDBDataType* CDBDataTypeProvider::ParseDBTypeStr(const tstring& type)
 		IDBDataType* dbType = 0;
 		if(dbType = (*iter)->Parse(type))
 		{
-			RegisterDataType(*dbType);
+			RegisterDataType(dbType);
 			return dbType;
 		}
 	}
@@ -25,7 +25,7 @@ IDBDataType* CDBDataTypeProvider::ParseDBTypeStr(const tstring& type)
 	return 0;
 }
 
-IDBDataType* CDBDataTypeProvider::GetPreferredDBType(EnumCppDataType type)
+const IDBDataType* CDBDataTypeProvider::GetPreferredDBType(EnumCppDataType type)
 {
 	for(DBDataTypeVct::iterator iter = DataTypes.begin(); iter != DataTypes.end(); ++iter)
 	{
@@ -51,16 +51,16 @@ IDBDataTypeProvider::DBDataTypeEnumPtr CDBDataTypeProvider::GetEnumerator()
 	return DBDataTypeEnumPtr(new_iterator_enumerator(DataTypes.begin(), DataTypes.end()));
 }
 
-int	CDBDataTypeProvider::RegisterDataType(const IDBDataType& type)
+int	CDBDataTypeProvider::RegisterDataType(const IDBDataType* type)
 {
 	//DataTypes.push_back(static_cast<IDBDataType*>(type.Clone()));
-	DataTypes.push_back(&type);
+	DataTypes.push_back(type);
 	return 1;
 }
 
-int	CDBDataTypeProvider::RegisterParser(IDBDataTypeParser& parser)
+int	CDBDataTypeProvider::RegisterParser(const IDBDataTypeParser* parser)
 {
-	Parsers.push_back(&parser);
+	Parsers.push_back(parser);
 	return 1;
 }
 

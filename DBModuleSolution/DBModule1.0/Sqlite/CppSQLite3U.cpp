@@ -47,7 +47,10 @@
 
 //#include "stdafx.h"
 #include "CppSQLite3U.h"
-#include "format.hpp"
+#include "boost\format.hpp"
+#include "..\mytype.h"
+
+typedef boost::basic_format<tchar> tformat;
 
 /////////////////////////////////////////////////////////////////////////////
 // CppSQLite3Exception
@@ -59,10 +62,13 @@ CppSQLite3Exception::CppSQLite3Exception(const int nErrCode,
 {
 	int nLen = szErrMess ? _tcslen(szErrMess)+50 : 50;
 	mpszErrMess=new tchar[ nLen ];
-	_stprintf_s(mpszErrMess, nLen, TEXT("%s[%d]: %s"),
-								errorCodeAsString(nErrCode),
-								nErrCode,
-								szErrMess ? szErrMess : TEXT(""));
+
+	tstring errMess = (tformat(TEXT("%s[%d]: %s"))
+		%errorCodeAsString(nErrCode)
+		%nErrCode
+		%(szErrMess ? szErrMess : TEXT(""))).str();
+
+	errMess.copy(mpszErrMess, errMess.length());
 
 	if (bDeleteMsg && szErrMess)
 	{
@@ -79,7 +85,7 @@ CppSQLite3Exception::CppSQLite3Exception(const CppSQLite3Exception&  e) :
 	{
 		int nLen = _tcslen(e.mpszErrMess)+10;
 		mpszErrMess=new tchar[nLen];
-		_stprintf_s(mpszErrMess, nLen, TEXT("%s"), e.mpszErrMess);
+		_tcscpy(mpszErrMess, e.mpszErrMess);
 	}
 }
 
@@ -263,17 +269,22 @@ CppSQLite3Statement CppSQLite3DB::compileStatement(tchar const * szSQL)
 
 bool CppSQLite3DB::tableExists(tchar const * szTable)
 {
-	tchar szSQL[128];
-	_stprintf_s(szSQL, 128, TEXT("select count(*) from sqlite_master where type='table' and name='%s'"),	szTable);
-	int nRet = execScalar(szSQL);
+	//tchar szSQL[128];
+	//_stprintf_s(szSQL, 128, TEXT("select count(*) from sqlite_master where type='table' and name='%s'"), szTable);
+
+	tstring strSql = (tformat(TEXT("select count(*) from sqlite_master where type='table' and name='%s'"))%szTable).str();
+	int nRet = execScalar(strSql.c_str());
 	return (nRet > 0);
 }
 
 int CppSQLite3DB::execDMLV(tchar const * szFormat, ...)
 {
-	tstring strSQL;
+	tchar buf[];
+
 	va_list args;
 	va_start(args, szFormat);
+
+	vstprintf_s(
 	strSQL.FormatV(szFormat, args);	
 	va_end(args);
 
@@ -416,7 +427,7 @@ int CppSQLite3DB::execScalar(tchar const * szSQL)
 	if (q.eof() || q.numFields() < 1)
 		throw CppSQLite3Exception(CPPSQLITE_ERROR, TEXT("Invalid scalar query"),	DONT_DELETE_MSG);
 
-	return _tstoi(q.fieldValue(0));
+	return boost::lexical_cast<int>(q.fieldValue(0));
 }
 
 // Added By Begemot, exact as execScalar but return CString  08/06/06 16:30:37
@@ -427,7 +438,7 @@ tstring CppSQLite3DB::execScalarStr(tchar const * szSQL)
 	if (q.eof() || q.numFields() < 1)
 		throw CppSQLite3Exception(CPPSQLITE_ERROR, TEXT("Invalid scalar query"),	DONT_DELETE_MSG);
 	
-	return (tstring)q.getStringField(0);
+	return tstring(q.getStringField(0));
 }
 
 sqlite_int64 CppSQLite3DB::lastRowId()
@@ -929,7 +940,7 @@ tstring DoubleQuotes(tstring in)
 bool CppSQLite3DB::columnExists(tchar const * szTable, tchar const * szColumn)
 {
 	tstring strColumn(szColumn);
-	tstring strSQL = std::tr1::format("select * from %s") % szTable;
+	tstring strSQL = boost::format("select * from %s") % szTable;
 	//strSQL.Format(TEXT("select * from %s"), szTable);
 	CppSQLite3Query q = execQuery(strSQL);
 	if(q.eof())

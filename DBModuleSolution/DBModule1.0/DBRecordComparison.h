@@ -8,11 +8,11 @@
 namespace NSDBModule
 {
 
-class CDBRecordComparison : public IComparison<CDBRecordBase>
+class CDBRecordComparison : public IComparison<IDBRecord>
 {
 public:
 
-	int operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs) const
+	int operator()(const IDBRecord& lhs, const IDBRecord& rhs) const
 	{
 		if(lhs.GetFieldCount() != rhs.GetFieldCount())
 		{
@@ -75,67 +75,76 @@ protected:
 	std::vector<index_t> KeyFields_;
 };
 
-class CDBRecordLessThan : public IBoolComparison<CDBRecordBase>
+class CDBRecordLessThan : public IBoolComparison<IDBRecord>
 {
 public:
-	bool operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs) const
+	bool operator()(const IDBRecord& lhs, const IDBRecord& rhs) const
 	{
-		return Comparison_(lhs, rhs) < 0;
+		return Comparison(lhs, rhs) < 0;
 	}
 
-	CDBRecordLessThan(){}
+	//CDBRecordLessThan(){}
 
 	CDBRecordLessThan(const CDBRecordComparison& cmp)
-		: Comparison_(cmp)
+		: Comparison(cmp)
 	{}
 
 	CDBRecordLessThan(const CDBRecordLessThan& other)
-		: Comparison_(other.Comparison_)
+		: Comparison(other.Comparison)
 	{}
 
-	CDBRecordComparison Comparison_;
+	const CDBRecordComparison& Comparison;
+
+protected:
+	CDBRecordLessThan& operator=(const CDBRecordLessThan&);
 };
 
-class CDBRecordGreaterThan : public IBoolComparison<CDBRecordBase>
+class CDBRecordGreaterThan : public IBoolComparison<IDBRecord>
 {
 public:
-	bool operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
+	bool operator()(const IDBRecord& lhs, const IDBRecord& rhs)
 	{
-		return Comparison_(lhs, rhs) > 0;
+		return Comparison(lhs, rhs) > 0;
 	}
 
-	CDBRecordGreaterThan(){}
+	//CDBRecordGreaterThan(){}
 
 	CDBRecordGreaterThan(const CDBRecordComparison& cmp)
-		: Comparison_(cmp)
+		: Comparison(cmp)
 	{}
 
 	CDBRecordGreaterThan(const CDBRecordGreaterThan& other)
-		: Comparison_(other.Comparison_)
+		: Comparison(other.Comparison)
 	{}
 
-	CDBRecordComparison Comparison_;
+	const CDBRecordComparison& Comparison;
+
+protected:
+	CDBRecordGreaterThan& operator=(const CDBRecordGreaterThan&);
 };
 
-class CDBRecordEqual : public IBoolComparison<CDBRecordBase>
+class CDBRecordEqual : public IBoolComparison<IDBRecord>
 {
 public:
-	bool operator()(const CDBRecordBase& lhs, const CDBRecordBase& rhs)
+	bool operator()(const IDBRecord& lhs, const IDBRecord& rhs)
 	{
-		return 0 == Comparison_(lhs, rhs);
+		return 0 == Comparison(lhs, rhs);
 	}
 
-	CDBRecordEqual(){}
+	//CDBRecordEqual(){}
 
 	CDBRecordEqual(const CDBRecordComparison& cmp)
-		: Comparison_(cmp)
+		: Comparison(cmp)
 	{}
 
 	CDBRecordEqual(const CDBRecordEqual& other)
-		: Comparison_(other.Comparison_)
+		: Comparison(other.Comparison)
 	{}
 
-	CDBRecordComparison Comparison_;
+	const CDBRecordComparison& Comparison;
+
+protected:
+	CDBRecordEqual& operator=(const CDBRecordEqual&);
 };
 
 }

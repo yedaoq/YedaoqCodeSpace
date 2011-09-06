@@ -7,11 +7,11 @@ namespace NSDBModule
 	class CDBDataTypeDecimalParser : public IDBDataTypeParser
 	{
 	public:
-		virtual IDBDataType* Parse(const tstring& type);
+		virtual IDBDataType* Parse(const tstring& type) const;
 	};
 
 	class CDBDataTypeStringParser : public IDBDataTypeParser
 	{
-		virtual IDBDataType* Parse(const tstring& type);
+		virtual IDBDataType* Parse(const tstring& type) const;
 	};
 }

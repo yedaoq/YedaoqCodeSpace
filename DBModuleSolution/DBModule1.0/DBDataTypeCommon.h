@@ -13,13 +13,19 @@ namespace NSDBModule
 	public:
 		typedef std::vector<EnumCppDataType> CppTypeCollection;
 
+	public:
+
+		CDBDataTypeBase(tstring name, EnumDBDataTypeCategory category, index_t compatibleCPPTypeCount)
+			: Name_(name), Category_(category), CompatibleCPPTypes_(compatibleCPPTypeCount)
+		{}
+
 		virtual EnumDBDataTypeCategory Category() const { return Category_; }
 		
 		virtual const tstring& ToString() const { return Name_; }
 		
 		virtual EnumCppDataType	PreferredCppDataType() const { return CompatibleCPPTypes_[0]; }
 
-		virtual bool Equal(const IDBDataType* other){ return ToString() == other->ToString(); };
+		virtual bool Equal(const IDBDataType* other) const { return ToString() == other->ToString(); };
 
 		virtual bool IsNull(const tchar* val) const {return val == 0 || 0 == _tcslen(val); }
 
@@ -29,6 +35,8 @@ namespace NSDBModule
 			Wrapper(val, strRet);
 			return strRet;
 		}
+
+		virtual bool Wrapper(const tchar* val, tstring& buf) const = 0;
 
 		virtual tstring	UnWrapper(const tchar* val) const {	return tstring(val); }
 
@@ -54,13 +62,19 @@ namespace NSDBModule
 
 		virtual EnumCppDataType	PreferredCppDataType() const { return EnumCppDataType::CppUnknow; }
 
-		virtual bool Equal(const IDBDataType* other){ return ToString() == other->ToString(); };
+		virtual bool Equal(const IDBDataType* other) const { return ToString() == other->ToString(); };
 
 		virtual bool IsNull(const tchar* val) const { return true; }
 
 		virtual tstring	Wrapper(const tchar* val) const 
 		{ 
 			return TEXT("null");
+		}
+
+		virtual bool Wrapper(const tchar* val, tstring& buf) const 
+		{ 
+			buf.append(TEXT("null")); 
+			return 1;
 		}
 
 		virtual tstring	UnWrapper(const tchar* val) const {	return TEXT(""); }
@@ -73,7 +87,7 @@ namespace NSDBModule
 	{
 	public:
 		CDBDataTypeInteger()
-			: Name_(TEXT("integer")), Category_(DBNumeric), CompatibleCPPTypes_(2)
+			: CDBDataTypeBase(TEXT("integer"), DBNumeric, 2)
 		{
 			CompatibleCPPTypes_.push_back(CppInt32);
 			CompatibleCPPTypes_.push_back(CppBool);
@@ -89,7 +103,7 @@ namespace NSDBModule
 	{
 	public:
 		CDBDataTypeFloat()
-			: Name_(TEXT("float")), Category_(DBNumeric), CompatibleCPPTypes_(3)
+			: CDBDataTypeBase(TEXT("float"), DBNumeric, 3)
 		{
 			CompatibleCPPTypes_.push_back(EnumCppDataType::CppFloat);
 			CompatibleCPPTypes_.push_back(EnumCppDataType::CppBool);
@@ -106,7 +120,7 @@ namespace NSDBModule
 	{
 	public:
 		CDBDataTypeDouble()
-			: Name_(TEXT("double")), Category_(DBNumeric), CompatibleCPPTypes_(5)
+			: CDBDataTypeBase(TEXT("double"), DBNumeric, 5)
 		{
 			CompatibleCPPTypes_.push_back(EnumCppDataType::CppDouble);
 			CompatibleCPPTypes_.push_back(EnumCppDataType::CppFloat);
@@ -125,7 +139,7 @@ namespace NSDBModule
 	{
 	public:
 		CDBDataTypeDecimal(int len, int precision)
-			: Category_(EnumDBDataTypeCategory::DBString), CompatibleCPPTypes_(5),
+			: CDBDataTypeBase(TEXT(""), EnumDBDataTypeCategory::DBString, 5),
 			Length_(len), Precision_(precision)
 		{
 			CompatibleCPPTypes_.push_back(EnumCppDataType::CppDouble);
@@ -153,7 +167,7 @@ namespace NSDBModule
 	{
 	public:
 		CDBDataTypeString(int len, bool bFixedWidth, bool bUnicode)
-			: Category_(EnumDBDataTypeCategory::DBString), CompatibleCPPTypes_(6),
+			: CDBDataTypeBase(TEXT(""), EnumDBDataTypeCategory::DBString, 6),
 			  Length_(len), FixedWidth_(bFixedWidth), Unicode_(bUnicode)
 		{
 			CompatibleCPPTypes_.push_back(EnumCppDataType::CppString);

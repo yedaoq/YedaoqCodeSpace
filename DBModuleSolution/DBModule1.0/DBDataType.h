@@ -16,7 +16,7 @@ namespace NSDBModule
 
 		virtual EnumDBDataTypeCategory Category() const = 0;								// 
 		virtual const tstring&		ToString() const = 0;	// get the datatype str
-		virtual bool				Equal(const IDBDataType* other) = 0;
+		virtual bool				Equal(const IDBDataType* other) const = 0;
 		
 		virtual bool				IsNull(const tchar* val) const = 0;					// whether a val of this type is a db null 
 
@@ -32,17 +32,17 @@ namespace NSDBModule
 	interface IDBDataTypeParser
 	{
 		~IDBDataTypeParser() {}
-		virtual IDBDataType* Parse(const tstring& type) = 0;
+		virtual IDBDataType* Parse(const tstring& type) const = 0;
 	};
 
 	interface IDBDataTypeProvider
 	{
-		typedef std::tr1::shared_ptr<IEnumerator<IDBDataType*>> DBDataTypeEnumPtr;
+		typedef std::tr1::shared_ptr<IEnumerator<const IDBDataType*>> DBDataTypeEnumPtr;
 
 		virtual ~IDBDataTypeProvider() {};
 
-		virtual IDBDataType*		ParseDBTypeStr(const tstring& type) = 0;
-		virtual IDBDataType*		GetPreferredDBType(EnumCppDataType type) = 0;
+		virtual const IDBDataType*	ParseDBTypeStr(const tstring& type) = 0;
+		virtual const IDBDataType*	GetPreferredDBType(EnumCppDataType type) = 0;
 
 		virtual bool				DBTypeEnumerable() = 0;
 		virtual DBDataTypeEnumPtr	GetEnumerator() = 0;
