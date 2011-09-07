@@ -11,6 +11,7 @@
 	#define _tcslen			wcslen
 	#define _tcschr			wcschr
 	#define _tcscpy			wcscpy
+	#define _tcscmp			wcscmp
 	#define tprintf_s		wprintf_s
 	#define vstprintf_s		vswprintf_s
 #else
@@ -22,6 +23,7 @@
 	#define _tcslen			strlen
 	#define _tcschr			strchr
 	#define _tcscpy			strcpy
+	#define _tcscmp			strcmp
 	#define tprintf_s		sprintf_s
 	#define vstprintf_s		vsprintf_s
 #endif

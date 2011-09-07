@@ -4,13 +4,15 @@
 #include "SqliteDataTypeProvider.h"
 #include "..\DBCommand.h"
 #include "..\DBRecord.h"
+//#include "boost\smart_ptr.hpp"
+#include "boost\smart_ptr\make_shared.hpp"
 
 using namespace NSDBModule;
 
 IDBDataAdapter::DBTableEnumPtr CSqliteDataAdapter::EnumTable()
 {
 	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB->execQuery2(TEXT("SELECT name FROM [sqlite_master] WHERE type = 'table'"));
-	return std::tr1::make_shared<CSqliteTableEnumerator>(spQuery);	
+	return boost::make_shared<CSqliteTableEnumerator>(spQuery);	
 }
 
 IDBDataAdapter::DBColumnEnumPtr CSqliteDataAdapter::EnumColumn(const tstring& tblName)
@@ -22,7 +24,7 @@ IDBDataAdapter::DBColumnEnumPtr CSqliteDataAdapter::EnumColumn(const tstring& tb
 	buf[len + tblName.length() + 1] = '\0';
 
 	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB->execQuery2(buf);
-	return std::tr1::make_shared<CSqliteColumnEnumerator>(spQuery);
+	return boost::make_shared<CSqliteColumnEnumerator>(spQuery);
 }
 
 IDBDataAdapter::DBRecordEnumPtr CSqliteDataAdapter::Select(const IDBCommand& cmd)

@@ -9,6 +9,7 @@
 
 namespace NSDBModule
 {
+	interface IDBRecord;
 	struct DBColumnSchema;
 	class CDBTableSchema;
 	class CDBRecordBase;
@@ -21,15 +22,21 @@ namespace NSDBModule
 		virtual ~IDBCommandBuilder() = 0 {}
 		virtual int Initialize(CDBTableSchema const*) = 0;
 
-		virtual int GetCmdSelect(const CDBRecordBase&, const CDBRecordComparison&, IDBCommand**) = 0;
+		virtual int GetCmdSelect(const IDBRecord&, const CDBRecordComparison&, IDBCommand**) = 0;
 		virtual int GetCmdSelect(IDBCommand**) = 0;
 
-		virtual int GetCmdInsert(const CDBRecordBase&, IDBCommand**) = 0;
-		virtual int GetCmdDelete(const CDBRecordBase&, const CDBRecordComparison& cmp,  IDBCommand**) = 0;
-		virtual int GetCmdUpdate(const CDBRecordBase&, const CDBRecordBase&, const CDBRecordComparison& cmp, IDBCommand**) = 0;
+		virtual int GetCmdInsert(const IDBRecord&, IDBCommand**) = 0;
+		virtual int GetCmdDelete(const IDBRecord&, const CDBRecordComparison& cmp,  IDBCommand**) = 0;
+		virtual int GetCmdUpdate(const IDBRecord&, const IDBRecord&, const CDBRecordComparison& cmp, IDBCommand**) = 0;
 
 		virtual int GetCmdCreate() = 0;
 
 		virtual int ReleaseCmd(IDBCommand *, bool);
+	};
+
+	interface IDBCommandBuilderFactory
+	{
+		virtual ~IDBCommandBuilderFactory() {}
+		virtual IDBCommandBuilder* Create() const = 0;
 	};
 }

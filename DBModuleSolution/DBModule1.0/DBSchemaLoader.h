@@ -26,7 +26,7 @@ namespace NSDBModule
 		bool Load();
 
 		bool LoadAllTable();
-		bool LoadTable(const tstring& dbName, const DBTablePtr& pTbl);
+		bool LoadTable(const tstring& dbName, CDBTable* pTbl);
 
 	protected:
 		CDBModule*		DBModule;

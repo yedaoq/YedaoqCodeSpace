@@ -52,8 +52,6 @@ DBRecordEnumerator CDBTable::EnumRecord() /*const*/
 	}
 
 	return make_iterator_enumerator(Records_.begin(), Records_.end());
-
-	//return DBRecordEnumPtr(new_iterator_enumerator(Records_.begin(), Records_.end()));
 }
 
 int	CDBTable::LoadData()

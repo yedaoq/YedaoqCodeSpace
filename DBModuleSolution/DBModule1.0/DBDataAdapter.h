@@ -7,6 +7,7 @@
 #include <memory>
 #include "mytype.h"
 #include "Enumerator.h"
+#include "boost\smart_ptr\shared_ptr.hpp"
 
 namespace NSDBModule
 {
@@ -22,9 +23,9 @@ namespace NSDBModule
 	interface IDBDataAdapter
 	{
 	public:
-		typedef std::tr1::shared_ptr<IEnumerator<tstring>>			DBTableEnumPtr;
-		typedef std::tr1::shared_ptr<IEnumerator<DBColumnSchema>>	DBColumnEnumPtr;
-		typedef std::tr1::shared_ptr<IEnumerator<IDBRecord>>		DBRecordEnumPtr;
+		typedef boost::shared_ptr<IEnumerator<tstring>>			DBTableEnumPtr;
+		typedef boost::shared_ptr<IEnumerator<DBColumnSchema>>	DBColumnEnumPtr;
+		typedef boost::shared_ptr<IEnumerator<IDBRecord>>		DBRecordEnumPtr;
 
 	public:
 		virtual ~IDBDataAdapter() = 0 {}

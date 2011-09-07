@@ -20,11 +20,11 @@ namespace NSDBModule
 
 	interface IDBCommandBuilder;
 
-	typedef std::set<IDBRecord, CDBRecordLessThan>				DBRecordSet;
+	typedef std::set<CDBRecordBase, CDBRecordLessThan>			DBRecordSet;
 	typedef DBRecordSet::const_iterator							DBRecordIterator;
 	typedef std::tr1::shared_ptr<IEnumerator<IDBRecord>>		DBRecordEnumPtr;
 	typedef std::tr1::shared_ptr<IDBCommandBuilder>				DBCommandBuilderPtr;
-	typedef CIteratorEnumerator<DBRecordSet::const_iterator>	DBRecordEnumerator;
+	typedef CIteratorEnumerator<DBRecordSet::iterator>	DBRecordEnumerator;
 
 	class CDBTable
 	{

@@ -37,12 +37,12 @@ namespace NSDBModule
 
 	interface IDBDataTypeProvider
 	{
-		typedef std::tr1::shared_ptr<IEnumerator<const IDBDataType*>> DBDataTypeEnumPtr;
+		typedef std::tr1::shared_ptr<IEnumerator<IDBDataType*>> DBDataTypeEnumPtr;
 
 		virtual ~IDBDataTypeProvider() {};
 
-		virtual const IDBDataType*	ParseDBTypeStr(const tstring& type) = 0;
-		virtual const IDBDataType*	GetPreferredDBType(EnumCppDataType type) = 0;
+		virtual IDBDataType*		ParseDBTypeStr(const tstring& type) = 0;
+		virtual IDBDataType*		GetPreferredDBType(EnumCppDataType type) = 0;
 
 		virtual bool				DBTypeEnumerable() = 0;
 		virtual DBDataTypeEnumPtr	GetEnumerator() = 0;

@@ -49,8 +49,12 @@
 #include "CppSQLite3U.h"
 #include "boost\format.hpp"
 #include "..\mytype.h"
+#include "boost\lexical_cast.hpp"
+#include "boost\algorithm\string.hpp"
 
 typedef boost::basic_format<tchar> tformat;
+
+#define MAX_SQL_SIZE 1024
 
 /////////////////////////////////////////////////////////////////////////////
 // CppSQLite3Exception
@@ -279,16 +283,18 @@ bool CppSQLite3DB::tableExists(tchar const * szTable)
 
 int CppSQLite3DB::execDMLV(tchar const * szFormat, ...)
 {
-	tchar buf[];
+	tchar buf[MAX_SQL_SIZE];
 
 	va_list args;
 	va_start(args, szFormat);
 
-	vstprintf_s(
-	strSQL.FormatV(szFormat, args);	
+	vstprintf_s(buf, MAX_SQL_SIZE - 1, szFormat, args);
+	//strSQL.FormatV(szFormat, args);	
+
 	va_end(args);
 
- 	return execDML(strSQL.c_str());
+ 	int iResult = execDML(buf);
+	return iResult;
 }
 
 int CppSQLite3DB::execDML(tchar const * szSQL)
@@ -315,24 +321,32 @@ int CppSQLite3DB::execDML(tchar const * szSQL)
 
 CppSQLite3Query CppSQLite3DB::execQueryV(tchar const * szFormat, ...)
 {
-	tstring strSQL;
+	tchar buf[MAX_SQL_SIZE];
+
 	va_list args;
 	va_start(args, szFormat);
-	strSQL.FormatV(szFormat, args);	
+
+	vstprintf_s(buf, MAX_SQL_SIZE - 1, szFormat, args);
+	//strSQL.FormatV(szFormat, args);	
+
 	va_end(args);
 
-	return execQuery(strSQL);
+	return execQuery(buf);
 }
 
 I_CppSQLite3Query* CppSQLite3DB::execQueryV2(tchar const * szFormat, ...)
 {
-	tstring strSQL;
+	tchar buf[MAX_SQL_SIZE];
+
 	va_list args;
 	va_start(args, szFormat);
-	strSQL.FormatV(szFormat, args);	
+
+	vstprintf_s(buf, MAX_SQL_SIZE - 1, szFormat, args);
+	//strSQL.FormatV(szFormat, args);	
+
 	va_end(args);
 
-	return execQuery2(strSQL);
+	return execQuery2(buf);
 }
 void CppSQLite3Query::Destory()
 {
@@ -400,24 +414,32 @@ I_CppSQLite3Query* CppSQLite3DB::execQuery2(tchar const * szSQL)
 }
 int CppSQLite3DB::execScalarV(tchar const * szFormat, ...)
 {
-	tstring strSQL;
+	tchar buf[MAX_SQL_SIZE];
+
 	va_list args;
 	va_start(args, szFormat);
-	strSQL.FormatV(szFormat, args);	
+
+	vstprintf_s(buf, MAX_SQL_SIZE - 1, szFormat, args);
+	//strSQL.FormatV(szFormat, args);	
+
 	va_end(args);
 
-	return execScalar(strSQL);
+	return execScalar(buf);
 }
 
 tstring CppSQLite3DB::execScalarStrV(tchar const * szFormat, ...)
 {
-	tstring strSQL;
+	tchar buf[MAX_SQL_SIZE];
+
 	va_list args;
 	va_start(args, szFormat);
-	strSQL.FormatV(szFormat, args);	
+
+	vstprintf_s(buf, MAX_SQL_SIZE - 1, szFormat, args);
+	//strSQL.FormatV(szFormat, args);	
+
 	va_end(args);
 
-	return tstring(execScalarStr(strSQL));
+	return tstring(execScalarStr(buf));
 }
 
 int CppSQLite3DB::execScalar(tchar const * szSQL)
@@ -932,7 +954,8 @@ void CppSQLite3Query::checkVM()
 //*************-  Added By Begemot - 28/02/06 20:25 - ****
 tstring DoubleQuotes(tstring in)
 {
-	in.Replace(TEXT("\'"),TEXT("\'\'"));
+	boost::replace_all(in, TEXT("\'"),TEXT("\'\'"));
+	//in.Replace(TEXT("\'"),TEXT("\'\'"));
 	return in;
 }
 
@@ -940,9 +963,9 @@ tstring DoubleQuotes(tstring in)
 bool CppSQLite3DB::columnExists(tchar const * szTable, tchar const * szColumn)
 {
 	tstring strColumn(szColumn);
-	tstring strSQL = boost::format("select * from %s") % szTable;
+	tstring strSQL = (tformat(TEXT("select * from %s")) % szTable).str();
 	//strSQL.Format(TEXT("select * from %s"), szTable);
-	CppSQLite3Query q = execQuery(strSQL);
+	CppSQLite3Query q = execQuery(strSQL.c_str());
 	if(q.eof())
 		return false;
 

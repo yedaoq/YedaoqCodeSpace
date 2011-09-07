@@ -10,8 +10,8 @@ namespace NSDBModule
 	class CDBDataTypeProvider : public IDBDataTypeProvider
 	{
 	public:
-		typedef std::vector<const IDBDataType*>			DBDataTypeVct;
-		typedef std::vector<const IDBDataTypeParser*>	DBDataTypeParserVct;
+		typedef std::vector<IDBDataType*>			DBDataTypeVct;
+		typedef std::vector<IDBDataTypeParser*>	DBDataTypeParserVct;
 
 	public:
 		virtual ~CDBDataTypeProvider() { Clear(); }
@@ -20,14 +20,14 @@ namespace NSDBModule
 			: DataTypes(CPPDATATYPECOUNT)
 		{}
 
-		virtual const IDBDataType*	ParseDBTypeStr(const tstring& type);
-		virtual const IDBDataType*	GetPreferredDBType(EnumCppDataType type);
+		virtual IDBDataType*		ParseDBTypeStr(const tstring& type);
+		virtual IDBDataType*		GetPreferredDBType(EnumCppDataType type);
 
 		virtual bool				DBTypeEnumerable() { return true; };
 		virtual DBDataTypeEnumPtr	GetEnumerator();
 
-		virtual int					RegisterDataType(const IDBDataType* type);
-		virtual int					RegisterParser(const IDBDataTypeParser* parser);
+		virtual int					RegisterDataType(IDBDataType* type);
+		virtual int					RegisterParser(IDBDataTypeParser* parser);
 
 		virtual int					Clear();
 

@@ -5,6 +5,9 @@
 #include <algorithm>
 #include "mytype.h"
 #include "SqlConstituentWrapper.h"
+#include "boost\format.hpp"
+
+typedef boost::basic_format<tchar> tformat;
 
 namespace NSDBModule
 {
@@ -148,9 +151,9 @@ namespace NSDBModule
 			CompatibleCPPTypes_.push_back(EnumCppDataType::CppUint32);
 			CompatibleCPPTypes_.push_back(EnumCppDataType::CppBool);
 
-			Name_ = TEXT("decimal");
-			Name_.reserve(31);
-			tprintf(Name_.c_str() + Name_.length(), 30, TEXT("decimal(%u,%u)"), len, precision);
+			Name_ = (tformat(TEXT("decimal(%u,%u)"))
+				%len
+				%precision).str();
 		}
 
 		virtual bool Wrapper(const tchar* val, tstring& buf) const
@@ -186,8 +189,9 @@ namespace NSDBModule
 				Name_ = (bUnicode) ? TEXT("nvarchar") : TEXT("varchar");
 			}
 
-			Name_.reserve(Name_.length() + 13);
-			tprintf(Name_.c_str() + Name_.length(), 12, TEXT("(%u)"), len);
+			Name_ = (tformat(TEXT("%s(%u)"))
+				%Name_
+				%len).str();
 		}
 
 		virtual bool Wrapper(const tchar* val, tstring& buf) const

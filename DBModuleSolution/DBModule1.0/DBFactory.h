@@ -21,4 +21,12 @@ namespace NSDBModule
 		virtual IDBNameMapping*			CreateDBNameMapping();
 	};
 
+	struct IDBInterfaceSuit
+	{
+		IDBDataAdapter*			DataAdapter;
+		IDBCommandBuilder*		CommandBuilder;
+		IDBDataTypeProvider*	DataTypePrivider;
+		IDBNameMapping*			NameMapping;
+	};
+
 }

@@ -2,7 +2,7 @@
 
 using namespace NSDBModule;
 
-const IDBDataType* CDBDataTypeProvider::ParseDBTypeStr(const tstring& type)
+IDBDataType* CDBDataTypeProvider::ParseDBTypeStr(const tstring& type)
 {
 	for(DBDataTypeVct::iterator iter = DataTypes.begin(); iter != DataTypes.end(); ++iter)
 	{
@@ -25,7 +25,7 @@ const IDBDataType* CDBDataTypeProvider::ParseDBTypeStr(const tstring& type)
 	return 0;
 }
 
-const IDBDataType* CDBDataTypeProvider::GetPreferredDBType(EnumCppDataType type)
+IDBDataType* CDBDataTypeProvider::GetPreferredDBType(EnumCppDataType type)
 {
 	for(DBDataTypeVct::iterator iter = DataTypes.begin(); iter != DataTypes.end(); ++iter)
 	{
@@ -51,14 +51,14 @@ IDBDataTypeProvider::DBDataTypeEnumPtr CDBDataTypeProvider::GetEnumerator()
 	return DBDataTypeEnumPtr(new_iterator_enumerator(DataTypes.begin(), DataTypes.end()));
 }
 
-int	CDBDataTypeProvider::RegisterDataType(const IDBDataType* type)
+int	CDBDataTypeProvider::RegisterDataType(IDBDataType* type)
 {
 	//DataTypes.push_back(static_cast<IDBDataType*>(type.Clone()));
 	DataTypes.push_back(type);
 	return 1;
 }
 
-int	CDBDataTypeProvider::RegisterParser(const IDBDataTypeParser* parser)
+int	CDBDataTypeProvider::RegisterParser(IDBDataTypeParser* parser)
 {
 	Parsers.push_back(parser);
 	return 1;
