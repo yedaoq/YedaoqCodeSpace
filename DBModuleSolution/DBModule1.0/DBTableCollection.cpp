@@ -6,35 +6,35 @@
 
 using namespace NSDBModule;
 
-const CDBTable* CDBTableCollection::operator[](const tstring& tbl) const
+DBTablePtr_const CDBTableCollection::operator[](const tstring& tbl) const
 {
 	if(tbl.empty())
 	{
 		_ASSERT(false);
-		return 0;
+		return DBTablePtr_const(0);
 	}
 
 	for (DBTableCollection::const_iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
 	{
 		if((*iter)->GetName() == tbl)
 		{
-			return *iter;
+			return DBTablePtr_const(*iter);
 		}
 	}
 
-	return 0;
+	return DBTablePtr(0);
 }
 
-const CDBTable* CDBTableCollection::operator[](index_t tbl) const
+DBTablePtr_const CDBTableCollection::operator[](index_t tbl) const
 {
 	if(tbl < 0 || tbl >= Tables.size())
 	{
 		_ASSERT(false);
 		throw std::exception();
-		return 0;
+		return DBTablePtr_const(0);
 	}
 
-	return Tables[tbl];
+	return (DBTablePtr)Tables[tbl];
 }
 
 DBTableEnumerator CDBTableCollection::Enum() const
@@ -43,9 +43,9 @@ DBTableEnumerator CDBTableCollection::Enum() const
 	return make_iterator_enumerator(Tables.begin(), Tables.end());
 }
 
-CDBTable* CDBTableCollection::Append(const tstring& name, CDBModule* module, bool bBuildIn )
+DBTablePtr CDBTableCollection::Append(const tstring& name, CDBModule* module, bool bBuildIn )
 {
-	CDBTable* ptrRet = 0;
+	DBTablePtr ptrRet = 0;
 	if(name.empty() || !module)
 	{
 		_ASSERT(false);
@@ -57,15 +57,15 @@ CDBTable* CDBTableCollection::Append(const tstring& name, CDBModule* module, boo
 	schema.Name = name;
 	schema.SetFlag(CDBTableSchema::BuildIn, bBuildIn);
 
-	Tables.push_back(pTbl);
+	Tables.push_back(DBTablePtr(pTbl));
 	ptrRet = Tables[Tables.size() - 1];
 
 	return ptrRet;
 }
 
-CDBTable* CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* module, bool bBuildIn)
+DBTablePtr CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* module, bool bBuildIn)
 {
-	CDBTable* ptrRet = 0;
+	DBTablePtr ptrRet = 0;
 	if(schema.Name.empty() || !module)
 	{
 		_ASSERT(false);
@@ -75,12 +75,12 @@ CDBTable* CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* mo
 	CDBTable* pTbl = new CDBTable(module, schema);
 	pTbl->GetSchema().SetFlag(CDBTableSchema::BuildIn, bBuildIn);
 
-	Tables.push_back(pTbl);
+	Tables.push_back(DBTablePtr(pTbl));
 	ptrRet = Tables[Tables.size() - 1];
 	return ptrRet;
 }
 
-CDBTable* CDBTableCollection::Remove(const tstring& name)
+DBTablePtr CDBTableCollection::Remove(const tstring& name)
 {
 	int idx = 0;
 	for (DBTableCollection::const_iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
@@ -93,10 +93,10 @@ CDBTable* CDBTableCollection::Remove(const tstring& name)
 	}
 }
 
-CDBTable* CDBTableCollection::Remove(index_t tbl)
+DBTablePtr CDBTableCollection::Remove(index_t tbl)
 {
 	DBTableCollection::iterator iter = Tables.begin() + tbl;
-	CDBTable* pTbl = *iter;
+	DBTablePtr pTbl = *iter;
 	Tables.erase(iter,iter);
 	return pTbl;
 }
@@ -108,7 +108,7 @@ int	CDBTableCollection::Clear(bool bBuildIn)
 	{
 		while ( iter != Tables.end())
 		{
-			if(!((CDBTable*)(*iter))->GetSchema().IsBuildin())
+			if(!((DBTablePtr)(*iter))->GetSchema().IsBuildin())
 			{
 				break;
 			}
@@ -119,7 +119,7 @@ int	CDBTableCollection::Clear(bool bBuildIn)
 
 	for (iter = Tables.begin(); iter != Tables.end(); ++iter)
 	{
-		((CDBTable*)(*iter))->GetSchema().Clear();
+		((DBTablePtr)(*iter))->GetSchema().Clear();
 	}
 
 	return 1;

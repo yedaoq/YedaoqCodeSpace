@@ -12,7 +12,9 @@ namespace NSDBModule
 	class CDBTableSchema;
 	class CDBModule;
 
-	typedef std::vector<ATL::CAdapt<CDBTable*>>						DBTableCollection;
+	typedef std::tr1::shared_ptr<CDBTable>							DBTablePtr;
+	typedef std::tr1::shared_ptr<const CDBTable>					DBTablePtr_const;
+	typedef std::vector<ATL::CAdapt<DBTablePtr>>					DBTableCollection;
 	typedef CIteratorEnumerator<DBTableCollection::const_iterator>	DBTableEnumerator;
 
 	class CDBTableCollection
@@ -23,17 +25,17 @@ namespace NSDBModule
 
 		DBTableEnumerator		Enum() const;
 
-		CDBTable*				Append(const tstring& name, CDBModule* module, bool bBuildIn = false);
-		CDBTable*				Append(const CDBTableSchema& schema, CDBModule* module, bool bBuildIn = false);
+		DBTablePtr				Append(const tstring& name, CDBModule* module, bool bBuildIn = false);
+		DBTablePtr				Append(const CDBTableSchema& schema, CDBModule* module, bool bBuildIn = false);
 
-		CDBTable*				Remove(const tstring& name);
-		CDBTable*				Remove(index_t tbl);
+		DBTablePtr				Remove(const tstring& name);
+		DBTablePtr				Remove(index_t tbl);
 
-		const CDBTable* operator[](const tstring& tbl) const;
-		const CDBTable* operator[](index_t tbl) const;
+		DBTablePtr_const operator[](const tstring& tbl) const;
+		DBTablePtr_const operator[](index_t tbl) const;
 
-		CDBTable* operator[](const tstring& tbl) { return const_cast<CDBTable*>(const_cast<const CDBTableCollection&>(*this)[tbl]); }
-		CDBTable* operator[](index_t tbl) { return const_cast<CDBTable*>(const_cast<const CDBTableCollection&>(*this)[tbl]); }
+		DBTablePtr operator[](const tstring& tbl) { return std::tr1::const_pointer_cast<CDBTable,const CDBTable>(const_cast<const CDBTableCollection&>(*this)[tbl]); }
+		DBTablePtr operator[](index_t tbl) { return std::tr1::const_pointer_cast<CDBTable, const CDBTable>(const_cast<const CDBTableCollection&>(*this)[tbl]); }
 
 	protected:
 		DBTableCollection Tables;

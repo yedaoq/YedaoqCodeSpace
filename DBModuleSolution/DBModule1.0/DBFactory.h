@@ -14,19 +14,11 @@ namespace NSDBModule
 	interface IDBFactory
 	{
 		virtual ~IDBFactory() = 0 {};
-		virtual IDBDataAdapter*			CreateDBAdapter();
-		virtual IDBCommand*				CreateDBCommand();
-		virtual IDBCommandBuilder*		CreateDBCommandBuilder();
-		virtual IDBDataTypeProvider*	CreateDBDataTypeProvider();
-		virtual IDBNameMapping*			CreateDBNameMapping();
-	};
-
-	struct IDBInterfaceSuit
-	{
-		IDBDataAdapter*			DataAdapter;
-		IDBCommandBuilder*		CommandBuilder;
-		IDBDataTypeProvider*	DataTypePrivider;
-		IDBNameMapping*			NameMapping;
+		virtual IDBDataAdapter*			CreateDBAdapter() = 0;
+		virtual IDBCommand*				CreateDBCommand() = 0;
+		virtual IDBCommandBuilder*		CreateDBCommandBuilder() = 0;
+		virtual IDBDataTypeProvider*	CreateDBDataTypeProvider() = 0;
+		virtual IDBNameMapping*			CreateDBNameMapping() = 0;
 	};
 
 }

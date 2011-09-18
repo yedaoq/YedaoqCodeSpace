@@ -33,10 +33,4 @@ namespace NSDBModule
 
 		virtual int ReleaseCmd(IDBCommand *, bool);
 	};
-
-	interface IDBCommandBuilderFactory
-	{
-		virtual ~IDBCommandBuilderFactory() {}
-		virtual IDBCommandBuilder* Create() const = 0;
-	};
 }

@@ -112,10 +112,11 @@
     <ClInclude Include="DBSchemaHeaderMicro.h" />
     <ClInclude Include="DBSchemaLoader.h" />
     <ClInclude Include="DBSchemaValidater.h" />
+    <ClInclude Include="DBSourceManager.h" />
+    <ClInclude Include="DBSourcePath.h" />
     <ClInclude Include="DBTable.h" />
     <ClInclude Include="DBTableCollection.h" />
     <ClInclude Include="DBTableSchema.h" />
-    <ClInclude Include="Factory.h" />
     <ClInclude Include="mytype.h" />
     <ClInclude Include="SqlConstituentWrapper.h" />
     <ClInclude Include="Sqlite\CppSQLite3U.h" />

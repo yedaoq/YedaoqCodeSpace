@@ -57,7 +57,7 @@ bool CDBSchemaLoader::LoadAllTable()
 			continue;
 		}
 
-		CDBTable* pTable = DBModule->Tables()[name];
+		DBTablePtr pTable = DBModule->Tables()[name];
 		if(!pTable)
 		{
 			pTable = DBModule->Tables().Append(name, DBModule, false);
@@ -72,7 +72,7 @@ bool CDBSchemaLoader::LoadAllTable()
 	return bRet;
 }
 
-bool CDBSchemaLoader::LoadTable(const tstring& dbName, CDBTable* pTbl)
+bool CDBSchemaLoader::LoadTable(const tstring& dbName, const DBTablePtr& pTbl)
 {
 	CDBTableSchema& schema = pTbl->GetSchema();
 
@@ -103,4 +103,5 @@ bool CDBSchemaLoader::LoadTable(const tstring& dbName, CDBTable* pTbl)
 		exCol.SetExternInfo(dbCol.DBName, dbCol.DBType, true, dbCol.IsDBPrimaryKey(), dbCol.IsDBNullable());
 		schema.ModifyColumn(exCol);
 	}
+
 }
