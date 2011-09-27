@@ -1,18 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YedaoqFlowLayout", "YedaoqCPPTableLayout\YedaoqFlowLayout.vcxproj", "{566B2DAC-8FBA-4EC7-9F51-7D66A361BFD5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YedaoqFlowLayout", "YedaoqLayout\YedaoqLayout.vcxproj", "{566B2DAC-8FBA-4EC7-9F51-7D66A361BFD5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcxproj", "{11D3A908-D716-4159-ADB1-573D9B57F3EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
+		Template|Win32 = Template|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{566B2DAC-8FBA-4EC7-9F51-7D66A361BFD5}.Debug|Win32.ActiveCfg = Debug|Win32
 		{566B2DAC-8FBA-4EC7-9F51-7D66A361BFD5}.Debug|Win32.Build.0 = Debug|Win32
 		{566B2DAC-8FBA-4EC7-9F51-7D66A361BFD5}.Release|Win32.ActiveCfg = Release|Win32
 		{566B2DAC-8FBA-4EC7-9F51-7D66A361BFD5}.Release|Win32.Build.0 = Release|Win32
+		{566B2DAC-8FBA-4EC7-9F51-7D66A361BFD5}.Template|Win32.ActiveCfg = Release|Win32
+		{566B2DAC-8FBA-4EC7-9F51-7D66A361BFD5}.Template|Win32.Build.0 = Release|Win32
+		{11D3A908-D716-4159-ADB1-573D9B57F3EE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{11D3A908-D716-4159-ADB1-573D9B57F3EE}.Debug|Win32.Build.0 = Debug|Win32
+		{11D3A908-D716-4159-ADB1-573D9B57F3EE}.Release|Win32.ActiveCfg = Release|Win32
+		{11D3A908-D716-4159-ADB1-573D9B57F3EE}.Release|Win32.Build.0 = Release|Win32
+		{11D3A908-D716-4159-ADB1-573D9B57F3EE}.Template|Win32.ActiveCfg = Template|Win32
+		{11D3A908-D716-4159-ADB1-573D9B57F3EE}.Template|Win32.Build.0 = Template|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
