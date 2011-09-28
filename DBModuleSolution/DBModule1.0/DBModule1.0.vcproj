@@ -231,10 +231,6 @@
 			Name="Module"
 			>
 			<File
-				RelativePath=".\DBColumnSchema.h"
-				>
-			</File>
-			<File
 				RelativePath=".\DBModule.cpp"
 				>
 			</File>
@@ -248,22 +244,6 @@
 			</File>
 			<File
 				RelativePath=".\DBRecordComparison.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DBSchemaLoader.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBSchemaLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DBSchemaValidater.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBSchemaValidater.h"
 				>
 			</File>
 			<File
@@ -282,14 +262,42 @@
 				RelativePath=".\DBTableCollection.h"
 				>
 			</File>
-			<File
-				RelativePath=".\DBTableSchema.cpp"
+			<Filter
+				Name="Schema"
 				>
-			</File>
-			<File
-				RelativePath=".\DBTableSchema.h"
+				<File
+					RelativePath=".\DBColumnSchema.h"
+					>
+				</File>
+				<File
+					RelativePath=".\DBSchemaLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\DBSchemaLoader.h"
+					>
+				</File>
+				<File
+					RelativePath=".\DBSchemaValidater.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\DBSchemaValidater.h"
+					>
+				</File>
+				<File
+					RelativePath=".\DBTableSchema.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\DBTableSchema.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Store"
 				>
-			</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Util"

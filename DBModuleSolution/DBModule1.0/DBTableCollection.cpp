@@ -6,44 +6,43 @@
 
 using namespace NSDBModule;
 
-DBTablePtr_const CDBTableCollection::operator[](const tstring& tbl) const
+const CDBTable* CDBTableCollection::operator[](const tstring& tbl) const
 {
 	if(tbl.empty())
 	{
 		_ASSERT(false);
-		return DBTablePtr_const(0);
+		return 0;
 	}
 
 	for (DBTableCollection::const_iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
 	{
 		if((*iter)->GetName() == tbl)
 		{
-			return DBTablePtr_const(*iter);
+			return *iter;
 		}
 	}
 
-	return DBTablePtr(0);
+	return 0;
 }
 
-DBTablePtr_const CDBTableCollection::operator[](index_t tbl) const
+const CDBTable* CDBTableCollection::operator[](index_t tbl) const
 {
 	if(tbl < 0 || tbl >= Tables.size())
 	{
 		_ASSERT(false);
 		throw std::exception();
-		return DBTablePtr_const(0);
+		return 0;
 	}
 
-	return (DBTablePtr)Tables[tbl];
+	return Tables[tbl];
 }
 
 DBTableEnumerator CDBTableCollection::Enum() const
 {
-	//return make_iterator_enumerator(Tables_.begin(), Tables_.end());
 	return make_iterator_enumerator(Tables.begin(), Tables.end());
 }
 
-DBTablePtr CDBTableCollection::Append(const tstring& name, CDBModule* module, bool bBuildIn )
+CDBTable* CDBTableCollection::Append(const tstring& name, CDBModule* module, bool bBuildIn )
 {
 	DBTablePtr ptrRet = 0;
 	if(name.empty() || !module)
@@ -63,7 +62,7 @@ DBTablePtr CDBTableCollection::Append(const tstring& name, CDBModule* module, bo
 	return ptrRet;
 }
 
-DBTablePtr CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* module, bool bBuildIn)
+CDBTable* CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* module, bool bBuildIn)
 {
 	DBTablePtr ptrRet = 0;
 	if(schema.Name.empty() || !module)
@@ -80,47 +79,83 @@ DBTablePtr CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* m
 	return ptrRet;
 }
 
-DBTablePtr CDBTableCollection::Remove(const tstring& name)
+int CDBTableCollection::Remove(const tstring& name)
 {
-	int idx = 0;
-	for (DBTableCollection::const_iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
+	if(name.empty())
+	{
+		_ASSERT(false);
+		return 0;
+	}
+
+	DBTableCollection::iterator iter = Tables.begin();
+	while(iter != Tables.end())
 	{
 		if((*iter)->GetName() == name)
 		{
-			return Remove(idx);
+			break;
 		}
-		++idx;
 	}
+
+	if(iter != Tables.end())
+	{
+		ReleaseTables(iter, Tables.end());
+		Tables.erase(iter,iter);
+		return 1;
+	}
+
+	return 0;	
 }
 
-DBTablePtr CDBTableCollection::Remove(index_t tbl)
+int CDBTableCollection::Remove(index_t tbl)
 {
+	if(tbl < 0 || tbl >= Tables.size())
+	{
+		_ASSERT(false);
+		return 0;
+	}
+
 	DBTableCollection::iterator iter = Tables.begin() + tbl;
-	DBTablePtr pTbl = *iter;
+	ReleaseTables(iter, iter + 1);
 	Tables.erase(iter,iter);
-	return pTbl;
+	return 1;
 }
 
 int	CDBTableCollection::Clear(bool bBuildIn)
 {
+	// get first item to remove
 	DBTableCollection::iterator iter = Tables.begin();
 	if(!bBuildIn)
 	{
 		while ( iter != Tables.end())
 		{
-			if(!((DBTablePtr)(*iter))->GetSchema().IsBuildin())
+			if(!(*iter)->GetSchema().IsBuildin())
 			{
 				break;
 			}
 		}		
 	}
 	
+	// release memory of all item to be removed
+	ReleaseTables(iter, Tables.end());
+
+	// remove item from list
 	Tables.erase(iter, Tables.end());
 
-	for (iter = Tables.begin(); iter != Tables.end(); ++iter)
+	// clear data and extern schema of all remaining tables
+	for (DBTableCollection::iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
 	{
-		((DBTablePtr)(*iter))->GetSchema().Clear();
+		(*iter)->GetSchema().Clear(false);
+		(*iter)->ClearData();
 	}
 
 	return 1;
+}
+
+void CDBTableCollection::ReleaseTables(DBTableCollection::iterator begin, DBTableCollection::iterator end)
+{
+	for (DBTableCollection::iterator iter = begin; iter != end; ++iter)
+	{
+		delete *iter;
+		*iter = 0;
+	}
 }

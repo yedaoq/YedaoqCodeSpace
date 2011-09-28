@@ -1,31 +1,38 @@
 
-// DBSchemaMaintainer.h : main header file for the PROJECT_NAME application
+// DBSchemaMaintainer.h : DBSchemaMaintainer 应用程序的主头文件
 //
-
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "include 'stdafx.h' before including this file for PCH"
+	#error "在包含此文件之前包含“stdafx.h”以生成 PCH 文件"
 #endif
 
-#include "resource.h"		// main symbols
+#include "resource.h"       // 主符号
 
 
 // CDBSchemaMaintainerApp:
-// See DBSchemaMaintainer.cpp for the implementation of this class
+// 有关此类的实现，请参阅 DBSchemaMaintainer.cpp
 //
 
-class CDBSchemaMaintainerApp : public CWinApp
+class CDBSchemaMaintainerApp : public CWinAppEx
 {
 public:
 	CDBSchemaMaintainerApp();
 
-// Overrides
+
+// 重写
 public:
 	virtual BOOL InitInstance();
 
-// Implementation
+// 实现
+	UINT  m_nAppLook;
+	BOOL  m_bHiColorIcons;
 
+	virtual void PreLoadState();
+	virtual void LoadCustomState();
+	virtual void SaveCustomState();
+
+	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
 };
 
