@@ -5,6 +5,9 @@
 
 namespace NSYedaoqLayout
 {
+	class CCtrlLayout;
+	class CZoomBlankLayout;
+
 	class CFlowLayout : public ILayout
 	{
 	public:
@@ -28,13 +31,17 @@ namespace NSYedaoqLayout
 		virtual const ResizeInfo&	GetResizeInfo(EnumLayoutDirection dir);
 		virtual int					Layout(const LayoutPoint& ptBase, const LayoutSize& lyArea);
 
-		ILayout*					AddItem(HWND hWnd, 
+		ILayout*					AddItem(const ILayout& item);
+
+		CCtrlLayout*				AddCtrl(HWND hWnd, 
 											ResizeInfo resizeInfoH = ResizeInfo::FixedInfo, 
 											ResizeInfo resizeInfoV = ResizeInfo::FixedInfo, 
 											AnchorInfo anchorInfoH = AnchorInfo::AnchorFront,
 											AnchorInfo anchorInfoV = AnchorInfo::AnchorFront);
 
-		ILayout*					AddItem(const ILayout& item);
+		CFlowLayout*				AddFlow(EnumLayoutDirection dir, ResizeInfo resizeInfo = ResizeInfo(EnumResizeMode::Auto, 0));
+		
+		CZoomBlankLayout*			AddZoomBlank(long percentH = 100, long percentV = 100);
 
 	protected:
 		virtual int					UpdateAutoSize();

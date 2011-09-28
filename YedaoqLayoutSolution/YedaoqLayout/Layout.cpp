@@ -10,9 +10,9 @@ LayoutPoint LayoutPoint::Zero(0,0);
 const ResizeInfo ResizeInfo::FillInfo( EnumResizeMode::Zoomed, 100);
 const ResizeInfo ResizeInfo::FixedInfo( EnumResizeMode::Fixed, -1);
 
-const AnchorInfo AnchorInfo::AnchorFront(EnumAnchorMode::Front, 3);
-const AnchorInfo AnchorInfo::AnchorCenter(EnumAnchorMode::Center, 3);
-const AnchorInfo AnchorInfo::AnchorBack(EnumAnchorMode::Back, 3);
+const AnchorInfo AnchorInfo::AnchorFront(EnumAnchorMode::Front, 1);
+const AnchorInfo AnchorInfo::AnchorCenter(EnumAnchorMode::Center, 1);
+const AnchorInfo AnchorInfo::AnchorBack(EnumAnchorMode::Back, 1);
 
 LayoutOffset::operator LayoutSize() const
 {

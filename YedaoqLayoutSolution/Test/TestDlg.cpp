@@ -7,6 +7,7 @@
 #include "TestDlg.h"
 #include "..\YedaoqLayout\ZoomBlankLayout.h"
 #include "..\YedaoqLayout\CtrlLayout.h"
+#include "Dialog1.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -38,6 +39,7 @@ BEGIN_MESSAGE_MAP(CTestDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
 	ON_WM_SIZE()
+	ON_BN_CLICKED(IDOK, &CTestDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -53,23 +55,30 @@ BOOL CTestDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	CFlowLayout* pFlowLayout = static_cast<CFlowLayout*>(m_Layout.AddItem(CFlowLayout(EnumLayoutDirection::Horizon)));
+	CFlowLayout* pFlowLayout = m_Layout.AddFlow(
+		EnumLayoutDirection::Horizon);
 	
-	CCtrlLayout* pCtrlLayout = static_cast<CCtrlLayout*>(pFlowLayout->AddItem(m_CmbTest.GetSafeHwnd()));
-	pFlowLayout->AddItem(CZoomBlankLayout());
-	pCtrlLayout = static_cast<CCtrlLayout*>(pFlowLayout->AddItem(m_BtnOK.GetSafeHwnd()));
-	pCtrlLayout = static_cast<CCtrlLayout*>(pFlowLayout->AddItem(m_BtnCancel.GetSafeHwnd()));
+	CCtrlLayout* pCtrlLayout = pFlowLayout->AddCtrl(m_CmbTest.GetSafeHwnd(),
+		ResizeInfo::FixedInfo,
+		ResizeInfo::FixedInfo,
+		AnchorInfo::AnchorFront,
+		AnchorInfo::AnchorCenter);
 
-	pFlowLayout = static_cast<CFlowLayout*>(m_Layout.AddItem(
-		CFlowLayout(EnumLayoutDirection::Horizon, ResizeInfo(EnumResizeMode::Zoomed, 100))));
+	pFlowLayout->AddZoomBlank();
+	pCtrlLayout = pFlowLayout->AddCtrl(m_BtnOK.GetSafeHwnd());
+	pCtrlLayout = pFlowLayout->AddCtrl(m_BtnCancel.GetSafeHwnd());
 
-	pCtrlLayout = static_cast<CCtrlLayout*>(pFlowLayout->AddItem(m_TreTest.GetSafeHwnd(),
+	pFlowLayout = m_Layout.AddFlow(
+		EnumLayoutDirection::Horizon, 
+		ResizeInfo(EnumResizeMode::Zoomed, 100));
+
+	pCtrlLayout = pFlowLayout->AddCtrl(m_TreTest.GetSafeHwnd(),
 		ResizeInfo(EnumResizeMode::Zoomed, 30),
-		ResizeInfo(EnumResizeMode::Zoomed, 100)));
+		ResizeInfo(EnumResizeMode::Zoomed, 100));
 
-	pCtrlLayout = static_cast<CCtrlLayout*>(pFlowLayout->AddItem(m_LstTest.GetSafeHwnd(),
+	pCtrlLayout = pFlowLayout->AddCtrl(m_LstTest.GetSafeHwnd(),
 		ResizeInfo(EnumResizeMode::Zoomed, 70),
-		ResizeInfo(EnumResizeMode::Zoomed, 100)));
+		ResizeInfo(EnumResizeMode::Zoomed, 100));
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -118,7 +127,15 @@ void CTestDlg::OnSize(UINT nType, int cx, int cy)
 	// TODO: 在此处添加消息处理程序代码
 	if(m_CmbTest.GetSafeHwnd())
 	{
-		m_Layout.Layout(LayoutPoint(0,0), LayoutSize(cx,cy));
+		m_Layout.Layout(LayoutPoint(3, 3), LayoutSize(cx - 6, cy - 6));
 		this->Invalidate(FALSE);
 	}
+}
+
+void CTestDlg::OnBnClickedOk()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialog1 dlg;
+	dlg.DoModal();
+	//OnOK();
 }

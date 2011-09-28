@@ -7,7 +7,9 @@ namespace NSYedaoqLayout
 	class CZoomBlankLayout : public ILayout
 	{
 	public:
-		CZoomBlankLayout(int iPercentH = 100, int iPercentV = 100);
+		CZoomBlankLayout(long lPercentH = 100, long lPercentV = 100)
+			: ResizeInfoH_(EnumResizeMode::Zoomed, lPercentH), ResizeInfoV_(EnumResizeMode::Zoomed, lPercentV)
+		{}
 
 		virtual ILayout*			Clone() const { return new CZoomBlankLayout(ResizeInfoH_.Percent, ResizeInfoV_.Percent); }
 		virtual const ResizeInfo&	GetResizeInfo(EnumLayoutDirection dir);

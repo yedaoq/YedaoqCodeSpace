@@ -85,9 +85,22 @@ FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "确定",IDOK,209,178,50,14
     PUSHBUTTON      "取消",IDCANCEL,264,178,50,14
-    COMBOBOX        IDC_COMBO1,20,18,48,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO1,20,18,102,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LISTBOX         IDC_LIST1,177,44,48,40,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     CONTROL         "",IDC_TREE1,"SysTreeView32",WS_BORDER | WS_HSCROLL | WS_TABSTOP,70,88,60,50
+END
+
+IDD_DIALOG1 DIALOGEX 0, 0, 316, 180
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_TREE1,"SysTreeView32",WS_BORDER | WS_HSCROLL | WS_TABSTOP,7,38,78,106
+    PUSHBUTTON      "A",IDC_BUTTON1,7,7,34,14
+    PUSHBUTTON      "B",IDC_BUTTON2,51,7,34,14
+    PUSHBUTTON      "X",IDC_BUTTON3,97,50,16,14
+    PUSHBUTTON      "Y",IDC_BUTTON4,97,71,16,14
+    CONTROL         "",IDC_LIST1,"SysListView32",LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,120,7,189,166
 END
 
 
@@ -145,9 +158,24 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 192
     END
+
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 173
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// HTML
+//
+
+IDR_HTML_DIALOG1        HTML                    "Dialog1.htm"
 #endif    // 中文(中华人民共和国) resources
 /////////////////////////////////////////////////////////////////////////////
 

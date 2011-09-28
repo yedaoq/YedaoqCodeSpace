@@ -46,6 +46,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
+				ProgramDataBaseFileName="$(OutDir)\YedaoqLayoutsd.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -60,6 +61,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\$(ProjectName)sd.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -107,7 +109,8 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				ProgramDataBaseFileName="$(OutDir)\YedaoqLayoutsr.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -122,6 +125,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\$(ProjectName)sr.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -165,6 +169,14 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

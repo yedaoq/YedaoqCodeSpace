@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "FlowLayout.h"
 #include "CtrlLayout.h"
+#include "ZoomBlankLayout.h"
 
 using namespace NSYedaoqLayout;
 
@@ -17,7 +18,7 @@ int	CFlowLayout::Layout(const LayoutPoint& ptBase, const LayoutSize& lyArea)
 	{
 		if(itemOffset.Value >= lAreaLength)
 		{
-			_ASSERT(FALSE);
+			//_ASSERT(FALSE);
 			break;
 		}
 
@@ -117,9 +118,23 @@ long CFlowLayout::GetFixedItemsLength()
 	return lRet;
 }
 
-ILayout* CFlowLayout::AddItem(HWND hWnd,ResizeInfo resizeInfoH, ResizeInfo resizeInfoV, AnchorInfo anchorInfoH, AnchorInfo anchorInfoV)
+CFlowLayout* CFlowLayout::AddFlow(EnumLayoutDirection dir, ResizeInfo resizeInfo)
 {
-	ILayout* pItem = new CCtrlLayout(hWnd, resizeInfoH, resizeInfoV, anchorInfoH, anchorInfoV);
+	CFlowLayout* pItem = new CFlowLayout(dir, resizeInfo);
+	Items_.push_back(pItem);
+	return pItem;
+}
+
+CCtrlLayout* CFlowLayout::AddCtrl(HWND hWnd,ResizeInfo resizeInfoH, ResizeInfo resizeInfoV, AnchorInfo anchorInfoH, AnchorInfo anchorInfoV)
+{
+	CCtrlLayout* pItem = new CCtrlLayout(hWnd, resizeInfoH, resizeInfoV, anchorInfoH, anchorInfoV);
+	Items_.push_back(pItem);
+	return pItem;
+}
+
+CZoomBlankLayout* CFlowLayout::AddZoomBlank(long percentH, long percentV)
+{
+	CZoomBlankLayout* pItem = new CZoomBlankLayout(percentH, percentV);
 	Items_.push_back(pItem);
 	return pItem;
 }
