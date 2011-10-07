@@ -50,82 +50,87 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>D:\boost_1_46_1;..\..\Include;.\DBInterface;.\Module;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>D:\boost_1_47_0</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>D:\boost_1_46_1;..\..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DBCommandBuilderBase.cpp" />
-    <ClCompile Include="DBDataTypeParser.cpp" />
-    <ClCompile Include="DBDataTypeProviderBase.cpp" />
-    <ClCompile Include="DBModule.cpp" />
-    <ClCompile Include="DBSchemaLoader.cpp" />
-    <ClCompile Include="DBSchemaValidater.cpp" />
-    <ClCompile Include="DBTable.cpp" />
-    <ClCompile Include="DBTableCollection.cpp" />
-    <ClCompile Include="DBTableSchema.cpp" />
-    <ClCompile Include="SqlConstituentWrapper.cpp" />
+    <ClInclude Include="DBCommon\DBCommandBase.h" />
+    <ClInclude Include="DBCommon\DBCommandBuilderBase.h" />
+    <ClInclude Include="DBCommon\DBDataTypeCommon.h" />
+    <ClInclude Include="DBCommon\DBDataTypeParser.h" />
+    <ClInclude Include="DBCommon\DBDataTypeProviderBase.h" />
+    <ClInclude Include="DBCommon\SqlConstituentWrapper.h" />
+    <ClInclude Include="Module\CPPDataType.h" />
+    <ClInclude Include="Module\DBModule.h" />
+    <ClInclude Include="Module\DBRecord.h" />
+    <ClInclude Include="Module\DBRecordComparison.h" />
+    <ClInclude Include="Module\DBRecordFunction.h" />
+    <ClInclude Include="Module\DBTable.h" />
+    <ClInclude Include="Module\DBTableCollection.h" />
+    <ClInclude Include="Module\Schema\DBColumnSchema.h" />
+    <ClInclude Include="Module\Schema\DBSchemaCppMicro.h" />
+    <ClInclude Include="Module\Schema\DBSchemaHeaderMicro.h" />
+    <ClInclude Include="Module\Schema\DBSchemaLoader.h" />
+    <ClInclude Include="Module\Schema\DBSchemaValidater.h" />
+    <ClInclude Include="Module\Schema\DBTableSchema.h" />
+    <ClInclude Include="Util\DBEnumeratorSuit.h" />
+    <ClInclude Include="Util\DBRecordBaseEnumerator.h" />
+    <ClInclude Include="Sqlite\CppSQLite3U.h" />
+    <ClInclude Include="Sqlite\I_DBControl.h" />
+    <ClInclude Include="Sqlite\SqliteDataAdapter.h" />
+    <ClInclude Include="Sqlite\SqliteDataTypeProvider.h" />
+    <ClInclude Include="Sqlite\SqliteFactory.h" />
+    <ClInclude Include="View\CellContext.h" />
+    <ClInclude Include="View\CellEditStyle.h" />
+    <ClInclude Include="View\CellView.h" />
+    <ClInclude Include="View\CellViewDBMap.h" />
+    <ClInclude Include="View\DBColumnViewInfo.h" />
+    <ClInclude Include="View\DBTableViewer.h" />
+    <ClInclude Include="DBInterface\DBCommand.h" />
+    <ClInclude Include="DBInterface\DBCommandBuilder.h" />
+    <ClInclude Include="DBInterface\DBDataAdapter.h" />
+    <ClInclude Include="DBInterface\DBDataType.h" />
+    <ClInclude Include="DBInterface\DBFactory.h" />
+    <ClInclude Include="DBInterface\DBNameMapping.h" />
+    <ClInclude Include="DBInterface\DBSourceManager.h" />
+    <ClInclude Include="DBInterface\DBSourcePath.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DBCommon\DBCommandBuilderBase.cpp" />
+    <ClCompile Include="DBCommon\DBDataTypeParser.cpp" />
+    <ClCompile Include="DBCommon\DBDataTypeProviderBase.cpp" />
+    <ClCompile Include="DBCommon\SqlConstituentWrapper.cpp" />
+    <ClCompile Include="Module\DBModule.cpp" />
+    <ClCompile Include="Module\DBTable.cpp" />
+    <ClCompile Include="Module\DBTableCollection.cpp" />
+    <ClCompile Include="Module\Schema\DBSchemaLoader.cpp" />
+    <ClCompile Include="Module\Schema\DBSchemaValidater.cpp" />
+    <ClCompile Include="Module\Schema\DBTableSchema.cpp" />
     <ClCompile Include="Sqlite\CppSQLite3U.cpp" />
     <ClCompile Include="Sqlite\SqliteDataAdapter.cpp" />
     <ClCompile Include="Sqlite\SqliteDataTypeProvider.cpp" />
     <ClCompile Include="Sqlite\SqliteFactory.cpp" />
-    <ClCompile Include="StringBuilder.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Comaprison.h" />
-    <ClInclude Include="DBColumnSchema.h" />
-    <ClInclude Include="DBCommand.h" />
-    <ClInclude Include="DBCommandBase.h" />
-    <ClInclude Include="DBCommandBuilder.h" />
-    <ClInclude Include="DBCommandBuilderBase.h" />
-    <ClInclude Include="DBDataAdapter.h" />
-    <ClInclude Include="DBDataType.h" />
-    <ClInclude Include="DBDataTypeCommon.h" />
-    <ClInclude Include="DBDataTypeParser.h" />
-    <ClInclude Include="DBDataTypeProviderBase.h" />
-    <ClInclude Include="DBModule.h" />
-    <ClInclude Include="DBNameMapping.h" />
-    <ClInclude Include="DBFactory.h" />
-    <ClInclude Include="DBRecord.h" />
-    <ClInclude Include="DBRecordComparison.h" />
-    <ClInclude Include="DBSchemaCppMicro.h" />
-    <ClInclude Include="DBSchemaHeaderMicro.h" />
-    <ClInclude Include="DBSchemaLoader.h" />
-    <ClInclude Include="DBSchemaValidater.h" />
-    <ClInclude Include="DBSourceManager.h" />
-    <ClInclude Include="DBSourcePath.h" />
-    <ClInclude Include="DBTable.h" />
-    <ClInclude Include="DBTableCollection.h" />
-    <ClInclude Include="DBTableSchema.h" />
-    <ClInclude Include="mytype.h" />
-    <ClInclude Include="SqlConstituentWrapper.h" />
-    <ClInclude Include="Sqlite\CppSQLite3U.h" />
-    <ClInclude Include="Sqlite\I_DBControl.h" />
-    <ClInclude Include="Sqlite\sqlite3.h" />
-    <ClInclude Include="Sqlite\SqliteDataAdapter.h" />
-    <ClInclude Include="Sqlite\SqliteDataTypeProvider.h" />
-    <ClInclude Include="Sqlite\SqliteFactory.h" />
-    <ClInclude Include="StringBuilder.h" />
+    <ClCompile Include="View\CellEditStyle.cpp" />
+    <ClCompile Include="View\DBColumnViewInfo.cpp" />
+    <ClCompile Include="View\DBTableViewer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

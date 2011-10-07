@@ -1,6 +1,6 @@
 #pragma once
 //#include "..\..\include\IRefObject.h"
-#include "..\mytype.h"
+#include "mytype.h"
 
 #ifndef interface
 #define interface struct

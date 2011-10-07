@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../DBDataAdapter.h"
+#include "DBDataAdapter.h"
 //#include "CppSQLite3U.h"
 #include "I_DBControl.h"
-#include "../Enumerator.h"
-#include "../mytype.h"
-#include "../DBRecord.h"
+#include "Enumerator.h"
+#include "mytype.h"
+#include "DBRecord.h"
 
 namespace NSDBModule
 {

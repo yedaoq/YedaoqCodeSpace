@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="GridCtrl_src">
+      <UniqueIdentifier>{65da82d0-4706-4631-9994-f9cc9222f97c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridCell.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridCellBase.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridCtrl.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridDropTarget.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\InPlaceEdit.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\TitleTip.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridColumn.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\CellFactory.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\CellTemplate.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\CellFactoryProvider.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridCellCheck.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridCellComboBox.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridCellDateTime.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridCellLink.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridCellNumeric.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCtrl_src\GridURLCell.cpp">
+      <Filter>GridCtrl_src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\CellRange.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridCell.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridCellBase.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridCtrl.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridDropTarget.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\InPlaceEdit.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\MemDC.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\TitleTip.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridColumn.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\CellFactory.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\CellTemplate.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\CellFactoryProvider.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridCellCheck.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridCellComboBox.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridCellDateTime.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridCellLink.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridCellNumeric.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCtrl_src\GridURLCell.h">
+      <Filter>GridCtrl_src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

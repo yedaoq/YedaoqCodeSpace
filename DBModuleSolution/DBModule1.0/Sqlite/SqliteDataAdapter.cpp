@@ -1,9 +1,9 @@
 #include "SqliteDataAdapter.h"
 #include "I_DBControl.h"
-#include "..\DBColumnSchema.h"
+#include "Schema\DBColumnSchema.h"
 #include "SqliteDataTypeProvider.h"
-#include "..\DBCommand.h"
-#include "..\DBRecord.h"
+#include "DBCommand.h"
+#include "DBRecord.h"
 //#include "boost\smart_ptr.hpp"
 #include "boost\smart_ptr\make_shared.hpp"
 

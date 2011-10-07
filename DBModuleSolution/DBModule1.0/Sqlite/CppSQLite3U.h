@@ -53,11 +53,9 @@
 #endif // _MSC_VER > 1000
 // CppSQLite3U.h : header file
 //
-//#include "atlstr.h"
 #include "I_DBControl.h"
 #include "sqlite3.h"
-//#include "..\include\RefObjectImpl.h"
-#include "..\mytype.h"
+#include "mytype.h"
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef interface

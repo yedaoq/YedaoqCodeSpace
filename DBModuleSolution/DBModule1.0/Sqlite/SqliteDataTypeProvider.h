@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../DBDataTypeProviderBase.h"
-#include "../Singlton.h"
+#include "../DBCommon/DBDataTypeProviderBase.h"
+#include "Singlton.h"
 
 namespace NSDBModule
 {

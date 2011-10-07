@@ -46,9 +46,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 //#include "stdafx.h"
+
+#include "mytype.h"
 #include "CppSQLite3U.h"
 #include "boost\format.hpp"
-#include "..\mytype.h"
 #include "boost\lexical_cast.hpp"
 #include "boost\algorithm\string.hpp"
 

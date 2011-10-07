@@ -210,6 +210,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBTableViewer4GridCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FileView.cpp"
 				>
 			</File>
@@ -273,6 +277,10 @@
 			</File>
 			<File
 				RelativePath=".\DBSchemaTableView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBTableViewer4GridCtrl.h"
 				>
 			</File>
 			<File
