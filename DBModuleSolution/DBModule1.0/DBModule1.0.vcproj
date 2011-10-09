@@ -184,6 +184,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBCommon\DBNameMappingNone.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DBCommon\SqlConstituentWrapper.cpp"
 				>
 			</File>
@@ -238,6 +242,14 @@
 			<Filter
 				Name="Schema"
 				>
+				<File
+					RelativePath=".\Module\Schema\BuildInSchemaSerializer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Module\Schema\BuildInSchemaSerializer.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Module\Schema\DBColumnSchema.h"
 					>

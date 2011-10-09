@@ -2,6 +2,8 @@
 
 #include "mytype.h"
 #include "Enumerator.h"
+#include "DBDataAdapter.h"
+#include "DBFactory.h"
 
 #ifndef interface
 #define interface struct
@@ -9,16 +11,21 @@
 
 namespace NSDBModule
 {
-	interface IDBSourcePath;
+	interface IDBConnection;
 
 	interface IDBSourceManager
 	{
+		typedef IEnumerator<IDBConnection> SourceEnumerator;
+
 		virtual ~IDBSourceManager() {}
 
-		virtual bool SourceEnumerable() = 0;
-		virtual IEnumerator<IDBSourcePath>* EnumDBSource() = 0;
-		virtual IDBSourcePath* PromptOpenDBSource() = 0;
-		virtual IDBSourcePath* PromptCreateDBSource() = 0;
-		virtual IDBSourcePath* OpenDBSource(const tstring& connStr) = 0;
+		virtual SourceEnumerator*	EnumDBSource() = 0;
+
+		virtual IDBConnection*		PromptSelectDBSource(IDBConnection* pDefault) = 0;
+		virtual IDBConnection*		PromptCreateDBSource(IDBConnection* pDefault) = 0;
+
+		virtual IDBConnection*		ParseDBConnection(const tchar* pcConnStr) = 0;
+		
+		virtual bool				OpenDBConnection(IDBConnection* pConn, IDBDataAdapter** ppAdapter, IDBFactory** ppFactory) = 0;
 	};
 }

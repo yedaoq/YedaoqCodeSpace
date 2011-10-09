@@ -4,14 +4,23 @@
 #include "SqliteDataTypeProvider.h"
 #include "DBCommand.h"
 #include "DBRecord.h"
-//#include "boost\smart_ptr.hpp"
+#include "CppSQLite3U.h"
 #include "boost\smart_ptr\make_shared.hpp"
+#include "DBSourcePath.h"
 
 using namespace NSDBModule;
 
+CSqliteDataAdapter::CSqliteDataAdapter(IDBConnection* conn)
+{
+	if(!SqliteDB.open(conn->ToString().c_str()))
+	{
+		throw std::exception();
+	}
+}
+
 IDBDataAdapter::DBTableEnumPtr CSqliteDataAdapter::EnumTable()
 {
-	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB->execQuery2(TEXT("SELECT name FROM [sqlite_master] WHERE type = 'table'"));
+	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB.execQuery2(TEXT("SELECT name FROM [sqlite_master] WHERE type = 'table'"));
 	return boost::make_shared<CSqliteTableEnumerator>(spQuery);	
 }
 
@@ -23,7 +32,7 @@ IDBDataAdapter::DBColumnEnumPtr CSqliteDataAdapter::EnumColumn(const tstring& tb
 	buf[len + tblName.length()] = '\'';
 	buf[len + tblName.length() + 1] = '\0';
 
-	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB->execQuery2(buf);
+	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB.execQuery2(buf);
 	return boost::make_shared<CSqliteColumnEnumerator>(spQuery);
 }
 
@@ -34,7 +43,7 @@ IDBDataAdapter::DBRecordEnumPtr CSqliteDataAdapter::Select(const IDBCommand& cmd
 		throw std::exception();
 	}
 
-	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB->execQuery2(cmd.Text().c_str());
+	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB.execQuery2(cmd.Text().c_str());
 }
 
 int	CSqliteDataAdapter::Execute(const IDBCommand& cmd)
@@ -44,7 +53,7 @@ int	CSqliteDataAdapter::Execute(const IDBCommand& cmd)
 		throw std::exception();
 	}
 
-	SqliteDB->execScalar(cmd.Text().c_str());
+	SqliteDB.execScalar(cmd.Text().c_str());
 }
 
 bool CSqliteTableEnumerator::MoveNext()
@@ -55,13 +64,13 @@ bool CSqliteTableEnumerator::MoveNext()
 	}
 	else
 	{
-		if(!QueryPtr->eof())
+		if(!(QueryPtr->eof()))
 		{
 			QueryPtr->nextRow();
 		}
 	}
 
-	return !QueryPtr->eof();
+	return !(QueryPtr->eof());
 }
 
 const tstring& CSqliteTableEnumerator::Current()

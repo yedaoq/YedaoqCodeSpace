@@ -54,6 +54,14 @@ DBRecordEnumerator CDBTable::EnumRecord() /*const*/
 	return make_iterator_enumerator(Records_.begin(), Records_.end());
 }
 
+int CDBTable::ClearData()
+{
+	Records_.clear();
+	FlagLoaded_ = false;
+
+	return 1;
+}
+
 int	CDBTable::LoadData()
 {
 	if(FlagLoaded_ && !FlagDirty_)

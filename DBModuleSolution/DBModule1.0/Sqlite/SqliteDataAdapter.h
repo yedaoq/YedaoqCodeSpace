@@ -1,11 +1,10 @@
 #pragma once
 
-#include "DBDataAdapter.h"
-//#include "CppSQLite3U.h"
 #include "I_DBControl.h"
-#include "Enumerator.h"
-#include "mytype.h"
-#include "DBRecord.h"
+#include "CppSQLite3U.h"
+#include "..\DBInterface\DBDataAdapter.h"
+#include "..\Module\DBRecord.h"
+#include "..\DBInterface\DBSourcePath.h"
 
 namespace NSDBModule
 {
@@ -14,11 +13,7 @@ namespace NSDBModule
 	class CSqliteDataAdapter : public IDBDataAdapter
 	{
 	public:
-		CSqliteDataAdapter(I_CppSQLite3DB* db)
-			: SqliteDB(db)
-		{}
-
-		virtual ~CSqliteDataAdapter() {}
+		CSqliteDataAdapter(IDBConnection* conn);
 
 		virtual DBTableEnumPtr		EnumTable();
 		virtual DBColumnEnumPtr		EnumColumn(const tstring& tblName);
@@ -27,7 +22,7 @@ namespace NSDBModule
 		virtual int					Execute(const IDBCommand& cmd);
 
 	protected:
-		I_CppSQLite3DB* SqliteDB;
+		CppSQLite3DB SqliteDB;
 	};
 
 	class CSqliteTableEnumerator : public IEnumerator<tstring>

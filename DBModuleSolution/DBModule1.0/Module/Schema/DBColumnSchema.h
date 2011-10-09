@@ -2,7 +2,7 @@
 
 #include "mytype.h"
 #include <vector>
-#include "CPPDataType.h"
+#include "..\CPPDataType.h"
 
 #ifndef interface
 #define interface struct

@@ -24,7 +24,7 @@ namespace NSDBModule
 	typedef DBRecordSet::const_iterator							DBRecordIterator;
 	typedef std::tr1::shared_ptr<IEnumerator<IDBRecord>>		DBRecordEnumPtr;
 	typedef std::tr1::shared_ptr<IDBCommandBuilder>				DBCommandBuilderPtr;
-	typedef CIteratorEnumerator<DBRecordSet::iterator>	DBRecordEnumerator;
+	typedef CIteratorEnumerator<DBRecordSet::iterator>			DBRecordEnumerator;
 
 	class CDBTable
 	{

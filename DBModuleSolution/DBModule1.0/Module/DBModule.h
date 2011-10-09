@@ -34,16 +34,17 @@ public:
 	{}
 
 	// initialize for access	
-	virtual int				InitializeBuildinSchema() { WithBuildinSchema_ = false; } //// buildin schema initialize
+	virtual int				InitializeBuildinSchema() { WithBuildinSchema_ = false; return 1; } //// buildin schema initialize
 	virtual int				Initialize();	
 
 	// database binding
-	virtual	int				AttachToDatabase(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory);
+	virtual	int				AttachToDatabase(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory, IDBNameMapping* dbNameMapping);
 	virtual int				DetachFromDataBase();
 
 	// module info
 	virtual IDBDataAdapter* DBAdapter() const { return DBAdapter_; }			// get the database data adapter
 	virtual IDBFactory*		DBFactory() const { return DBFactory_; }			// get the database component factory
+	virtual IDBNameMapping*	DBNameMapping() const { return DBNameMapping_; }	// get the name mapper
 	virtual bool			WithBuildinSchema() const {return WithBuildinSchema_; }	// whether the module has a buildin schema
 	
 	// module state
@@ -52,7 +53,7 @@ public:
 	virtual bool			Accessable() const {return BindingToAnyDataBase() && Valid == SchemaValidity(); /*&& Initialized()*/ }
 
 	// schema operation
-	virtual int				Clear();
+	virtual int				Clear(bool bBuildIn = false);
 	virtual int				RefreshSchema();
 
 	// data operation
@@ -65,6 +66,8 @@ public:
 protected:
 	IDBDataAdapter*			DBAdapter_;
 	IDBFactory*				DBFactory_;
+	IDBNameMapping*			DBNameMapping_;
+
 	bool					WithBuildinSchema_;
 	bool					SchemaValidity_;
 

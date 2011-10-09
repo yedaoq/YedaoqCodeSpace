@@ -20,12 +20,6 @@ bool CDBSchemaLoader::Load()
 		return false;
 	}
 
-	DBNameMapping = DBModule->DBFactory()->CreateDBNameMapping();
-	if(!DBNameMapping)
-	{
-		return false;
-	}
-
 	if(!LoadAllTable())
 	{
 		bRet = false;
@@ -51,7 +45,7 @@ bool CDBSchemaLoader::LoadAllTable()
 	tstring name;
 	while (etor->MoveNext(dbName))
 	{
-		name = DBNameMapping->FromDBName(dbName, context);
+		name = DBModule->DBNameMapping()->FromDBName(dbName, context);
 		if(name.empty())
 		{
 			continue;
@@ -93,7 +87,7 @@ bool CDBSchemaLoader::LoadTable(const tstring& dbName, const DBTablePtr& pTbl)
 
 	while(etor->MoveNext(dbCol))
 	{
-		dbCol.Name = DBNameMapping->FromDBName(dbCol.DBName, context);
+		dbCol.Name = DBModule->DBNameMapping()->FromDBName(dbCol.DBName, context);
 		if(!schema.FindByName(dbCol.Name, exCol))
 		{
 			exCol.SetBuildInInfo(dbCol.Name, dbCol.DBType->PreferredCppDataType(), false, false);

@@ -106,6 +106,12 @@ int CDBCommandBuilderBase::GetCmdCreate(IDBCommand** cmd)
 	return 1;
 }
 
+int CDBCommandBuilderBase::ReleaseCmd(IDBCommand* cmd, bool)
+{
+	delete cmd;
+	return 1;
+}
+
 int CDBCommandBuilderBase::GenerateSqlSelect(const IDBRecord& rec , const CDBRecordComparison& cmp, tstring& buffer)
 {
 	buffer.append(TEXT("SELECT * FROM "));

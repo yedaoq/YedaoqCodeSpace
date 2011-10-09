@@ -12,6 +12,7 @@
 #define new DEBUG_NEW
 #endif
 
+using namespace NSYedaoqLayout;
 
 // CDBSchemaTableView
 
@@ -22,11 +23,14 @@ BEGIN_MESSAGE_MAP(CDBSchemaTableView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CDBSchemaTableView::OnFilePrintPreview)
+	ON_WM_CREATE()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 // CDBSchemaTableView 构造/析构
 
 CDBSchemaTableView::CDBSchemaTableView()
+	: Layout_(EnumLayoutDirection::Vertical)
 {
 	// TODO: 在此处添加构造代码
 
@@ -41,7 +45,36 @@ BOOL CDBSchemaTableView::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: 在此处通过修改
 	//  CREATESTRUCT cs 来修改窗口类或样式
 
+	//cs.style ^= WS_BORDER;
+
 	return CView::PreCreateWindow(cs);
+}
+
+int CDBSchemaTableView::OnCreate(LPCREATESTRUCT lpcs)
+{
+	if (CView::OnCreate(lpcs) == -1)
+		return -1;
+
+	RECT rect = {0, 0, lpcs->cx, lpcs->cy};
+	Grid_.Create(rect, this, 1, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
+
+	RECT rect1 = { 0, 0, 150, 28 };
+	CmbTables_.Create(CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, rect1, this, 2);
+
+	CmbTables_.ShowWindow(SW_SHOW);
+
+	CFlowLayout* pFlow = Layout_.AddFlow(EnumLayoutDirection::Horizon);
+	pFlow->AddCtrl(CmbTables_.GetSafeHwnd());
+
+	Layout_.AddCtrl(
+		Grid_.GetSafeHwnd(), 
+		ResizeInfo::FillInfo, 
+		ResizeInfo::FillInfo);
+
+	Grid_.SetColumnCount(2);
+	Grid_.SetRowCount(1);
+
+	return S_OK;
 }
 
 // CDBSchemaTableView 绘制
@@ -92,6 +125,10 @@ void CDBSchemaTableView::OnContextMenu(CWnd* pWnd, CPoint point)
 	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
 }
 
+afx_msg void CDBSchemaTableView::OnSize(UINT nType, int cx, int cy)
+{
+	Layout_.Layout(LayoutPoint(0, 0), LayoutSize(cx, cy));
+}
 
 // CDBSchemaTableView 诊断
 

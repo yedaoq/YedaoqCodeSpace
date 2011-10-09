@@ -30,7 +30,6 @@ namespace NSDBModule
 
 	protected:
 		CDBModule*		DBModule;
-		IDBNameMapping* DBNameMapping;
 	};
 }
 

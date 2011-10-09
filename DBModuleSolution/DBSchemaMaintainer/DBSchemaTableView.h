@@ -2,9 +2,11 @@
 // DBSchemaTableView.h : CDBSchemaTableView 类的接口
 //
 
-
 #pragma once
 
+#include "GridCtrl.h"
+#include "Layout/FlowLayout.h"
+#include "Layout/CtrlLayout.h"
 
 class CDBSchemaTableView : public CView
 {
@@ -37,12 +39,17 @@ public:
 #endif
 
 protected:
+	CGridCtrl					Grid_;
+	NSYedaoqLayout::CFlowLayout Layout_;
+	CComboBox					CmbTables_;
 
 // 生成的消息映射函数
 protected:
 	afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg int  OnCreate(LPCREATESTRUCT lpcs);
 	DECLARE_MESSAGE_MAP()
 };
 

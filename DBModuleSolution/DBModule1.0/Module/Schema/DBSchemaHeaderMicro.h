@@ -20,7 +20,7 @@ public : \
 #undef BEGIN_DBTABLE
 #endif
 
-#define BEGIN_DBTABLE(name) index_t TBL_##name \
+#define BEGIN_DBTABLE(name) index_t TBL_##name; \
 	enum Enum##name { 
 
 // redef micro END_DBTABLE
@@ -30,9 +30,9 @@ public : \
 
 #define END_DBTABLE }
 
-// redef micro DECLARE_COLUMN
-#ifdef DECLARE_COLUMN
-#undef DECLARE_COLUMN
+// redef micro DBCOLUMN
+#ifdef DBCOLUMN
+#undef DBCOLUMN
 #endif
 
-#define DECLARE_COLUMN(name, type, flag, uniquemask) name;
+#define DBCOLUMN(name, type, flag, uniquemask) name,

@@ -31,11 +31,11 @@
 
 #define END_DBTABLE Tables.Append(anonyousTableSchema, this, true);
 
-// redef micro DECLARE_COLUMN
-#ifdef DECLARE_COLUMN
-#undef DECLARE_COLUMN
+// redef micro DBCOLUMN
+#ifdef DBCOLUMN
+#undef DBCOLUMN
 #endif
 
-#define DECLARE_COLUMN(name, type, flag, uniquemask) \
+#define DBCOLUMN(name, type, flag, uniquemask) \
 	anonyousColumnSchema = {0, name, type, 0, TEXT(""), 0, uniquemask, flag}; \
 	anonyousTableSchema.AppendColumn(anonyousColumnSchema);

@@ -1,16 +1,14 @@
 #pragma once
 
-#include "../DBFactory.h"
+#include "..\DBInterface\DBFactory.h"
 
 namespace NSDBModule
 {
-	class CSqliteFactory
+	class CSqliteFactory : public IDBFactory
 	{
-		virtual IDBDataAdapter*			CreateDBAdapter();
 		virtual IDBCommand*				CreateDBCommand();
 		virtual IDBCommandBuilder*		CreateDBCommandBuilder();
 		virtual IDBDataTypeProvider*	CreateDBDataTypeProvider();
-		virtual IDBNameMapping*			CreateDBNameMapping();
 	};
 
 }

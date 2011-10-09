@@ -29,8 +29,8 @@ namespace NSDBModule
 		virtual int GetCmdDelete(const IDBRecord&, const CDBRecordComparison& cmp,  IDBCommand**) = 0;
 		virtual int GetCmdUpdate(const IDBRecord&, const IDBRecord&, const CDBRecordComparison& cmp, IDBCommand**) = 0;
 
-		virtual int GetCmdCreate() = 0;
+		virtual int GetCmdCreate(IDBCommand**) = 0;
 
-		virtual int ReleaseCmd(IDBCommand *, bool);
+		virtual int ReleaseCmd(IDBCommand *, bool) = 0;
 	};
 }
