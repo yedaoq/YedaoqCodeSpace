@@ -49,4 +49,15 @@ namespace NSDBModule
 		CDBRecordComparison Comparison;
 		CDBRecordAuto		Key;
 	};
+
+	bool DBRecordAssign(IDBRecord& des, const IDBRecord& src)
+	{
+		_ASSERT(des.GetFieldCount() == src.GetFieldCount());
+		for(int i = 0; i < min(des.GetFieldCount(), src.GetFieldCount()); ++i)
+		{
+			des.SetField(i, src.GetField(i));
+		}
+
+		return true;
+	}
 }

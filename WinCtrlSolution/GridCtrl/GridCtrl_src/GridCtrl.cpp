@@ -3915,7 +3915,10 @@ int CGridCtrl::InsertColumn(const CGridColumn& columnInfo,
 
 	// initialized column width
 	//m_arColWidths[nColumn] = GetTextExtent(0, nColumn, strHeading).cx;
-	m_arColumns[nColumn].SetWidth(GetTextExtent(0, nColumn, columnInfo.GetTitle().c_str()).cx);
+	if (m_arColumns[nColumn].GetWidth() == -1)
+	{
+		m_arColumns[nColumn].SetWidth(GetTextExtent(0, nColumn, columnInfo.GetTitle().c_str()).cx);
+	}	
 
 	if (m_idCurrentCell.col != -1 && nColumn < m_idCurrentCell.col)
 		m_idCurrentCell.col++;
@@ -4095,13 +4098,23 @@ int CGridCtrl::SetCellEx(int nRow, int nCol, CGridCellBase *cell)
         return NULL;
     }
 	
-    //CGridCellBase* pCell = (CGridCellBase*) m_pRtcDefault->CreateObject();
-	CGridCellBase* pCell = m_arColumns[nCol].GetCellTemplate().CreateCell();
+	
+	CGridCellBase* pCell = 0;
+	if(nRow < m_nFixedRows)
+	{
+		pCell = (CGridCellBase*) m_pRtcDefault->CreateObject();
+	}
+	else
+	{
+		pCell = m_arColumns[nCol].GetCellTemplate().CreateCell();
+		pCell->SetState(m_arColumns[nCol].GetCellState());
+	}
+	
     if (!pCell)
         return NULL;
 
     pCell->SetGrid(this);
-    pCell->SetCoords(nRow, nCol); 
+    pCell->SetCoords(nRow, nCol); 	
 
     if (nCol < m_nFixedCols)
         pCell->SetState(pCell->GetState() | GVIS_FIXED | GVIS_FIXEDCOL);
@@ -4965,7 +4978,7 @@ BOOL CGridCtrl::SetColumnWidth(int nCol, int width)
     if (nCol < 0 || nCol >= m_nCols || width < 0)
         return FALSE;
 
-    m_arColumns[m_arColOrder[nCol]].SetWidth(nCol);  //m_arColWidths[m_arColOrder[nCol]] = width;
+    m_arColumns[m_arColOrder[nCol]].SetWidth(width);  //m_arColWidths[m_arColOrder[nCol]] = width;
     ResetScrollBars();
 
     return TRUE;

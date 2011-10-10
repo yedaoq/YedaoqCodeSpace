@@ -20,7 +20,7 @@ CSqliteDataAdapter::CSqliteDataAdapter(IDBConnection* conn)
 
 IDBDataAdapter::DBTableEnumPtr CSqliteDataAdapter::EnumTable()
 {
-	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB.execQuery2(TEXT("SELECT name FROM [sqlite_master] WHERE type = 'table'"));
+	I_CppSQLite3Query* spQuery = SqliteDB.execQuery2(TEXT("SELECT name FROM [sqlite_master] WHERE type = 'table' and name not in ('sqlite_sequence')"));
 	return boost::make_shared<CSqliteTableEnumerator>(spQuery);	
 }
 
@@ -32,7 +32,7 @@ IDBDataAdapter::DBColumnEnumPtr CSqliteDataAdapter::EnumColumn(const tstring& tb
 	buf[len + tblName.length()] = '\'';
 	buf[len + tblName.length() + 1] = '\0';
 
-	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB.execQuery2(buf);
+	I_CppSQLite3Query* spQuery = SqliteDB.execQuery2(buf);
 	return boost::make_shared<CSqliteColumnEnumerator>(spQuery);
 }
 
@@ -43,7 +43,8 @@ IDBDataAdapter::DBRecordEnumPtr CSqliteDataAdapter::Select(const IDBCommand& cmd
 		throw std::exception();
 	}
 
-	CAutoDBObjPtr<I_CppSQLite3Query> spQuery = SqliteDB.execQuery2(cmd.Text().c_str());
+	I_CppSQLite3Query* spQuery = SqliteDB.execQuery2(cmd.Text().c_str());
+	return boost::make_shared<CSqliteRecordEnumerator>(spQuery);
 }
 
 int	CSqliteDataAdapter::Execute(const IDBCommand& cmd)
@@ -53,7 +54,7 @@ int	CSqliteDataAdapter::Execute(const IDBCommand& cmd)
 		throw std::exception();
 	}
 
-	SqliteDB.execScalar(cmd.Text().c_str());
+	return SqliteDB.execScalar(cmd.Text().c_str());
 }
 
 bool CSqliteTableEnumerator::MoveNext()
@@ -115,8 +116,11 @@ const DBColumnSchema& CSqliteColumnEnumerator::Current()
 
 	col.DBIndex = IdxCol;
 	col.DBName = QueryPtr->fieldName(IdxCol);
+
+	int iSqlTypeID = QueryPtr->fieldDataType(IdxCol);
+
 	col.DBType = CSqliteDataTypeProvider::GetInstance().ParseDBTypeStr(
-		DataTypeStrs[QueryPtr->fieldDataType(IdxCol)]);
+		DataTypeStrs[iSqlTypeID - 1]);
 
 	return col;
 }

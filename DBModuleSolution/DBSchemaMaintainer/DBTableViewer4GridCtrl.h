@@ -2,27 +2,29 @@
 #include "..\DBModule1.0\View\DBTableViewer.h"
 
 class CGridCtrl;
+class CGridColumn;
 
 using NSDBModule::IDBTableViewer;
 using NSDBModule::CDBTableViewColumnCollection;
 using NSDBModule::DBTableViewColumn;
 using NSDBModule::IDBRecord;
+using NSDBModule::CDBColumnViewInfo;
 
 
 class CDBTableViewer4GridCtrl : public NSDBModule::IDBTableViewer
 {
 public:
-
-	~CDBTableViewer4GridCtrl(void);
-
 	CDBTableViewer4GridCtrl(void){};
-	CDBTableViewer4GridCtrl(const CDBTableViewColumnCollection& columns, CGridCtrl* grid, int gridHeaderRows)
-		: ColumnInfos_(columns), Grid_(grid), HeadRowCount(gridHeaderRows)
+	CDBTableViewer4GridCtrl(CGridCtrl* grid, int gridHeaderRows)
+		: Grid_(grid), HeadRowCount_(gridHeaderRows)
 	{}
 
-	virtual int					Initialize();
+	virtual int					Initialize(const CDBTableViewColumnCollection& columns);
 
-	virtual int					Fill(const IEnumerator<IDBRecord>&);
+	virtual	CGridCtrl*			Grid() { return Grid_; }
+	virtual int					HeadRowCount() {return HeadRowCount_; }
+
+	virtual int					Fill(IEnumerator<IDBRecord>&);
 
 	// record enumerate
 	virtual int					GetRecordCount();
@@ -30,7 +32,7 @@ public:
 
 	// selection info
 	virtual int					GetCurRecord(IDBRecord*);
-	virtual DBTableViewColumn	GetCurColumn();
+	virtual DBTableViewColumn*	GetCurColumn();
 
 	// single record r/w
 	virtual int					GetRecordAt(int row, IDBRecord*);
@@ -39,7 +41,7 @@ public:
 	virtual int					NewRecordAt(int row, const IDBRecord&);
 
 	// column info
-	IDBTableViewer::ColumnEnumerator*	EnumColumn();
+	IEnumerator<DBTableViewColumn>*	EnumColumn();
 
 protected:
 	CGridColumn					GetGridColumnFromDBColInfo(CDBColumnViewInfo* info);
@@ -47,5 +49,5 @@ protected:
 protected:
 	CDBTableViewColumnCollection ColumnInfos_;
 	CGridCtrl*					 Grid_;
-	int							 HeadRowCount;
+	int							 HeadRowCount_;
 };

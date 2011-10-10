@@ -2,32 +2,37 @@
 
 #include <mytype.h>
 
+interface ITextFormatSwitcher;
+interface IEditStyle;
+
 namespace NSDBModule
 {
-	interface ITextFormatSwitcher;
-	interface IEditStyle;
-
 	class CDBColumnViewInfo
 	{
 	public:
-		CDBColumnViewInfo(const tstring& title, ITextFormatSwitcher* view = 0, IEditStyle* editStyle = 0, int defaultsize = 0)
-			: StrTitle_(title), View_(view), EditStyle_(editStyle), DefaultWidth_(defaultsize)
+		CDBColumnViewInfo() {}
+
+		CDBColumnViewInfo(const tstring& title, ITextFormatSwitcher* view = 0, IEditStyle* editStyle = 0, int defaultsize = 0, bool readonly = false)
+			: StrTitle_(title), View_(view), EditStyle_(editStyle), DefaultWidth_(defaultsize), ReadOnly_(readonly)
 		{}
 
-		virtual tstring&	SetTitle(const tstring& val)			{ StrTitle_ = val; }
-		virtual int			SetDefaultWidth(int val)				{ DefaultWidth_ = val; }
-		virtual int			SetTextFormat(ITextFormatSwitcher* val)	{ View_ = val; }
-		virtual int			SetEditStyle(IEditStyle* val)			{ EditStyle_ = val; }
+		virtual int			SetTitle(const tstring& val)			{ StrTitle_ = val; return 1; }
+		virtual int			SetDefaultWidth(int val)				{ DefaultWidth_ = val; return 1; }
+		virtual int			SetTextFormat(ITextFormatSwitcher* val)	{ View_ = val; return 1; }
+		virtual int			SetEditStyle(IEditStyle* val)			{ EditStyle_ = val; return 1; }
+		virtual int			SetReadOnly(bool val)					{ ReadOnly_ = val; return 1; }
 
 		virtual const tstring&			GetTitle()					{ return StrTitle_; }
 		virtual int						GetDefaultWidth()			{ return DefaultWidth_; }
 		virtual ITextFormatSwitcher*	GetTextFormat()				{ return View_; }
 		virtual IEditStyle*				GetEditStyle()				{ return EditStyle_; }
+		virtual	bool					GetReadOnly()				{ return ReadOnly_; }
 
 	protected:
 		tstring					StrTitle_;
 		int						DefaultWidth_;
 		ITextFormatSwitcher*	View_;
 		IEditStyle*				EditStyle_;
+		bool					ReadOnly_;
 	};
 }

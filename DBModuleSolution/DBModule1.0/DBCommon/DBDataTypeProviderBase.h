@@ -6,8 +6,6 @@
 
 namespace NSDBModule
 {
-	
-
 	class CDBDataTypeProvider : public IDBDataTypeProvider
 	{
 	public:
@@ -18,7 +16,7 @@ namespace NSDBModule
 		virtual ~CDBDataTypeProvider() { Clear(); }
 
 		CDBDataTypeProvider()
-			: DataTypes(CPPDATATYPECOUNT)
+			: DataTypes(0)
 		{}
 
 		virtual IDBDataType*		ParseDBTypeStr(const tstring& type);

@@ -30,10 +30,41 @@ END_MESSAGE_MAP()
 // CDBSchemaTableView ¹¹Ôì/Îö¹¹
 
 CDBSchemaTableView::CDBSchemaTableView()
-	: Layout_(EnumLayoutDirection::Vertical)
+	: Layouter(EnumLayoutDirection::Vertical), GridColViewer(&GridCol, 1), GridTabViewer(&GridTab, 1)
 {
 	// TODO: ÔÚ´Ë´¦Ìí¼Ó¹¹Ôì´úÂë
+	GridTab_Name = CDBColumnViewInfo(
+		TEXT("Ãû³Æ"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleNone::GetInstance(),
+		80,
+		true);
 
+	GridTab_DBName = CDBColumnViewInfo(
+		TEXT("Êı¾İ¿âÃû"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleNone::GetInstance(),
+		80,
+		true);
+
+	GridTab_BuildIn = CDBColumnViewInfo(
+		TEXT("ÄÚÖÃ"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleBool::GetInstance(),
+		40,
+		true);
+
+	GridTab_DBExist = CDBColumnViewInfo(
+		TEXT("´æÔÚ"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleBool::GetInstance(),
+		40,
+		true);
+
+	GridTblColumns.Append(&GridTab_Name);
+	GridTblColumns.Append(&GridTab_DBName);
+	GridTblColumns.Append(&GridTab_BuildIn);
+	GridTblColumns.Append(&GridTab_DBExist);
 }
 
 CDBSchemaTableView::~CDBSchemaTableView()
@@ -56,23 +87,36 @@ int CDBSchemaTableView::OnCreate(LPCREATESTRUCT lpcs)
 		return -1;
 
 	RECT rect = {0, 0, lpcs->cx, lpcs->cy};
-	Grid_.Create(rect, this, 1, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
+	GridCol.Create(rect, this, 1, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
+	GridTab.Create(rect, this, 2, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
 
 	RECT rect1 = { 0, 0, 150, 28 };
-	CmbTables_.Create(CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, rect1, this, 2);
+	CmbTab.Create(CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, rect1, this, 3);
 
-	CmbTables_.ShowWindow(SW_SHOW);
+	CmbTab.ShowWindow(SW_SHOW);
 
-	CFlowLayout* pFlow = Layout_.AddFlow(EnumLayoutDirection::Horizon);
-	pFlow->AddCtrl(CmbTables_.GetSafeHwnd());
+	CFlowLayout* pFlow = Layouter.AddFlow(EnumLayoutDirection::Horizon);
+	pFlow->AddCtrl(CmbTab.GetSafeHwnd());
 
-	Layout_.AddCtrl(
-		Grid_.GetSafeHwnd(), 
+	pFlow = Layouter.AddFlow(
+		EnumLayoutDirection::Horizon,
+		ResizeInfo::FillInfo);
+
+	pFlow->AddCtrl(
+		GridTab.GetSafeHwnd(),
+		ResizeInfo(EnumResizeMode::Fixed, 300),
+		ResizeInfo::FillInfo);
+
+	pFlow->AddCtrl(
+		GridCol.GetSafeHwnd(), 
 		ResizeInfo::FillInfo, 
 		ResizeInfo::FillInfo);
 
-	Grid_.SetColumnCount(2);
-	Grid_.SetRowCount(1);
+	GridTab.SetColumnCount(4);
+	GridTabViewer.Initialize(GridTblColumns);
+
+	GridCol.SetColumnCount(2);
+	GridCol.SetRowCount(1);
 
 	return S_OK;
 }
@@ -127,7 +171,7 @@ void CDBSchemaTableView::OnContextMenu(CWnd* pWnd, CPoint point)
 
 afx_msg void CDBSchemaTableView::OnSize(UINT nType, int cx, int cy)
 {
-	Layout_.Layout(LayoutPoint(0, 0), LayoutSize(cx, cy));
+	Layouter.Layout(LayoutPoint(0, 0), LayoutSize(cx, cy));
 }
 
 // CDBSchemaTableView Õï¶Ï
@@ -149,6 +193,12 @@ CDBSchemaMaintainerDoc* CDBSchemaTableView::GetDocument() const // ·Çµ÷ÊÔ°æ±¾ÊÇÄ
 	return (CDBSchemaMaintainerDoc*)m_pDocument;
 }
 #endif //_DEBUG
+
+void CDBSchemaTableView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
+{
+	CDBTableInfoEnumerator pEnumTbl(&(GetDocument()->GetDBModule()));
+	GridTabViewer.Fill(pEnumTbl);
+}
 
 
 // CDBSchemaTableView ÏûÏ¢´¦Àí³ÌĞò

@@ -6,6 +6,7 @@
 	ProjectGUID="{20DC88E4-337F-4245-92EE-95E97732B20A}"
 	RootNamespace="DBSchemaMaintainer"
 	Keyword="MFCProj"
+	AssemblyReferenceSearchPaths="&quot;..\..\WinCtrlSolution\GridCtrl\GridCtrl_src&quot;"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -217,6 +218,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBTableViewer4GridCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FileView.cpp"
 				>
 			</File>
@@ -257,18 +262,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\test.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\ViewTree.cpp"
 				>
 			</File>
@@ -300,6 +293,10 @@
 			</File>
 			<File
 				RelativePath=".\DBSchemaTableView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBTableViewer4GridCtrl.h"
 				>
 			</File>
 			<File

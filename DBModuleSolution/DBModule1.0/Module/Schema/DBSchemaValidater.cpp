@@ -10,10 +10,10 @@ bool CDBSchemaValidater::Validate()
 {
 	bool bRet = true;
 
-	DBTableEnumerator etor = DBModule.Tables().Enum();
-	while (etor.MoveNext())
+	std::auto_ptr<DBTableEnumerator> pEnumTbl(DBModule.Tables().Enum());
+	while (pEnumTbl->MoveNext())
 	{
-		if(ValidateTable(etor.Current()->GetSchema()))
+		if(ValidateTable(pEnumTbl->Current()->GetSchema()))
 		{
 			bRet = false;
 		}

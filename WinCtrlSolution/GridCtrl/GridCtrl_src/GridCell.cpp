@@ -272,7 +272,7 @@ void CGridDefaultCell::SetFont(const LOGFONT* plf)
     {
         CFont* pOldFont = pDC->SelectObject(&m_Font);
 
-        SetMargin(pDC->GetTextExtent(_T(" "), 1).cx);
+        SetMargin(pDC->GetTextExtent(_T(" "), 1).cx / 2);
         m_Size = pDC->GetTextExtent(_T(" XXXXXXXXXXXX "), 14);
         m_Size.cy = (m_Size.cy * 3) / 2;
 

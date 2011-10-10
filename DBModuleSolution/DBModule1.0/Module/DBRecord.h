@@ -91,7 +91,9 @@ public:
 	{
 		if(idx >= FieldCount_)
 		{
-			Fields_.resize(idx, tstring());
+			FieldCount_ = idx + 1;
+			Fields_.resize(FieldCount_, tstring());
+			
 		}
 		Fields_[idx] = val;
 

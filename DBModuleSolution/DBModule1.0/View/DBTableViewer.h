@@ -1,6 +1,6 @@
 #pragma once
 #include "Enumerator.h"
-#include "DBRecord.h"
+#include "..\Module\DBRecord.h"
 #include "DBColumnViewInfo.h"
 #include <vector>
 
@@ -34,14 +34,13 @@ namespace NSDBModule
 			Items_.reserve(iCount);
 		}
 
-		//CDBTableViewColumnCollection(const CDBTableViewColumnCollection& other)
-		//	: Items_(other.Items_.begin(), other.Items_.end())
-		//{}
-
 		int					Append(CDBColumnViewInfo* viewInfo, int viewCol = -1, int recCol = -1);
 		int					RemoveAt(int idx);
 		
 		ColumnEnumerator*	Enum();
+
+		DBTableViewColumn*	GetColumnByViewCol(int col);
+		DBTableViewColumn*	GetColumnByRecordCol(int col);
 
 	protected:
 		int					GetMaxIdxRecord();
@@ -60,7 +59,7 @@ namespace NSDBModule
 	public:
 		~IDBTableViewer(void) {};
 
-		virtual int					Fill(const IEnumerator<IDBRecord>&) = 0;
+		virtual int					Fill(IEnumerator<IDBRecord>&) = 0;
 		
 		// record enumerate
 		virtual int					GetRecordCount() = 0;
@@ -68,7 +67,7 @@ namespace NSDBModule
 
 		// selection info
 		virtual int					GetCurRecord(IDBRecord*) = 0;
-		virtual DBTableViewColumn	GetCurColumn() = 0;
+		virtual DBTableViewColumn*	GetCurColumn() = 0;
 		
 		// single record r/w
 		virtual int					GetRecordAt(int row, IDBRecord*) = 0;

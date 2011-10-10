@@ -38,6 +38,36 @@ CDBTableViewColumnCollection::ColumnEnumerator* CDBTableViewColumnCollection::En
 	return new_iterator_enumerator(Items_.begin(), Items_.end()); 
 }
 
+DBTableViewColumn*	CDBTableViewColumnCollection::GetColumnByViewCol(int col)
+{
+	DBTableViewColumn* pRet = 0;
+	for(CDBTableViewColumnCollection::ColumnVct::iterator iter = Items_.begin(); iter != Items_.end(); ++iter)
+	{
+		if(iter->IdxView == col)
+		{
+			pRet = &(*iter);
+			break;
+		}
+	}
+
+	return pRet;
+}
+
+DBTableViewColumn*	CDBTableViewColumnCollection::GetColumnByRecordCol(int col)
+{
+	DBTableViewColumn* pRet = 0;
+	for(CDBTableViewColumnCollection::ColumnVct::iterator iter = Items_.begin(); iter != Items_.end(); ++iter)
+	{
+		if(iter->IdxRecord == col)
+		{
+			pRet = &(*iter);
+			break;
+		}
+	}
+
+	return pRet;
+}
+
 int	CDBTableViewColumnCollection::GetMaxIdxRecord()
 {
 	int iRet = -1;

@@ -48,6 +48,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
+				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -107,11 +108,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\include"
+				AdditionalIncludeDirectories="..\..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
+				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -194,62 +196,34 @@
 			>
 		</Filter>
 		<Filter
-			Name="NewCellTypes"
-			>
-			<File
-				RelativePath=".\NewCellTypes\GridCellCheck.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridCellCheck.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridCellComboBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridCellComboBox.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridCellDateTime.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridCellDateTime.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridCellLink.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridCellLink.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridCellNumeric.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridCellNumeric.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridURLCell.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\NewCellTypes\GridURLCell.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="GridCtrl_src"
 			>
 			<File
+				RelativePath=".\GridCtrl_src\CellFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\CellFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\CellFactoryProvider.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\CellFactoryProvider.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GridCtrl_src\CellRange.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\CellTemplate.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\CellTemplate.h"
 				>
 			</File>
 			<File
@@ -269,6 +243,54 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GridCtrl_src\GridCellCheck.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellCheck.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellComboBox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellDateTime.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellDateTime.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellLink.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellLink.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellNumeric.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridCellNumeric.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridColumn.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridColumn.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GridCtrl_src\GridCtrl.cpp"
 				>
 			</File>
@@ -282,6 +304,14 @@
 			</File>
 			<File
 				RelativePath=".\GridCtrl_src\GridDropTarget.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridURLCell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridCtrl_src\GridURLCell.h"
 				>
 			</File>
 			<File
@@ -302,50 +332,6 @@
 			</File>
 			<File
 				RelativePath=".\GridCtrl_src\TitleTip.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="CellTemplate"
-			>
-			<File
-				RelativePath=".\CellTemplate\CellEditStyle.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CellTemplate\CellEditStyle.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CellTemplate\CellFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CellTemplate\CellFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CellTemplate\CellFactoryProvider.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CellTemplate\CellFactoryProvider.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CellTemplate\CellTemplate.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CellTemplate\CellTemplate.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CellTemplate\ColumnTemplate.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CellTemplate\ColumnTemplate.h"
 				>
 			</File>
 		</Filter>

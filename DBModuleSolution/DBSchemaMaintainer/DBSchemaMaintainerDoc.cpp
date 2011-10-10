@@ -6,9 +6,7 @@
 #include "DBSchemaMaintainer.h"
 
 #include "DBSchemaMaintainerDoc.h"
-#include "TextFile.h"
 #include "Module\Schema\BuildInSchemaSerializer.h"
-#include <io.h>
 #include "DBCommon\DBNameMappingNone.h"
 #include "SqliteSource.h"
 
@@ -177,4 +175,6 @@ void CDBSchemaMaintainerDoc::OnOpenDB()
 
 	sourceMgr.OpenDBConnection(pConn, &pAdapter, &pFactory);
 	LoadDBSchema(pAdapter, pFactory, pMapping);
+
+	UpdateAllViews(NULL);
 }

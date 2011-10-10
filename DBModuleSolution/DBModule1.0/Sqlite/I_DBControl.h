@@ -94,7 +94,10 @@ public:
 	~CAutoDBObjPtr()
 	{
 		if (p)
+		{
 			p->Destory();
+			p = 0;
+		}
 	}
 
 	operator T*()

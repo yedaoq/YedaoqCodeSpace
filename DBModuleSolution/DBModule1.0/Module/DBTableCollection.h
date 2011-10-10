@@ -12,17 +12,18 @@ namespace NSDBModule
 	class CDBTableSchema;
 	class CDBModule;
 
-	typedef CDBTable*												DBTablePtr;
-	typedef std::vector<DBTablePtr>									DBTableCollection;
-	typedef CIteratorEnumerator<DBTableCollection::const_iterator>	DBTableEnumerator;
+	typedef CDBTable*						DBTablePtr;
+	typedef std::vector<DBTablePtr>			DBTableCollection;
+	typedef IEnumerator<DBTablePtr>			DBTableEnumerator;
 
 	class CDBTableCollection
 	{
 	public:
 
+		int						Count() const { return Tables.size(); }
 		int						Clear(bool bBuildIn = false);
 
-		DBTableEnumerator		Enum() const;
+		DBTableEnumerator*		Enum() const;
 
 		CDBTable*				Append(const tstring& name, CDBModule* module, bool bBuildIn = false);
 		CDBTable*				Append(const CDBTableSchema& schema, CDBModule* module, bool bBuildIn = false);

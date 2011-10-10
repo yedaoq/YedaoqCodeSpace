@@ -37,9 +37,9 @@ const CDBTable* CDBTableCollection::operator[](index_t tbl) const
 	return Tables[tbl];
 }
 
-DBTableEnumerator CDBTableCollection::Enum() const
+DBTableEnumerator* CDBTableCollection::Enum() const
 {
-	return make_iterator_enumerator(Tables.begin(), Tables.end());
+	return new_iterator_enumerator(Tables.begin(), Tables.end());
 }
 
 CDBTable* CDBTableCollection::Append(const tstring& name, CDBModule* module, bool bBuildIn )

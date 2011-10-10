@@ -28,7 +28,7 @@ namespace NSDBModule
 	class CSqliteTableEnumerator : public IEnumerator<tstring>
 	{
 	public:
-		CSqliteTableEnumerator(const CAutoDBObjPtr<I_CppSQLite3Query>& query)
+		CSqliteTableEnumerator(I_CppSQLite3Query* query)
 			: QueryPtr(query), BeforeFirst(true)
 		{}
 
@@ -37,7 +37,7 @@ namespace NSDBModule
 		virtual bool MoveNext(tstring& tbl);
 		virtual void Reset() { }
 
-		virtual ICloneable* Clone() const { return new CSqliteTableEnumerator(QueryPtr); }
+		virtual ICloneable* Clone() const { throw std::exception(); } // 拷贝会导致I_CppSQLite3Query*所有权混乱的问题
 
 	protected:
 		CAutoDBObjPtr<I_CppSQLite3Query> QueryPtr;
@@ -47,7 +47,7 @@ namespace NSDBModule
 	class CSqliteColumnEnumerator : public IEnumerator<DBColumnSchema>
 	{
 	public:
-		CSqliteColumnEnumerator(const CAutoDBObjPtr<I_CppSQLite3Query>& query)
+		CSqliteColumnEnumerator(I_CppSQLite3Query* query)
 			: QueryPtr(query), IdxCol(-1)
 		{}
 
@@ -56,7 +56,7 @@ namespace NSDBModule
 		virtual bool MoveNext(DBColumnSchema& tbl);
 		virtual void Reset() { IdxCol = -1; }
 
-		virtual ICloneable* Clone() const { return new CSqliteColumnEnumerator(QueryPtr); }
+		virtual ICloneable* Clone() const { throw std::exception(); } // 拷贝会导致I_CppSQLite3Query*所有权混乱的问题
 
 	protected:
 		CAutoDBObjPtr<I_CppSQLite3Query>	QueryPtr;

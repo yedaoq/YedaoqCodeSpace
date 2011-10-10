@@ -110,10 +110,10 @@ bool CBuildInSchemaSerializer::Write(CDBModule& module, FileRowCollection& rows)
 
 bool CBuildInSchemaSerializer::WriteAllTable(CDBModule& module, FileRowCollection& rows)
 {
-	IEnumerator<DBTablePtr>& Tables = module.Tables().Enum();
-	while(Tables.MoveNext())
+	std::auto_ptr<DBTableEnumerator> pEnumTbl(module.Tables().Enum());
+	while(pEnumTbl->MoveNext())
 	{
-		WriteTable(Tables.Current()->GetSchema(), rows);
+		WriteTable(pEnumTbl->Current()->GetSchema(), rows);
 	}
 
 	return true;

@@ -10,6 +10,7 @@ CSqliteDataTypeProvider::CSqliteDataTypeProvider()
 	RegisterDataType(new CDBDataTypeFloat());
 	RegisterDataType(new CDBDataTypeDouble());
 	RegisterDataType(new CDBDataTypeUnknow());
+	RegisterDataType(new CDBDataTypeString(0, false, false));
 
 	RegisterParser(new CDBDataTypeDecimalParser());
 	RegisterParser(new CDBDataTypeStringParser());

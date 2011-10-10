@@ -1,4 +1,5 @@
 #include "DBDataTypeProviderBase.h"
+#include "DBDataTypeCommon.h"
 
 using namespace NSDBModule;
 
@@ -21,8 +22,9 @@ IDBDataType* CDBDataTypeProvider::ParseDBTypeStr(const tstring& type)
 			return dbType;
 		}
 	}
-	
-	return 0;
+
+	_ASSERT(false);
+	return &CDBDataTypeUnknow::GetInstance();
 }
 
 IDBDataType* CDBDataTypeProvider::GetPreferredDBType(EnumCppDataType type)
@@ -43,7 +45,8 @@ IDBDataType* CDBDataTypeProvider::GetPreferredDBType(EnumCppDataType type)
 		}
 	}
 
-	return 0;
+	_ASSERT(false);
+	return &CDBDataTypeUnknow::GetInstance();
 }
 
 IDBDataTypeProvider::DBDataTypeEnumPtr CDBDataTypeProvider::GetEnumerator()

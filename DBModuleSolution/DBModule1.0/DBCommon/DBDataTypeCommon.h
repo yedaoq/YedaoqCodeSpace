@@ -6,6 +6,7 @@
 #include "mytype.h"
 #include "SqlConstituentWrapper.h"
 #include "boost\format.hpp"
+#include "Singlton.h"
 
 typedef boost::basic_format<tchar> tformat;
 
@@ -19,7 +20,7 @@ namespace NSDBModule
 	public:
 
 		CDBDataTypeBase(tstring name, EnumDBDataTypeCategory category, index_t compatibleCPPTypeCount)
-			: Name_(name), Category_(category), CompatibleCPPTypes_(compatibleCPPTypeCount)
+			: Name_(name), Category_(category), CompatibleCPPTypes_(0)
 		{}
 
 		virtual EnumDBDataTypeCategory Category() const { return Category_; }
@@ -57,7 +58,7 @@ namespace NSDBModule
 		CppTypeCollection		CompatibleCPPTypes_;
 	};
 
-	class CDBDataTypeUnknow : public IDBDataType
+	class CDBDataTypeUnknow : public IDBDataType, public CSingleton<CDBDataTypeUnknow>
 	{
 		virtual EnumDBDataTypeCategory Category() const { return EnumDBDataTypeCategory::Unknow; }
 
