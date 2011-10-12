@@ -123,7 +123,7 @@ const tstring& CDBColumnInfoRecord::GetField(unsigned int idx) const
 		return str;
 		break;
 	case 5:
-		str = EnumEntityOfCppDataType()[ColPtr->Type].ValueStr;
+		str.clear(); //str = EnumEntityOfCppDataType()[ColPtr->Type].ValueStr;
 		return str;
 		break;
 	case 6:
