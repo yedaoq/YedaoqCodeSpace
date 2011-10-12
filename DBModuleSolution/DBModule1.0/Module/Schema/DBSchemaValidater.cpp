@@ -1,8 +1,9 @@
 #include "DBSchemaValidater.h"
-#include "DBModule.h"
 #include "DBColumnSchema.h"
-#include "DBDataType.h"
-#include "DBTable.h"
+#include "..\DBModule.h"
+#include "..\DBTable.h"
+#include "..\..\DBInterface\DBDataType.h"
+
 
 using namespace NSDBModule;
 
@@ -61,10 +62,10 @@ bool CDBSchemaValidater::ValidateBuildInTable(const CDBTableSchema& tbl)
 
 	bool bRet = true;
 
-	IEnumerator<DBColumnSchema>& etor = tbl.EnumColumn();
-	while(etor.MoveNext())
+	std::auto_ptr<IEnumerator<DBColumnSchema>> etor(tbl.EnumColumn());
+	while(etor->MoveNext())
 	{
-		if(!ValidateColumn(etor.Current()))
+		if(!ValidateColumn(etor->Current()))
 		{
 			bRet = false;
 		}
@@ -93,10 +94,10 @@ bool CDBSchemaValidater::ValidateExternTable(const CDBTableSchema& tbl)
 
 	bool bRet = true;
 
-	IEnumerator<DBColumnSchema>& etor = tbl.EnumColumn();
-	while(etor.MoveNext())
+	std::auto_ptr<IEnumerator<DBColumnSchema>> etor(tbl.EnumColumn());
+	while(etor->MoveNext())
 	{
-		if(!ValidateColumn(etor.Current()))
+		if(!ValidateColumn(etor->Current()))
 		{
 			bRet = false;
 		}
@@ -139,12 +140,12 @@ bool CDBSchemaValidater::ValidateBuildInColumn(const DBColumnSchema& col)
 		if(EnumCppDataType::CppUnknow == col.Type) break;
 		if(!col.DBType) break;
 		if(!col.DBType->CompatibleWith(col.Type)) break;
-		if(col.IsDBPrimaryKey() || !col.IsDBNullable()) break;
 
 		bRet = true;
 
 	} while (false);
 	
+	return bRet;
 }
 
 bool CDBSchemaValidater::ValidateExternColumn(const DBColumnSchema& col)
@@ -165,9 +166,11 @@ bool CDBSchemaValidater::ValidateExternColumn(const DBColumnSchema& col)
 		if(EnumCppDataType::CppUnknow == col.Type) break;
 		if(!col.DBType) break;
 		if(!col.DBType->CompatibleWith(col.Type)) break;
+		if(col.IsDBPrimaryKey() || !col.IsDBNullable()) break;
 
 		bRet = true;
 
 	} while (false);
 
+	return bRet;
 }

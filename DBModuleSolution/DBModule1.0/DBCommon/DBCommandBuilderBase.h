@@ -1,7 +1,6 @@
 #pragma once
 
-#include "DBCommandBuilder.h"
-//#include "DBRecord.h"
+#include "..\DBInterface\DBCommandBuilder.h"
 
 #ifndef interface
 #define interface struct

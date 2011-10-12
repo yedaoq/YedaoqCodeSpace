@@ -132,6 +132,7 @@ int	CDBTableCollection::Clear(bool bBuildIn)
 			{
 				break;
 			}
+			++iter;
 		}		
 	}
 	

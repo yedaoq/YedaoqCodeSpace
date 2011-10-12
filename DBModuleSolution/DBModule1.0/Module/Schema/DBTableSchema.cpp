@@ -1,8 +1,8 @@
 #include "DBTableSchema.h"
+#include "..\..\DBInterface\DBDataAdapter.h"
+#include "..\..\DBInterface\DBDataType.h"
 #include <stdexcept>
 #include <algorithm>
-#include "DBDataAdapter.h"
-#include "DBDataType.h"
 
 using namespace NSDBModule;
 
@@ -47,6 +47,24 @@ bool CDBTableSchema::AppendColumn(DBColumnSchema& col)
 	Columns.push_back(col);
 
 	return true;
+}
+
+bool CDBTableSchema::RemoveColumn(index_t col)
+{
+	if(col < 0 || col >= Columns.size())
+	{
+		_ASSERT(false);
+		return false;
+	}
+
+	ColumnCollection::iterator iter = Columns.begin() + col;
+	iter = Columns.erase(iter, iter);
+
+	while(iter != Columns.end())
+	{
+		--(iter->Index);
+		++iter;
+	}
 }
 
 const DBColumnSchema& CDBTableSchema::operator[](const tstring& dbCol) const

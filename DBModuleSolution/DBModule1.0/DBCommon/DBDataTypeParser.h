@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DBDataType.h"
+#include "..\DBInterface\DBDataType.h"
 
 namespace NSDBModule
 {

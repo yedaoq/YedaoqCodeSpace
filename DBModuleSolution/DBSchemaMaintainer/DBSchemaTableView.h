@@ -11,6 +11,7 @@
 #include "Module/DBTable.h"
 #include "View/DBColumnViewInfo.h"
 #include "DBTableViewer4GridCtrl.h"
+#include "Module/Schema/DBSchemaValidater.h"
 
 class CDBSchemaTableView : public CView
 {
@@ -22,8 +23,13 @@ protected: // 仅从序列化创建
 public:
 	CDBSchemaMaintainerDoc* GetDocument() const;
 
+	enum { EIDC_GRIDTBL = 1, EIDC_GRIDCOL, EIDC_BTNMERGE };
+	enum { GRIDHEADERROWCOUNT = 1};
+
 // 操作
 public:
+	int		ShowColumnsOfTable(int idxTbl);
+	void	CreateButton(CButton& btn, UINT id, CWnd* pParent, LPCTSTR lpTitle = NULL, UINT width = 75, UINT height = 23, DWORD dwStyle = WS_CHILD | BS_CENTER | BS_VCENTER | BS_TEXT | BS_PUSHBUTTON, CFont* font = NULL);
 
 // 重写
 public:
@@ -48,6 +54,7 @@ protected:
 	CGridCtrl					GridTab;
 	NSYedaoqLayout::CFlowLayout Layouter;
 	CComboBox					CmbTab;
+	CButton						BtnMerge;
 
 	CDBTableViewColumnCollection GridTblColumns;
 	CDBTableViewColumnCollection GridColColumns;
@@ -55,10 +62,24 @@ protected:
 	CDBTableViewer4GridCtrl		GridColViewer;
 	CDBTableViewer4GridCtrl		GridTabViewer;
 
+	CDBColumnViewInfo			Grid_Select;
+
 	CDBColumnViewInfo			GridTab_Name;
 	CDBColumnViewInfo			GridTab_DBName;
 	CDBColumnViewInfo			GridTab_BuildIn;
 	CDBColumnViewInfo			GridTab_DBExist;
+	CDBColumnViewInfo			GridTab_State;
+
+	CDBColumnViewInfo			GridCol_State;
+	CDBColumnViewInfo			GridCol_Name;
+	CDBColumnViewInfo			GridCol_DBName;
+	CDBColumnViewInfo			GridCol_Buildin;
+	CDBColumnViewInfo			GridCol_DBExist;
+	CDBColumnViewInfo			GridCol_CppType;
+	CDBColumnViewInfo			GridCol_DBType;
+	CDBColumnViewInfo			GridCol_KeyCol;
+	CDBColumnViewInfo			GridCol_DBPK;
+	CDBColumnViewInfo			GridCol_DBNull;
 
 // 生成的消息映射函数
 protected:
@@ -67,6 +88,8 @@ protected:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg int  OnCreate(LPCREATESTRUCT lpcs);
+	afx_msg void OnGridTblSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult);
+	afx_msg void OnBtnMergeClicked();
 	DECLARE_MESSAGE_MAP()
 };
 
@@ -75,69 +98,3 @@ inline CDBSchemaMaintainerDoc* CDBSchemaTableView::GetDocument() const
    { return reinterpret_cast<CDBSchemaMaintainerDoc*>(m_pDocument); }
 #endif
 
-class CDBTableInfo : public CDBRecordBase
-{
-
-};
-
-class CDBTableInfoEnumerator : public IEnumerator<IDBRecord>
-{
-public:
-	CDBTableInfoEnumerator(CDBModule* pModule)
-		: DBModulePtr(pModule), InnerEnumPtr(pModule->Tables().Enum())
-	{
-		_ASSERT(pModule);
-	}
-
-	CDBTableInfoEnumerator(const CDBTableInfoEnumerator& other)
-		: DBModulePtr(other.DBModulePtr), InnerEnumPtr(DBModulePtr->Tables().Enum())
-	{}
-	
-	virtual bool MoveNext()
-	{
-		return InnerEnumPtr->MoveNext();
-	}
-
-	virtual bool MoveNext(IDBRecord& rec)
-	{
-		if(MoveNext())
-		{
-			rec = Current();
-			return true;
-		}
-
-		return false;
-	}
-
-	virtual const IDBRecord& Current()
-	{
-		static CDBRecordAuto rec;
-
-		CDBTableSchema& schema = InnerEnumPtr->Current()->GetSchema();
-		rec.SetField(0, schema.Name);
-		rec.SetField(1, schema.DBName);
-		rec.SetField(2, schema.IsBuildin() ? TEXT("1") : TEXT("0"));
-		rec.SetField(3, schema.IsDBExist() ? TEXT("1") : TEXT("0"));
-
-		return rec;
-	}
-
-	virtual void Reset()
-	{
-		InnerEnumPtr = std::auto_ptr<DBTableEnumerator>(DBModulePtr->Tables().Enum());
-	}
-
-	virtual ICloneable* Clone() const
-	{
-		return new CDBTableInfoEnumerator(*this);
-	}
-
-protected:
-	CDBModule*						 DBModulePtr;
-	std::auto_ptr<DBTableEnumerator> InnerEnumPtr;
-};
-
-class CDBColumnInfoEnumerator : public IEnumerator<IDBRecord>
-{
-public:
-};

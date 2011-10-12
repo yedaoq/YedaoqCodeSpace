@@ -1,11 +1,11 @@
 #include "DBCommandBuilderBase.h"
-#include "Schema\DBTableSchema.h"
-#include <crtdbg.h>
-#include "DBCommand.h"
-#include "DBRecord.h"
-#include "DBDataType.h"
-#include "DBRecordComparison.h"
 #include "DBCommandBase.h"
+#include "..\DBInterface\DBDataType.h"
+#include "..\DBInterface\DBCommand.h"
+#include "..\Module\DBRecord.h"
+#include "..\Module\DBRecordComparison.h"
+#include "..\Module\Schema\DBTableSchema.h"
+#include <crtdbg.h>
 
 using namespace NSDBModule;
 

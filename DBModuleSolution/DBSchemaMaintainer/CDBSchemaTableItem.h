@@ -2,25 +2,21 @@
 
 #include "DBInterface/DBDataAdapter.h"
 #include "Module/DBRecord.h"
-#include "EnumEntity.h"
+#include "EnumEntityHeaderMicro.h"
 #include "Module/Schema/DBColumnSchema.h"
 #include <boost/lexical_cast.hpp>
 
 BEGINENUM(ModifyState, 状态)
-
-ENUMITEM(Unknow, 未知, 0)
-ENUMITEM(Uptodate, 最新,1)
-ENUMITEM(Add, 添加,2)
-ENUMITEM(Remove, 移除,3)
-ENUMITEM(Modify, 更改,4)
-
+ENUMITEM0(Unknow)
+ENUMITEM0(Uptodate)
+ENUMITEM0(Add)
+ENUMITEM0(Remove)
+ENUMITEM0(Modify)
 ENDENUM
 
 BEGINENUM(DBSchemaItemCategory, 类型)
-
-//ENUMITEM(Unknow, 未知, 0)
-ENUMITEM(Table, 表, 1)
-ENUMITEM(Column, 列, 2)
+ENUMITEM0(Table)
+ENUMITEM0(Column)
 
 ENDENUM
 

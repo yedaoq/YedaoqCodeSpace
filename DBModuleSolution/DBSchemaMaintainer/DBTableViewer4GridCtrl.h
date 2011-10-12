@@ -25,6 +25,7 @@ public:
 	virtual int					HeadRowCount() {return HeadRowCount_; }
 
 	virtual int					Fill(IEnumerator<IDBRecord>&);
+	virtual int					Clear();// { Grid_->SetRowCount(HeadRowCount_); return 1; }
 
 	// record enumerate
 	virtual int					GetRecordCount();

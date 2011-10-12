@@ -15,13 +15,13 @@ namespace NSDBModule
 
 		bool Validate();
 
-		bool ValidateTable(const CDBTableSchema& tbl);
-		bool ValidateBuildInTable(const CDBTableSchema& tbl);
-		bool ValidateExternTable(const CDBTableSchema& tbl);
+		static bool ValidateTable(const CDBTableSchema& tbl);
+		static bool ValidateBuildInTable(const CDBTableSchema& tbl);
+		static bool ValidateExternTable(const CDBTableSchema& tbl);
 
-		bool ValidateColumn(const DBColumnSchema& tbl);
-		bool ValidateBuildInColumn(const DBColumnSchema& col);
-		bool ValidateExternColumn(const DBColumnSchema& col);
+		static bool ValidateColumn(const DBColumnSchema& tbl);
+		static bool ValidateBuildInColumn(const DBColumnSchema& col);
+		static bool ValidateExternColumn(const DBColumnSchema& col);
 
 	protected:
 		const CDBModule& DBModule;

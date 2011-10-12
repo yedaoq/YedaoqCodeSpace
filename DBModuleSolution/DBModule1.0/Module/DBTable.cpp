@@ -1,8 +1,8 @@
-#include "DBTable.h"
-#include "DBModule.h"
-#include "DBCommandBuilder.h"
-#include "DBDataAdapter.h"
-#include "DBRecordComparison.h"
+#include "..\Module\DBTable.h"
+#include "..\Module\DBModule.h"
+#include "..\Module\DBRecordComparison.h"
+#include "..\DBInterface\DBCommandBuilder.h"
+#include "..\DBInterface\DBDataAdapter.h"
 #include <crtdbg.h>
 
 using namespace NSDBModule;
@@ -39,7 +39,7 @@ int CDBTable::Initialize()
 	return 0;
 }
 
-CDBTableSchema::ColumnEnumerator CDBTable::EnumColumn() const
+IEnumerator<DBColumnSchema>* CDBTable::EnumColumn() const
 {
 	return Schema_.EnumColumn();
 }

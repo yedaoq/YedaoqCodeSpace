@@ -1,12 +1,12 @@
 #include "SqliteDataAdapter.h"
-#include "I_DBControl.h"
-#include "Schema\DBColumnSchema.h"
 #include "SqliteDataTypeProvider.h"
-#include "DBCommand.h"
-#include "DBRecord.h"
+#include "..\Module\Schema\DBColumnSchema.h"
+#include "..\DBInterface\DBSourcePath.h"
+#include "..\DBInterface\DBCommand.h"
+#include "..\Module\DBRecord.h"
 #include "CppSQLite3U.h"
+#include "I_DBControl.h"
 #include "boost\smart_ptr\make_shared.hpp"
-#include "DBSourcePath.h"
 
 using namespace NSDBModule;
 
@@ -95,7 +95,7 @@ bool CSqliteTableEnumerator::MoveNext(tstring& tbl)
 	return false;
 }
 
-tstring CSqliteColumnEnumerator::DataTypeStrs[] = {TEXT("integer"), TEXT("float"), TEXT("varchar(0)"), TEXT("blob"), TEXT("null") };
+//tstring CSqliteColumnEnumerator::DataTypeStrs[] = {TEXT("integer"), TEXT("float"), TEXT("varchar(0)"), TEXT("blob"), TEXT("null") };
 
 bool CSqliteColumnEnumerator::MoveNext()
 {
@@ -116,11 +116,11 @@ const DBColumnSchema& CSqliteColumnEnumerator::Current()
 
 	col.DBIndex = IdxCol;
 	col.DBName = QueryPtr->fieldName(IdxCol);
+	col.DBType = CSqliteDataTypeProvider::GetInstance().ParseDBTypeStr(QueryPtr->fieldDeclType(IdxCol));
 
-	int iSqlTypeID = QueryPtr->fieldDataType(IdxCol);
-
-	col.DBType = CSqliteDataTypeProvider::GetInstance().ParseDBTypeStr(
-		DataTypeStrs[iSqlTypeID - 1]);
+	//int iSqlTypeID = QueryPtr->fieldDataType(IdxCol);
+	//col.DBType = CSqliteDataTypeProvider::GetInstance().ParseDBTypeStr(
+	//	DataTypeStrs[iSqlTypeID - 1]);
 
 	return col;
 }

@@ -19,6 +19,8 @@ namespace NSDBModule
 
 		virtual ~IDBSourceManager() {}
 
+		virtual const tstring&		ToString() = 0;
+
 		virtual SourceEnumerator*	EnumDBSource() = 0;
 
 		virtual IDBConnection*		PromptSelectDBSource(IDBConnection* pDefault) = 0;

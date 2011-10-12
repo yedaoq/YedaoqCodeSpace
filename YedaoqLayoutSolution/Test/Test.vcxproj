@@ -141,11 +141,6 @@
   <ItemGroup>
     <ResourceCompile Include="Test.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\YedaoqLayout\YedaoqLayout.vcxproj">
-      <Project>{566b2dac-8fba-4ec7-9f51-7d66a361bfd5}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

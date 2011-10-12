@@ -1,7 +1,6 @@
 #pragma once
 
 #include "mytype.h"
-#include "DBTableCollection.h"
 
 #ifndef interface
 #define interface struct
@@ -10,11 +9,12 @@
 namespace NSDBModule
 {
 	class CDBModule;
-	class CDBTableSchema;
-	struct DBColumnSchema;
-	interface IDBDataAdapter;
-	interface IDBNameMapping;
-	class CDBTableCollection;
+	class CDBTable;
+	//class CDBTableSchema;
+	//struct DBColumnSchema;
+	//interface IDBDataAdapter;
+	//interface IDBNameMapping;
+	//class CDBTableCollection;
 
 	class CDBSchemaLoader
 	{
@@ -26,7 +26,7 @@ namespace NSDBModule
 		bool Load();
 
 		bool LoadAllTable();
-		bool LoadTable(const tstring& dbName, const DBTablePtr& pTbl);
+		bool LoadTable(const tstring& dbName, CDBTable* pTbl);
 
 	protected:
 		CDBModule*		DBModule;

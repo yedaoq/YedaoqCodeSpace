@@ -1,33 +1,39 @@
 #pragma once
 
-#include "..\DBInterface\DBSourceManager.h"
-#include "..\DBInterface\DBSourcePath.h"
+#include "DBInterface\DBSourceManager.h"
+#include "DBInterface\DBSourcePath.h"
+#include <vector>
 
 namespace NSDBModule
 {
 	class CSqliteConnection : public IDBConnection
 	{
 	public:
+		typedef std::vector<DBConnectionProperty> PropertyCollection;
+
+	public:
 		CSqliteConnection();
 		CSqliteConnection(const tstring& file);
 
-		virtual PropertyEnumerator* EnumPropertyName() = 0;
-		virtual const tstring&		GetProperty(const tstring& name) = 0;
-		virtual bool				SetProperty(const tstring& name, const tstring& val) = 0;
+		virtual PropertyEnumerator* EnumProperty();
+		virtual const tstring&		GetProperty(const tstring& name);
+		virtual bool				SetProperty(const tstring& name, const tstring& val);
 
-		virtual int					Open() = 0;
-		virtual int					Close() = 0;
+		//virtual int					Open();
+		//virtual int					Close();
 
-		virtual tstring				ToString() = 0;
+		virtual tstring				ToString();
 
 	protected:
-		DBConnectionProperty		Path_;
+		PropertyCollection			Properties_;
 	};
 
-	class CSqliteSourceManager : IDBSourceManager
+	class CSqliteSourceManager : public IDBSourceManager
 	{
 	public:
-		virtual bool				SourceEnumerable() { return false; };
+
+		virtual const tstring&		ToString();
+
 		virtual SourceEnumerator*	EnumDBSource() { return 0; };
 
 		virtual IDBConnection*		PromptSelectDBSource(IDBConnection* pDefault);
@@ -35,7 +41,7 @@ namespace NSDBModule
 
 		virtual IDBConnection*		ParseDBConnection(const tchar* pcConnStr);
 
-		//virtual IDBDataAdapter*		OpenDBSource(IDBConnection* pPath, IDBDataAdapter** ppAdapter, IDBFactory** ppFactory) = 0;
+		virtual bool				OpenDBConnection(IDBConnection* pConn, IDBDataAdapter** ppAdapter, IDBFactory** ppFactory);
 	};
 
 }

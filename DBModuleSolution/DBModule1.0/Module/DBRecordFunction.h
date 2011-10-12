@@ -50,7 +50,7 @@ namespace NSDBModule
 		CDBRecordAuto		Key;
 	};
 
-	bool DBRecordAssign(IDBRecord& des, const IDBRecord& src)
+	inline bool DBRecordAssign(IDBRecord& des, const IDBRecord& src)
 	{
 		_ASSERT(des.GetFieldCount() == src.GetFieldCount());
 		for(int i = 0; i < min(des.GetFieldCount(), src.GetFieldCount()); ++i)

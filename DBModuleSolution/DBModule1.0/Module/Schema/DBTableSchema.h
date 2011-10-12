@@ -64,13 +64,14 @@ namespace NSDBModule
 		bool IsBuildin() const { return static_cast<bool>(Flag & BuildIn); }
 		bool IsDBExist() const { return static_cast<bool>(Flag & DBExist); }
 
-		ColumnEnumerator EnumColumn() const { return make_iterator_enumerator(Columns.begin(), Columns.end()); }
+		IEnumerator<DBColumnSchema>* EnumColumn() const { return new_iterator_enumerator(Columns.begin(), Columns.end()); }
 
 		bool FindByName(const tstring& col, DBColumnSchema& colSchema) const;
 		bool FindByIndex(index_t col, DBColumnSchema& colSchema) const;
 		
 		bool ModifyColumn(const DBColumnSchema& col);
 		bool AppendColumn(DBColumnSchema& col);
+		bool RemoveColumn(index_t col);
 
 		void SetFlag(flag_t flag, bool bAppend)
 		{
@@ -80,7 +81,7 @@ namespace NSDBModule
 			}
 			else
 			{
-				Flag ^= flag;
+				Flag &= ~flag;
 			}
 		}
 

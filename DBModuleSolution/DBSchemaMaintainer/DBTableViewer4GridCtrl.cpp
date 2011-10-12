@@ -62,7 +62,13 @@ int	CDBTableViewer4GridCtrl::Fill(IEnumerator<IDBRecord>& recs)
 		NewRecordAt(-1, recs.Current());
 	}
 
+	Grid_->Invalidate();
 	return -1;
+}
+
+int	CDBTableViewer4GridCtrl::Clear() 
+{ 
+	Grid_->SetRowCount(HeadRowCount_); return 1; 
 }
 
 // record enumerate
@@ -80,20 +86,22 @@ IDBTableViewer::RecordEnumerator* CDBTableViewer4GridCtrl::EnumRecord()
 // selection info
 int CDBTableViewer4GridCtrl::GetCurRecord(IDBRecord* rec)
 {
+	int iRow = -1;
 	CCellRange range = Grid_->GetSelectedCellRange();
-	if(!range.IsValid())
+	if(range.IsValid())
 	{
-		return GetRecordAt(range.GetMinRow() - HeadRowCount_, rec);
+		iRow = range.GetMinRow() - HeadRowCount_;
+	 	if(rec) GetRecordAt(iRow, rec);
 	}
 
-	return -1;
+	return iRow;
 }
 
 DBTableViewColumn* CDBTableViewer4GridCtrl::GetCurColumn()
 {
 	DBTableViewColumn* pRet = 0;
 	CCellRange range = Grid_->GetSelectedCellRange();
-	if(!range.IsValid())
+	if(range.IsValid())
 	{
 		int iGridCol = range.GetMinCol();
 		pRet = ColumnInfos_.GetColumnByViewCol(iGridCol);
@@ -105,7 +113,7 @@ DBTableViewColumn* CDBTableViewer4GridCtrl::GetCurColumn()
 // single record r/w
 int CDBTableViewer4GridCtrl::GetRecordAt(int row, IDBRecord* rec)
 {
-	if(row < 0 || row >= GetRecordCount() || !rec)
+	if(row < 0 || row >= GetRecordCount())
 	{
 		_ASSERT(false);
 		return -1;
@@ -120,8 +128,11 @@ int CDBTableViewer4GridCtrl::GetRecordAt(int row, IDBRecord* rec)
 
 	while(pEnumCol->MoveNext())
 	{
-		CGridCellBase* pCell = Grid_->GetCell(row, pEnumCol->Current().IdxView);
-		rec->SetField(pEnumCol->Current().IdxRecord, pCell->GetValue());
+		if(pEnumCol->Current().IdxRecord != -1)
+		{
+			CGridCellBase* pCell = Grid_->GetCell(row, pEnumCol->Current().IdxView);
+			rec->SetField(pEnumCol->Current().IdxRecord, pCell->GetValue());
+		}
 	}
 
 	return 1;
@@ -160,8 +171,11 @@ int CDBTableViewer4GridCtrl::SetRecordAt(int row, const IDBRecord& rec)
 
 	while(pEnumCol->MoveNext())
 	{
-		CGridCellBase* pCell = Grid_->GetCell(row, pEnumCol->Current().IdxView);
-		pCell->SetValue(rec.GetField(pEnumCol->Current().IdxRecord).c_str());
+		if(pEnumCol->Current().IdxRecord != -1)
+		{
+			CGridCellBase* pCell = Grid_->GetCell(row, pEnumCol->Current().IdxView);
+			pCell->SetValue(rec.GetField(pEnumCol->Current().IdxRecord).c_str());
+		}
 	}
 
 	return 1;

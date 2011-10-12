@@ -15,6 +15,7 @@ namespace NSDBModule
 {
 	interface	IDBFactory;
 	interface	IDBDataAdapter;
+	interface	IDBNameMapping;
 	class		CDBTable;
 
 class CDBModule

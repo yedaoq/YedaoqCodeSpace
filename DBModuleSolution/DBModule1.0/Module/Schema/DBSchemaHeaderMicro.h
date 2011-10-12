@@ -13,7 +13,7 @@ public : \
 #undef END_DBSCHEMA
 #endif
 
-#define END_DBSCHEMA }
+#define END_DBSCHEMA };
 
 // redef micro BEGIN_DBTABLE
 #ifdef BEGIN_DBTABLE
@@ -28,11 +28,11 @@ public : \
 #undef END_DBTABLE
 #endif
 
-#define END_DBTABLE }
+#define END_DBTABLE };
 
 // redef micro DBCOLUMN
 #ifdef DBCOLUMN
 #undef DBCOLUMN
 #endif
 
-#define DBCOLUMN(name, type, flag, uniquemask) name,
+#define DBCOLUMN(tbl, name, type, flag, uniquemask) COL_##tbl##_##name,

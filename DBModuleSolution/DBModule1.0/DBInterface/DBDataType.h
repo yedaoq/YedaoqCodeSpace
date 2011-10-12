@@ -1,9 +1,7 @@
 #pragma once
 #include "mytype.h"
-#include "CPPDataType.h"
 #include "Enumerator.h"
-#include <memory>
-
+#include "..\Module\CPPDataType.h"
 
 #ifndef interface
 #define interface struct
@@ -40,7 +38,7 @@ namespace NSDBModule
 
 	interface IDBDataTypeProvider
 	{
-		typedef std::tr1::shared_ptr<IEnumerator<IDBDataType*>> DBDataTypeEnumPtr;
+		typedef IEnumerator<IDBDataType*>* DBDataTypeEnumPtr;
 
 		virtual ~IDBDataTypeProvider() {};
 

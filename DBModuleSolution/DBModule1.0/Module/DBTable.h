@@ -42,9 +42,11 @@ namespace NSDBModule
 		const CDBTableSchema&			GetSchema()	const		{ return Schema_; }
 		CDBTableSchema&					GetSchema()				{ return Schema_; }
 
+		CDBModule*						GetDBModule() const		{ return DBModule_; }
+
 		//void SetComparison(const CDBRecordComparison& cmp)		{ Comparison_ = cmp; }
 
-		CDBTableSchema::ColumnEnumerator EnumColumn() const;
+		IEnumerator<DBColumnSchema>*	EnumColumn() const;
 		DBRecordEnumerator				EnumRecord() /*const*/;
 
 		int								LoadData();

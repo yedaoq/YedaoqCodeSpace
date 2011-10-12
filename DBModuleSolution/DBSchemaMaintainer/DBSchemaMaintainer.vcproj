@@ -206,6 +206,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBSchemaInfoRecord.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DBSchemaMaintainer.cpp"
 				>
 			</File>
@@ -222,7 +226,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FileEnumerator.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FileView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Helper.cpp"
 				>
 			</File>
 			<File
@@ -284,6 +296,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBSchemaInfoRecord.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DBSchemaMaintainer.h"
 				>
 			</File>
@@ -300,7 +316,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DynamicLinkLibrary.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FileEnumerator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FileView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Helper.h"
 				>
 			</File>
 			<File

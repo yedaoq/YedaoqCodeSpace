@@ -6,6 +6,9 @@
 #include <set>
 #include "CDBSchemaTableItem.h"
 #include "Module\DBModule.h"
+#include "DBInterface\DBSourceManager.h"
+#include "DBInterface\DBNameMapping.h"
+#include "DynamicLinkLibrary.h"
 
 class CDBSchemaMaintainerDoc : public CDocument
 {
@@ -20,9 +23,17 @@ public:
 
 // 操作
 public:
-	virtual int	LoadDBSchema(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory, IDBNameMapping* dbNameMapping);
-	virtual int LoadBuildInSchema(LPCTSTR lpszSchemaFile);
-	virtual int SaveBuildInSchema();
+	int	LoadDBSchema(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory, IDBNameMapping* dbNameMapping);
+	int LoadBuildInSchema(LPCTSTR lpszSchemaFile);
+	int SaveBuildInSchema();
+
+	int	UpdateModuleAsBuildin();
+
+	int MergeTable(int iTbl1, int iTbl2);
+	int MergeColumn(int iTbl, int Col1, int Col2);
+
+	bool FindDBProviderDLL(tstring& filePath);
+	bool GetDBProvider(HMODULE hModule, IDBSourceManager** ppSourceManager, IDBNameMapping** ppNameMapping);
 
 // 重写
 public:
@@ -38,14 +49,17 @@ public:
 #endif
 
 protected:
-	NSDBModule::CDBModule	DBModule_;
-	CString					File_;
+	NSDBModule::CDBModule			DBModule_;
+	CString							File_;
+	CDynamicLinkLibrary				DllDBProvider_;
 
 // 生成的消息映射函数
 protected:
 	DECLARE_MESSAGE_MAP()
 
 	afx_msg void OnOpenDB();
+	afx_msg void OnOpenFile();
+	afx_msg void OnFileSave();
 };
 
 

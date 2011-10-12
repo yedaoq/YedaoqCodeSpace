@@ -3,6 +3,7 @@
 #include "mytype.h"
 #include <vector>
 #include "..\CPPDataType.h"
+#include "..\..\DBCommon\DBDataTypeUnknow.h"
 
 #ifndef interface
 #define interface struct
@@ -54,7 +55,7 @@ namespace NSDBModule
 			}
 			else
 			{
-				Flag ^= flag;
+				Flag &= ~flag;
 			}
 		}
 
@@ -66,19 +67,37 @@ namespace NSDBModule
 			SetFlag(KeyColumn, bKeyColumn);
 		}
 
-		void SetExternInfo(const tstring& dbName, IDBDataType* dbType, bool bExist, bool bPK, bool bNullable)
+		void SetExternInfo(const tstring& dbName, index_t dbIndex, IDBDataType* dbType, bool bExist, bool bPK, bool bNullable)
 		{
 			DBName = dbName;
+			dbIndex = dbIndex;
 			DBType = dbType;
 			SetFlag(DBExist, bExist);
 			SetFlag(DBPrimaryKey, bPK);
 			SetFlag(DBNullable, bNullable);
 		}
 
+		void Reset()
+		{
+			ResetBuildinInfo();
+			ResetExternInfo();
+			Flag = 0;
+			UniqueMask = 0;
+		}
+		void ResetBuildinInfo()
+		{
+			Index = -1;
+			Name.clear();
+			Type = CppUnknow;
+			SetFlag(BuildIn, false);
+			SetFlag(KeyColumn, false);
+		}
 		void ResetExternInfo()
 		{
+			DBIndex = -1;
 			DBName.clear();
-			DBType = 0;
+			DBType = &CDBDataTypeUnknow::GetInstance();
+			SetFlag(DBExist, false);
 			SetFlag(DBPrimaryKey, false);
 			SetFlag(DBNullable, true);
 		}

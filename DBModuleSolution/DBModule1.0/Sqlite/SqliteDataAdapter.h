@@ -62,7 +62,7 @@ namespace NSDBModule
 		CAutoDBObjPtr<I_CppSQLite3Query>	QueryPtr;
 		int									IdxCol;
 		
-		static tstring						DataTypeStrs[];
+		//static tstring						DataTypeStrs[];
 	};
 
 	class CSqliteRecordEnumerator : public IEnumerator<IDBRecord>
@@ -75,7 +75,12 @@ namespace NSDBModule
 				: QueryPtr(query)
 			{}
 
-			virtual const tstring&	GetField(unsigned int idx) const { return QueryPtr->getStringField(idx); }
+			virtual const tstring& GetField(unsigned int idx) const 
+			{ 
+				static tstring str;
+				str = QueryPtr->getStringField(idx);
+				return str; 
+			}
 			virtual int				SetField(unsigned int idx, const tstring& val) { throw std::exception(); }
 			virtual index_t			GetFieldCount() const { return QueryPtr->numFields(); };
 

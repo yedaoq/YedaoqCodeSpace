@@ -8,7 +8,9 @@
 
 #ifdef UNICODE
 	#define tregex			std::tr1::wregex
-	#define tmatch			std::tr1::wcmatch
+	#define tmatch			std::tr1::wsmatch
+	#define tcmatch			std::tr1::wcmatch
+	#define tstringstream	std::wstringstream
 	typedef std::wstring	tstring;
 	typedef wchar_t			tchar;
 	#define	TEXT(x)			L##x
@@ -20,7 +22,9 @@
 	#define vstprintf_s		vswprintf_s
 #else
 	#define tregex			std::tr1::regex
-	#define tmatch			std::tr1::cmatch
+	#define tmatch			std::tr1::smatch
+	#define tcmatch			std::tr1::cmatch
+	#define tstringstream	std::stringstream
 	typedef std::string		tstring;
 	typedef	char			tchar;
 	#define	TEXT(x)			x

@@ -1,13 +1,13 @@
 #include "DBSchemaLoader.h"
-#include "DBModule.h"
-#include "DBDataAdapter.h"
-#include "DBNameMapping.h"
-#include "DBTableCollection.h"
-#include "DBTable.h"
 #include "DBColumnSchema.h"
+#include "..\DBModule.h"
+#include "..\DBTableCollection.h"
+#include "..\DBTable.h"
+#include "..\..\DBInterface\DBDataAdapter.h"
+#include "..\..\DBInterface\DBNameMapping.h"
+#include "..\..\DBInterface\DBFactory.h"
+#include "..\..\DBInterface\DBDataType.h"
 #include "mytype.h"
-#include "DBFactory.h"
-#include "DBDataType.h"
 
 using namespace NSDBModule;
 
@@ -30,7 +30,7 @@ bool CDBSchemaLoader::Load()
 
 bool CDBSchemaLoader::LoadAllTable()
 {
-	bool bRet;
+	bool bRet = true;
 
 	DBModule->Tables().Clear();
 
@@ -66,7 +66,7 @@ bool CDBSchemaLoader::LoadAllTable()
 	return bRet;
 }
 
-bool CDBSchemaLoader::LoadTable(const tstring& dbName, const DBTablePtr& pTbl)
+bool CDBSchemaLoader::LoadTable(const tstring& dbName, CDBTable* pTbl)
 {
 	CDBTableSchema& schema = pTbl->GetSchema();
 
@@ -90,11 +90,11 @@ bool CDBSchemaLoader::LoadTable(const tstring& dbName, const DBTablePtr& pTbl)
 		dbCol.Name = DBModule->DBNameMapping()->FromDBName(dbCol.DBName, context);
 		if(!schema.FindByName(dbCol.Name, exCol))
 		{
+			exCol.Reset();
 			exCol.SetBuildInInfo(dbCol.Name, dbCol.DBType->PreferredCppDataType(), false, false);
-			exCol.ResetExternInfo();
 			schema.AppendColumn(exCol);
 		}
-		exCol.SetExternInfo(dbCol.DBName, dbCol.DBType, true, dbCol.IsDBPrimaryKey(), dbCol.IsDBNullable());
+		exCol.SetExternInfo(dbCol.DBName, dbCol.DBIndex, dbCol.DBType, true, dbCol.IsDBPrimaryKey(), dbCol.IsDBNullable());
 		schema.ModifyColumn(exCol);
 	}
 

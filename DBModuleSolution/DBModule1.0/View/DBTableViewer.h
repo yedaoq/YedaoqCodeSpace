@@ -35,6 +35,7 @@ namespace NSDBModule
 		}
 
 		int					Append(CDBColumnViewInfo* viewInfo, int viewCol = -1, int recCol = -1);
+		int					AppendVirtual(CDBColumnViewInfo* viewInfo, int viewCol = -1);
 		int					RemoveAt(int idx);
 		
 		ColumnEnumerator*	Enum();
@@ -60,6 +61,7 @@ namespace NSDBModule
 		~IDBTableViewer(void) {};
 
 		virtual int					Fill(IEnumerator<IDBRecord>&) = 0;
+		virtual int					Clear() = 0;
 		
 		// record enumerate
 		virtual int					GetRecordCount() = 0;

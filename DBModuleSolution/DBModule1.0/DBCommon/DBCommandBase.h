@@ -1,5 +1,5 @@
 #pragma once
-#include "DBCommand.h"
+#include "..\DBInterface\DBCommand.h"
 
 namespace NSDBModule
 {

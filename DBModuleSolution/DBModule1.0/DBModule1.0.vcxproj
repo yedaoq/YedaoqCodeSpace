@@ -36,9 +36,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\Lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\Lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
@@ -50,7 +50,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>D:\boost_1_46_1;..\..\Include;.\DBInterface;.\Module;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\boost_1_46_1;..\..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -77,6 +77,8 @@
     <ClInclude Include="DBCommon\DBDataTypeCommon.h" />
     <ClInclude Include="DBCommon\DBDataTypeParser.h" />
     <ClInclude Include="DBCommon\DBDataTypeProviderBase.h" />
+    <ClInclude Include="DBCommon\DBDataTypeUnknow.h" />
+    <ClInclude Include="DBCommon\DBNameMappingNone.h" />
     <ClInclude Include="DBCommon\SqlConstituentWrapper.h" />
     <ClInclude Include="Module\CPPDataType.h" />
     <ClInclude Include="Module\DBModule.h" />
@@ -85,6 +87,7 @@
     <ClInclude Include="Module\DBRecordFunction.h" />
     <ClInclude Include="Module\DBTable.h" />
     <ClInclude Include="Module\DBTableCollection.h" />
+    <ClInclude Include="Module\Schema\BuildInSchemaSerializer.h" />
     <ClInclude Include="Module\Schema\DBColumnSchema.h" />
     <ClInclude Include="Module\Schema\DBSchemaCppMicro.h" />
     <ClInclude Include="Module\Schema\DBSchemaHeaderMicro.h" />
@@ -121,6 +124,7 @@
     <ClCompile Include="Module\DBModule.cpp" />
     <ClCompile Include="Module\DBTable.cpp" />
     <ClCompile Include="Module\DBTableCollection.cpp" />
+    <ClCompile Include="Module\Schema\BuildInSchemaSerializer.cpp" />
     <ClCompile Include="Module\Schema\DBSchemaLoader.cpp" />
     <ClCompile Include="Module\Schema\DBSchemaValidater.cpp" />
     <ClCompile Include="Module\Schema\DBTableSchema.cpp" />
@@ -131,6 +135,10 @@
     <ClCompile Include="View\CellEditStyle.cpp" />
     <ClCompile Include="View\DBColumnViewInfo.cpp" />
     <ClCompile Include="View\DBTableViewer.cpp" />
+    <ClCompile Include="EnumEntity.cpp">
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PreprocessToFile>
+      <PreprocessSuppressLineNumbers Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PreprocessSuppressLineNumbers>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

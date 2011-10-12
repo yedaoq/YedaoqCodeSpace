@@ -30,7 +30,7 @@ public:
 	bool				  OtherAcceptable;
 };
 
-class CEditStyleBool : public IEditStyle
+class CEditStyleBool : public IEditStyle, public CSingleton<CEditStyleBool>
 {
 public:
 	CEditStyleBool()

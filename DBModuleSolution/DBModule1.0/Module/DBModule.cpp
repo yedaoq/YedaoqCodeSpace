@@ -1,11 +1,11 @@
 #include "DBModule.h"
-#include "DBDataAdapter.h"
 #include "Enumerator.h"
 #include "DBTable.h"
-#include "DBFactory.h"
-#include <algorithm>
+#include "..\DBInterface\DBDataAdapter.h"
+#include "..\DBInterface\DBFactory.h"
 #include "Schema\DBSchemaValidater.h"
 #include "..\DBCommon\DBNameMappingNone.h"
+#include <algorithm>
 
 using namespace NSDBModule;
 

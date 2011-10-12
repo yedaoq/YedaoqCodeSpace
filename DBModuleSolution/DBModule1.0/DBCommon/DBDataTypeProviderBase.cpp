@@ -1,5 +1,6 @@
 #include "DBDataTypeProviderBase.h"
 #include "DBDataTypeCommon.h"
+#include "DBDataTypeUnknow.h"
 
 using namespace NSDBModule;
 

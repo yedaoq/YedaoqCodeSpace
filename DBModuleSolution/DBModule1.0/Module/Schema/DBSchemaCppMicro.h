@@ -6,8 +6,9 @@
 
 #define BEGIN_DBSCHEMA(name, version) int CDB##name:: InitializeBuildinSchema() { \
 	index_t anonyousTableIndex = 0; \
-	CDBTableSchema anonyousTableSchema; \
-	DBColumnSchema anonyousColumnSchema;
+	DBColumnSchema anonyousColumnSchema; //\
+//	CDBTableSchema anonyousTableSchema; 
+	
 
 // redef micro END_DBSCHEMA
 #ifdef END_DBSCHEMA
@@ -22,20 +23,21 @@
 #endif
 
 #define BEGIN_DBTABLE(name) TBL_##name = anonyousTableIndex++; \
-	anonyousTableSchema.clear(true); 
+	anonyousTableSchema.Clear(true); 
 
 // redef micro END_DBTABLE
 #ifdef END_DBTABLE
 #undef END_DBTABLE
 #endif
 
-#define END_DBTABLE Tables.Append(anonyousTableSchema, this, true);
+#define END_DBTABLE Tables().Append(anonyousTableSchema, this, true);
 
 // redef micro DBCOLUMN
 #ifdef DBCOLUMN
 #undef DBCOLUMN
 #endif
 
-#define DBCOLUMN(name, type, flag, uniquemask) \
-	anonyousColumnSchema = {0, name, type, 0, TEXT(""), 0, uniquemask, flag}; \
-	anonyousTableSchema.AppendColumn(anonyousColumnSchema);
+#define DBCOLUMN(tbl ,name, type, flag, uniquemask) {\
+	DBColumnSchema anonyousColumnSchema = {0, TEXT(#name), (EnumCppDataType)type, 0, TEXT(""), 0, uniquemask, flag}; \
+	anonyousColumnSchema.ResetExternInfo();	\
+	anonyousTableSchema.AppendColumn(anonyousColumnSchema);}

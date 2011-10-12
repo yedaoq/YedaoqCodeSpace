@@ -1,21 +1,21 @@
 #pragma once
 
+#include "EnumEntityHeaderMicro.h"
+
 #ifndef interface
 #define interface struct
 #endif
 
 namespace NSDBModule
 {
-	enum EnumCppDataType
-	{
-		CppUnknow = 0,
-		CppInt32,
-		CppUint32,
-		CppDouble,
-		CppFloat,
-		CppString,
-		CppBinary,
-		CppBool,
-	};
-	#define CPPDATATYPECOUNT CppBool
+	BEGINENUM(CppDataType, C++数据类型)
+	ENUMITEM3(CppUnknow, 0, unknow)
+	ENUMITEM1(CppInt32, int)
+	ENUMITEM1(CppUint32, unsigned int)
+	ENUMITEM1(CppDouble, double)
+	ENUMITEM1(CppFloat, float)
+	ENUMITEM1(CppString, tstring)
+	ENUMITEM1(CppBinary, byte*)
+	ENUMITEM1(CppBool, bool)
+	ENDENUM
 }

@@ -7,6 +7,8 @@
 
 #include "DBSchemaMaintainerDoc.h"
 #include "DBSchemaTableView.h"
+#include "DBSchemaInfoRecord.h"
+#include "Helper.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -23,6 +25,8 @@ BEGIN_MESSAGE_MAP(CDBSchemaTableView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CDBSchemaTableView::OnFilePrintPreview)
+	ON_COMMAND(EIDC_BTNMERGE, &CDBSchemaTableView::OnBtnMergeClicked)
+	ON_NOTIFY(GVN_SELCHANGED, EIDC_GRIDTBL, &CDBSchemaTableView::OnGridTblSelChanged)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 END_MESSAGE_MAP()
@@ -33,18 +37,26 @@ CDBSchemaTableView::CDBSchemaTableView()
 	: Layouter(EnumLayoutDirection::Vertical), GridColViewer(&GridCol, 1), GridTabViewer(&GridTab, 1)
 {
 	// TODO: ÔÚ´Ë´¦Ìí¼Ó¹¹Ôì´úÂë
+
+	Grid_Select = CDBColumnViewInfo(
+		TEXT(""), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleBool::GetInstance(),
+		20,
+		false);
+
 	GridTab_Name = CDBColumnViewInfo(
 		TEXT("Ãû³Æ"), 
 		&CTextFormatSwitcherNone::GetInstance(),
 		&CEditStyleNone::GetInstance(),
-		80,
+		180,
 		true);
 
 	GridTab_DBName = CDBColumnViewInfo(
 		TEXT("Êý¾Ý¿âÃû"), 
 		&CTextFormatSwitcherNone::GetInstance(),
 		&CEditStyleNone::GetInstance(),
-		80,
+		180,
 		true);
 
 	GridTab_BuildIn = CDBColumnViewInfo(
@@ -61,10 +73,101 @@ CDBSchemaTableView::CDBSchemaTableView()
 		40,
 		true);
 
+	GridTab_State = CDBColumnViewInfo(
+		TEXT(""), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleNone::GetInstance(),
+		20,
+		true);
+
+	GridTblColumns.AppendVirtual(&Grid_Select);
+	GridTblColumns.Append(&GridTab_State);
 	GridTblColumns.Append(&GridTab_Name);
 	GridTblColumns.Append(&GridTab_DBName);
 	GridTblColumns.Append(&GridTab_BuildIn);
-	GridTblColumns.Append(&GridTab_DBExist);
+	GridTblColumns.Append(&GridTab_DBExist);	
+
+	GridCol_State = CDBColumnViewInfo(
+		TEXT(""), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleNone::GetInstance(),
+		20,
+		true);
+
+	GridCol_Name = CDBColumnViewInfo(
+		TEXT("Ãû³Æ"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleNone::GetInstance(),
+		180,
+		true);
+
+	GridCol_DBName = CDBColumnViewInfo(
+		TEXT("Êý¾Ý¿âÃû"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleNone::GetInstance(),
+		180,
+		true);
+
+	GridCol_Buildin = CDBColumnViewInfo(
+		TEXT("ÄÚÖÃ"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleBool::GetInstance(),
+		40,
+		true);
+
+	GridCol_DBExist = CDBColumnViewInfo(
+		TEXT("´æÔÚ"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleBool::GetInstance(),
+		40,
+		true);
+
+	GridCol_CppType = CDBColumnViewInfo(
+		TEXT("ÀàÐÍ"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleNone::GetInstance(),
+		80,
+		false);
+
+	GridCol_DBType = CDBColumnViewInfo(
+		TEXT("Êý¾Ý¿âÀàÐÍ"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleNone::GetInstance(),
+		80,
+		true);
+
+	GridCol_KeyCol = CDBColumnViewInfo(
+		TEXT("¹Ø¼üÁÐ"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleBool::GetInstance(),
+		40,
+		false);
+
+	GridCol_DBPK = CDBColumnViewInfo(
+		TEXT("Ö÷¼ü"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleBool::GetInstance(),
+		40,
+		true);
+
+	GridCol_DBNull = CDBColumnViewInfo(
+		TEXT("¿É¿Õ"), 
+		&CTextFormatSwitcherNone::GetInstance(),
+		&CEditStyleBool::GetInstance(),
+		40,
+		true);
+
+	GridColColumns.AppendVirtual(&Grid_Select);
+	GridColColumns.Append(&GridCol_State);
+	GridColColumns.Append(&GridCol_Name);
+	GridColColumns.Append(&GridCol_DBName);
+	GridColColumns.Append(&GridCol_Buildin);
+	GridColColumns.Append(&GridCol_DBExist);
+	GridColColumns.Append(&GridCol_CppType);
+	GridColColumns.Append(&GridCol_DBType);
+	GridColColumns.Append(&GridCol_KeyCol);
+	GridColColumns.Append(&GridCol_DBPK);
+	GridColColumns.Append(&GridCol_DBNull);
 }
 
 CDBSchemaTableView::~CDBSchemaTableView()
@@ -87,16 +190,17 @@ int CDBSchemaTableView::OnCreate(LPCREATESTRUCT lpcs)
 		return -1;
 
 	RECT rect = {0, 0, lpcs->cx, lpcs->cy};
-	GridCol.Create(rect, this, 1, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
-	GridTab.Create(rect, this, 2, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
+	GridCol.Create(rect, this, EIDC_GRIDCOL, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
+	GridTab.Create(rect, this, EIDC_GRIDTBL, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
 
-	RECT rect1 = { 0, 0, 150, 28 };
-	CmbTab.Create(CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, rect1, this, 3);
+	CreateButton(BtnMerge, EIDC_BTNMERGE, this, TEXT("ºÏ²¢"));
 
-	CmbTab.ShowWindow(SW_SHOW);
+	//RECT rect1 = { 0, 0, 150, 28 };
+	//CmbTab.Create(CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, rect1, this, 3);
+	//CmbTab.ShowWindow(SW_SHOW);
 
 	CFlowLayout* pFlow = Layouter.AddFlow(EnumLayoutDirection::Horizon);
-	pFlow->AddCtrl(CmbTab.GetSafeHwnd());
+	pFlow->AddCtrl(BtnMerge.GetSafeHwnd());
 
 	pFlow = Layouter.AddFlow(
 		EnumLayoutDirection::Horizon,
@@ -104,7 +208,7 @@ int CDBSchemaTableView::OnCreate(LPCREATESTRUCT lpcs)
 
 	pFlow->AddCtrl(
 		GridTab.GetSafeHwnd(),
-		ResizeInfo(EnumResizeMode::Fixed, 300),
+		ResizeInfo(EnumResizeMode::Fixed, 490),
 		ResizeInfo::FillInfo);
 
 	pFlow->AddCtrl(
@@ -112,11 +216,11 @@ int CDBSchemaTableView::OnCreate(LPCREATESTRUCT lpcs)
 		ResizeInfo::FillInfo, 
 		ResizeInfo::FillInfo);
 
-	GridTab.SetColumnCount(4);
+	GridTab.SetColumnCount(6);
 	GridTabViewer.Initialize(GridTblColumns);
 
-	GridCol.SetColumnCount(2);
-	GridCol.SetRowCount(1);
+	GridCol.SetColumnCount(11);
+	GridColViewer.Initialize(GridColColumns);
 
 	return S_OK;
 }
@@ -197,8 +301,94 @@ CDBSchemaMaintainerDoc* CDBSchemaTableView::GetDocument() const // ·Çµ÷ÊÔ°æ±¾ÊÇÄ
 void CDBSchemaTableView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
 	CDBTableInfoEnumerator pEnumTbl(&(GetDocument()->GetDBModule()));
+
+	GridTabViewer.Clear();
+	GridColViewer.Clear();
 	GridTabViewer.Fill(pEnumTbl);
 }
 
 
 // CDBSchemaTableView ÏûÏ¢´¦Àí³ÌÐò
+void CDBSchemaTableView::OnGridTblSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult)
+{
+	CCellRange range = GridTab.GetSelectedCellRange();
+	if(range.IsValid() && range.GetMinRow() >= GRIDHEADERROWCOUNT)
+	{
+		ShowColumnsOfTable(range.GetMinRow() - GRIDHEADERROWCOUNT);
+	}
+}
+
+void CDBSchemaTableView::OnBtnMergeClicked()
+{
+	int iSelectedRowCount = 0;
+	int iSelectedRows[2];
+
+	for(int i = GRIDHEADERROWCOUNT; i < GridTab.GetRowCount(); ++i)
+	{
+		CGridCellBase* pCell = GridTab.GetCell(i, 0);
+		if(CEditStyleBool::GetInstance().strTrue == pCell->GetValue())
+		{
+			iSelectedRows[iSelectedRowCount++] = i - GRIDHEADERROWCOUNT;
+			if(iSelectedRowCount >= 2) break;
+		}
+	}
+
+	if(iSelectedRowCount == 2)
+	{
+		GetDocument()->MergeTable(iSelectedRows[0], iSelectedRows[1]);
+	}
+
+	iSelectedRowCount = 0;
+	for(int i = GRIDHEADERROWCOUNT; i < GridCol.GetRowCount(); ++i)
+	{
+		CGridCellBase* pCell = GridCol.GetCell(i, 0);
+		TTRACE(pCell->GetValue());
+		if(CEditStyleBool::GetInstance().strTrue == pCell->GetValue())
+		{
+			iSelectedRows[iSelectedRowCount++] = i - GRIDHEADERROWCOUNT;
+			if(iSelectedRowCount >= 2) break;
+		}
+	}
+
+	if(iSelectedRowCount == 2)
+	{
+		GetDocument()->MergeColumn(GridTabViewer.GetCurRecord(0), iSelectedRows[0], iSelectedRows[1]);
+	}
+}
+
+int CDBSchemaTableView::ShowColumnsOfTable(int idxTbl)
+{
+	GridColViewer.Clear();
+	GridColViewer.Fill(CDBColumnInfoEnumerator(&GetDocument()->GetDBModule().Tables()[idxTbl]->GetSchema()));
+	return 1;
+}
+
+void CDBSchemaTableView::CreateButton(CButton& btn, UINT id, CWnd* pParent, LPCTSTR lpTitle, UINT width, UINT height, DWORD dwStyle, CFont* pFont)
+{
+	static CFont* pDefaultFont = 0;
+
+	if(!pDefaultFont)
+	{
+		pDefaultFont = new CFont;
+		pDefaultFont->CreateFont(16,		//   nHeight
+			0,								//   nWidth
+			0,								//   nEscapement
+			0,								//   nOrientation
+			0,								//   nWeight
+			FALSE,							//   bItalic
+			FALSE,							//   bUnderline
+			0,								//   cStrikeOut
+			ANSI_CHARSET,					//   nCharSet
+			OUT_DEFAULT_PRECIS,				//   nOutPrecision
+			CLIP_DEFAULT_PRECIS,			//   nClipPrecision
+			DEFAULT_QUALITY,				//   nQuality
+			DEFAULT_PITCH   |   FF_SWISS,	//   nPitchAndFamily
+			_T( "Arial "));					//   lpszFac 
+	}
+
+	RECT rect = {0, 0, width, height};
+	btn.Create(lpTitle, dwStyle, rect, pParent, id);
+	if(!pFont) pFont = pDefaultFont;
+	btn.SetFont(pFont);
+	btn.ShowWindow(SW_SHOW);
+}
