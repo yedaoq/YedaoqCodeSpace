@@ -9,8 +9,7 @@
 
 #define BEGINENUM(name,comment) \
 	const ENUMENTITY<ENUMNAME(name)>& EnumEntityOf##name(){  \
-	static ENUMENTITY<ENUMNAME(name)> entity; \
-	??=define NAMEOFENUM ENUMNAME(name)
+	static ENUMENTITY<ENUMNAME(name)> entity; 
 
 #define ENDENUM return entity; }
 

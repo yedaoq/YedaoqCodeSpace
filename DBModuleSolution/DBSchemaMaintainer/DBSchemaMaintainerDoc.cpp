@@ -247,7 +247,7 @@ bool CDBSchemaMaintainerDoc::FindDBProviderDLL(tstring& filePath)
 		}
 	}
 
-	return true;
+	return false;
 }
 
 bool CDBSchemaMaintainerDoc::GetDBProvider(HMODULE hModule, IDBSourceManager** ppSourceManager, IDBNameMapping** ppNameMapping)
@@ -323,12 +323,17 @@ void CDBSchemaMaintainerDoc::OnOpenDB()
 	
 	tstring				FileDll;
 
-	if(!DllDBProvider_.GetModule() && !FindDBProviderDLL(FileDll))
+	if(!DllDBProvider_.GetModule())
 	{
-		return;
+		if(!FindDBProviderDLL(FileDll))
+		{
+			return;
+		}
+		else
+		{
+			DllDBProvider_ = FileDll.c_str();
+		}
 	}
-
-	DllDBProvider_ = FileDll.c_str();
 
 	if(!GetDBProvider(DllDBProvider_.GetModule(), &pSourceManager, &pMapping))
 	{

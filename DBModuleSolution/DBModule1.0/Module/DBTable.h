@@ -34,7 +34,8 @@ namespace NSDBModule
 		CDBTable(CDBModule* module);
 		CDBTable(const CDBTable& other);
 
-		int Initialize();
+		int InitializeStore();
+		int initializeAccess();
 
 		const tstring&					GetName() const			{ return Schema_.Name; }
 		const tstring&					GetDBName() const		{ return Schema_.DBName; }
@@ -44,10 +45,8 @@ namespace NSDBModule
 
 		CDBModule*						GetDBModule() const		{ return DBModule_; }
 
-		//void SetComparison(const CDBRecordComparison& cmp)		{ Comparison_ = cmp; }
-
 		IEnumerator<DBColumnSchema>*	EnumColumn() const;
-		DBRecordEnumerator				EnumRecord() /*const*/;
+		DBRecordEnumerator				EnumRecord();
 
 		int								LoadData();
 		int								ClearData();
@@ -56,9 +55,9 @@ namespace NSDBModule
 		bool							DataDirty() const { return FlagDirty_; }
 		bool							Invalidate() { FlagDirty_ = true; }
 
-		int								Find(IDBRecord& rec) /*const*/;
-		int								Find(IDBRecord& rec, const CDBRecordComparison& cmp) /*const*/;
-		DBRecordEnumerator				FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp) /*const*/;
+		int								Find(IDBRecord& rec);
+		int								Find(IDBRecord& rec, const CDBRecordComparison& cmp);
+		DBRecordEnumerator				FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp);
 	
 		int								Update(const IDBRecord& cur, const IDBRecord& ori);
 		int								Insert(const IDBRecord& rec);

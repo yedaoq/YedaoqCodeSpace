@@ -95,8 +95,6 @@ bool CSqliteTableEnumerator::MoveNext(tstring& tbl)
 	return false;
 }
 
-//tstring CSqliteColumnEnumerator::DataTypeStrs[] = {TEXT("integer"), TEXT("float"), TEXT("varchar(0)"), TEXT("blob"), TEXT("null") };
-
 bool CSqliteColumnEnumerator::MoveNext()
 {
 	if(IdxCol < QueryPtr->numFields())
@@ -117,10 +115,6 @@ const DBColumnSchema& CSqliteColumnEnumerator::Current()
 	col.DBIndex = IdxCol;
 	col.DBName = QueryPtr->fieldName(IdxCol);
 	col.DBType = CSqliteDataTypeProvider::GetInstance().ParseDBTypeStr(QueryPtr->fieldDeclType(IdxCol));
-
-	//int iSqlTypeID = QueryPtr->fieldDataType(IdxCol);
-	//col.DBType = CSqliteDataTypeProvider::GetInstance().ParseDBTypeStr(
-	//	DataTypeStrs[iSqlTypeID - 1]);
 
 	return col;
 }

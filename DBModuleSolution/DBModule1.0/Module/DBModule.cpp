@@ -16,6 +16,7 @@ int	CDBModule::Initialize()
 	do
 	{
 		if(iRet = InitializeBuildinSchema() <= 0) break;
+		
 
 	}while(false);
 	
@@ -48,7 +49,21 @@ int CDBModule::AttachToDatabase(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory
 		DBNameMapping_ = new CDBNameMappingNone;
 	}
 	
-	return RefreshSchema();
+	if(1 != RefreshSchema())
+	{
+		_ASSERT(false);
+		return -1;
+	}
+
+	std::auto_ptr<DBTableEnumerator> pEnumTbl(Tables().Enum());
+
+	if(pEnumTbl.get())
+	{
+		while(pEnumTbl->MoveNext())
+		{
+			pEnumTbl->Current()->initializeAccess();
+		}
+	}
 }
 
 int CDBModule::DetachFromDataBase()

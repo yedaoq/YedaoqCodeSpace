@@ -70,7 +70,7 @@ namespace NSDBModule
 		void SetExternInfo(const tstring& dbName, index_t dbIndex, IDBDataType* dbType, bool bExist, bool bPK, bool bNullable)
 		{
 			DBName = dbName;
-			dbIndex = dbIndex;
+			DBIndex = dbIndex;
 			DBType = dbType;
 			SetFlag(DBExist, bExist);
 			SetFlag(DBPrimaryKey, bPK);

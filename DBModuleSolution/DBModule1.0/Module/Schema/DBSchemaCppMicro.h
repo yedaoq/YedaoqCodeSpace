@@ -23,7 +23,8 @@
 #endif
 
 #define BEGIN_DBTABLE(name) TBL_##name = anonyousTableIndex++; \
-	anonyousTableSchema.Clear(true); 
+	anonyousTableSchema.Clear(true); \
+	anonyousTableSchema.Name = TEXT(#name);
 
 // redef micro END_DBTABLE
 #ifdef END_DBTABLE
