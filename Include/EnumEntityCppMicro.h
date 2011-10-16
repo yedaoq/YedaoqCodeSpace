@@ -1,3 +1,5 @@
+#include "EnumEntityDeclaration.h"
+
 #undef BEGINENUM
 #undef ENDENUM
 #undef ENUMITEM0
@@ -7,13 +9,31 @@
 
 #define ENUMNAME(name) Enum##name
 
-#define BEGINENUM(name,comment) \
-	const ENUMENTITY<ENUMNAME(name)>& EnumEntityOf##name(){  \
-	static ENUMENTITY<ENUMNAME(name)> entity; 
+#define BEGINENUM(name) BEGINENUMEX(name, int)
 
-#define ENDENUM return entity; }
+#define BEGINENUMEX(name, base)								\
+	const ENUMENTITY<base>& EnumEntityOf##name(){			\
+	static ENUMENTITY<base> entity;							\
+	static bool				bInitialized = false;			\
+	if(!bInitialized)		{bInitialized = true;			\
+	base idx = 0;											\
 
-#define ENUMITEM0(name) entity.Add(ENUMITEM(name, TEXT(#name), TEXT("")));
-#define ENUMITEM1(name, desc) entity.Add(ENUMITEM(name, TEXT(#name), TEXT(""))); 
-#define ENUMITEM2(name, val) entity.Add(ENUMITEM(name, TEXT(#name), TEXT(""))); 
-#define ENUMITEM3(name, val, desc) entity.Add(ENUMITEM(name, TEXT(#name), TEXT(#desc)));
+#ifndef BEGININNERENUM
+#define BEGININNERENUM(name,owner)	BEGININNERENUMEX(name, int, owner)
+#endif
+
+#ifndef BEGININNERENUMEX
+#define BEGININNERENUMEX(name, base, owner)					\
+	const ENUMENTITY<base>& owner##::##EnumEntityOf##name(){\
+	static ENUMENTITY<base> entity;							\
+	static bool				bInitialized = false;			\
+	if(!bInitialized)		{bInitialized = true;			\
+	base idx = 0;
+#endif
+
+#define ENDENUM } return entity; }
+
+#define ENUMITEM0(name) entity.Add(make_enumitem(idx++, TEXT(#name), TEXT("")));
+#define ENUMITEM1(name, desc) entity.Add(make_enumitem(idx++, TEXT(#name), TEXT(""))); 
+#define ENUMITEM2(name, val) idx = val; entity.Add(make_enumitem(idx++, TEXT(#name), TEXT(""))); 
+#define ENUMITEM3(name, val, desc) idx = val; entity.Add(make_enumitem(idx++, TEXT(#name), TEXT(#desc)));

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Sqlite/SqliteDataAdapter.h"
 #include "Sqlite/SqliteFactory.h"
-#include "SqliteSource.h"
+#include "Sqlite/SqliteSource.h"
 #include "DBNameMappingLP.h"
 
 using namespace NSDBModule;

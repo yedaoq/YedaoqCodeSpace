@@ -134,8 +134,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Include\FileEnumerator.cpp" />
-    <ClCompile Include="..\..\Include\Helper.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="DBSchemaInfoRecord.cpp" />
@@ -143,7 +141,9 @@
     <ClCompile Include="DBSchemaMaintainerDoc.cpp" />
     <ClCompile Include="DBSchemaTableView.cpp" />
     <ClCompile Include="DBTableViewer4GridCtrl.cpp" />
+    <ClCompile Include="..\..\Include\FileEnumerator.cpp" />
     <ClCompile Include="FileView.cpp" />
+    <ClCompile Include="..\..\Include\Helper.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
@@ -154,8 +154,6 @@
     <ClCompile Include="ViewTree.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Include\FileEnumerator.h" />
-    <ClInclude Include="..\..\Include\Helper.h" />
     <ClInclude Include="CDBSchemaTableItem.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
@@ -164,8 +162,9 @@
     <ClInclude Include="DBSchemaMaintainerDoc.h" />
     <ClInclude Include="DBSchemaTableView.h" />
     <ClInclude Include="DBTableViewer4GridCtrl.h" />
-    <ClInclude Include="DynamicLinkLibrary.h" />
+    <ClInclude Include="..\..\Include\FileEnumerator.h" />
     <ClInclude Include="FileView.h" />
+    <ClInclude Include="..\..\Include\Helper.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PropertiesWnd.h" />

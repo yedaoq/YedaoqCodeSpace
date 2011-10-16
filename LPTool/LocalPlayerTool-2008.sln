@@ -8,7 +8,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dwarves", "Dwarves\Dwarves.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LocalPlayerDB", "LocalPlayerDB\LocalPlayerDB.vcproj", "{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBModule1.0", "..\YedaoqCodeSpace\DBModuleSolution\DBModule1.0\DBModule1.0.vcproj", "{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBModule1.0", "..\DBModuleSolution\DBModule1.0\DBModule1.0.vcproj", "{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

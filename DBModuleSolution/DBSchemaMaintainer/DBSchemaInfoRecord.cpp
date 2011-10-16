@@ -4,7 +4,7 @@
 #include "Module\DBTable.h"
 #include "Module\Schema\DBColumnSchema.h"
 #include "DBInterface\DBDataType.h"
-#include "Module\CPPDataType.h"
+#include "Module\EnumCppDataType.h"
 
 const tstring& CDBTableInfoRecord::GetField(unsigned int idx) const
 {
@@ -123,7 +123,7 @@ const tstring& CDBColumnInfoRecord::GetField(unsigned int idx) const
 		return str;
 		break;
 	case 5:
-		str.clear(); //str = EnumEntityOfCppDataType()[ColPtr->Type].ValueStr;
+		str = EnumEntityOfCppDataType()[ColPtr->Type].ValueStr; // str.clear(); //
 		return str;
 		break;
 	case 6:
@@ -160,21 +160,22 @@ int	CDBColumnInfoRecord::SetField(unsigned int idx, const tstring& val)
 		ColPtr->DBName = val;
 		break;
 	case 3:
-		ColPtr->SetFlag(DBColumnSchema::BuildIn, TEXT("1"));
+		ColPtr->SetFlag(EnumDBColumnSchemaFlag::BuildIn, val == TEXT("1"));
 		break;
 	case 4:
-		ColPtr->SetFlag(DBColumnSchema::DBExist, TEXT("1"));
+		ColPtr->SetFlag(EnumDBColumnSchemaFlag::DBExist, val == TEXT("1"));
 		break;
 	case 7:
-		ColPtr->SetFlag(DBColumnSchema::KeyColumn, TEXT("1"));
+		ColPtr->SetFlag(EnumDBColumnSchemaFlag::KeyColumn, val == TEXT("1"));
 		break;
 	case 8:
-		//ColPtr->SetFlag(DBColumnSchema::DBPrimaryKey, TEXT("1"));
+		ColPtr->SetFlag(EnumDBColumnSchemaFlag::DBPrimaryKey, val == TEXT("1"));
 		break;
 	case 9:
-		//ColPtr->SetFlag(DBColumnSchema::DBNullable, TEXT("1"));
+		ColPtr->SetFlag(EnumDBColumnSchemaFlag::DBNullable, val == TEXT("1"));
 		break;
 	case 5:
+		ColPtr->Type = EnumEntityOfCppDataType()[val].Value<EnumCppDataType>();
 		break;
 	case 6:
 		//str = ColPtr->DBType->ToString();

@@ -204,10 +204,6 @@
 			Name="Module"
 			>
 			<File
-				RelativePath=".\Module\CPPDataType.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Module\DBModule.cpp"
 				>
 			</File>
@@ -241,6 +237,10 @@
 			</File>
 			<File
 				RelativePath=".\Module\DBTableCollection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Module\EnumCppDataType.h"
 				>
 			</File>
 			<Filter

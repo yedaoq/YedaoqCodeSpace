@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Module\CPPDataType.h"
+#include "..\Module\EnumCppDataType.h"
 #include "..\DBInterface\DBDataType.h"
 #include "Singlton.h"
 

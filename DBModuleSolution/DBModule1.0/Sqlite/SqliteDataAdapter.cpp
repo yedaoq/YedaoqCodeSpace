@@ -82,6 +82,7 @@ const tstring& CSqliteTableEnumerator::Current()
 		throw std::exception();
 	}
 	str = QueryPtr->getStringField(0);
+	return str;
 }
 
 bool CSqliteTableEnumerator::MoveNext(tstring& tbl)

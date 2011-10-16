@@ -6,8 +6,8 @@
 
 #define BEGIN_DBSCHEMA(name, version) int CDB##name:: InitializeBuildinSchema() { \
 	index_t anonyousTableIndex = 0; \
-	DBColumnSchema anonyousColumnSchema; //\
-//	CDBTableSchema anonyousTableSchema; 
+	DBColumnSchema anonyousColumnSchema; \
+	CDBTableSchema anonyousTableSchema; 
 	
 
 // redef micro END_DBSCHEMA

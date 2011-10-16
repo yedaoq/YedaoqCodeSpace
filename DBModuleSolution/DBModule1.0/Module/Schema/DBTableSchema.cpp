@@ -65,6 +65,8 @@ bool CDBTableSchema::RemoveColumn(index_t col)
 		--(iter->Index);
 		++iter;
 	}
+
+	return true;
 }
 
 const DBColumnSchema& CDBTableSchema::operator[](const tstring& dbCol) const

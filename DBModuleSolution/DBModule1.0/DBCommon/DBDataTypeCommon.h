@@ -8,8 +8,6 @@
 #include "boost\format.hpp"
 #include "Singlton.h"
 
-typedef boost::basic_format<tchar> tformat;
-
 namespace NSDBModule
 {
 	class CDBDataTypeBase : public IDBDataType

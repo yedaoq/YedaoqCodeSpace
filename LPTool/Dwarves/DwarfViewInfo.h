@@ -24,12 +24,15 @@ struct DwarfViewOperationItem
 {
 	index_t				ID;
 	tstring				Name;
+	DelegateOperation	Operation;
 
 	DwarfViewOperationItem()
-		: ID(0)
+		: ID(0), Operation(0)
 	{}
 
-	DwarfViewOperationItem()
+	DwarfViewOperationItem(index_t id, tstring name, DelegateOperation op)
+		: ID(id), Name(name), Operation(op)
+	{}
 };
 
 interface IDwarfViewInfo

@@ -80,13 +80,13 @@
     <ClInclude Include="DBCommon\DBDataTypeUnknow.h" />
     <ClInclude Include="DBCommon\DBNameMappingNone.h" />
     <ClInclude Include="DBCommon\SqlConstituentWrapper.h" />
-    <ClInclude Include="Module\CPPDataType.h" />
     <ClInclude Include="Module\DBModule.h" />
     <ClInclude Include="Module\DBRecord.h" />
     <ClInclude Include="Module\DBRecordComparison.h" />
     <ClInclude Include="Module\DBRecordFunction.h" />
     <ClInclude Include="Module\DBTable.h" />
     <ClInclude Include="Module\DBTableCollection.h" />
+    <ClInclude Include="Module\EnumCppDataType.h" />
     <ClInclude Include="Module\Schema\BuildInSchemaSerializer.h" />
     <ClInclude Include="Module\Schema\DBColumnSchema.h" />
     <ClInclude Include="Module\Schema\DBSchemaCppMicro.h" />

@@ -207,6 +207,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DwarfViewInfoDBTblBase.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Dwarves.cpp"
 				>
 			</File>
@@ -277,7 +281,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DwarfViewInfo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DwarfViewInfoBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfViewInfoDBTblBase.h"
 				>
 			</File>
 			<File
@@ -318,10 +330,6 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ViewPanelInfo.h"
 				>
 			</File>
 			<File

@@ -2,7 +2,7 @@
 
 #include "mytype.h"
 #include "Enumerator.h"
-#include <regex>
+#include <vector>
 
 #ifndef interface
 #define interface struct
@@ -10,9 +10,10 @@
 
 namespace NSDBModule
 {
-	class CDBModule;
-	class CDBTableSchema;
-	struct DBColumnSchema;
+	class	CDBModule;
+	class	CDBTableSchema;
+	struct	DBColumnSchema;
+	struct	BuildInSchemaSerializeObject;
 
 	class CBuildInSchemaSerializer
 	{
@@ -33,12 +34,8 @@ namespace NSDBModule
 		bool WriteTable(const CDBTableSchema& tbl, FileRowCollection& rows);
 
 	protected:
-		tregex				RegexTblBegin;
-		tregex				RegexTblEnd;
-		tregex				RegexColumn;
-		tregex				RegexSchBegin;
-		tregex				RegexSchEnd;
-		tregex				RegexBlank;
+		BuildInSchemaSerializeObject* SerializeObject;
+		
 	};
 }
 

@@ -149,7 +149,7 @@ int	CDBSchemaMaintainerDoc::UpdateModuleAsBuildin()
 			iter != pTbl->GetSchema().Columns.end();
 			++iter)
 		{
-			iter->SetFlag(DBColumnSchema::BuildIn, true);
+			iter->SetFlag(EnumDBColumnSchemaFlag::BuildIn, true);
 		}
 	}
 
@@ -194,7 +194,7 @@ int CDBSchemaMaintainerDoc::MergeColumn(int iTbl, int iCol1, int iCol2)
 	CDBTableSchema& Tbl = DBModule_.Tables()[iTbl]->GetSchema();
 	
 	flag_t flag = Tbl[iCol1].Flag ^ Tbl[iCol2].Flag;
-	if(!(flag & DBColumnSchema::BuildIn) || !(flag & DBColumnSchema::DBExist))
+	if(!(flag & EnumDBColumnSchemaFlag::BuildIn) || !(flag & EnumDBColumnSchemaFlag::DBExist))
 	{
 		MsgboxPrompt(TEXT("列[ %s ]与[ %s ]不满足合并条件!"), 
 			Tbl[iCol1].Name.c_str(), 

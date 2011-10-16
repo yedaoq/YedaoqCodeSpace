@@ -64,6 +64,8 @@ int CDBModule::AttachToDatabase(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory
 			pEnumTbl->Current()->initializeAccess();
 		}
 	}
+
+	return 1;
 }
 
 int CDBModule::DetachFromDataBase()
@@ -97,7 +99,7 @@ int	CDBModule::RefreshSchema()
 
 	CDBSchemaLoader loader(this);
 	
-	if(loader.Load())
+	if(loader.Load() != 1)
 	{
 		return -1;
 	}

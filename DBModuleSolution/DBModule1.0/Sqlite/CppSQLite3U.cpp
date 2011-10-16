@@ -53,8 +53,6 @@
 #include "boost\lexical_cast.hpp"
 #include "boost\algorithm\string.hpp"
 
-typedef boost::basic_format<tchar> tformat;
-
 #define MAX_SQL_SIZE 1024
 
 /////////////////////////////////////////////////////////////////////////////

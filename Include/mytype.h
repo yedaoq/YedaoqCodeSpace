@@ -7,10 +7,14 @@
 #include <string>
 
 #ifdef UNICODE
-	#define tregex			std::tr1::wregex
-	#define tmatch			std::tr1::wsmatch
-	#define tcmatch			std::tr1::wcmatch
+	#define tregex			boost::xpressive::wsregex
+	#define tcregex			boost::xpressive::wcregex
+	#define tmatch			boost::xpressive::wsmatch
+	#define tcmatch			boost::xpressive::wcmatch
+	#define tregex_compiler boost::xpressive::wsregex
+	#define tcregex_compiler	boost::xpressive::wcregex
 	#define tstringstream	std::wstringstream
+	#define tformat			boost::wformat
 	typedef std::wstring	tstring;
 	typedef wchar_t			tchar;
 	#define	TEXT(x)			L##x
@@ -21,9 +25,13 @@
 	#define tprintf_s		wprintf_s
 	#define vstprintf_s		vswprintf_s
 #else
-	#define tregex			std::tr1::regex
-	#define tmatch			std::tr1::smatch
-	#define tcmatch			std::tr1::cmatch
+	#define tregex			boost::xpressive::sregex
+	#define tcregex			boost::xpressive::cregex
+	#define tmatch			boost::xpressive::smatch
+	#define tcmatch			boost::xpressive::cmatch
+	#define tregex_compiler boost::xpressive::sregex
+	#define tcregex_compiler	boost::xpressive::cregex
+	#define tformat			boost::format
 	#define tstringstream	std::stringstream
 	typedef std::string		tstring;
 	typedef	char			tchar;

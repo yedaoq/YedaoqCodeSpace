@@ -1,7 +1,7 @@
 #pragma once
 #include "mytype.h"
 #include "Enumerator.h"
-#include "..\Module\CPPDataType.h"
+#include "..\Module\EnumCppDataType.h"
 
 #ifndef interface
 #define interface struct

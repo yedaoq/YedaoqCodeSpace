@@ -98,4 +98,5 @@ bool CDBSchemaLoader::LoadTable(const tstring& dbName, CDBTable* pTbl)
 		schema.ModifyColumn(exCol);
 	}
 
+	return 1;
 }

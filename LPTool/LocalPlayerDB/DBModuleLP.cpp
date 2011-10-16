@@ -6,7 +6,7 @@
 #include "DBInterface/DBSourcePath.h"
 #include "DBInterface/DBDataAdapter.h"
 #include "DBInterface/DBFactory.h"
-#include "SqliteSource.h"
+#include "Sqlite/SqliteSource.h"
 
 using namespace NSDBModule;
 

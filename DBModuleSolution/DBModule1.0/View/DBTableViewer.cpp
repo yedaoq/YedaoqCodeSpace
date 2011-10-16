@@ -17,6 +17,8 @@ int	CDBTableViewColumnCollection::Append(CDBColumnViewInfo* viewInfo, int viewCo
 	if(recCol == -1) recCol = GetMaxIdxRecord() + 1;
 
 	Items_.push_back(DBTableViewColumn(viewInfo, recCol, viewCol));
+
+	return 1;
 }
 
 int	CDBTableViewColumnCollection::AppendVirtual(CDBColumnViewInfo* viewInfo, int viewCol)
@@ -30,6 +32,8 @@ int	CDBTableViewColumnCollection::AppendVirtual(CDBColumnViewInfo* viewInfo, int
 	if(viewCol == -1) viewCol = GetMaxIdxView() + 1;
 
 	Items_.push_back(DBTableViewColumn(viewInfo, -1, viewCol));
+
+	return 1;
 }
 
 int	CDBTableViewColumnCollection::RemoveAt(int idx)
