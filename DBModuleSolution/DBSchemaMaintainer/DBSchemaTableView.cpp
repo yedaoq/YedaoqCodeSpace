@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "DBSchemaMaintainer.h"
-
 #include "DBSchemaMaintainerDoc.h"
 #include "DBSchemaTableView.h"
 #include "DBSchemaInfoRecord.h"

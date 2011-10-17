@@ -54,6 +54,7 @@ CDBTable* CDBTableCollection::Append(const tstring& name, CDBModule* module, boo
 	CDBTable* pTbl = new CDBTable(module);
 	CDBTableSchema& schema = pTbl->GetSchema();
 	schema.Name = name;
+	//schema.Index = Tables.size();
 	schema.SetFlag(CDBTableSchema::BuildIn, bBuildIn);
 
 	Tables.push_back(DBTablePtr(pTbl));
@@ -73,7 +74,7 @@ CDBTable* CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* mo
 
 	CDBTable* pTbl = new CDBTable(module, schema);
 	pTbl->GetSchema().SetFlag(CDBTableSchema::BuildIn, bBuildIn);
-
+	//schema.Index = Tables.size();
 	Tables.push_back(DBTablePtr(pTbl));
 	ptrRet = Tables[Tables.size() - 1];
 	return ptrRet;
@@ -118,6 +119,27 @@ int CDBTableCollection::Remove(index_t tbl)
 	ReleaseTables(iter, iter + 1);
 	Tables.erase(iter,iter);
 	return 1;
+}
+
+int	CDBTableCollection::IndexOf(const tstring& tbl)
+{
+	int iRet = -1;
+	if(tbl.empty())
+	{
+		_ASSERT(false);
+		return iRet;
+	}
+
+	for (DBTableCollection::const_iterator iter = Tables.begin(); iter != Tables.end(); ++iter)
+	{
+		++iRet;
+		if((*iter)->GetName() == tbl)
+		{
+			return iRet;
+		}
+	}
+
+	return -1;
 }
 
 int	CDBTableCollection::Clear(bool bBuildIn)

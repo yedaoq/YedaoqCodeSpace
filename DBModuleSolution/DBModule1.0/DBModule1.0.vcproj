@@ -364,14 +364,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\View\CellView.h"
-				>
-			</File>
-			<File
-				RelativePath=".\View\CellViewDBMap.h"
-				>
-			</File>
-			<File
 				RelativePath=".\View\DBColumnViewInfo.cpp"
 				>
 			</File>
@@ -385,6 +377,10 @@
 			</File>
 			<File
 				RelativePath=".\View\DBTableViewer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\View\TextConverter4DBMap.h"
 				>
 			</File>
 		</Filter>
@@ -433,6 +429,18 @@
 				<Tool
 					Name="VCCLCompilerTool"
 					GeneratePreprocessedFile="0"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\test.cpp"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					GeneratePreprocessedFile="2"
 				/>
 			</FileConfiguration>
 		</File>

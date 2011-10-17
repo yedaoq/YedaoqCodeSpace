@@ -80,6 +80,12 @@ protected:
 	CDBColumnViewInfo			GridCol_KeyCol;
 	CDBColumnViewInfo			GridCol_DBPK;
 	CDBColumnViewInfo			GridCol_DBNull;
+	CDBColumnViewInfo			GridCol_RelyTbl;
+	CDBColumnViewInfo			GridCol_RelyCol;
+	CDBColumnViewInfo			GridCol_VisiCol;
+
+	CDBColumnInfoEnumerator		ColEnumerator;
+	CRangeEnumerator<int>		TblIdxEnumerator;
 
 // 生成的消息映射函数
 protected:

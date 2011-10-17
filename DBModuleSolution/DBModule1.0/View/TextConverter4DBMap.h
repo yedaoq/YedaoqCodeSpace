@@ -1,26 +1,26 @@
 #pragma once
 
 #include <mytype.h>
-#include "CellView.h
+#include <ITextFormater.h>
 
 namespace NSDBModule
 {
-	class CCellViewDBMap : public ICellView
+	class CTextConverter4DBMap : public ITextFormatSwitcher
 	{
 	public:
 
-		CCellViewDBMap()
+		CTextConverter4DBMap()
 			: m_InnerAdapter(0), m_Records(0), m_FieldView(-1), m_FieldValue(-1)
 		{}
 
-		CCellViewDBMap(IEnumerator<CDBRecordBase>* records, int fieldView, int fieldValue)
+		CTextConverter4DBMap(IEnumerator<CDBRecordBase>* records, int fieldView, int fieldValue)
 			: m_InnerAdapter(0), m_Records(records), m_FieldView(fieldView), m_FieldValue(fieldValue)
 		{
 			ASSERT(m_FieldView >= 0 && m_FieldValue >= 0 && m_Records);
 		}
 
 		template<typename iter_t>
-		CCellViewDBMap(const iter_t& begin, const iter_t& end, int fieldView, int fieldValue)
+		CTextConverter4DBMap(const iter_t& begin, const iter_t& end, int fieldView, int fieldValue)
 			: m_FieldView(fieldView), m_FieldValue(fieldValue)
 		{
 			m_InnerAdapter	= new CIteratorEnumerator<iter_t>(begin, end);
@@ -28,7 +28,7 @@ namespace NSDBModule
 			ASSERT(m_FieldView >= 0 && m_FieldValue >= 0 && m_Records);
 		}
 
-		CCellViewDBMap(const CCellViewDBMap& other)
+		CTextConverter4DBMap(const CTextConverter4DBMap& other)
 			:  m_FieldView(other.m_FieldView), m_FieldValue(other.m_FieldValue)
 		{
 			if(other.m_InnerAdapter)
@@ -43,7 +43,7 @@ namespace NSDBModule
 			}		
 		}
 
-		CCellViewDBMap& operator=(const CCellViewDBMap& other)
+		CTextConverter4DBMap& operator=(const CTextConverter4DBMap& other)
 		{
 			if(other.m_InnerAdapter)
 			{
@@ -61,7 +61,7 @@ namespace NSDBModule
 			return *this;
 		}
 
-		~CCellViewDBMap()
+		~CTextConverter4DBMap()
 		{
 			if(m_InnerAdapter)
 			{
@@ -70,24 +70,24 @@ namespace NSDBModule
 			}
 		}
 
-		virtual tstring GetValue(LPCTSTR view, ICellContext* ctx)
+		virtual tstring Parse(const tstring& text, ICellContext* ctx)
 		{
 			m_Records->Reset();
-			CDBRecordBase rec;
+			CDBRecordAuto rec;
 			while(m_Records->MoveNext(rec))
 			{
-				if(rec.GetField(m_FieldView) == view)
+				if(rec.GetField(m_FieldView) == text)
 				{
 					return rec.GetField(m_FieldValue);
 				}
 			}
-			return m_DefaultValue;
+			return text;
 		}
 
-		virtual tstring GetView(LPCTSTR val, ICellContext* ctx)
+		virtual tstring Format(LPCTSTR val, ICellContext* ctx)
 		{
 			m_Records->Reset();
-			CDBRecordBase rec;
+			CDBRecordAuto rec;
 			while(m_Records->MoveNext(rec))
 			{
 				if(rec.GetField(m_FieldValue) == val)
@@ -96,7 +96,7 @@ namespace NSDBModule
 				}
 			}
 
-			return m_DefaultView;
+			return val;
 		}
 
 	protected:
@@ -112,3 +112,4 @@ namespace NSDBModule
 		tstring m_DefaultValue;
 	};
 }
+															

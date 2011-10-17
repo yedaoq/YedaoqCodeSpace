@@ -31,6 +31,8 @@ namespace NSDBModule
 		int						Remove(const tstring& name);
 		int						Remove(index_t tbl);
 
+		int						IndexOf(const tstring& name);
+
 		const CDBTable* operator[](const tstring& tbl) const;
 		const CDBTable* operator[](index_t tbl) const;
 

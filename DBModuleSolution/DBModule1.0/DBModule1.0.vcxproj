@@ -103,10 +103,9 @@
     <ClInclude Include="Sqlite\SqliteFactory.h" />
     <ClInclude Include="View\CellContext.h" />
     <ClInclude Include="View\CellEditStyle.h" />
-    <ClInclude Include="View\CellView.h" />
-    <ClInclude Include="View\CellViewDBMap.h" />
     <ClInclude Include="View\DBColumnViewInfo.h" />
     <ClInclude Include="View\DBTableViewer.h" />
+    <ClInclude Include="View\TextConverter4DBMap.h" />
     <ClInclude Include="DBInterface\DBCommand.h" />
     <ClInclude Include="DBInterface\DBCommandBuilder.h" />
     <ClInclude Include="DBInterface\DBDataAdapter.h" />

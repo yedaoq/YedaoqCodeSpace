@@ -111,7 +111,6 @@ bool CBuildInSchemaSerializer::ReadTable(IEnumerator<tstring>& rows, CDBTableSch
 		{
 			col.Reset();
 			col.Name = match[1].str();
-			//col.Type = (EnumCppDataType)boost::lexical_cast<int>(match[2].str());
 			col.Type = (EnumCppDataType)EnumEntityOfCppDataType()[match[2].str().c_str()].ValueEnum;
 			tstringstream(match[4].str()) >> std::hex >> col.IndexMask;
 			col.Flag = EnumEntityOfDBColumnSchemaFlag().ParseFlagEnum(match[5].str());

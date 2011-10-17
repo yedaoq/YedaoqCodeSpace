@@ -27,6 +27,7 @@ namespace NSDBModule
 			DBExist,					// indicate a table exist in database
 		};
 
+		//index_t					Index;	// index of table in memory module
 		tstring					DBName;	// name of table in database
 		tstring					Name;	// name of table in memory module
 		flag_t					Flag;	

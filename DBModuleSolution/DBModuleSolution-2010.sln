@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBModule1.0", "DBModule1.0\DBModule1.0.vcxproj", "{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBSchemaMaintainer", "DBSchemaMaintainer\DBSchemaMaintainer.vcxproj", "{20DC88E4-337F-4245-92EE-95E97732B20A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBModule1.0", "DBModule1.0\DBModule1.0.vcxproj", "{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,18 +12,18 @@ Global
 		Template|Win32 = Template|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Debug|Win32.Build.0 = Debug|Win32
-		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Release|Win32.ActiveCfg = Release|Win32
-		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Release|Win32.Build.0 = Release|Win32
-		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Template|Win32.ActiveCfg = Release|Win32
-		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Template|Win32.Build.0 = Release|Win32
 		{20DC88E4-337F-4245-92EE-95E97732B20A}.Debug|Win32.ActiveCfg = Debug|Win32
 		{20DC88E4-337F-4245-92EE-95E97732B20A}.Debug|Win32.Build.0 = Debug|Win32
 		{20DC88E4-337F-4245-92EE-95E97732B20A}.Release|Win32.ActiveCfg = Release|Win32
 		{20DC88E4-337F-4245-92EE-95E97732B20A}.Release|Win32.Build.0 = Release|Win32
 		{20DC88E4-337F-4245-92EE-95E97732B20A}.Template|Win32.ActiveCfg = Template|Win32
 		{20DC88E4-337F-4245-92EE-95E97732B20A}.Template|Win32.Build.0 = Template|Win32
+		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Debug|Win32.Build.0 = Debug|Win32
+		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Release|Win32.ActiveCfg = Release|Win32
+		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Release|Win32.Build.0 = Release|Win32
+		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Template|Win32.ActiveCfg = Release|Win32
+		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Template|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
