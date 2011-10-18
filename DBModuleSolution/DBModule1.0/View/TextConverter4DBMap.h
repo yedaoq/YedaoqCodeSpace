@@ -13,7 +13,7 @@ namespace NSDBModule
 			: m_InnerAdapter(0), m_Records(0), m_FieldView(-1), m_FieldValue(-1)
 		{}
 
-		CTextConverter4DBMap(IEnumerator<CDBRecordBase>* records, int fieldView, int fieldValue)
+		CTextConverter4DBMap(IEnumerator<IDBRecord>* records, int fieldView, int fieldValue)
 			: m_InnerAdapter(0), m_Records(records), m_FieldView(fieldView), m_FieldValue(fieldValue)
 		{
 			ASSERT(m_FieldView >= 0 && m_FieldValue >= 0 && m_Records);
@@ -33,7 +33,7 @@ namespace NSDBModule
 		{
 			if(other.m_InnerAdapter)
 			{
-				m_InnerAdapter = static_cast<IEnumerator<CDBRecordBase>*>(other.m_InnerAdapter->Clone());
+				m_InnerAdapter = static_cast<IEnumerator<IDBRecord>*>(other.m_InnerAdapter->Clone());
 				m_Records = m_InnerAdapter;
 			}
 			else
@@ -47,7 +47,7 @@ namespace NSDBModule
 		{
 			if(other.m_InnerAdapter)
 			{
-				m_InnerAdapter = static_cast<IEnumerator<CDBRecordBase>*>(other.m_InnerAdapter->Clone());
+				m_InnerAdapter = static_cast<IEnumerator<IDBRecord>*>(other.m_InnerAdapter->Clone());
 				m_Records = m_InnerAdapter;
 			}
 			else
@@ -70,7 +70,7 @@ namespace NSDBModule
 			}
 		}
 
-		virtual tstring Parse(const tstring& text, ICellContext* ctx)
+		virtual tstring Parse(const tstring& text, IContext* ctx)
 		{
 			m_Records->Reset();
 			CDBRecordAuto rec;
@@ -84,7 +84,7 @@ namespace NSDBModule
 			return text;
 		}
 
-		virtual tstring Format(LPCTSTR val, ICellContext* ctx)
+		virtual tstring Format(const tstring& val, IContext* ctx)
 		{
 			m_Records->Reset();
 			CDBRecordAuto rec;
@@ -101,8 +101,8 @@ namespace NSDBModule
 
 	protected:
 
-		IEnumerator<CDBRecordBase>*	m_InnerAdapter;
-		IEnumerator<CDBRecordBase>*	m_Records;
+		IEnumerator<IDBRecord>*	m_InnerAdapter;
+		IEnumerator<IDBRecord>*	m_Records;
 
 		int m_FieldView;
 		int m_FieldValue;

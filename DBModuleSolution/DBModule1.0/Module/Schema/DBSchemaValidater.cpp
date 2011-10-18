@@ -166,7 +166,7 @@ bool CDBSchemaValidater::ValidateExternColumn(const DBColumnSchema& col)
 		if(EnumCppDataType::CppUnknow == col.Type) break;
 		if(!col.DBType) break;
 		if(!col.DBType->CompatibleWith(col.Type)) break;
-		if(col.IsDBPrimaryKey() || !col.IsDBNullable()) break;
+		if(col.IsDBPrimaryKey() || !col.IsDBUnnull()) break;
 
 		bRet = true;
 

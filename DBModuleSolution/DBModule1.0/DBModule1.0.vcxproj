@@ -101,7 +101,6 @@
     <ClInclude Include="Sqlite\SqliteDataAdapter.h" />
     <ClInclude Include="Sqlite\SqliteDataTypeProvider.h" />
     <ClInclude Include="Sqlite\SqliteFactory.h" />
-    <ClInclude Include="View\CellContext.h" />
     <ClInclude Include="View\CellEditStyle.h" />
     <ClInclude Include="View\DBColumnViewInfo.h" />
     <ClInclude Include="View\DBTableViewer.h" />

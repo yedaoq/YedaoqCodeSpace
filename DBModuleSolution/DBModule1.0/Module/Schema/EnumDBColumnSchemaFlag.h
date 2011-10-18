@@ -13,7 +13,7 @@ namespace NSDBModule
 	ENUMITEM2(KeyColumn,	0x0004)
 
 	ENUMITEM2(DBPrimaryKey, 0x0010)
-	ENUMITEM2(DBNullable,	0x0020)
+	ENUMITEM2(DBUnnull,	0x0020)
 
 	ENDENUM
 }

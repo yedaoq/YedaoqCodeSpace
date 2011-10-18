@@ -61,12 +61,7 @@ public:
 
 	virtual bool MoveNext()
 	{
-		Ts tmp;
-		if(m_Source->MoveNext(tmp))
-		{
-			return true;
-		}
-		return false;
+		return m_Source->MoveNext();
 	}
 
 	virtual bool MoveNext(Tt& obj)

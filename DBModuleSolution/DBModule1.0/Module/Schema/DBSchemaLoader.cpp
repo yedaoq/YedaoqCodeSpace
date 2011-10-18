@@ -94,7 +94,7 @@ bool CDBSchemaLoader::LoadTable(const tstring& dbName, CDBTable* pTbl)
 			exCol.SetBuildInInfo(dbCol.Name, dbCol.DBType->PreferredCppDataType(), false, false);
 			schema.AppendColumn(exCol);
 		}
-		exCol.SetExternInfo(dbCol.DBName, dbCol.DBIndex, dbCol.DBType, true, dbCol.IsDBPrimaryKey(), dbCol.IsDBNullable());
+		exCol.SetExternInfo(dbCol.DBName, dbCol.DBIndex, dbCol.DBType, true, dbCol.IsDBPrimaryKey(), dbCol.IsDBUnnull());
 		schema.ModifyColumn(exCol);
 	}
 

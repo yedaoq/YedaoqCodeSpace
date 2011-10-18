@@ -12,6 +12,11 @@
 #include "View/DBColumnViewInfo.h"
 #include "DBTableViewer4GridCtrl.h"
 #include "Module/Schema/DBSchemaValidater.h"
+#include "TextConverter4DBTblNameIdx.h"
+#include "DBSchemaInfoRecord.h"
+#include <View/TextConverter4DBMap.h>
+#include <TypeConverter.h>
+#include <Module/DBRecordFunction.h>
 
 class CDBSchemaTableView : public CView
 {
@@ -84,8 +89,17 @@ protected:
 	CDBColumnViewInfo			GridCol_RelyCol;
 	CDBColumnViewInfo			GridCol_VisiCol;
 
-	CDBColumnInfoEnumerator		ColEnumerator;
-	CRangeEnumerator<int>		TblIdxEnumerator;
+	CDBColumnInfoEnumerator		DBColEnumerator;
+	CConvertEnumerator<tstring, IDBRecord, CDBRecordToField> DBColIdxStrEnumerator;
+	
+	CRangeEnumerator<int>		DBTblIdxEnumerator;
+	CConvertEnumerator<tstring, int, CTypeConverter_LexicalCast<tstring, int>> DBTblIdxStrEnumerator;
+	
+	CEditStyleOptional			GridCol_RelyTblStyle;
+	CTextConverter4DBTblNameIdx GridCol_RelyTblFormat;
+
+	NSDBModule::CTextConverter4DBMap	GridCol_RelyColFormat;
+	CEditStyleOptional			GridCol_RelyColStyle;
 
 // 生成的消息映射函数
 protected:
@@ -95,6 +109,7 @@ protected:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg int  OnCreate(LPCREATESTRUCT lpcs);
 	afx_msg void OnGridTblSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult);
+	afx_msg void OnGridColSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult);
 	afx_msg void OnBtnMergeClicked();
 	DECLARE_MESSAGE_MAP()
 };

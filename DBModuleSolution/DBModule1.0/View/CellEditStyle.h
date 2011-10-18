@@ -1,9 +1,9 @@
 #pragma once
 
 #include <mytype.h>
-#include "CellContext.h"
 #include "Singlton.h"
 #include "Enumerator.h"
+#include <ITextFormater.h>
 
 namespace NSDBModule
 {
@@ -67,6 +67,6 @@ namespace NSDBModule
 	public:
 		virtual ~CCellEditStyleLink() = 0 {};
 
-		virtual tstring OnLinkClicked(ICellContext*) = 0;
+		virtual tstring OnLinkClicked(IContext*) = 0;
 	};
 }

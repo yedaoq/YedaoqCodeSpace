@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(CDBSchemaTableView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CDBSchemaTableView::OnFilePrintPreview)
 	ON_COMMAND(EIDC_BTNMERGE, &CDBSchemaTableView::OnBtnMergeClicked)
 	ON_NOTIFY(GVN_SELCHANGED, EIDC_GRIDTBL, &CDBSchemaTableView::OnGridTblSelChanged)
+	ON_NOTIFY(GVN_SELCHANGED, EIDC_GRIDCOL, &CDBSchemaTableView::OnGridColSelChanged)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 END_MESSAGE_MAP()
@@ -33,7 +34,15 @@ END_MESSAGE_MAP()
 // CDBSchemaTableView ¹¹Ôì/Îö¹¹
 
 CDBSchemaTableView::CDBSchemaTableView()
-	: Layouter(EnumLayoutDirection::Vertical), GridColViewer(&GridCol, 1), GridTabViewer(&GridTab, 1)
+	: Layouter(EnumLayoutDirection::Vertical), 
+	GridColViewer(&GridCol, 1), 
+	GridTabViewer(&GridTab, 1),
+	DBTblIdxStrEnumerator(&DBTblIdxEnumerator, CTypeConverter_LexicalCast<tstring,int>()),
+	DBColIdxStrEnumerator(&DBColEnumerator, CDBRecordToField(CDBColumnInfoRecord::Index)),
+	GridCol_RelyTblStyle(&DBTblIdxStrEnumerator),
+	GridCol_RelyColStyle(&DBColIdxStrEnumerator),
+	GridCol_RelyColFormat(&DBColEnumerator, CDBColumnInfoRecord::Name, CDBColumnInfoRecord::Index),
+	DBColEnumerator(0)
 {
 	// TODO: ÔÚ´Ë´¦Ìí¼Ó¹¹Ôì´úÂë
 
@@ -48,14 +57,14 @@ CDBSchemaTableView::CDBSchemaTableView()
 		TEXT("Ãû³Æ"), 
 		&CTextFormatSwitcherNone::GetInstance(),
 		&CEditStyleNone::GetInstance(),
-		180,
+		140,
 		true);
 
 	GridTab_DBName = CDBColumnViewInfo(
 		TEXT("Êý¾Ý¿âÃû"), 
 		&CTextFormatSwitcherNone::GetInstance(),
 		&CEditStyleNone::GetInstance(),
-		180,
+		140,
 		true);
 
 	GridTab_BuildIn = CDBColumnViewInfo(
@@ -97,14 +106,14 @@ CDBSchemaTableView::CDBSchemaTableView()
 		TEXT("Ãû³Æ"), 
 		&CTextFormatSwitcherNone::GetInstance(),
 		&CEditStyleNone::GetInstance(),
-		180,
+		120,
 		true);
 
 	GridCol_DBName = CDBColumnViewInfo(
 		TEXT("Êý¾Ý¿âÃû"), 
 		&CTextFormatSwitcherNone::GetInstance(),
 		&CEditStyleNone::GetInstance(),
-		180,
+		120,
 		true);
 
 	GridCol_Buildin = CDBColumnViewInfo(
@@ -156,6 +165,27 @@ CDBSchemaTableView::CDBSchemaTableView()
 		40,
 		true);
 
+	GridCol_RelyTbl = CDBColumnViewInfo(
+		TEXT("Íâ±í"),
+		&GridCol_RelyTblFormat,
+		&GridCol_RelyTblStyle,
+		140,
+		false);
+
+	GridCol_RelyCol = CDBColumnViewInfo(
+		TEXT("Íâ¼ü"),
+		&GridCol_RelyColFormat,
+		&GridCol_RelyColStyle,
+		120,
+		false);
+
+	GridCol_VisiCol = CDBColumnViewInfo(
+		TEXT("Íâ¼ü"),
+		&GridCol_RelyColFormat,
+		&GridCol_RelyColStyle,
+		120,
+		false);
+
 	GridColColumns.AppendVirtual(&Grid_Select);
 	GridColColumns.Append(&GridCol_State);
 	GridColColumns.Append(&GridCol_Name);
@@ -167,6 +197,9 @@ CDBSchemaTableView::CDBSchemaTableView()
 	GridColColumns.Append(&GridCol_KeyCol);
 	GridColColumns.Append(&GridCol_DBPK);
 	GridColColumns.Append(&GridCol_DBNull);
+	GridColColumns.Append(&GridCol_RelyTbl);
+	GridColColumns.Append(&GridCol_RelyCol);
+	GridColColumns.Append(&GridCol_VisiCol);
 }
 
 CDBSchemaTableView::~CDBSchemaTableView()
@@ -207,7 +240,7 @@ int CDBSchemaTableView::OnCreate(LPCREATESTRUCT lpcs)
 
 	pFlow->AddCtrl(
 		GridTab.GetSafeHwnd(),
-		ResizeInfo(EnumResizeMode::Fixed, 490),
+		ResizeInfo(EnumResizeMode::Fixed, 400),
 		ResizeInfo::FillInfo);
 
 	pFlow->AddCtrl(
@@ -218,7 +251,7 @@ int CDBSchemaTableView::OnCreate(LPCREATESTRUCT lpcs)
 	GridTab.SetColumnCount(6);
 	GridTabViewer.Initialize(GridTblColumns);
 
-	GridCol.SetColumnCount(11);
+	GridCol.SetColumnCount(14);
 	GridColViewer.Initialize(GridColColumns);
 
 	return S_OK;
@@ -299,15 +332,34 @@ CDBSchemaMaintainerDoc* CDBSchemaTableView::GetDocument() const // ·Çµ÷ÊÔ°æ±¾ÊÇÄ
 
 void CDBSchemaTableView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
-	CDBTableInfoEnumerator pEnumTbl(&(GetDocument()->GetDBModule()));
+	CDBModule& module = GetDocument()->GetDBModule();
+	
+	DBTblIdxEnumerator = CRangeEnumerator<int>(0, module.Tables().Count());
+	GridCol_RelyTblFormat = CTextConverter4DBTblNameIdx(&module.Tables());	
 
 	GridTabViewer.Clear();
 	GridColViewer.Clear();
+	CDBTableInfoEnumerator pEnumTbl(&module);
 	GridTabViewer.Fill(pEnumTbl);
 }
 
 
 // CDBSchemaTableView ÏûÏ¢´¦Àí³ÌÐò
+void CDBSchemaTableView::OnGridColSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult)
+{
+	CCellRange range = GridCol.GetSelectedCellRange();
+	if(range.IsValid() && range.GetMinRow() >= GRIDHEADERROWCOUNT)
+	{
+		CDBRecordAuto rec;
+		GridColViewer.GetCurRecord(&rec); 
+		int RelyTblID = boost::lexical_cast<int>(rec.GetField(CDBColumnInfoRecord::RelyTbl));
+		if( RelyTblID != -1)
+		{
+			DBColEnumerator = CDBColumnInfoEnumerator(&(GetDocument()->GetDBModule().Tables()[RelyTblID]->GetSchema()));
+		}
+	}
+}
+
 void CDBSchemaTableView::OnGridTblSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult)
 {
 	CCellRange range = GridTab.GetSelectedCellRange();

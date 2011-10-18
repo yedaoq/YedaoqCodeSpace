@@ -180,7 +180,7 @@ int CDBSchemaMaintainerDoc::MergeTable(int iTbl1, int iTbl2)
 		return 0;
 	}
 
-
+	return 0;
 }
 
 int CDBSchemaMaintainerDoc::MergeColumn(int iTbl, int iCol1, int iCol2)
@@ -221,12 +221,14 @@ int CDBSchemaMaintainerDoc::MergeColumn(int iTbl, int iCol1, int iCol2)
 	DBColumnSchema& Col1 = Tbl[iCol1];
 	DBColumnSchema& Col2 = Tbl[iCol2];
 
-	Col1.SetExternInfo(Col2.DBName, Col2.DBIndex, Col2.DBType, Col2.IsDBExist(), Col2.IsDBPrimaryKey(), Col2.IsDBNullable());
+	Col1.SetExternInfo(Col2.DBName, Col2.DBIndex, Col2.DBType, Col2.IsDBExist(), Col2.IsDBPrimaryKey(), Col2.IsDBUnnull());
 	Col1.Name = Col2.Name;
 
 	Tbl.RemoveColumn(Col2.Index);
 
 	UpdateAllViews(NULL);
+
+	return 1;
 }
 
 bool CDBSchemaMaintainerDoc::FindDBProviderDLL(tstring& filePath)

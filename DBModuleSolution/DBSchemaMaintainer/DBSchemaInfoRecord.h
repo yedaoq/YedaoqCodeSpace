@@ -12,6 +12,16 @@ using namespace NSDBModule;
 class CDBTableInfoRecord : public IDBRecord
 {
 public:
+	enum EnumField
+	{
+		State,
+		Name,
+		DBName,
+		Buildin,
+		DBExist,		
+	};
+
+public:
 	CDBTableInfoRecord()
 		: TblPtr(0)
 	{}
@@ -33,6 +43,25 @@ protected:
 
 class CDBColumnInfoRecord : public IDBRecord
 {
+public:
+	enum EnumField
+	{
+		State,
+		Name,
+		DBName,
+		Buildin,
+		DBExist,
+		Type,
+		DBType,
+		KeyCol,
+		DBPK,
+		DBUnnull,
+		RelyTbl,
+		RelyCol,
+		VisiCol,
+		Index,
+	};
+
 public:
 	CDBColumnInfoRecord()
 		: ColPtr(0)
@@ -108,9 +137,9 @@ class CDBColumnInfoEnumerator : public IEnumerator<IDBRecord>
 {
 public:
 	CDBColumnInfoEnumerator(CDBTableSchema* pTbl)
-		: DBTableSchemaPtr(pTbl), InnerEnumPtr(pTbl->EnumColumn())
+		: DBTableSchemaPtr(pTbl), InnerEnumPtr(0)
 	{
-		_ASSERT(pTbl);
+		Reset();
 	}
 
 	CDBColumnInfoEnumerator(const CDBColumnInfoEnumerator& other)
@@ -119,7 +148,11 @@ public:
 
 	virtual bool MoveNext()
 	{
-		return InnerEnumPtr->MoveNext();
+		if(InnerEnumPtr.get())
+		{
+			return InnerEnumPtr->MoveNext();
+		}
+		return false;
 	}
 
 	virtual bool MoveNext(IDBRecord& rec)
@@ -142,7 +175,14 @@ public:
 
 	virtual void Reset()
 	{
-		InnerEnumPtr = std::auto_ptr<IEnumerator<DBColumnSchema>>(DBTableSchemaPtr->EnumColumn());
+		if(DBTableSchemaPtr)
+		{
+			InnerEnumPtr = std::auto_ptr<IEnumerator<DBColumnSchema>>(DBTableSchemaPtr->EnumColumn());
+		}
+		else
+		{
+			InnerEnumPtr = std::auto_ptr<IEnumerator<DBColumnSchema>>(0);
+		}
 	}
 
 	virtual ICloneable* Clone() const

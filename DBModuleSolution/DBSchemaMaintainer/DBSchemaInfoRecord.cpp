@@ -5,6 +5,7 @@
 #include "Module\Schema\DBColumnSchema.h"
 #include "DBInterface\DBDataType.h"
 #include "Module\EnumCppDataType.h"
+#include <boost\lexical_cast.hpp>
 
 const tstring& CDBTableInfoRecord::GetField(unsigned int idx) const
 {
@@ -19,21 +20,21 @@ const tstring& CDBTableInfoRecord::GetField(unsigned int idx) const
 
 	switch (idx)
 	{
-	case 1:
+	case Name:
 		return TblPtr->GetName();
 		break;
-	case 2:
+	case DBName:
 		return TblPtr->GetDBName();
 		break;
-	case 3:
+	case Buildin:
 		str = TblPtr->GetSchema().IsBuildin() ? TEXT("1") : TEXT("0");
 		return str;
 		break;
-	case 4:
+	case DBExist:
 		str = TblPtr->GetSchema().IsDBExist() ? TEXT("1") : TEXT("0");
 		return str;
 		break;
-	case 0:
+	case State:
 		str = IsStateNormal() ? TEXT("") : TEXT("!");
 		break;
 	default:
@@ -56,19 +57,19 @@ int	CDBTableInfoRecord::SetField(unsigned int idx, const tstring& val)
 
 	switch (idx)
 	{
-	case 1:
+	case Name:
 		TblPtr->GetSchema().Name = val;
 		break;
-	case 2:
+	case DBName:
 		TblPtr->GetSchema().DBName = val;
 		break;
-	case 3:
+	case Buildin:
 		TblPtr->GetSchema().SetFlag(CDBTableSchema::BuildIn, val == TEXT("1"));
 		break;
-	case 4:
+	case DBExist:
 		TblPtr->GetSchema().SetFlag(CDBTableSchema::DBExist, val == TEXT("1"));
 		break;
-	case 0:
+	case State:
 		break;
 	default:
 		_ASSERT(false);
@@ -96,42 +97,51 @@ const tstring& CDBColumnInfoRecord::GetField(unsigned int idx) const
 
 	switch (idx)
 	{
-	case 1:
+	case Name:
 		return ColPtr->Name;
 		break;
-	case 2:
+	case DBName:
 		return ColPtr->DBName;
 		break;
-	case 3:
+	case Buildin:
 		str = ColPtr->IsBuildin() ? TEXT("1") : TEXT("0");
 		return str;
 		break;
-	case 4:
+	case DBExist:
 		str = ColPtr->IsDBExist() ? TEXT("1") : TEXT("0");
 		return str;
 		break;
-	case 7:
+	case KeyCol:
 		str = ColPtr->IsKeyColumn() ? TEXT("1") : TEXT("0");
 		return str;
 		break;
-	case 8:
+	case DBPK:
 		str = ColPtr->IsDBPrimaryKey() ? TEXT("1") : TEXT("0");
 		return str;
 		break;
-	case 9:
-		str = ColPtr->IsDBNullable() ? TEXT("1") : TEXT("0");
+	case DBUnnull:
+		str = ColPtr->IsDBUnnull() ? TEXT("1") : TEXT("0");
 		return str;
 		break;
-	case 5:
+	case Type:
 		str = EnumEntityOfCppDataType()[ColPtr->Type].ValueStr; // str.clear(); //
 		return str;
 		break;
-	case 6:
+	case DBType:
 		str = ColPtr->DBType->ToString();
 		return str;
 		break;
-	case 0:
+	case State:
 		str = IsStateNormal() ? TEXT("") : TEXT("!");
+		break;
+	case RelyTbl:
+		str = boost::lexical_cast<tstring>(ColPtr->RelyTblID);
+		break;
+	case RelyCol:
+		str = boost::lexical_cast<tstring>(ColPtr->RelyColID);
+		break;
+	case VisiCol:
+		str = boost::lexical_cast<tstring>(ColPtr->VisiColID);
 		break;
 	default:
 		_ASSERT(false);
@@ -153,35 +163,47 @@ int	CDBColumnInfoRecord::SetField(unsigned int idx, const tstring& val)
 
 	switch (idx)
 	{
-	case 1:
+	case Name:
 		ColPtr->Name = val;
 		break;
-	case 2:
+	case DBName:
 		ColPtr->DBName = val;
 		break;
-	case 3:
+	case Buildin:
 		ColPtr->SetFlag(EnumDBColumnSchemaFlag::BuildIn, val == TEXT("1"));
 		break;
-	case 4:
+	case DBExist:
 		ColPtr->SetFlag(EnumDBColumnSchemaFlag::DBExist, val == TEXT("1"));
 		break;
-	case 7:
+	case KeyCol:
 		ColPtr->SetFlag(EnumDBColumnSchemaFlag::KeyColumn, val == TEXT("1"));
 		break;
-	case 8:
+	case DBPK:
 		ColPtr->SetFlag(EnumDBColumnSchemaFlag::DBPrimaryKey, val == TEXT("1"));
 		break;
-	case 9:
-		ColPtr->SetFlag(EnumDBColumnSchemaFlag::DBNullable, val == TEXT("1"));
+	case DBUnnull:
+		ColPtr->SetFlag(EnumDBColumnSchemaFlag::DBUnnull, val == TEXT("1"));
 		break;
-	case 5:
+	case Type:
 		ColPtr->Type = EnumEntityOfCppDataType()[val].Value<EnumCppDataType>();
 		break;
-	case 6:
+	case DBType:
 		//str = ColPtr->DBType->ToString();
 		break;
-	case 0:
+	case State:
 		//str = IsStateNormal() ? TEXT("1") : TEXT("0");
+		break;
+	case RelyTbl:
+		ColPtr->RelyTblID = boost::lexical_cast<index_t>(val);
+		break;
+	case RelyCol:
+		ColPtr->RelyColID = boost::lexical_cast<index_t>(val);
+		break;
+	case VisiCol:
+		ColPtr->VisiColID = boost::lexical_cast<index_t>(val);
+		break;
+	case Index:
+		_ASSERT(false);
 		break;
 	default:
 		_ASSERT(false);

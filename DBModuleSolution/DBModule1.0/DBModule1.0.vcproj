@@ -352,10 +352,6 @@
 			Name="View"
 			>
 			<File
-				RelativePath=".\View\CellContext.h"
-				>
-			</File>
-			<File
 				RelativePath=".\View\CellEditStyle.cpp"
 				>
 			</File>
@@ -429,18 +425,6 @@
 				<Tool
 					Name="VCCLCompilerTool"
 					GeneratePreprocessedFile="0"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\test.cpp"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					GeneratePreprocessedFile="2"
 				/>
 			</FileConfiguration>
 		</File>

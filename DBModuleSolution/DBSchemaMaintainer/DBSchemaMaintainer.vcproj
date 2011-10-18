@@ -348,6 +348,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TextConverter4DBTblNameIdx.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ViewTree.h"
 				>
 			</File>
