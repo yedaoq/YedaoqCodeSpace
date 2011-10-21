@@ -43,8 +43,9 @@ bool CDBSchemaLoader::LoadAllTable()
 	ContextDBNameMapping context = {EnumDBNameCategory::Table, 0};
 	tstring dbName;
 	tstring name;
-	while (etor->MoveNext(dbName))
+	while (etor->MoveNext())
 	{
+		dbName = etor->Current();
 		name = DBModule->DBNameMapping()->FromDBName(dbName, context);
 		if(name.empty())
 		{
@@ -85,8 +86,9 @@ bool CDBSchemaLoader::LoadTable(const tstring& dbName, CDBTable* pTbl)
 	DBColumnSchema exCol; // exist column info
 	ContextDBNameMapping context = { EnumDBNameCategory::Column, &schema };
 
-	while(etor->MoveNext(dbCol))
+	while(etor->MoveNext())
 	{
+		dbCol = etor->Current();
 		dbCol.Name = DBModule->DBNameMapping()->FromDBName(dbCol.DBName, context);
 		if(!schema.FindByName(dbCol.Name, exCol))
 		{

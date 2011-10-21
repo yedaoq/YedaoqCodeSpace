@@ -27,6 +27,7 @@ BEGIN_MESSAGE_MAP(CDBSchemaTableView, CView)
 	ON_COMMAND(EIDC_BTNMERGE, &CDBSchemaTableView::OnBtnMergeClicked)
 	ON_NOTIFY(GVN_SELCHANGED, EIDC_GRIDTBL, &CDBSchemaTableView::OnGridTblSelChanged)
 	ON_NOTIFY(GVN_SELCHANGED, EIDC_GRIDCOL, &CDBSchemaTableView::OnGridColSelChanged)
+	ON_NOTIFY(GVN_ENDLABELEDIT, EIDC_GRIDCOL, &CDBSchemaTableView::OnGridColTxtChanged)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 END_MESSAGE_MAP()
@@ -42,7 +43,8 @@ CDBSchemaTableView::CDBSchemaTableView()
 	GridCol_RelyTblStyle(&DBTblIdxStrEnumerator),
 	GridCol_RelyColStyle(&DBColIdxStrEnumerator),
 	GridCol_RelyColFormat(&DBColEnumerator, CDBColumnInfoRecord::Name, CDBColumnInfoRecord::Index),
-	DBColEnumerator(0)
+	DBColEnumerator(0),
+	CurrentTableIndex(-1)
 {
 	// TODO: 在此处添加构造代码
 
@@ -71,14 +73,14 @@ CDBSchemaTableView::CDBSchemaTableView()
 		TEXT("内置"), 
 		&CTextFormatSwitcherNone::GetInstance(),
 		&CEditStyleBool::GetInstance(),
-		40,
+		35,
 		true);
 
 	GridTab_DBExist = CDBColumnViewInfo(
 		TEXT("存在"), 
 		&CTextFormatSwitcherNone::GetInstance(),
 		&CEditStyleBool::GetInstance(),
-		40,
+		35,
 		true);
 
 	GridTab_State = CDBColumnViewInfo(
@@ -120,14 +122,14 @@ CDBSchemaTableView::CDBSchemaTableView()
 		TEXT("内置"), 
 		&CTextFormatSwitcherNone::GetInstance(),
 		&CEditStyleBool::GetInstance(),
-		40,
+		35,
 		true);
 
 	GridCol_DBExist = CDBColumnViewInfo(
 		TEXT("存在"), 
 		&CTextFormatSwitcherNone::GetInstance(),
 		&CEditStyleBool::GetInstance(),
-		40,
+		35,
 		true);
 
 	GridCol_CppType = CDBColumnViewInfo(
@@ -180,7 +182,7 @@ CDBSchemaTableView::CDBSchemaTableView()
 		false);
 
 	GridCol_VisiCol = CDBColumnViewInfo(
-		TEXT("外键"),
+		TEXT("视图列"),
 		&GridCol_RelyColFormat,
 		&GridCol_RelyColStyle,
 		120,
@@ -336,6 +338,7 @@ void CDBSchemaTableView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	
 	DBTblIdxEnumerator = CRangeEnumerator<int>(0, module.Tables().Count());
 	GridCol_RelyTblFormat = CTextConverter4DBTblNameIdx(&module.Tables());	
+	CurrentTableIndex = -1;
 
 	GridTabViewer.Clear();
 	GridColViewer.Clear();
@@ -348,15 +351,29 @@ void CDBSchemaTableView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 void CDBSchemaTableView::OnGridColSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult)
 {
 	CCellRange range = GridCol.GetSelectedCellRange();
-	if(range.IsValid() && range.GetMinRow() >= GRIDHEADERROWCOUNT)
+
+	//TTRACE(TEXT("Row Select - %d\r\n"), range.GetMinRow());
+
+	if(!range.IsValid() || range.GetMinRow() < GRIDHEADERROWCOUNT)
 	{
-		CDBRecordAuto rec;
-		GridColViewer.GetCurRecord(&rec); 
-		int RelyTblID = boost::lexical_cast<int>(rec.GetField(CDBColumnInfoRecord::RelyTbl));
-		if( RelyTblID != -1)
-		{
-			DBColEnumerator = CDBColumnInfoEnumerator(&(GetDocument()->GetDBModule().Tables()[RelyTblID]->GetSchema()));
-		}
+		return;
+	}
+
+	CDBModule&		module = GetDocument()->GetDBModule();
+	CDBRecordAuto	rec;
+	GridColViewer.GetCurRecord(&rec); 
+	tstring strRelayTblID = rec.GetField(CDBColumnInfoRecord::RelyTbl);
+	if(strRelayTblID.empty() || strRelayTblID == TEXT("-1"))
+	{
+		return;
+	}
+
+	TTRACE(TEXT("依赖表 : %s\r\n"), strRelayTblID.c_str());
+	int relyTblID = boost::lexical_cast<int>(rec.GetField(CDBColumnInfoRecord::RelyTbl));
+	if( relyTblID != -1)
+	{
+		DBColEnumerator.SetTable(&(module.Tables()[relyTblID]->GetSchema()));
+		GridCol_RelyColFormat.SetSource(DBColEnumerator);
 	}
 }
 
@@ -367,6 +384,33 @@ void CDBSchemaTableView::OnGridTblSelChanged(NMHDR *pNotifyStruct, LRESULT* pRes
 	{
 		ShowColumnsOfTable(range.GetMinRow() - GRIDHEADERROWCOUNT);
 	}
+}
+
+void CDBSchemaTableView::OnGridColTxtChanged(NMHDR *pNotifyStruct, LRESULT* pResult)
+{
+	NM_GRIDVIEW* pItem = (NM_GRIDVIEW*) pNotifyStruct;
+
+	if(pItem->iRow < GRIDHEADERROWCOUNT || pItem->iRow >= GridCol.GetRowCount())
+	{
+		return;
+	}
+
+	CDBTableCollection& tables = GetDocument()->GetDBModule().Tables();
+	if(CurrentTableIndex < 0 || CurrentTableIndex >= tables.Count())
+	{
+		_ASSERT(FALSE);
+		return;
+	}
+
+	CGridCellBase* pCell = GridCol.GetCell(pItem->iRow, pItem->iColumn);
+
+	CDBColumnInfoRecord col(&tables[CurrentTableIndex]->GetSchema()[pItem->iRow - GRIDHEADERROWCOUNT]);
+	int fieldIdx = GridColColumns.GetColumnByViewCol(pItem->iColumn)->IdxRecord;
+	col.SetField(fieldIdx, pCell->GetValue());
+
+	TTRACE(TEXT("Column %s : field %d changed to %s\r\n"), col.GetField(CDBColumnInfoRecord::Name).c_str(), fieldIdx, pCell->GetText());
+
+	//TRACE("Grid Edited...\r\n");
 }
 
 void CDBSchemaTableView::OnBtnMergeClicked()
@@ -409,8 +453,13 @@ void CDBSchemaTableView::OnBtnMergeClicked()
 
 int CDBSchemaTableView::ShowColumnsOfTable(int idxTbl)
 {
+	CDBTableCollection& tables = GetDocument()->GetDBModule().Tables();
+
+	_ASSERT(idxTbl >= 0 && idxTbl < tables.Count());
+
+	CurrentTableIndex = idxTbl;
 	GridColViewer.Clear();
-	GridColViewer.Fill(CDBColumnInfoEnumerator(&GetDocument()->GetDBModule().Tables()[idxTbl]->GetSchema()));
+	GridColViewer.Fill(CDBColumnInfoEnumerator(&tables[idxTbl]->GetSchema()));
 	return 1;
 }
 

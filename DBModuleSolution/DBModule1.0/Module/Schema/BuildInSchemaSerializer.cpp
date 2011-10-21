@@ -34,11 +34,11 @@ namespace NSDBModule
 			: MatchOption(ignore_white_space | ECMAScript),
 			RegexTblBegin(wsregex_compiler().compile(TEXT("^\\s*BEGIN_DBTABLE\\(\\s*(\\w+)\\s*\\)$"))),
 			RegexTblEnd(wsregex_compiler().compile(  TEXT("^\\s*END_DBTABLE$"))),
-			RegexColumn(wsregex_compiler().compile(  TEXT("^\\s*DBCOLUMN\\(\\s*\\w+\\s*,\\s*(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*([\\w\\\|]+)\\s*\\)$"))),
+			RegexColumn(wsregex_compiler().compile(  TEXT("^\\s*DBCOLUMN\\(\\s*\\w+\\s*,\\s*(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*(\\w+)\\s*,\\s*([\\w\\|]+)\\s*,\\s*([\\w-]+)\\s*,\\s*([\\w-]+)\\s*,\\s*([\\w-]+)\\s*\\)$"))),
 			RegexSchBegin(wsregex_compiler().compile(TEXT("^\\s*BEGIN_DBSCHEMA\\(\\s*(\\w+)\\s*,\\s*(\\w+)\\s*\\)$"))),
 			RegexSchEnd(wsregex_compiler().compile(  TEXT("^\\s*END_DBSCHEMA$"))),
 			RegexBlank(wsregex_compiler().compile(   TEXT("^\\s*$"))),
-			FormatColumn(TEXT("DBCOLUMN(%-30s, %-30s, %-10s, 0x%08X, %s)")),
+			FormatColumn(TEXT("DBCOLUMN(%-30s, %-30s, %-10s, 0x%08X, %s, %d, %d, %d)")),
 			FormatTblBegin(TEXT("BEGIN_DBTABLE(%s)"))
 		{}
 	};
@@ -72,8 +72,9 @@ bool CBuildInSchemaSerializer::ReadAllTable(IEnumerator<tstring>& rows, CDBModul
 
 	module.Tables().Clear();	
 
-	while(rows.MoveNext(row))
+	while(rows.MoveNext())
 	{
+		row = rows.Current();
 		if(boost::xpressive::regex_match(row, match, SerializeObject->RegexTblBegin))
 		{
 			CDBTable* pTbl = module.Tables().Append(match[1].str(), &module, true);
@@ -105,15 +106,19 @@ bool CBuildInSchemaSerializer::ReadTable(IEnumerator<tstring>& rows, CDBTableSch
 
 	schema.Clear(true);	
 
-	while(rows.MoveNext(row))
+	while(rows.MoveNext())
 	{
+		row = rows.Current();
 		if(boost::xpressive::regex_match(row,match, SerializeObject->RegexColumn))
 		{
 			col.Reset();
 			col.Name = match[1].str();
-			col.Type = (EnumCppDataType)EnumEntityOfCppDataType()[match[2].str().c_str()].ValueEnum;
-			tstringstream(match[4].str()) >> std::hex >> col.IndexMask;
-			col.Flag = EnumEntityOfDBColumnSchemaFlag().ParseFlagEnum(match[5].str());
+			col.Type = (EnumCppDataType)EnumEntityOfCppDataType()[match[2].str()].ValueEnum;
+			tstringstream(match[3].str()) >> std::hex >> col.IndexMask;
+			col.Flag = EnumEntityOfDBColumnSchemaFlag().ParseFlagEnum(match[4].str());
+			col.RelyTblID = boost::lexical_cast<int>(match[5].str());
+			col.RelyColID = boost::lexical_cast<int>(match[6].str());
+			col.VisiColID = boost::lexical_cast<int>(match[7].str());
 
 			col.ResetExternInfo();
 			schema.AppendColumn(col);
@@ -168,8 +173,9 @@ bool CBuildInSchemaSerializer::WriteTable(const CDBTableSchema& tbl, FileRowColl
 	std::auto_ptr<IEnumerator<DBColumnSchema>> cols(tbl.EnumColumn());
 
 	DBColumnSchema col;
-	while(cols->MoveNext(col))
+	while(cols->MoveNext())
 	{
+		col = cols->Current();
 		col.ResetExternInfo();
 
 		fmtCol
@@ -177,7 +183,10 @@ bool CBuildInSchemaSerializer::WriteTable(const CDBTableSchema& tbl, FileRowColl
 			%col.Name
 			%EnumEntityOfCppDataType()[col.Type].ValueStr
 			%col.IndexMask
-			%EnumEntityOfDBColumnSchemaFlag().FormatFlagEnum(col.Flag);
+			%EnumEntityOfDBColumnSchemaFlag().FormatFlagEnum(col.Flag)
+			%col.RelyTblID
+			%col.RelyColID
+			%col.VisiColID;
 
 		rows.push_back(fmtCol.str());
 	}

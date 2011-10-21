@@ -55,6 +55,7 @@
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
+				ShowIncludes="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -309,6 +310,10 @@
 			</File>
 			<File
 				RelativePath=".\DBTableViewer4GridCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\Enumerator.h"
 				>
 			</File>
 			<File

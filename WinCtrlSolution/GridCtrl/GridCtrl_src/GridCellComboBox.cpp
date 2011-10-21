@@ -39,6 +39,7 @@
 #include "GridCtrl.h"
 #include "GridCellComboBox.h"
 #include "CellTemplate.h"
+#include "helper.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -74,7 +75,7 @@ public:
 			result = m_pCell->GetTemplate()->GetTextFormat()->Parse(orgin.c_str(), 0);
 		}
 
-		TRACE("CTextConvertAdapter - %s", result.c_str());
+		//TTRACE(TEXT("CTextConvertAdapter - %s\r\n"), result.c_str());
 
 		return result;
 	}

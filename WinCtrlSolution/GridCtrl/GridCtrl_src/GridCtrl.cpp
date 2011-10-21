@@ -1816,7 +1816,7 @@ void CGridCtrl::OnDraw(CDC* pDC)
     if (GetVirtualMode())
        SendCacheHintToParent(CCellRange(-1,-1,-1,-1));
 
-#ifdef _DEBUG
+#ifdef _TRACEOUT
 	LARGE_INTEGER iEndCount;
 	QueryPerformanceCounter(&iEndCount);
 	TRACE1("Draw counter ticks: %d\n", iEndCount.LowPart-iStartCount.LowPart);
@@ -5960,7 +5960,9 @@ CPoint CGridCtrl::GetPointClicked(int nRow, int nCol, const CPoint& point)
 
 void CGridCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-    TRACE0("CGridCtrl::OnLButtonDblClk\n");
+#ifdef _TRACEOUT
+	TRACE0("CGridCtrl::OnLButtonDblClk\n");
+#endif    
 
     CCellID cell = GetCellFromPt(point);
     if( !IsValid( cell) )

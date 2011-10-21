@@ -143,6 +143,9 @@ const tstring& CDBColumnInfoRecord::GetField(unsigned int idx) const
 	case VisiCol:
 		str = boost::lexical_cast<tstring>(ColPtr->VisiColID);
 		break;
+	case Index:
+		str = boost::lexical_cast<tstring>(ColPtr->Index);
+		break; 
 	default:
 		_ASSERT(false);
 		str.clear();

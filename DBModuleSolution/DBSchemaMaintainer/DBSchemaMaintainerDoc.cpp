@@ -64,7 +64,7 @@ int CDBSchemaMaintainerDoc::LoadBuildInSchema(LPCTSTR lpszSchemaFile)
 		{
 			return 0;
 		}
-		File_ = dlg.GetPathName();
+		ParseProjectInfo(dlg.GetPathName());
 	}
 	else if(_taccess(lpszSchemaFile, 0) != 0)
 	{
@@ -73,7 +73,7 @@ int CDBSchemaMaintainerDoc::LoadBuildInSchema(LPCTSTR lpszSchemaFile)
 	}
 	else
 	{
-		File_ = lpszSchemaFile;
+		ParseProjectInfo(lpszSchemaFile);
 	}
 
 	DBModule_.Clear(true);
@@ -82,7 +82,7 @@ int CDBSchemaMaintainerDoc::LoadBuildInSchema(LPCTSTR lpszSchemaFile)
 	CBuildInSchemaSerializer::FileRowCollection rows;
 
 	//read file
-	CStdioFile file(GetFile(), CStdioFile::modeRead);
+	CStdioFile file(GetBuildInSchemaDetailFile(), CStdioFile::modeRead);
 	CString line;
 	while(file.ReadString(line))
 	{
@@ -97,31 +97,59 @@ int CDBSchemaMaintainerDoc::LoadBuildInSchema(LPCTSTR lpszSchemaFile)
 	return 1;
 }
 
-int CDBSchemaMaintainerDoc::SaveBuildInSchema()
+int CDBSchemaMaintainerDoc::SaveBuildInSchemaDetail()
 {
-	if(GetFile().IsEmpty())
-	{
-		TCHAR pszFilter[] = TEXT("Database Schema File(*.dbschema)|*.dbschema|All Files(*.*)|*.*|");
-		CFileDialog dlg(FALSE, TEXT("dbschema"), TEXT("Project1"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, pszFilter);
-		if(dlg.DoModal() != IDOK)
-		{
-			return 0;
-		}
-		File_ = dlg.GetPathName();
-	}
-
-	UpdateModuleAsBuildin();
-
 	CBuildInSchemaSerializer serializer; 
 	CBuildInSchemaSerializer::FileRowCollection rows;
 	serializer.Write(DBModule_, rows);
 
-	CStdioFile file(GetFile(), CStdioFile::modeWrite | CStdioFile::modeCreate);
+	CStdioFile file(GetBuildInSchemaDetailFile(), CStdioFile::modeWrite | CStdioFile::modeCreate);
 
 	for (CBuildInSchemaSerializer::FileRowCollection::iterator iter = rows.begin(); iter != rows.end(); ++iter)
 	{
 		file.WriteString(iter->c_str());
 		file.WriteString(TEXT("\n"));
+	}
+
+	file.Flush();
+	file.Close();
+
+	return 1;
+}
+
+int CDBSchemaMaintainerDoc::SaveBuildInSchemaObjID()
+{
+	std::auto_ptr<DBTableEnumerator> pTblEnum(GetDBModule().Tables().Enum());
+	CStdioFile	file(GetBuildInSchemaObjIDFile(), CStdioFile::modeWrite | CStdioFile::modeCreate);
+	CDBTable*	pTbl;
+	CString		strTmp;
+
+	file.WriteString(TEXT("#pragma once\n\n"));
+	strTmp.Format(TEXT("enum Enum%sTables\n"), ProjectName_); 
+	file.WriteString(strTmp);
+	file.WriteString(TEXT("{\n"));
+
+	while(pTblEnum->MoveNext(pTbl))
+	{
+		strTmp.Format(TEXT("\tTBL_%s,\n"), pTbl->GetName().c_str());
+		file.WriteString(strTmp);
+	}
+	file.WriteString(TEXT("};\n\n"));
+	
+	pTblEnum->Reset();
+	while(pTblEnum->MoveNext(pTbl))
+	{
+		strTmp.Format(TEXT("enum Enum%sColumns\n{\n"), pTbl->GetName().c_str());
+		file.WriteString(strTmp);
+
+		std::auto_ptr<DBColumnEnumerator> pColEnum(pTbl->EnumColumn());
+		while(pColEnum->MoveNext())
+		{
+			strTmp.Format(TEXT("\tCOL_%s_%s,\n"), pTbl->GetName().c_str(), pColEnum->Current().Name.c_str());
+			file.WriteString(strTmp);
+		}
+
+		file.WriteString(TEXT("};\n\n"));
 	}
 
 	file.Flush();
@@ -275,6 +303,21 @@ bool CDBSchemaMaintainerDoc::GetDBProvider(HMODULE hModule, IDBSourceManager** p
 	return *ppNameMapping && *ppSourceManager;
 }
 
+int CDBSchemaMaintainerDoc::ParseProjectInfo(LPCTSTR lpszProFile)
+{
+	ProjectPath_ = ProjectName_ = ProjectExt_ = lpszProFile;
+
+	PathRemoveExtension(ProjectName_.GetBuffer());
+	ProjectName_.ReleaseBuffer();
+	ProjectExt_ = ProjectExt_.Right(ProjectExt_.GetLength() - ProjectName_.GetLength() - 1);
+
+	PathRemoveFileSpec(ProjectPath_.GetBuffer());
+	ProjectPath_.ReleaseBuffer();
+	ProjectName_ = ProjectName_.Right(ProjectName_.GetLength() - ProjectPath_.GetLength() - 1);	
+
+	return 1;
+}
+
 BOOL CDBSchemaMaintainerDoc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
@@ -362,7 +405,21 @@ void CDBSchemaMaintainerDoc::OnOpenFile()
 
 void CDBSchemaMaintainerDoc::OnFileSave()
 {
-	SaveBuildInSchema();
+	if(ProjectName_.IsEmpty())
+	{
+		TCHAR pszFilter[] = TEXT("Database Schema File(*.dbschema)|*.dbschema|All Files(*.*)|*.*|");
+		CFileDialog dlg(FALSE, TEXT("dbschema"), TEXT("Project1"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, pszFilter);
+		if(dlg.DoModal() != IDOK)
+		{
+			return;
+		}
+		ParseProjectInfo(dlg.GetPathName());
+	}
+
+	UpdateModuleAsBuildin();
+
+	SaveBuildInSchemaDetail();
+	SaveBuildInSchemaObjID();
 	UpdateAllViews(NULL);
 }
 

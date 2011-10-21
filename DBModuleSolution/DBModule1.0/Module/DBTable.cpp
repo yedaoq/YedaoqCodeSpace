@@ -8,6 +8,7 @@
 #include <vector>
 #include <crtdbg.h>
 #include "DBRecord.h"
+#include "DBRecordFunction.h"
 
 using namespace NSDBModule;
 
@@ -62,7 +63,7 @@ int CDBTable::InitializeStore()
 
 int CDBTable::initializeAccess()
 {
-	CommandBuilder_ = std::tr1::shared_ptr<IDBCommandBuilder>(DBModule_->DBFactory()->CreateDBCommandBuilder());
+	CommandBuilder_ = std::auto_ptr<IDBCommandBuilder>(DBModule_->DBFactory()->CreateDBCommandBuilder());
 	CommandBuilder_->Initialize(&GetSchema());
 
 	return 1;
@@ -73,14 +74,14 @@ IEnumerator<DBColumnSchema>* CDBTable::EnumColumn() const
 	return Schema_.EnumColumn();
 }
 
-DBRecordEnumerator CDBTable::EnumRecord() /*const*/
+IEnumerator<IDBRecord>* CDBTable::EnumRecord() /*const*/
 {
 	if(!FlagLoaded_)
 	{
 		LoadData();
 	}
 
-	return make_iterator_enumerator(Records_.begin(), Records_.end());
+	return new_iterator_enumerator_ex<IDBRecord>(Records_.begin(), Records_.end());
 }
 
 int CDBTable::ClearData()
@@ -103,14 +104,14 @@ int	CDBTable::LoadData()
 		InitializeStore();
 	}
 
-	if(!CommandBuilder_)
+	if(!CommandBuilder_.get())
 	{
 		initializeAccess();
 	}
 
 	Records_.clear();
 
-	if(!DBModule_ || !DBModule_->DBAdapter() || !CommandBuilder_)	
+	if(!DBModule_ || !DBModule_->DBAdapter() || !CommandBuilder_.get())	
 	{																
 		_ASSERT(DBModule_ && DBModule_->DBAdapter());				
 		throw std::exception();										
@@ -173,12 +174,13 @@ int	CDBTable::Find(IDBRecord& rec, const CDBRecordComparison& cmp)
 	return 0;
 }
 
-DBRecordEnumerator CDBTable::FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp) /*const*/
+IEnumerator<IDBRecord>* CDBTable::FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp) /*const*/
 {
 	LoadData();
 
-	throw std::exception();
-	//return make_iterator_enumerator();
+	return new_filter_enumerator(
+		make_iterator_enumerator_ex<IDBRecord>(Records_.begin(), Records_.end()),
+		CDBRecordFilter(rec, cmp));
 }
 
 int	CDBTable::Update(const IDBRecord& cur, const IDBRecord& ori)

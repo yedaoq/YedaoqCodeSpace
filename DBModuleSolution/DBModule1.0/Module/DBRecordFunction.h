@@ -22,7 +22,7 @@ namespace NSDBModule
 			: Field_(field)
 		{}
 
-		const tstring& operator()(const CDBRecordBase& rec) 
+		const tstring& operator()(const IDBRecord& rec) 
 		{ 
 			_ASSERT(Field_ != -1);
 			return rec.GetField(Field_); 
@@ -36,11 +36,11 @@ namespace NSDBModule
 	public:
 		CDBRecordFilter(){}
 
-		CDBRecordFilter(const CDBRecordBase& rec, const CDBRecordComparison& cmp)
+		CDBRecordFilter(const IDBRecord& rec, const CDBRecordComparison& cmp)
 			: Key(rec), Comparison(cmp)
 		{}
 
-		bool operator()(const CDBRecordBase& rec)
+		bool operator()(const IDBRecord& rec)
 		{ 
 			//int result = Comparison(rec, Key);
 			return 0 == Comparison(rec, Key); 
@@ -52,8 +52,18 @@ namespace NSDBModule
 
 	inline bool DBRecordAssign(IDBRecord& des, const IDBRecord& src)
 	{
-		_ASSERT(des.GetFieldCount() == src.GetFieldCount());
+		//_ASSERT(des.GetFieldCount() == src.GetFieldCount());
 		for(int i = 0; i < min(des.GetFieldCount(), src.GetFieldCount()); ++i)
+		{
+			des.SetField(i, src.GetField(i));
+		}
+
+		return true;
+	}
+
+	inline bool DBRecordAssign(IDBRecord& des, const IDBRecord& src, index_t fieldCount)
+	{
+		for(int i = 0; i < fieldCount; ++i)
 		{
 			des.SetField(i, src.GetField(i));
 		}

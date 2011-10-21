@@ -28,34 +28,69 @@ interface IEnumerator : public ICloneable
 {
 	virtual ~IEnumerator() = 0 {}
 
+	virtual bool			MoveNext()		= 0;
+	virtual bool			MoveNext(T&)	= 0;
+	virtual const T&		Current()		= 0;
+	virtual void			Reset()			= 0;
+};
+
+template<typename T>
+class CEnumeratorBase : public IMPIREFOBJECT(IEnumerator<T>)
+{
+public:
+	virtual ~CEnumeratorBase() = 0 {}
 	virtual bool		MoveNext()		= 0;
-	virtual bool		MoveNext(T&)	= 0;
 	virtual const T&	Current()		= 0;
 	virtual void		Reset()			= 0;
+
+	virtual bool MoveNext(T& obj)
+	{
+		if(MoveNext())
+		{
+			obj = Current();
+			return true;
+		}
+		return false;
+	}
 };
 
 template<typename Tt, typename Ts, typename Fc>
-class CConvertEnumerator : public IMPIREFOBJECT(IEnumerator<Tt>)
+class CConvertEnumeratorEx : public CEnumeratorBase<Tt>
 {
 public:
-	CConvertEnumerator()
-		: m_Source(0)
-	{}
-
-	CConvertEnumerator(IEnumerator<Ts> *source, Fc convert)
-		: m_Source(source), m_Converter(convert)
-	{}
-
-	CConvertEnumerator(const CConvertEnumerator& other)
+	~CConvertEnumeratorEx()
 	{
-		m_Source = other.m_Source;
-		m_Converter = other.m_Converter;
+		if(m_SourceOwned && m_Source) delete m_Source;
+		m_Source = 0;
 	}
 
-	CConvertEnumerator& operator=(const CConvertEnumerator& other)
+	CConvertEnumeratorEx()
+		: m_SourceOwned(0), m_Source(0)
+	{}
+
+	CConvertEnumeratorEx(IEnumerator<Ts>* source, Fc convert)
+		: m_SourceOwned(false), m_Source(source), m_Converter(convert)
+	{}
+
+	CConvertEnumeratorEx(IEnumerator<Ts>& source, Fc convert)
+		: m_SourceOwned(true), m_Source(static_cast<IEnumerator<Ts>*>(source.Clone())), m_Converter(convert)
+	{}
+
+	CConvertEnumeratorEx(const CConvertEnumeratorEx& other)
+		: m_SourceOwned(other.m_SourceOwned), m_Converter(other.m_Converter)
 	{
-		m_Source = other.m_Source;
+		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
+	}
+
+	CConvertEnumeratorEx& operator=(const CConvertEnumeratorEx& other)
+	{
+		IEnumerator<Ts>* tmp = m_SourceOwned ? m_Source : 0;
+
+		m_SourceOwned = other.m_SourceOwned;
+		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
 		m_Converter = other.m_Converter;
+
+		if(tmp) delete tmp;
 		return *this;
 	}
 
@@ -64,14 +99,72 @@ public:
 		return m_Source->MoveNext();
 	}
 
-	virtual bool MoveNext(Tt& obj)
+	virtual const Tt& Current()
 	{
-		if(m_Source->MoveNext())
-		{
-			obj = Current();
-			return true;
-		}
-		return false;
+		m_InterMediate = m_Converter(m_Source->Current());
+		return m_InterMediate;
+	}
+
+	virtual void Reset()
+	{
+		m_Source->Reset();
+	}
+
+	virtual ICloneable* Clone() const
+	{
+		return new CConvertEnumeratorEx(*this);
+	}
+
+	bool				m_SourceOwned;
+	IEnumerator<Ts>*	m_Source;	
+	Fc					m_Converter;
+	Tt					m_InterMediate;
+};
+
+template<typename Tt, typename Ts, typename Fc>
+class CConvertEnumerator : public CEnumeratorBase<Tt>
+{
+public:
+
+	~CConvertEnumerator()
+	{
+		if(m_SourceOwned && m_Source) delete m_Source;
+		m_Source = 0;
+	}
+
+	CConvertEnumerator()
+		: m_SourceOwned(0), m_Source(0)
+	{}
+
+	CConvertEnumerator(IEnumerator<Ts>* source, Fc convert)
+		: m_SourceOwned(false), m_Source(source), m_Converter(convert)
+	{}
+
+	CConvertEnumerator(IEnumerator<Ts>& source, Fc convert)
+		: m_SourceOwned(true), m_Source(static_cast<IEnumerator<Ts>*>(source.Clone())), m_Converter(convert)
+	{}
+
+	CConvertEnumerator(const CConvertEnumerator& other)
+		: m_SourceOwned(other.m_SourceOwned), m_Converter(other.m_Converter)
+	{
+		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
+	}
+
+	CConvertEnumerator& operator=(const CConvertEnumerator& other)
+	{
+		IEnumerator<Ts>* tmp = m_SourceOwned ? m_Source : 0;
+
+		m_SourceOwned = other.m_SourceOwned;
+		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
+		m_Converter = other.m_Converter;
+
+		if(tmp) delete tmp;
+		return *this;
+	}
+
+	virtual bool MoveNext()
+	{
+		return m_Source->MoveNext();
 	}
 
 	virtual const Tt& Current()
@@ -89,32 +182,53 @@ public:
 		return new CConvertEnumerator(*this);
 	}
 
-	IEnumerator<Ts>*	m_Source;
+	bool				m_SourceOwned;
+	IEnumerator<Ts>*	m_Source;	
 	Fc					m_Converter;
 };
 
 template<typename T, typename Ff>
-class CFilterEnumerator : public IMPIREFOBJECT(IEnumerator<T>)
+class CFilterEnumerator : public CEnumeratorBase<T>
 {
 public:
+
+	~CFilterEnumerator()
+	{
+		if(m_SourceOwned && m_Source)
+		{
+			delete m_Source;			
+		}
+		m_Source = 0;
+	}
+
 	CFilterEnumerator()
-		:m_Source(0)
+		: m_SourceOwned(false), m_Source(0)
 	{}
 
-	CFilterEnumerator(IEnumerator<T> *source, Ff filter)
-		: m_Source(source), m_Filter(filter)
+	CFilterEnumerator(IEnumerator<T>* source, Ff filter)
+		: m_SourceOwned(false), m_Source(source), m_Filter(filter)
+	{}
+
+	CFilterEnumerator(IEnumerator<T>& source, Ff filter)
+		: m_SourceOwned(true), m_Source(static_cast<IEnumerator<T>*>(source.Clone())), m_Filter(filter)
 	{}
 
 	CFilterEnumerator(const CFilterEnumerator& other)
+		: m_SourceOwned(other.m_SourceOwned), m_Filter(other.m_Filter)
 	{
-		m_Source = other.m_Source;
-		m_Filter = other.m_Filter;
+		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
 	}
 
 	CFilterEnumerator& operator=(const CFilterEnumerator& other)
 	{
-		m_Source = other.m_Source;
+		IEnumerator<T>* tmp = m_SourceOwned ? m_InnerSource : 0;
+
+		m_SourceOwned = other.m_SourceOwned;
+		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
 		m_Filter = other.m_Filter;
+
+		if(tmp)	delete tmp;
+
 		return *this;
 	}
 
@@ -123,19 +237,6 @@ public:
 		while(m_Source->MoveNext())
 		{
 			if(m_Filter(Current()))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	virtual bool MoveNext(T& obj)
-	{
-		while(m_Source->MoveNext(obj))
-		{
-			if(m_Filter(obj))
 			{
 				return true;
 			}
@@ -159,12 +260,13 @@ public:
 		return new CFilterEnumerator(*this);
 	}
 
-	IEnumerator<T>* m_Source;
+	bool			m_SourceOwned;
+	IEnumerator<T>* m_Source;	
 	Ff				m_Filter;
 };
 
 template<typename T>
-class CRangeEnumerator : public IEnumerator<T>
+class CRangeEnumerator : public CEnumeratorBase<T>
 {
 public:
 	CRangeEnumerator()
@@ -204,16 +306,6 @@ public:
 		return current_ != last_;
 	}
 
-	virtual bool MoveNext(T& item)
-	{
-		if(MoveNext())
-		{
-			item = Current();
-			return true;
-		}
-		return false;
-	}
-
 	virtual const T& Current()
 	{
 		_ASSERT(!beforefirst_ && current_ != last_);
@@ -237,8 +329,8 @@ protected:
 	bool	beforefirst_;
 };
 
-template<typename iter_t>
-class CIteratorEnumerator : public IMPIREFOBJECT(IEnumerator<typename iter_t::value_type>)
+template<typename iter_t, typename value_t = typename iter_t::value_type>
+class CIteratorEnumerator : public CEnumeratorBase<value_t>
 {
 public:
 	CIteratorEnumerator(){}
@@ -247,32 +339,12 @@ public:
 		: inner_(begin, end)
 	{}
 
-	//CIteratorEnumerator(const CIteratorEnumerator& other)
-	//	: inner_(other.inner_)
-	//{}
-
-	//CIteratorEnumerator& operator=(const CIteratorEnumerator& other)
-	//{
-	//	inner_ = other.inner_;
-	//	return *this;
-	//}
-
 	virtual bool MoveNext()
 	{
 		return inner_.MoveNext();
 	}
 
-	virtual bool MoveNext(typename iter_t::value_type& obj)
-	{
-		if(inner_.MoveNext())
-		{
-			obj = *inner_.Current();
-			return true;
-		}
-		return false;
-	}
-
-	virtual const typename iter_t::value_type& Current()
+	virtual const value_t& Current()
 	{
 		return *inner_.Current();
 	}
@@ -291,115 +363,99 @@ protected:
 	CRangeEnumerator<iter_t> inner_;
 };
 
-//template<typename _Container, typename _Ele>
-//class CIteratorEnumeratorEx : public IMPIREFOBJECT(IEnumerator<_Ele>)
-//{
-//public:
-//	typedef typename _Container<_Ele>::iterator iter_t;
-//
-//	CIteratorEnumerator()
-//		: iter_(last_), beforefirst_(false)
-//	{}
-//
-//	CIteratorEnumerator(const iter_t& begin, const iter_t& end)
-//		: first_(begin), last_(end), iter_(begin), beforefirst_(true)
-//	{}
-//
-//	CIteratorEnumerator(const CIteratorEnumerator& other)
-//		: first_(other.first_), last_(other.last_), iter_(other.iter_), beforefirst_(true)
-//	{}
-//
-//	CIteratorEnumerator& operator=(const CIteratorEnumerator& other)
-//	{
-//		first_ = other.first_;
-//		last_ = other.last_;
-//		iter_ = other.iter_;
-//		beforefirst_ = other.beforefirst_;
-//
-//		return *this;
-//	}
-//
-//	virtual bool MoveNext()
-//	{
-//		if(beforefirst_)
-//		{
-//			beforefirst_ = false;
-//			iter_ = first_;
-//		}
-//		else if(iter_ != last_)
-//		{
-//			++iter_;
-//		}
-//
-//		return iter_ != last_;
-//	}
-//
-//	virtual bool MoveNext(typename iter_t::value_type& obj)
-//	{
-//		if(MoveNext())
-//		{
-//			obj = Current();
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	virtual const typename iter_t::value_type& Current()
-//	{
-//		_ASSERT(!beforefirst_ && iter_ != last_);
-//		return *iter_ ;
-//	}
-//
-//	virtual void Reset()
-//	{
-//		beforefirst_ = true;
-//	}
-//
-//	virtual ICloneable* Clone() const
-//	{
-//		return new CIteratorEnumerator(*this);
-//	}
-//
-//protected:
-//	iter_t	first_;
-//	iter_t	last_;
-//	iter_t	iter_;
-//	bool	beforefirst_;
-//};
-
-template<typename T>
-CIteratorEnumerator<T> make_iterator_enumerator(T begin, T end)
+template<typename iter_t>
+CIteratorEnumerator<iter_t> make_iterator_enumerator(iter_t begin, iter_t end)
 {
-	return CIteratorEnumerator<T>(begin, end);
+	return CIteratorEnumerator<iter_t>(begin, end);
+}
+
+template<typename value_t, typename iter_t>
+CIteratorEnumerator<iter_t, value_t> make_iterator_enumerator_ex(iter_t begin, iter_t end)
+{
+	return CIteratorEnumerator<iter_t, value_t>(begin, end);
 }
 
 template<typename Tt, typename Ts, typename Fc>
-CConvertEnumerator<Tt, Ts, Fc> make_convert_enumerator(IEnumerator<Ts> *source, Fc converter)
+CConvertEnumerator<Tt, Ts, Fc> make_convert_enumerator(IEnumerator<Ts>* source, Fc converter)
 {
 	return CConvertEnumerator<Tt, Ts, Fc>(source, converter);
 }
 
-template<typename T, typename Ff>
-CFilterEnumerator<T, Ff> make_filter_enumerator(IEnumerator<T> *source, Ff converter)
+template<typename Tt, typename Ts, typename Fc>
+CConvertEnumerator<Tt, Ts, Fc> make_convert_enumerator(IEnumerator<Ts>& source, Fc converter)
 {
-	return CFilterEnumerator<T, Ff>(source, converter);
-}
-
-template<typename T>
-CIteratorEnumerator<T>* new_iterator_enumerator(T begin, T end)
-{
-	return new CIteratorEnumerator<T>(begin, end);
+	return CConvertEnumerator<Tt, Ts, Fc>(source, converter);
 }
 
 template<typename Tt, typename Ts, typename Fc>
-CConvertEnumerator<Tt, Ts, Fc>* new_convert_enumerator(IEnumerator<Ts> *source, Fc converter)
+CConvertEnumeratorEx<Tt, Ts, Fc> make_convert_enumerator_ex(IEnumerator<Ts>* source, Fc converter)
+{
+	return CConvertEnumeratorEx<Tt, Ts, Fc>(source, converter);
+}
+
+template<typename Tt, typename Ts, typename Fc>
+CConvertEnumeratorEx<Tt, Ts, Fc> make_convert_enumerator_ex(IEnumerator<Ts>& source, Fc converter)
+{
+	return CConvertEnumeratorEx<Tt, Ts, Fc>(source, converter);
+}
+
+template<typename T, typename Ff>
+CFilterEnumerator<T, Ff> make_filter_enumerator(IEnumerator<T>* source, Ff filter)
+{
+	return CFilterEnumerator<T, Ff>(source, filter);
+}
+
+template<typename T, typename Ff>
+CFilterEnumerator<T, Ff> make_filter_enumerator(IEnumerator<T>& source, Ff filter)
+{
+	return CFilterEnumerator<T, Ff>(source, filter);
+}
+
+template<typename iter_t>
+CIteratorEnumerator<iter_t>* new_iterator_enumerator(iter_t begin, iter_t end)
+{
+	return new CIteratorEnumerator<iter_t>(begin, end);
+}
+
+template<typename value_t, typename iter_t>
+CIteratorEnumerator<iter_t, value_t>* new_iterator_enumerator_ex(iter_t begin, iter_t end)
+{
+	return new CIteratorEnumerator<iter_t, value_t>(begin, end);
+}
+
+template<typename Tt, typename Ts, typename Fc>
+CConvertEnumerator<Tt, Ts, Fc>* new_convert_enumerator(IEnumerator<Ts>* source, Fc converter)
 {
 	return new CConvertEnumerator<Tt, Ts, Fc>(source, converter);
 }
 
-template<typename T, typename Ff>
-CFilterEnumerator<T, Ff>* new_filter_enumerator(IEnumerator<T> *source, Ff converter)
+template<typename Tt, typename Ts, typename Fc>
+CConvertEnumerator<Tt, Ts, Fc>* new_convert_enumerator(IEnumerator<Ts>& source, Fc converter)
 {
-	return new CFilterEnumerator<T, Ff>(source, converter);
+	return new CConvertEnumerator<Tt, Ts, Fc>(source, converter);
+}
+
+template<typename Tt, typename Ts, typename Fc>
+CConvertEnumeratorEx<Tt, Ts, Fc>* new_convert_enumerator_ex(IEnumerator<Ts>* source, Fc converter)
+{
+	return new CConvertEnumeratorEx<Tt, Ts, Fc>(source, converter);
+}
+
+template<typename Tt, typename Ts, typename Fc>
+CConvertEnumeratorEx<Tt, Ts, Fc>* new_convert_enumerator_ex(IEnumerator<Ts>& source, Fc converter)
+{
+	return new CConvertEnumeratorEx<Tt, Ts, Fc>(source, converter);
+}
+
+template<typename T, typename Ff>
+CFilterEnumerator<T, Ff>* new_filter_enumerator(IEnumerator<T>* source, Ff filter)
+{
+	return new CFilterEnumerator<T, Ff>(source, filter);
+}
+
+template<typename T, typename Ff>
+CFilterEnumerator<T, Ff>* new_filter_enumerator(IEnumerator<T>& source, Ff filter)
+{
+	return new CFilterEnumerator<T, Ff>(source, filter);
 }
 

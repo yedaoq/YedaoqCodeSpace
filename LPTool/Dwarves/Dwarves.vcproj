@@ -277,6 +277,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBEnumeratorProvider.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DBTableViewer4GridCtrl.h"
 				>
 			</File>

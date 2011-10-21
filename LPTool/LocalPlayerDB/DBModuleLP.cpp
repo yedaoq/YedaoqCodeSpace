@@ -12,11 +12,21 @@ using namespace NSDBModule;
 
 int	CDBModuleLP::InitializeBuildinSchema()
 {
-	index_t anonyousTableIndex = 0;
-	CDBTableSchema anonyousTableSchema;
-	#include "LocalPlayer.dbschema"
+	CBuildInSchemaSerializer serializer; 
+	CBuildInSchemaSerializer::FileRowCollection rows;
 
-	return CDBModule::InitializeBuildinSchema();
+	Clear(true);	
+
+	//read file
+	CStdioFile file(TEXT("LocalPlayer.dbschema"), CStdioFile::modeRead);
+	CString line;
+	while(file.ReadString(line))
+	{
+		rows.push_back((LPCTSTR)line);
+	}
+	file.Close();
+
+	serializer.Read(make_iterator_enumerator(rows.begin(), rows.end()), *this);
 }
 
 CDBModuleLP DBModule;

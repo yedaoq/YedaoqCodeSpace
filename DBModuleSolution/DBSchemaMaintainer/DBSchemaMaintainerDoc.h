@@ -18,14 +18,16 @@ protected: // 仅从序列化创建
 
 // 属性
 public:
-	virtual CDBModule& GetDBModule() { return DBModule_; }
-	virtual CString& GetFile() { return File_; }
+	virtual CDBModule&	GetDBModule() { return DBModule_; }
+	virtual CString		GetBuildInSchemaDetailFile() { return ProjectPath_ + '\\' + ProjectName_ + '.' + ProjectExt_; }
+	virtual CString		GetBuildInSchemaObjIDFile() { return ProjectPath_ + '\\' + ProjectName_ + TEXT("ObjEnum.h"); }
 
 // 操作
 public:
 	int	LoadDBSchema(IDBDataAdapter* dbAdapter, IDBFactory* dbFactory, IDBNameMapping* dbNameMapping);
 	int LoadBuildInSchema(LPCTSTR lpszSchemaFile);
-	int SaveBuildInSchema();
+	int SaveBuildInSchemaDetail();
+	int SaveBuildInSchemaObjID();
 
 	int	UpdateModuleAsBuildin();
 
@@ -34,6 +36,8 @@ public:
 
 	bool FindDBProviderDLL(tstring& filePath);
 	bool GetDBProvider(HMODULE hModule, IDBSourceManager** ppSourceManager, IDBNameMapping** ppNameMapping);
+
+	int ParseProjectInfo(LPCTSTR lpszProFile);
 
 // 重写
 public:
@@ -50,7 +54,9 @@ public:
 
 protected:
 	NSDBModule::CDBModule			DBModule_;
-	CString							File_;
+	CString							ProjectName_;
+	CString							ProjectPath_;
+	CString							ProjectExt_;
 	CDynamicLinkLibrary				DllDBProvider_;
 
 // 生成的消息映射函数

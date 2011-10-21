@@ -6,6 +6,7 @@
 #include "Module\DBModule.h"
 #include "Module\Schema\DBTableSchema.h"
 #include "Module\DBRecordFunction.h"
+#include <Helper.h>
 
 using namespace NSDBModule;
 
@@ -73,7 +74,7 @@ public:
 
 	virtual const tstring& GetField(unsigned int idx) const;
 	virtual int	SetField(unsigned int idx, const tstring& val);
-	virtual index_t GetFieldCount() const { return 10; }
+	virtual index_t GetFieldCount() const { return 14; }
 
 	void SetColumn(DBColumnSchema* pCol) { ColPtr = pCol; }
 	bool IsStateNormal() const;
@@ -104,7 +105,7 @@ public:
 	{
 		if(MoveNext())
 		{
-			DBRecordAssign(rec, Current());
+			DBRecordAssign(rec, Current(), Current().GetFieldCount());
 			return true;
 		}
 
@@ -137,14 +138,35 @@ class CDBColumnInfoEnumerator : public IEnumerator<IDBRecord>
 {
 public:
 	CDBColumnInfoEnumerator(CDBTableSchema* pTbl)
-		: DBTableSchemaPtr(pTbl), InnerEnumPtr(0)
+		: DBTableSchemaPtr(0)
 	{
-		Reset();
+		SetTable(pTbl);
 	}
 
 	CDBColumnInfoEnumerator(const CDBColumnInfoEnumerator& other)
-		: DBTableSchemaPtr(other.DBTableSchemaPtr), InnerEnumPtr(DBTableSchemaPtr->EnumColumn())
-	{}
+		: DBTableSchemaPtr(0)
+	{
+		SetTable(other.DBTableSchemaPtr);
+	}
+
+	void SetTable(CDBTableSchema* pTbl) 
+	{
+		CDBTableSchema* pOri = DBTableSchemaPtr;
+		DBTableSchemaPtr = pTbl; 
+		if(!pOri || !pTbl || pOri->Name != pTbl->Name)
+		{
+			if(pTbl)
+			{
+				TTRACE(TEXT("DBRecord Enumerator : %s\r\n"), pTbl->Name.c_str());
+				InnerEnumPtr = std::auto_ptr<IEnumerator<DBColumnSchema>>(pTbl->EnumColumn());
+			}
+			else
+			{
+				TTRACE(TEXT("Warring : DBRecord Enumerator Null!\r\n"));
+				InnerEnumPtr = std::auto_ptr<IEnumerator<DBColumnSchema>>(0);
+			}
+		}
+	};
 
 	virtual bool MoveNext()
 	{
@@ -159,7 +181,7 @@ public:
 	{
 		if(MoveNext())
 		{
-			DBRecordAssign(rec, Current());
+			DBRecordAssign(rec, Current(), Current().GetFieldCount());
 			return true;
 		}
 
@@ -170,18 +192,15 @@ public:
 	{
 		static CDBColumnInfoRecord rec;
 		rec.SetColumn(const_cast<DBColumnSchema*>(&InnerEnumPtr->Current()));
+		TTRACE(TEXT("DBRecord Enumerator Read : %s %s\r\n"), rec.GetField(CDBColumnInfoRecord::Index).c_str(), rec.GetField(CDBColumnInfoRecord::Name).c_str());
 		return rec;
 	}
 
 	virtual void Reset()
 	{
-		if(DBTableSchemaPtr)
+		if(InnerEnumPtr.get())
 		{
-			InnerEnumPtr = std::auto_ptr<IEnumerator<DBColumnSchema>>(DBTableSchemaPtr->EnumColumn());
-		}
-		else
-		{
-			InnerEnumPtr = std::auto_ptr<IEnumerator<DBColumnSchema>>(0);
+			InnerEnumPtr->Reset();
 		}
 	}
 
@@ -190,7 +209,11 @@ public:
 		return new CDBColumnInfoEnumerator(*this);
 	}
 
+	const tstring& Table() const { static tstring strNull; return DBTableSchemaPtr ? DBTableSchemaPtr->Name : strNull; }
+
 protected:
-	CDBTableSchema*					DBTableSchemaPtr;
+	CDBTableSchema*								DBTableSchemaPtr;
 	std::auto_ptr<IEnumerator<DBColumnSchema>>	InnerEnumPtr;
+
+	CDBColumnInfoEnumerator& operator=(const CDBColumnInfoEnumerator&);
 };

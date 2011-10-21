@@ -13,8 +13,6 @@ public:
 	}
 
 	virtual int	InitializeBuildinSchema(); //// buildin schema initialize
-	
-	#include "LocalPlayer.dbschema"
 };
 
 bool DBInitialize();

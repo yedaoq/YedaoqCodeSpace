@@ -45,8 +45,9 @@ void WTRACE(wchar_t const* pszFmt, ...)
 tstring StringSplice(IEnumerator<tstring>& source, tstring connecter)
 {
 	tstring result;
-	if(source.MoveNext(result))
+	if(source.MoveNext())
 	{
+		result = source.Current();
 		while(source.MoveNext())
 		{
 			result += connecter;

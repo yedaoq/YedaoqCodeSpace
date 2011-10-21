@@ -11,24 +11,25 @@
 
 namespace NSDBModule
 {
-	class IDBRecord;
+	interface IDBRecord;
+	interface IDBCommandBuilder;
 	class CDBTableSchema;
 	class CDBRecordComparison;
 	class CDBRecordLessThan;
 	class CDBModule;
 	class CDBSchemaLoader;
 
-	interface IDBCommandBuilder;
-
-	typedef std::set<CDBRecordBase, CDBRecordLessThan>			DBRecordSet;
-	typedef DBRecordSet::const_iterator							DBRecordIterator;
-	typedef std::tr1::shared_ptr<IEnumerator<IDBRecord>>		DBRecordEnumPtr;
-	typedef std::tr1::shared_ptr<IDBCommandBuilder>				DBCommandBuilderPtr;
-	typedef CIteratorEnumerator<DBRecordSet::iterator>			DBRecordEnumerator;
+	typedef IEnumerator<IDBRecord>								DBRecordEnumerator;
+	typedef IEnumerator<DBColumnSchema>							DBColumnEnumerator;
 
 	class CDBTable
 	{
+		typedef std::set<CDBRecordBase, CDBRecordLessThan>			DBRecordSet;
+		typedef DBRecordSet::const_iterator							DBRecordIterator;
+		typedef std::auto_ptr<IDBCommandBuilder>					DBCommandBuilderPtr;
+
 		friend class CDBSchemaLoader;
+
 	public:
 		CDBTable(CDBModule* module, const CDBTableSchema& schema);
 		CDBTable(CDBModule* module);
@@ -46,7 +47,7 @@ namespace NSDBModule
 		CDBModule*						GetDBModule() const		{ return DBModule_; }
 
 		IEnumerator<DBColumnSchema>*	EnumColumn() const;
-		DBRecordEnumerator				EnumRecord();
+		IEnumerator<IDBRecord>*			EnumRecord();
 
 		int								LoadData();
 		int								ClearData();
@@ -57,7 +58,7 @@ namespace NSDBModule
 
 		int								Find(IDBRecord& rec);
 		int								Find(IDBRecord& rec, const CDBRecordComparison& cmp);
-		DBRecordEnumerator				FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp);
+		IEnumerator<IDBRecord>*			FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp);
 	
 		int								Update(const IDBRecord& cur, const IDBRecord& ori);
 		int								Insert(const IDBRecord& rec);

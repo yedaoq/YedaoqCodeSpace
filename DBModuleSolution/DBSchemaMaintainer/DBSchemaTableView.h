@@ -93,13 +93,17 @@ protected:
 	CConvertEnumerator<tstring, IDBRecord, CDBRecordToField> DBColIdxStrEnumerator;
 	
 	CRangeEnumerator<int>		DBTblIdxEnumerator;
-	CConvertEnumerator<tstring, int, CTypeConverter_LexicalCast<tstring, int>> DBTblIdxStrEnumerator;
+	CConvertEnumeratorEx<tstring, int, CTypeConverter_LexicalCast<tstring, int>> DBTblIdxStrEnumerator;
 	
 	CEditStyleOptional			GridCol_RelyTblStyle;
 	CTextConverter4DBTblNameIdx GridCol_RelyTblFormat;
 
 	NSDBModule::CTextConverter4DBMap	GridCol_RelyColFormat;
 	CEditStyleOptional			GridCol_RelyColStyle;
+
+protected:
+
+	int							CurrentTableIndex;
 
 // 生成的消息映射函数
 protected:
@@ -110,6 +114,7 @@ protected:
 	afx_msg int  OnCreate(LPCREATESTRUCT lpcs);
 	afx_msg void OnGridTblSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult);
 	afx_msg void OnGridColSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult);
+	afx_msg void OnGridColTxtChanged(NMHDR *pNotifyStruct, LRESULT* pResult);
 	afx_msg void OnBtnMergeClicked();
 	DECLARE_MESSAGE_MAP()
 };

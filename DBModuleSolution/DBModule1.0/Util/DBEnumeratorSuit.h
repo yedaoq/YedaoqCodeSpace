@@ -10,70 +10,101 @@ namespace NSDBModule
 	class CDBEnumeratorSuit
 	{
 	public:
-		typedef CFilterEnumerator<CDBRecordBase, CDBRecordFilter&>				DBRecordFilterEnumerator;
-		typedef CConvertEnumerator<tstring, CDBRecordBase, CDBRecordToField>	DBRecordFieldEnumerator;
+		typedef CFilterEnumerator<IDBRecord, CDBRecordFilter>				DBRecordFilterEnumerator;
+		typedef CConvertEnumerator<tstring, IDBRecord, CDBRecordToField>	DBRecordFieldEnumerator;
 
 	public:
 		CDBEnumeratorSuit()
-			: SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, Filter)
+			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, Filter)
 		{}
 
 		template<typename iter_t>
 		CDBEnumeratorSuit(iter_t first, iter_t last)
-			: SourceEnumerator_(new CDBRecordBaseEnumerator(first, last)), FilterEnumerator_(SourceEnumerator_, Filter)
-		{}
+			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, Filter)
+		{
+			SetSource(first, last);
+		}
 
-		CDBEnumeratorSuit(const IEnumerator<CDBRecordBase>& source)
-			: SourceEnumerator_(static_cast<IEnumerator<CDBRecordBase>*>(source.Clone())),
-			FilterEnumerator_(SourceEnumerator_, Filter)
-		{}
+		CDBEnumeratorSuit(const IEnumerator<IDBRecord>& source)
+			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, Filter)
+		{
+			SetSource(source);
+		}
+
+		CDBEnumeratorSuit(const IEnumerator<IDBRecord>* source)
+			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, Filter)
+		{
+			SetSource(source);
+		}
 
 		CDBEnumeratorSuit(const CDBEnumeratorSuit& other)
-			: Filter(other.Filter),
-			SourceEnumerator_(static_cast<IEnumerator<CDBRecordBase>*>(other.SourceEnumerator_->Clone())),
-			FilterEnumerator_(SourceEnumerator_, Filter)
-		{}
+			: SourceOwned_(false), SourceEnumerator_(0), Filter(other.Filter), FilterEnumerator_(SourceEnumerator_, Filter)
+		{
+			if(other.SourceOwned_)
+			{
+				SetSource(*other.SourceEnumerator_);
+			}
+			else
+			{
+				SetSource(other.SourceEnumerator_);
+			}
+		}
 
 		CDBEnumeratorSuit& operator=(const CDBEnumeratorSuit& other)
 		{
+			if(other.SourceOwned_)
+			{
+				SetSource(*other.SourceEnumerator_);
+			}
+			else
+			{
+				SetSource(other.SourceEnumerator_);
+			}
+
 			Filter = other.Filter;
-			SourceEnumerator_ = static_cast<IEnumerator<CDBRecordBase>*>(other.SourceEnumerator_->Clone());
-			FilterEnumerator_.m_Source = SourceEnumerator_;
 
 			return *this;
 		}
 
 		~CDBEnumeratorSuit()
 		{
-			if(SourceEnumerator_)
-			{
-				delete SourceEnumerator_;
-				SourceEnumerator_ = 0;
-			}
+			Dispose();
+		}
+
+		void Dispose()
+		{
+			if(SourceOwned_ && SourceEnumerator_) delete SourceEnumerator_;
+			SourceEnumerator_ = 0;			
 		}
 
 		template<typename iter_t>
 		void SetSource(iter_t first, iter_t last)
 		{
-			SetSource(make_recset_enumerator(first,last));
+			Dispose();
+			SourceOwned_ = true;
+			FilterEnumerator_.m_Source = SourceEnumerator_ = new_iterator_enumerator_ex<IDBRecord>(first,last);
 		}
 
-		void SetSource(const IEnumerator<CDBRecordBase>& source)
+		void SetSource(IEnumerator<IDBRecord>& source)
 		{
-			IEnumerator<CDBRecordBase>* tmp = SourceEnumerator_;
-			SourceEnumerator_ = static_cast<IEnumerator<CDBRecordBase>*>(source.Clone());
-			FilterEnumerator_.m_Source = SourceEnumerator_;
-
-			if(tmp)
-			{
-				delete tmp;
-			}
+			Dispose();
+			SourceOwned_ = true;
+			FilterEnumerator_.m_Source = SourceEnumerator_ = static_cast<IEnumerator<IDBRecord>*>(source.Clone());
 		}
+
+		void SetSource(IEnumerator<IDBRecord>* source)
+		{
+			Dispose();
+			SourceOwned_ = false;
+			FilterEnumerator_.m_Source = SourceEnumerator_ = source;
+		}
+
+		const CDBRecordFilter& Filter() {return FilterEnumerator_.m_Filter; }
 
 		CDBRecordFilter SetFilter(const CDBRecordFilter& newfilter)
 		{
 			CDBRecordFilter tmp = Filter;
-			Filter = newfilter;
+			FilterEnumerator_.m_Filter = newfilter;
 			return tmp;
 		}
 
@@ -89,14 +120,12 @@ namespace NSDBModule
 			return result;
 		}
 
-		DBRecordFilterEnumerator& GetFilterEnumerator()	{ return FilterEnumerator_; }
+		DBRecordFilterEnumerator& GetFilterEnumerator()		{ return FilterEnumerator_; }
 		IEnumerator<CDBRecordBase>& GetSourceEnumerator()	{ return *SourceEnumerator_; }
 
-	public:
-		CDBRecordFilter							Filter;
-
 	protected:
-		IEnumerator<CDBRecordBase>*				SourceEnumerator_;
+		bool									SourceOwned_;
+		IEnumerator<IDBRecord>*					SourceEnumerator_;
 		DBRecordFilterEnumerator				FilterEnumerator_;
 		std::map<int, DBRecordFieldEnumerator>	FieldEnumerators_;
 	};

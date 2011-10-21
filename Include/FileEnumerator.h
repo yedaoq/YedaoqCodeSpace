@@ -5,7 +5,7 @@
 #include <winbase.h>
 #include "mytype.h"
 
-class CFileEnumerator : public IEnumerator<WIN32_FIND_DATA>
+class CFileEnumerator : public CEnumeratorBase<WIN32_FIND_DATA>
 {
 public:
 	~CFileEnumerator()

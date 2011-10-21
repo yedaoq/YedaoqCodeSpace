@@ -51,6 +51,8 @@ class CDwarfViewInfoBase : public IDwarfViewInfo
 public:
 	CDwarfViewInfoBase(void);
 
+	virtual int										GetViewID();
+
 	virtual CDBTableViewColumnCollection&			GetViewColumnCollection() { return Columns; }
 
 	virtual IEnumerator<IDwarfViewInfo*>*			EnumReleatedView() { return new_iterator_enumerator(ReleatedViews.begin(), ReleatedViews.end()); }
@@ -65,4 +67,5 @@ protected:
 	CDwarfViewOperationCollection	Operations;
 	std::vector<IDwarfViewInfo*>	ReleatedViews;
 	CDBTableViewColumnCollection	Columns;
+	int								ViewID;
 };

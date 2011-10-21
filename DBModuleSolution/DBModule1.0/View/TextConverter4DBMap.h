@@ -2,6 +2,7 @@
 
 #include <mytype.h>
 #include <ITextFormater.h>
+#include <Helper.h>
 
 namespace NSDBModule
 {
@@ -10,51 +11,36 @@ namespace NSDBModule
 	public:
 
 		CTextConverter4DBMap()
-			: m_InnerAdapter(0), m_Records(0), m_FieldView(-1), m_FieldValue(-1)
+			: m_SourceOwned(0), m_Source(0), m_FieldView(-1), m_FieldValue(-1)
 		{}
 
 		CTextConverter4DBMap(IEnumerator<IDBRecord>* records, int fieldView, int fieldValue)
-			: m_InnerAdapter(0), m_Records(records), m_FieldView(fieldView), m_FieldValue(fieldValue)
+			: m_SourceOwned(0), m_Source(records), m_FieldView(fieldView), m_FieldValue(fieldValue)
 		{
-			ASSERT(m_FieldView >= 0 && m_FieldValue >= 0 && m_Records);
+			ASSERT(m_FieldView >= 0 && m_FieldValue >= 0 && m_Source);
 		}
 
 		template<typename iter_t>
 		CTextConverter4DBMap(const iter_t& begin, const iter_t& end, int fieldView, int fieldValue)
 			: m_FieldView(fieldView), m_FieldValue(fieldValue)
 		{
-			m_InnerAdapter	= new CIteratorEnumerator<iter_t>(begin, end);
-			m_Records		= m_InnerAdapter;
-			ASSERT(m_FieldView >= 0 && m_FieldValue >= 0 && m_Records);
+			m_SourceOwned	= true;
+			m_Source		= new_iterator_enumerator_ex<IDBRecord>(begin, end);
+			ASSERT(m_FieldView >= 0 && m_FieldValue >= 0 && m_Source);
 		}
 
 		CTextConverter4DBMap(const CTextConverter4DBMap& other)
-			:  m_FieldView(other.m_FieldView), m_FieldValue(other.m_FieldValue)
 		{
-			if(other.m_InnerAdapter)
-			{
-				m_InnerAdapter = static_cast<IEnumerator<IDBRecord>*>(other.m_InnerAdapter->Clone());
-				m_Records = m_InnerAdapter;
-			}
-			else
-			{
-				m_InnerAdapter = 0;
-				m_Records = other.m_Records;
-			}		
+			operator=(other);	
 		}
 
 		CTextConverter4DBMap& operator=(const CTextConverter4DBMap& other)
 		{
-			if(other.m_InnerAdapter)
-			{
-				m_InnerAdapter = static_cast<IEnumerator<IDBRecord>*>(other.m_InnerAdapter->Clone());
-				m_Records = m_InnerAdapter;
-			}
-			else
-			{
-				m_InnerAdapter = 0;
-				m_Records = other.m_Records;
-			}	
+			Dispose();
+			m_SourceOwned = other.m_SourceOwned;
+			this->m_Source = m_SourceOwned ? 
+				static_cast<IEnumerator<IDBRecord>*>(other.m_Source.Clone()) : other.m_Source;
+
 			m_FieldView = other.m_FieldView;
 			m_FieldValue = other.m_FieldValue;
 
@@ -63,18 +49,35 @@ namespace NSDBModule
 
 		~CTextConverter4DBMap()
 		{
-			if(m_InnerAdapter)
-			{
-				delete m_InnerAdapter;
-				m_InnerAdapter = 0;
-			}
+			Dispose();
+		}
+
+		void SetSource(IEnumerator<IDBRecord>& records)
+		{
+			Dispose();
+			m_SourceOwned = true;
+			m_Source = static_cast<IEnumerator<IDBRecord>*>(records.Clone());
+		}
+
+		void SetSource(IEnumerator<IDBRecord>* records)
+		{
+			Dispose();
+			m_SourceOwned = false;
+			m_Source = records;
+		}
+
+		void Dispose()
+		{
+			if(m_SourceOwned) delete m_Source;
+			m_SourceOwned = false;
+			m_Source = 0;
 		}
 
 		virtual tstring Parse(const tstring& text, IContext* ctx)
 		{
-			m_Records->Reset();
+			m_Source->Reset();
 			CDBRecordAuto rec;
-			while(m_Records->MoveNext(rec))
+			while(m_Source->MoveNext(rec))
 			{
 				if(rec.GetField(m_FieldView) == text)
 				{
@@ -86,26 +89,31 @@ namespace NSDBModule
 
 		virtual tstring Format(const tstring& val, IContext* ctx)
 		{
-			m_Records->Reset();
+			//TTRACE(TEXT("DBMap : %s -> "), val.c_str());
+			m_Source->Reset();
 			CDBRecordAuto rec;
-			while(m_Records->MoveNext(rec))
+			while(m_Source->MoveNext(rec))
 			{
+				TTRACE(TEXT("DBMap Enum : %s  Target : %s\r\n"), rec.GetField(m_FieldValue).c_str(), val.c_str());
 				if(rec.GetField(m_FieldValue) == val)
 				{
+					TTRACE(TEXT("DBMap Format Result : %s\r\n"), rec.GetField(m_FieldView).c_str());
 					return rec.GetField(m_FieldView);
 				}
 			}
+
+			//TTRACE(TEXT("%s\r\n"), val.c_str());
 
 			return val;
 		}
 
 	protected:
 
-		IEnumerator<IDBRecord>*	m_InnerAdapter;
-		IEnumerator<IDBRecord>*	m_Records;
+		bool					m_SourceOwned;
+		IEnumerator<IDBRecord>*	m_Source;
 
-		int m_FieldView;
-		int m_FieldValue;
+		int						m_FieldView;
+		int						m_FieldValue;
 
 	public:
 		tstring m_DefaultView;
