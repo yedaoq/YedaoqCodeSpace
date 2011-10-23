@@ -1,5 +1,13 @@
 #pragma once
 #include <Util\DBEnumeratorSuit.h>
+#include <Singlton.h>
+#include <map>
+#include "DBModuleLP.h"
+#include <Module\DBModule.h>
+#include <utility>
+#include <Module\DBTable.h>
+
+using namespace NSDBModule;
 
 class CDBEnumeratorProvider : CSingleton<CDBEnumeratorProvider>
 {
@@ -8,7 +16,7 @@ public:
 
 public:
 	CDBEnumeratorProvider()
-		: Module_(&DBModule)
+		: Module_(DBModule)
 	{}
 
 	CDBEnumeratorProvider(CDBModule* module)
@@ -27,7 +35,7 @@ public:
 		if (iter == Suits_.end())
 		{
 			std::auto_ptr<DBRecordEnumerator> pEnumRec(Module_->Tables()[tbl]->EnumRecord());
-			return Suits_.insert(make_pair(tbl, CDBEnumeratorSuit(*pEnumRec))).second;
+			return Suits_.insert(std::make_pair(tbl, CDBEnumeratorSuit(*pEnumRec))).second;
 		}
 		return iter->second;
 	}

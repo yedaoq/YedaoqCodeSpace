@@ -1,12 +1,14 @@
 #include "StdAfx.h"
 #include "DBModuleLP.h"
 #include "Module/Schema/DBSchemaCppMicro.h"
+#include "Module/Schema/BuildInSchemaSerializer.h"
 #include <memory>
 #include "DBNameMappingLP.h"
 #include "DBInterface/DBSourcePath.h"
 #include "DBInterface/DBDataAdapter.h"
 #include "DBInterface/DBFactory.h"
 #include "Sqlite/SqliteSource.h"
+
 
 using namespace NSDBModule;
 
@@ -27,6 +29,8 @@ int	CDBModuleLP::InitializeBuildinSchema()
 	file.Close();
 
 	serializer.Read(make_iterator_enumerator(rows.begin(), rows.end()), *this);
+
+	return 1;
 }
 
 CDBModuleLP DBModule;

@@ -1,4 +1,5 @@
 #pragma once
+#include <View\DBColumnViewInfo.h>
 
 class CDwarfViewInfoDBTblBase : public CDwarfViewInfoBase
 {

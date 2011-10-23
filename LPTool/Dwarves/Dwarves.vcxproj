@@ -51,6 +51,7 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\YedaoqCodeSpace\WinCtrlSolution\GridCtrl\GridCtrl_src;D:\YedaoqCodeSpace\DBModuleSolution\DBModule1.0;D:\YedaoqCodeSpace\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -119,6 +120,7 @@
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="DBTableViewer4GridCtrl.cpp" />
     <ClCompile Include="DwarfViewInfoBase.cpp" />
+    <ClCompile Include="DwarfViewInfoDBTblBase.cpp" />
     <ClCompile Include="Dwarves.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
@@ -135,8 +137,12 @@
   <ItemGroup>
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
+    <ClInclude Include="DBEnumeratorProvider.h" />
+    <ClInclude Include="DBMapFormatProvider.h" />
     <ClInclude Include="DBTableViewer4GridCtrl.h" />
+    <ClInclude Include="DwarfViewInfo.h" />
     <ClInclude Include="DwarfViewInfoBase.h" />
+    <ClInclude Include="DwarfViewInfoDBTblBase.h" />
     <ClInclude Include="Dwarves.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="MainFrm.h" />
@@ -147,7 +153,6 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="DwarfViewInfo.h" />
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>

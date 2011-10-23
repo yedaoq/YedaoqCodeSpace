@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "DwarfViewInfoDBTblBase.h"
 #include <Module\Schema\DBTableSchema.h>
+#include <ITextFormater.h>
 
 using namespace NSDBModule;
 

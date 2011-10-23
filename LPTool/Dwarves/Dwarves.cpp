@@ -12,7 +12,7 @@
 #include "DBInterface\DBSourcePath.h"
 #include "DBInterface\DBDataAdapter.h"
 #include "DBNameMappingLP.h"
-#include "SqliteSource.h"
+#include "Sqlite\SqliteSource.h"
 
 using namespace NSDBModule;
 
