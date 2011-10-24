@@ -3,6 +3,8 @@
 #include <mytype.h>
 #include <ITextFormater.h>
 #include <Helper.h>
+#include <Enumerator.h>
+#include "Module\DBRecord.h"
 
 namespace NSDBModule
 {
@@ -17,7 +19,7 @@ namespace NSDBModule
 		CTextConverter4DBMap(IEnumerator<IDBRecord>* records, int fieldView, int fieldValue)
 			: m_SourceOwned(0), m_Source(records), m_FieldView(fieldView), m_FieldValue(fieldValue)
 		{
-			ASSERT(m_FieldView >= 0 && m_FieldValue >= 0 && m_Source);
+			_ASSERT(m_FieldView >= 0 && m_FieldValue >= 0 && m_Source);
 		}
 
 		template<typename iter_t>
@@ -39,7 +41,7 @@ namespace NSDBModule
 			Dispose();
 			m_SourceOwned = other.m_SourceOwned;
 			this->m_Source = m_SourceOwned ? 
-				static_cast<IEnumerator<IDBRecord>*>(other.m_Source.Clone()) : other.m_Source;
+				static_cast<IEnumerator<IDBRecord>*>(other.m_Source->Clone()) : other.m_Source;
 
 			m_FieldView = other.m_FieldView;
 			m_FieldValue = other.m_FieldValue;

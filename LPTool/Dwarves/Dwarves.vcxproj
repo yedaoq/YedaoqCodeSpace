@@ -139,10 +139,13 @@
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="DBEnumeratorProvider.h" />
     <ClInclude Include="DBMapFormatProvider.h" />
+    <ClInclude Include="DBOptionalEditStyleProvider.h" />
     <ClInclude Include="DBTableViewer4GridCtrl.h" />
+    <ClInclude Include="DwarfViewInfoDBTable.h" />
     <ClInclude Include="DwarfViewInfo.h" />
     <ClInclude Include="DwarfViewInfoBase.h" />
     <ClInclude Include="DwarfViewInfoDBTblBase.h" />
+    <ClInclude Include="DwarfViewProvider.h" />
     <ClInclude Include="Dwarves.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="MainFrm.h" />

@@ -1,8 +1,11 @@
 #pragma once
 
 #include "mytype.h"
+#include "DBTableViewer4GridCtrl.h"
 
 interface IDwarfViewInfo;
+
+using namespace NSDBModule;
 
 enum EnumRecordRange
 {
@@ -18,7 +21,7 @@ struct DwarfViewOperationContext
 	__out	EnumRecordRange*				pRecordsToRefresh;
 };
 
-typedef afx_msg void (IDwarfViewInfo::*DelegateOperation)(DwarfViewOperationContext* pCtx);
+typedef void (AFX_MSG_CALL IDwarfViewInfo::*DelegateOperation)(DwarfViewOperationContext* pCtx);
 
 struct DwarfViewOperationItem
 {
@@ -39,7 +42,7 @@ interface IDwarfViewInfo
 {
 	virtual CDBTableViewColumnCollection&			GetViewColumnCollection() = 0;
 
-	virtual IEnumerator<IDwarfViewInfo>*			EnumReleatedView() = 0;
+	virtual IEnumerator<IDwarfViewInfo*>*			EnumReleatedView() = 0;
 
 	virtual IEnumerator<IDBRecord>*					EnumRecord4RelatedView(IDBRecord& item) = 0;
 	virtual IEnumerator<IDBRecord>*					EnumRecord() = 0;

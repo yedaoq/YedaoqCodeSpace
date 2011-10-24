@@ -1,10 +1,11 @@
 #pragma once
 #include "DwarfViewInfo.h"
+#include "DBTableViewer4GridCtrl.h"
 
 class CDwarfViewOperationCollection
 {
 public:
-	int Count() const {return Items; }
+	int Count() const {return Items.size(); }
 
 	int GetMaxOperationID() const
 	{
@@ -49,11 +50,14 @@ public:
 class CDwarfViewInfoBase : public IDwarfViewInfo
 {
 public:
+	typedef std::vector<CDBColumnViewInfo>	DBColumnViewInfoCollection;
+	typedef std::vector<IDwarfViewInfo*>	RelatedViewCollection;
+
 	CDwarfViewInfoBase(void);
 
 	virtual int										GetViewID();
 
-	virtual CDBTableViewColumnCollection&			GetViewColumnCollection() { return Columns; }
+	virtual CDBTableViewColumnCollection&			GetViewColumnCollection() { return ViewColumns; }
 
 	virtual IEnumerator<IDwarfViewInfo*>*			EnumReleatedView() { return new_iterator_enumerator(ReleatedViews.begin(), ReleatedViews.end()); }
 
@@ -64,8 +68,9 @@ public:
 	virtual void									ExecuteOperation(index_t id, DwarfViewOperationContext* pCtx);
 
 protected:
-	CDwarfViewOperationCollection	Operations;
-	std::vector<IDwarfViewInfo*>	ReleatedViews;
-	CDBTableViewColumnCollection	Columns;
-	int								ViewID;
+	CDwarfViewOperationCollection	Operations;			// 视图操作集合
+	RelatedViewCollection			ReleatedViews;		// 关联视图集合
+	CDBTableViewColumnCollection	ViewColumns;		// 视图中的列集
+	DBColumnViewInfoCollection		ColumnViewInfos;	// 列的展示信息的集合
+	int								ViewID;				// 视图的ID
 };

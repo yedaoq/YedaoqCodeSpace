@@ -281,6 +281,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DBMapFormatProvider.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBOptionalEditStyleProvider.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DBTableViewer4GridCtrl.h"
 				>
 			</File>
@@ -294,6 +302,10 @@
 			</File>
 			<File
 				RelativePath=".\DwarfViewInfoDBTblBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfViewProvider.h"
 				>
 			</File>
 			<File

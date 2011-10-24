@@ -13,6 +13,8 @@
 #include "DBInterface\DBDataAdapter.h"
 #include "DBNameMappingLP.h"
 #include "Sqlite\SqliteSource.h"
+#include "LocalPlayerObjEnum.h"
+
 
 using namespace NSDBModule;
 
@@ -183,7 +185,7 @@ void CDwarvesApp::OnFileOpen()
 	{
 		DBModule.AttachToDatabase(PAdapter, pFactory, pMapping);
 		DBModule.RefreshData();
-		DBModule.Tables()[DBModule.TBL_FileInfo]->LoadData();
+		DBModule.Tables()[TBL_FileInfo]->LoadData();
 	}
 }
 

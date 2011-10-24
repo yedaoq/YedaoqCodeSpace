@@ -9,14 +9,14 @@
 
 using namespace NSDBModule;
 
-class CDBEnumeratorProvider : CSingleton<CDBEnumeratorProvider>
+class CDBEnumeratorProvider : public CSingleton<CDBEnumeratorProvider>
 {
 public:
 	typedef std::map<int, CDBEnumeratorSuit> SuitMap;
 
 public:
 	CDBEnumeratorProvider()
-		: Module_(DBModule)
+		: Module_(&DBModule)
 	{}
 
 	CDBEnumeratorProvider(CDBModule* module)
@@ -25,7 +25,7 @@ public:
 
 	CDBEnumeratorSuit& operator[](int tbl)
 	{
-		if(!Module_ || tbl < 0 || tbl >= Module_.Tables().Count())
+		if(!Module_ || tbl < 0 || tbl >= Module_->Tables().Count())
 		{
 			_ASSERT(false);
 			throw std::exception();
@@ -35,7 +35,7 @@ public:
 		if (iter == Suits_.end())
 		{
 			std::auto_ptr<DBRecordEnumerator> pEnumRec(Module_->Tables()[tbl]->EnumRecord());
-			return Suits_.insert(std::make_pair(tbl, CDBEnumeratorSuit(*pEnumRec))).second;
+			iter = Suits_.insert(std::make_pair(tbl, CDBEnumeratorSuit(*pEnumRec))).first;
 		}
 		return iter->second;
 	}

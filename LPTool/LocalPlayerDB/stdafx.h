@@ -23,3 +23,4 @@
 #include "Module/Schema/DBTableSchema.h"
 #include "Module/DBTable.h"
 #include "Module/DBTableCollection.h"
+#include "LocalPlayerObjEnum.h"

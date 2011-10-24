@@ -147,7 +147,7 @@ public:
 	CConvertEnumerator(const CConvertEnumerator& other)
 		: m_SourceOwned(other.m_SourceOwned), m_Converter(other.m_Converter)
 	{
-		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
+		m_Source = m_SourceOwned ? static_cast<IEnumerator<Ts>*>(other.m_Source->Clone()) : other.m_Source;
 	}
 
 	CConvertEnumerator& operator=(const CConvertEnumerator& other)

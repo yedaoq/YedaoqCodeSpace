@@ -2,8 +2,9 @@
 
 #include "Enumerator.h"
 #include "mytype.h"
-#include "DBRecordFunction.h"
-#include "DBRecordComparison.h"
+#include "Module/DBRecordFunction.h"
+#include "Module/DBRecordComparison.h"
+#include <map>
 
 namespace NSDBModule
 {
@@ -15,30 +16,30 @@ namespace NSDBModule
 
 	public:
 		CDBEnumeratorSuit()
-			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, Filter)
+			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, CDBRecordFilter())
 		{}
 
 		template<typename iter_t>
 		CDBEnumeratorSuit(iter_t first, iter_t last)
-			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, Filter)
+			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, CDBRecordFilter())
 		{
 			SetSource(first, last);
 		}
 
-		CDBEnumeratorSuit(const IEnumerator<IDBRecord>& source)
-			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, Filter)
+		CDBEnumeratorSuit(IEnumerator<IDBRecord>& source)
+			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, CDBRecordFilter())
 		{
 			SetSource(source);
 		}
 
-		CDBEnumeratorSuit(const IEnumerator<IDBRecord>* source)
-			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, Filter)
+		CDBEnumeratorSuit(IEnumerator<IDBRecord>* source)
+			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, CDBRecordFilter())
 		{
 			SetSource(source);
 		}
 
 		CDBEnumeratorSuit(const CDBEnumeratorSuit& other)
-			: SourceOwned_(false), SourceEnumerator_(0), Filter(other.Filter), FilterEnumerator_(SourceEnumerator_, Filter)
+			: SourceOwned_(false), SourceEnumerator_(0), FilterEnumerator_(SourceEnumerator_, other.Filter())
 		{
 			if(other.SourceOwned_)
 			{
@@ -61,7 +62,7 @@ namespace NSDBModule
 				SetSource(other.SourceEnumerator_);
 			}
 
-			Filter = other.Filter;
+			SetFilter(other.Filter());
 
 			return *this;
 		}
@@ -99,11 +100,11 @@ namespace NSDBModule
 			FilterEnumerator_.m_Source = SourceEnumerator_ = source;
 		}
 
-		const CDBRecordFilter& Filter() {return FilterEnumerator_.m_Filter; }
+		const CDBRecordFilter& Filter() const {return FilterEnumerator_.m_Filter; }
 
 		CDBRecordFilter SetFilter(const CDBRecordFilter& newfilter)
 		{
-			CDBRecordFilter tmp = Filter;
+			CDBRecordFilter tmp = Filter();
 			FilterEnumerator_.m_Filter = newfilter;
 			return tmp;
 		}
@@ -121,7 +122,7 @@ namespace NSDBModule
 		}
 
 		DBRecordFilterEnumerator& GetFilterEnumerator()		{ return FilterEnumerator_; }
-		IEnumerator<CDBRecordBase>& GetSourceEnumerator()	{ return *SourceEnumerator_; }
+		IEnumerator<IDBRecord>&	  GetSourceEnumerator()		{ return *SourceEnumerator_; }
 
 	protected:
 		bool									SourceOwned_;

@@ -5,39 +5,36 @@
 #include "DBEnumeratorProvider.h"
 #include <Util\DBEnumeratorSuit.h>
 
-class CDBMapFormatProvider : public CSingleton<CDBMapFormatProvider>
+class CDBOptionalEditStyleProvider : public CSingleton<CDBOptionalEditStyleProvider>
 {
 public:
 	struct Item
 	{
 		int						TableID;
-		int						FieldValue;
-		int						FieldView;		
+		int						FieldID;	
 
 		bool operator<(const Item& other)
 		{
 			int iRet = TableID - other.TableID;
 			if(iRet != 0) return iRet < 0;
-			iRet = FieldValue - other.FieldValue;
-			if(iRet != 0) return iRet < 0;
-			return FieldView < other.FieldView;
+			return FieldID < other.FieldID;
 		}
 	};
 
-	typedef std::map<Item, CTextConverter4DBMap> ItemMap;
+	typedef std::map<Item, CEditStyleOptional> ItemMap;
 
 public:
-	CTextConverter4DBMap& Get(int tbl, int fieidValue, int fieldView)
+	CEditStyleOptional& Get(int tbl, int field)
 	{
-		Item item = {tbl, fieidValue, fieldView};
+		Item item = {tbl, field};
 
 		ItemMap::iterator iter = Items.find(item);
 		if(iter == Items.end())
 		{
 			iter = Items.insert(
 				std::make_pair(
-					item, 
-					CTextConverter4DBMap(&CDBEnumeratorProvider::GetInstance()[tbl].GetFilterEnumerator(), fieldView, fieidValue))
+				item, 
+				CEditStyleOptional(&CDBEnumeratorProvider::GetInstance()[tbl].GetFieldEnumerator(field)))
 				).first;
 		}
 		return iter->second;
