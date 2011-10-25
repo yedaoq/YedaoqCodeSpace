@@ -12,14 +12,13 @@ class CDwarfViewInfoDBTblBase : public CDwarfViewInfoBase
 {
 public:
 	CDwarfViewInfoDBTblBase(CDBModule* module, index_t id)
-		: DBModule(module)
-	{
-		ViewID = id;
-	}
+		: CDwarfViewInfoBase(id), DBModule(module)
+	{}
 
 	~CDwarfViewInfoDBTblBase(void);
 
-	virtual int	GetViewID() { return ViewID; }
+	virtual IEnumerator<IDBRecord>*	EnumRecordAsRelatedView(IDwarfViewInfo* pView, DwarfViewOperationContext* pCtx);
+	virtual IEnumerator<IDBRecord>*	EnumRecord();
 
 	virtual int Initialize();
 	virtual int InitializeReleatedViews();
@@ -32,6 +31,9 @@ public:
 	virtual afx_msg void OnRecordInsert(DwarfViewOperationContext* pCtx); 
 
 	virtual CDBColumnViewInfo GenerateColumnViewFromSchema(const DBColumnSchema& col);
+
+	// 判断两表是否关联
+	static bool IsDBTableRelated(int tblCur, int tblTar, int* colCur, int* colTar);
 
 protected:	
 	CDBModule* DBModule;

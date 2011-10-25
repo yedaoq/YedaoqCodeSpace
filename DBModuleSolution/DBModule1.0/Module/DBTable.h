@@ -48,6 +48,8 @@ namespace NSDBModule
 
 		IEnumerator<DBColumnSchema>*	EnumColumn() const;
 		IEnumerator<IDBRecord>*			EnumRecord();
+		
+		CDBRecordBase					RecordTemplate() const	{ return CDBRecordBase(GetSchema().Columns.size()); };
 
 		int								LoadData();
 		int								ClearData();

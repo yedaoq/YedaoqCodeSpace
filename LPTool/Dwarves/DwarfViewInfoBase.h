@@ -29,6 +29,7 @@ public:
 	int Append(tstring name, DelegateOperation op)
 	{
 		Items.push_back(DwarfViewOperationItem(GetMaxOperationID() + 1, name, op));
+		return 1;
 	}
 
 	int Append(int id, tstring name, DelegateOperation op)
@@ -53,15 +54,17 @@ public:
 	typedef std::vector<CDBColumnViewInfo>	DBColumnViewInfoCollection;
 	typedef std::vector<IDwarfViewInfo*>	RelatedViewCollection;
 
-	CDwarfViewInfoBase(void);
+	CDwarfViewInfoBase(int id)
+		: ViewID(id)
+	{}
 
-	virtual int										GetViewID();
+	virtual int										GetViewID() { return ViewID; };
 
 	virtual CDBTableViewColumnCollection&			GetViewColumnCollection() { return ViewColumns; }
 
 	virtual IEnumerator<IDwarfViewInfo*>*			EnumReleatedView() { return new_iterator_enumerator(ReleatedViews.begin(), ReleatedViews.end()); }
 
-	virtual IEnumerator<IDBRecord>*					EnumRecord4RelatedView(IDBRecord& item) = 0;
+	virtual IEnumerator<IDBRecord>*					EnumRecordAsRelatedView(IDwarfViewInfo* pView, DwarfViewOperationContext* pCtx) = 0;
 	virtual IEnumerator<IDBRecord>*					EnumRecord() = 0;
 
 	virtual IEnumerator<DwarfViewOperationItem>*	EnumOperation() { return new_iterator_enumerator(Operations.Items.begin(), Operations.Items.end()); }

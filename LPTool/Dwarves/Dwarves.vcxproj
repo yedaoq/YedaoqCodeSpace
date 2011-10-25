@@ -116,6 +116,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Include\Helper.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="DBTableViewer4GridCtrl.cpp" />
@@ -135,8 +136,10 @@
     <ClCompile Include="ViewTree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\Helper.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
+    <ClInclude Include="CommandIDAlloter.h" />
     <ClInclude Include="DBEnumeratorProvider.h" />
     <ClInclude Include="DBMapFormatProvider.h" />
     <ClInclude Include="DBOptionalEditStyleProvider.h" />
@@ -189,6 +192,14 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dwarves.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DBModuleSolution\DBModule1.0\DBModule1.0.vcxproj">
+      <Project>{5163fc8c-8b79-4b9c-a7ef-a6d5650601cc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\LocalPlayerDB\LocalPlayerDB.vcxproj">
+      <Project>{a08fe7f8-08ae-4f6e-b19b-6efea25da902}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

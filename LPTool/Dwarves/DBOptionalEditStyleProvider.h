@@ -13,7 +13,7 @@ public:
 		int						TableID;
 		int						FieldID;	
 
-		bool operator<(const Item& other)
+		bool operator<(const Item& other) const
 		{
 			int iRet = TableID - other.TableID;
 			if(iRet != 0) return iRet < 0;

@@ -17,4 +17,4 @@ public:
 
 bool DBInitialize();
 
-extern CDBModuleLP DBModule;
+extern CDBModuleLP g_DBModule;

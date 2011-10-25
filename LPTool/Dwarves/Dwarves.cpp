@@ -130,6 +130,7 @@ BOOL CDwarvesApp::InitInstance()
 	// 主窗口已初始化，因此显示它并对其进行更新
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
+	pMainFrame->InitDwarfViewMenuList();
 
 	return TRUE;
 }
@@ -183,9 +184,9 @@ void CDwarvesApp::OnFileOpen()
 
 	if(pConn.get() && smr.OpenDBConnection(pConn.get(), &PAdapter, &pFactory))
 	{
-		DBModule.AttachToDatabase(PAdapter, pFactory, pMapping);
-		DBModule.RefreshData();
-		DBModule.Tables()[TBL_FileInfo]->LoadData();
+		g_DBModule.AttachToDatabase(PAdapter, pFactory, pMapping);
+		g_DBModule.RefreshData();
+		g_DBModule.Tables()[TBL_FileInfo]->LoadData();
 	}
 }
 

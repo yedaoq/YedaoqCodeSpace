@@ -14,7 +14,7 @@ public:
 		int						FieldValue;
 		int						FieldView;		
 
-		bool operator<(const Item& other)
+		bool operator<(const Item& other) const
 		{
 			int iRet = TableID - other.TableID;
 			if(iRet != 0) return iRet < 0;

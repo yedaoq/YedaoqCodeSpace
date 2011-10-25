@@ -33,7 +33,7 @@ int	CDBModuleLP::InitializeBuildinSchema()
 	return 1;
 }
 
-CDBModuleLP DBModule;
+CDBModuleLP g_DBModule;
 
 bool DBInitialize()
 {
@@ -45,7 +45,7 @@ bool DBInitialize()
 
 	if(pConn.get() && smr.OpenDBConnection(pConn.get(), &PAdapter, &pFactory))
 	{
-		DBModule.AttachToDatabase(PAdapter, pFactory, pMapping);
+		g_DBModule.AttachToDatabase(PAdapter, pFactory, pMapping);
 		return true;
 	}
 

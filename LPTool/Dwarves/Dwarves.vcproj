@@ -219,6 +219,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Include\Helper.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.cpp"
 				>
 			</File>
@@ -277,6 +281,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CommandIDAlloter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DBEnumeratorProvider.h"
 				>
 			</File>
@@ -301,6 +309,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DwarfViewInfoDBTable.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DwarfViewInfoDBTblBase.h"
 				>
 			</File>
@@ -314,6 +326,10 @@
 			</File>
 			<File
 				RelativePath=".\FileView.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\Helper.h"
 				>
 			</File>
 			<File

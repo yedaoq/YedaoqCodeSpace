@@ -13,6 +13,10 @@ namespace NSDBModule
 
 	struct DBColumnSchema
 	{
+		static const int InvalidRelyTableID = -1;
+		static const int InvalidRelyColumnID = -1;
+		static const int InvalidVisiColumnID = -1;
+
 		index_t			Index;		// index of column in CDBRecordBase object
 		tstring			Name;		// name of col in App
 		EnumCppDataType Type;		// type of col in App(C++ type)

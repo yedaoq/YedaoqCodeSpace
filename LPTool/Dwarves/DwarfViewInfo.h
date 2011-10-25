@@ -40,13 +40,15 @@ struct DwarfViewOperationItem
 
 interface IDwarfViewInfo
 {
+	virtual int										GetViewID() = 0;
+
 	virtual CDBTableViewColumnCollection&			GetViewColumnCollection() = 0;
 
 	virtual IEnumerator<IDwarfViewInfo*>*			EnumReleatedView() = 0;
 
-	virtual IEnumerator<IDBRecord>*					EnumRecord4RelatedView(IDBRecord& item) = 0;
+	virtual IEnumerator<IDBRecord>*					EnumRecordAsRelatedView(IDwarfViewInfo* pView, DwarfViewOperationContext* pCtx) = 0;
 	virtual IEnumerator<IDBRecord>*					EnumRecord() = 0;
 
 	virtual IEnumerator<DwarfViewOperationItem>*	EnumOperation() = 0;
-	virtual void									ExecuteOperation(index_t id, DwarfViewOperationContext* pCtx);
+	virtual void									ExecuteOperation(index_t id, DwarfViewOperationContext* pCtx) = 0;
 };

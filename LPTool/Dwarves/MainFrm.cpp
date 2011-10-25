@@ -6,6 +6,9 @@
 #include "Dwarves.h"
 
 #include "MainFrm.h"
+#include <Helper.h>
+#include "CommandIDAlloter.h"
+//#include <afxcoll.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -21,6 +24,8 @@ const UINT uiLastUserToolBarId = uiFirstUserToolBarId + iMaxUserToolbars - 1;
 
 BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_CREATE()
+	ON_WM_ACTIVATE()
+	ON_WM_SHOWWINDOW()
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
 	ON_COMMAND(ID_VIEW_CUSTOMIZE, &CMainFrame::OnViewCustomize)
 	ON_REGISTERED_MESSAGE(AFX_WM_CREATETOOLBAR, &CMainFrame::OnToolbarCreateNew)
@@ -185,6 +190,17 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CMFCToolBar::SetBasicCommands(lstBasicCommands);
 
 	return 0;
+}
+
+void CMainFrame::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+	TTRACE(TEXT("OnActivate"));
+	__super::OnActivate(nState, pWndOther, bMinimized);
+}
+
+void CMainFrame::OnShowWindow(BOOL bShow, UINT nStatus)
+{
+	InitDwarfViewMenuList();
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
@@ -404,3 +420,16 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 	return TRUE;
 }
 
+void CMainFrame::InitDwarfViewMenuList()
+{
+	// 添加视图列表的菜单
+	/*CMenu* pMenu = GetMenu();
+	pMenu = pMenu->GetSubMenu(0);
+	pMenu->AppendMenu(MF_STRING, MinMenuViewID, TEXT("FileInfo"));*/
+
+	CContextMenuManager* cmm = ((CWinAppEx*)AfxGetApp())->GetContextMenuManager();
+	CStringList menuNames;
+	cmm->GetMenuNames(menuNames);
+	HMENU hMenu = cmm->GetMenuByName(TEXT("编辑"));
+	AppendMenu(hMenu, MF_STRING, MinMenuViewID, TEXT("FileInfo"));
+}

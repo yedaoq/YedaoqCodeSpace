@@ -3,7 +3,7 @@
 #include "DwarfViewInfoDBTblBase.h"
 
 template<int TblID>
-class CDwarfViewInfoDBTable : CDwarfViewInfoDBTblBase
+class CDwarfViewInfoDBTable : public CDwarfViewInfoDBTblBase
 {
 public:
 	CDwarfViewInfoDBTable()

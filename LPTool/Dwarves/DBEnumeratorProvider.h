@@ -16,7 +16,7 @@ public:
 
 public:
 	CDBEnumeratorProvider()
-		: Module_(&DBModule)
+		: Module_(&g_DBModule)
 	{}
 
 	CDBEnumeratorProvider(CDBModule* module)

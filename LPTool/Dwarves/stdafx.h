@@ -58,6 +58,6 @@
 #include "Module/DBRecordFunction.h"
 #include "Module/Schema/DBColumnSchema.h"
 #include "Module/Schema/DBTableSchema.h"
-
+#include "Enumerator.h"
 #include <memory>
 

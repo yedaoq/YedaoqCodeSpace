@@ -7,6 +7,7 @@
 
 #include "PackageDoc.h"
 #include "PackageView.h"
+#include "CommandIDAlloter.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -22,6 +23,7 @@ BEGIN_MESSAGE_MAP(CPackageView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CPackageView::OnFilePrintPreview)
+	ON_CONTROL_RANGE(BN_CLICKED, MinViewOpID, MaxViewOpID, &CPackageView::OnViewOperation)
 END_MESSAGE_MAP()
 
 // CPackageView ππ‘Ï/Œˆππ
@@ -92,6 +94,11 @@ void CPackageView::OnContextMenu(CWnd* pWnd, CPoint point)
 	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
 }
 
+void CPackageView::OnViewOperation(UINT id)
+{
+	int opID = id - MinViewOpID;
+	
+}
 
 // CPackageView ’Ô∂œ
 
