@@ -447,7 +447,7 @@ END
 STRINGTABLE 
 BEGIN
     IDR_MAINFRAME           "Dwarves"
-    IDR_DwarvesTYPE         "\nDwarves\nDwarves\n\n\nDwarves.Document\nDwarves.Document"
+    IDR_DwarvesTYPE         "Dwarves"
     IDS_WINDOWS_MANAGER     "´°¿Ú(&W)..."
 END
 

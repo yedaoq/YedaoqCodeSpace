@@ -5,6 +5,11 @@
 
 using namespace NSYedaoqLayout;
 
+CFlowLayout::~CFlowLayout()
+{
+	Clear();
+}
+
 int	CFlowLayout::Layout(const LayoutPoint& ptBase, const LayoutSize& lyArea)
 {
 	LayoutOffset itemOffset(GetDirection(), 0);
@@ -144,4 +149,25 @@ ILayout* CFlowLayout::AddItem(const ILayout& item)
 	ILayout* pItem = item.Clone();
 	Items_.push_back(pItem);
 	return pItem;
+}
+
+void CFlowLayout::Clear()
+{
+	for (ItemCollection::iterator iter = Items_.begin(); iter != Items_.end(); ++iter)
+	{
+		delete *iter;
+		*iter = 0;
+	}
+
+	Items_.clear();
+}
+
+int	CFlowLayout::Count() const
+{
+	return Items_.size();
+}
+
+ILayout* CFlowLayout::operator[](int idx) const
+{
+	return Items_[idx];
 }

@@ -39,6 +39,7 @@ namespace NSDBModule
 		int					RemoveAt(int idx);
 		
 		ColumnEnumerator*	Enum();
+		int					Count() const { return Items_.size(); }
 
 		DBTableViewColumn*	GetColumnByViewCol(int col);
 		DBTableViewColumn*	GetColumnByRecordCol(int col);

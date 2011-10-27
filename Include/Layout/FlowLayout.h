@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Layout.h"
-#include <list>
+//#include <list>
+#include <vector>
 
 namespace NSYedaoqLayout
 {
@@ -11,7 +12,10 @@ namespace NSYedaoqLayout
 	class CFlowLayout : public ILayout
 	{
 	public:
-		typedef std::list<ILayout*> ItemCollection;
+		typedef std::vector<ILayout*> ItemCollection;
+
+	public:
+		~CFlowLayout();
 
 		CFlowLayout(EnumLayoutDirection dir)
 			: Direction_(dir), ResizeInfo_(EnumResizeMode::Auto, -1)
@@ -29,6 +33,7 @@ namespace NSYedaoqLayout
 		EnumLayoutDirection			GetDirection()		{ return Direction_; }
 
 		virtual const ResizeInfo&	GetResizeInfo(EnumLayoutDirection dir);
+
 		virtual int					Layout(const LayoutPoint& ptBase, const LayoutSize& lyArea);
 
 		ILayout*					AddItem(const ILayout& item);
@@ -43,6 +48,11 @@ namespace NSYedaoqLayout
 		
 		CZoomBlankLayout*			AddZoomBlank(long percentH = 100, long percentV = 100);
 
+		void						Clear();
+		int							Count() const;
+
+		ILayout*					operator[](int idx) const;
+
 	protected:
 		virtual int					UpdateAutoSize();
 		virtual long				GetFixedItemsLength();
@@ -51,6 +61,6 @@ namespace NSYedaoqLayout
 		EnumLayoutDirection			Direction_;
 		ResizeInfo					ResizeInfo_;
 
-		std::list<ILayout*>			Items_;
+		ItemCollection				Items_;
 	};
 }

@@ -2,9 +2,11 @@
 #include <mytype.h>
 #include <View\DBColumnViewInfo.h>
 #include <Module\DBModule.h>
+#include <Module\DBTable.h>
 #include "DwarfViewInfoBase.h"
 #include "DBTableViewer4GridCtrl.h"
 #include "DwarfViewInfo.h"
+
 
 using namespace NSDBModule;
 
@@ -16,6 +18,8 @@ public:
 	{}
 
 	~CDwarfViewInfoDBTblBase(void);
+
+	virtual tstring	ToString() { return DBModule->Tables()[ViewID]->GetName(); }
 
 	virtual IEnumerator<IDBRecord>*	EnumRecordAsRelatedView(IDwarfViewInfo* pView, DwarfViewOperationContext* pCtx);
 	virtual IEnumerator<IDBRecord>*	EnumRecord();

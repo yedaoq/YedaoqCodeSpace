@@ -1,5 +1,5 @@
 #pragma once
-#include "..\DBModule1.0\View\DBTableViewer.h"
+#include "..\DBModuleSolution\DBModule1.0\View\DBTableViewer.h"
 
 class CGridCtrl;
 class CGridColumn;

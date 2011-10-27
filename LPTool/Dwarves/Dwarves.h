@@ -8,6 +8,7 @@
 #endif
 
 #include "resource.h"       // Ö÷·ûºÅ
+#include "PackageDoc.h"
 
 
 // CDwarvesApp:
@@ -28,11 +29,15 @@ public:
 	UINT  m_nAppLook;
 	BOOL  m_bHiColorIcons;
 
+	CPackageDoc	m_Doc;
+
 	virtual void PreLoadState();
 	virtual void LoadCustomState();
 	virtual void SaveCustomState();
 	
 	afx_msg void OnFileOpen();
+	afx_msg void OnViewOpen(UINT id);
+
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
 };

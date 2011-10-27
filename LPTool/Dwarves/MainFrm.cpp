@@ -9,6 +9,12 @@
 #include <Helper.h>
 #include "CommandIDAlloter.h"
 //#include <afxcoll.h>
+#include "PackageView.h"
+#include <algorithm>
+#include "DwarfViewInfo.h"
+#include <Enumerator.h>
+#include <memory>
+#include "DwarfViewProvider.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -26,8 +32,11 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_CREATE()
 	ON_WM_ACTIVATE()
 	ON_WM_SHOWWINDOW()
+	ON_COMMAND(ID_WINDOW_NEW, &CMainFrame::OnWindowNew)
+	//ON_MESSAGE(WM_MDISETMENU, &CMainFrame::OnSetMenu)
+
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
-	ON_COMMAND(ID_VIEW_CUSTOMIZE, &CMainFrame::OnViewCustomize)
+	ON_COMMAND(ID_VIEW_CUSTOMIZE, &CMainFrame::OnViewCustomize)	
 	ON_REGISTERED_MESSAGE(AFX_WM_CREATETOOLBAR, &CMainFrame::OnToolbarCreateNew)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnUpdateApplicationLook)
@@ -200,7 +209,32 @@ void CMainFrame::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 
 void CMainFrame::OnShowWindow(BOOL bShow, UINT nStatus)
 {
-	InitDwarfViewMenuList();
+	//InitDwarfViewMenuList();
+}
+
+void CMainFrame::OnWindowNew()
+{
+	MsgboxPrompt(TEXT("请通过视图菜单中的条目来打开视图！"));
+}
+
+BOOL CMainFrame::OnSetMenu(HMENU hmenu)
+{
+	if(!hmenu)
+	{
+		_ASSERT(FALSE);
+		return FALSE;
+	}
+	std::vector<HMENU>::iterator iter = std::find(m_wndMenuWithViews.begin(), m_wndMenuWithViews.end(), hmenu);
+	if(iter == m_wndMenuWithViews.end())
+	{
+		m_wndMenuWithViews.push_back(hmenu);
+		InitDwarfViewMenuList(hmenu);
+	}
+
+	//return __super::OnSetMenu(hmenu);
+
+	m_wndMenuBar.CreateFromMenu(hmenu, 0, TRUE);
+	return TRUE;
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
@@ -420,16 +454,77 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 	return TRUE;
 }
 
-void CMainFrame::InitDwarfViewMenuList()
+void CMainFrame::InitDwarfViewMenuList(HMENU hmenu)
 {
 	// 添加视图列表的菜单
 	/*CMenu* pMenu = GetMenu();
 	pMenu = pMenu->GetSubMenu(0);
 	pMenu->AppendMenu(MF_STRING, MinMenuViewID, TEXT("FileInfo"));*/
 
-	CContextMenuManager* cmm = ((CWinAppEx*)AfxGetApp())->GetContextMenuManager();
+	/*CContextMenuManager* cmm = ((CWinAppEx*)AfxGetApp())->GetContextMenuManager();
 	CStringList menuNames;
 	cmm->GetMenuNames(menuNames);
 	HMENU hMenu = cmm->GetMenuByName(TEXT("编辑"));
-	AppendMenu(hMenu, MF_STRING, MinMenuViewID, TEXT("FileInfo"));
+	AppendMenu(hMenu, MF_STRING, MinMenuViewID, TEXT("FileInfo"));*/
+
+	//CMFCToolBarButton* pMenu = m_wndMenuBar.GetMenuItem(2);
+	//CMenu* pMenu = m_wndMenuBar.GetMenu();
+	//pMenu = pMenu->GetSubMenu(2);
+	//pMenu->AppendMenu(MF_STRING, MinMenuViewID, TEXT("FileInfo"));
+
+	//CMenu menu;  
+	//menu.CreateMenu();  
+	//CString strMenu;  
+	//strMenu = _T("打开文件");  
+	//menu.AppendMenu(MF_ENABLED|MF_STRING, MinMenuViewID, strMenu);  
+	//strMenu = _T("保存文件");  
+	//menu.AppendMenu(MF_ENABLED|MF_STRING, MinMenuViewID + 1, strMenu);  
+	//CString strMenuBarTitle;  
+	//strMenuBarTitle = _T("文件1");  
+	//m_wndMenuBar.InsertButton (CMFCToolBarMenuButton (0, menu, -1,strMenuBarTitle)); 
+
+	//const int MenuCount = 1;
+	//HMENU hMenus[MenuCount] = {NULL};
+	//hMenus[0] = m_wndMenuBar.GetHMenu();
+	////hMenus[1] = m_wndMenuBar.GetDefaultMenu();
+
+	//m_wndMenuBar.GetMenuItem(1);
+
+	//for (int i = 0; i < MenuCount; ++i)
+	//{
+	//	AppendMenu(GetSubMenu(hMenus[i], 2), MF_SEPARATOR, 0, NULL);
+	//	AppendMenu(GetSubMenu(hMenus[i], 2), MF_STRING, MinMenuViewID, TEXT("FileInfo"));	
+	//}
+	//
+	//m_wndMenuBar.CreateFromMenu(hMenus[0], 0, TRUE);
+	//m_wndMenuBar.SetShowAllCommands(TRUE);
+
+	IDwarfViewInfo* pView;
+	BOOL bResult;
+	MENUINFO menuinfo;
+
+	hmenu = GetSubMenu(hmenu,2);
+	bResult = AppendMenu(hmenu, MF_SEPARATOR, 0, NULL);
+
+	std::auto_ptr<IEnumerator<IDwarfViewInfo*>> pEnumView(CDwarfViewProvider::GetInstance().Enum());
+
+	while(pEnumView->MoveNext(pView))
+	{
+		bResult = AppendMenu(hmenu, MF_STRING, MinMenuViewID + pView->GetViewID(), /*TEXT("ABC")*/pView->ToString().c_str());	
+	}
+}
+
+void CMainFrame::ClearDwarfViewmenuList()
+{
+	for (std::vector<HMENU>::iterator iter = m_wndMenuWithViews.begin(); iter != m_wndMenuWithViews.end(); ++iter)
+	{
+		HMENU hmenu = GetSubMenu(*iter, 2);
+		int iViews = GetMenuItemCount(hmenu);
+		for (int i = iViews - 1; i > 2; --i)
+		{
+			DeleteMenu(hmenu, i, MF_BYPOSITION);
+		}
+	}
+
+	m_wndMenuWithViews.clear();
 }

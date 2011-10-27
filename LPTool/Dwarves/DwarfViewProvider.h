@@ -13,7 +13,7 @@ public:
 
 	struct MapItem2DwarfViewInfo
 	{
-		IDwarfViewInfo* operator()(ViewMap::iterator iter){	return iter->second; }
+		IDwarfViewInfo*& operator()(ViewMap::iterator iter){	return iter->second; }
 	};
 
 public:

@@ -83,6 +83,16 @@ protected:
 	DBColumnSchema*	ColPtr;
 };
 
+class CDBIndexInfoRecord : public IDBRecord
+{
+	virtual const tstring& GetField(unsigned int idx) const;
+	virtual int	SetField(unsigned int idx, const tstring& val);
+	virtual index_t GetFieldCount() const { return 14; }
+
+protected:
+	//tstring 
+};
+
 class CDBTableInfoEnumerator : public IEnumerator<IDBRecord>
 {
 public:

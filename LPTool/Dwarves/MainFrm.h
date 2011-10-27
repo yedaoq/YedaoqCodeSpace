@@ -19,12 +19,14 @@ public:
 
 // 操作
 public:
-	void InitDwarfViewMenuList();
+	void InitDwarfViewMenuList(HMENU hmenu);
+	void ClearDwarfViewmenuList();
 
 // 重写
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = NULL, CCreateContext* pContext = NULL);
+	virtual BOOL OnSetMenu(HMENU hmenu);
 
 // 实现
 public:
@@ -44,12 +46,15 @@ protected:  // 控件条嵌入成员
 	COutputWnd        m_wndOutput;
 	CPropertiesWnd    m_wndProperties;
 
+	std::vector<HMENU> m_wndMenuWithViews;
+
 // 生成的消息映射函数
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 	afx_msg void OnWindowManager();
+	afx_msg void OnWindowNew();
 	afx_msg void OnViewCustomize();
 	afx_msg LRESULT OnToolbarCreateNew(WPARAM wp, LPARAM lp);
 	afx_msg void OnApplicationLook(UINT id);

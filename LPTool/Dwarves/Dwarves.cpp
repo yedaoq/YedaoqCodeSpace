@@ -14,6 +14,9 @@
 #include "DBNameMappingLP.h"
 #include "Sqlite\SqliteSource.h"
 #include "LocalPlayerObjEnum.h"
+#include "CommandIDAlloter.h"
+#include <Helper.h>
+#include "DBModuleLP.h"
 
 
 using namespace NSDBModule;
@@ -31,6 +34,7 @@ BEGIN_MESSAGE_MAP(CDwarvesApp, CWinAppEx)
 	ON_COMMAND(ID_FILE_NEW, &CWinAppEx::OnFileNew)
 	//ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
 	ON_COMMAND(ID_FILE_OPEN, &CDwarvesApp::OnFileOpen)
+	ON_COMMAND_RANGE(MinMenuViewID, MaxMenuViewID, &CDwarvesApp::OnViewOpen)
 	// 标准打印设置命令
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
 END_MESSAGE_MAP()
@@ -108,29 +112,35 @@ BOOL CDwarvesApp::InitInstance()
 
 	// 创建主 MDI 框架窗口
 	CMainFrame* pMainFrame = new CMainFrame;
-	if (!pMainFrame || !pMainFrame->LoadFrame(IDR_MAINFRAME))
+	if (!pMainFrame || !pMainFrame->LoadFrame(IDR_DwarvesTYPE))
 	{
 		delete pMainFrame;
 		return FALSE;
 	}
 	m_pMainWnd = pMainFrame;
+
 	// 仅当具有后缀时才调用 DragAcceptFiles
 	//  在 MDI 应用程序中，这应在设置 m_pMainWnd 之后立即发生
-
 
 	// 分析标准外壳命令、DDE、打开文件操作的命令行
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
 
-
 	// 调度在命令行中指定的命令。如果
 	// 用 /RegServer、/Register、/Unregserver 或 /Unregister 启动应用程序，则返回 FALSE。
-	if (!ProcessShellCommand(cmdInfo))
-		return FALSE;
+	if(cmdInfo.m_nShellCommand != CCommandLineInfo::FileNew)
+	{
+		if (!ProcessShellCommand(cmdInfo))
+			return FALSE;
+	}
+
 	// 主窗口已初始化，因此显示它并对其进行更新
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
-	pMainFrame->InitDwarfViewMenuList();
+	m_Doc.m_bAutoDelete = FALSE;
+	m_Doc.SetTitle(TEXT("请选择数据库"));
+	m_Doc.SetDBModule(&g_DBModule);
+	pDocTemplate->AddDocument(&m_Doc);
 
 	return TRUE;
 }
@@ -182,11 +192,44 @@ void CDwarvesApp::OnFileOpen()
 	IDBFactory*		pFactory;
 	IDBNameMapping* pMapping = new CDBNameMappingLP();
 
-	if(pConn.get() && smr.OpenDBConnection(pConn.get(), &PAdapter, &pFactory))
+	if(!pConn.get() || !smr.OpenDBConnection(pConn.get(), &PAdapter, &pFactory))
 	{
-		g_DBModule.AttachToDatabase(PAdapter, pFactory, pMapping);
-		g_DBModule.RefreshData();
-		g_DBModule.Tables()[TBL_FileInfo]->LoadData();
+		return;
+	}
+
+	g_DBModule.AttachToDatabase(PAdapter, pFactory, pMapping);
+	g_DBModule.RefreshData();
+
+	m_Doc.SetTitle(pConn->ToString().c_str());
+
+	RegDeleteKey(HKEY_CURRENT_USER, TEXT("Software\\应用程序向导生成的本地应用程序\\Dwarves"));
+
+	CMainFrame* pMainFrame = (CMainFrame*)m_pMainWnd;
+	pMainFrame->ClearDwarfViewmenuList();
+	pMainFrame->OnSetMenu(pMainFrame->GetMenuBar()->GetHMenu());
+}
+
+void CDwarvesApp::OnViewOpen(UINT id)
+{
+	int viewID = id - MinMenuViewID;
+
+	CDocTemplate* pTemplate = m_Doc.GetDocTemplate();
+	ASSERT_VALID(pTemplate);
+
+	CFrameWnd* pFrame = pTemplate->CreateNewFrame(&m_Doc, 0);
+	if (pFrame == NULL)
+	{
+		TRACE(traceAppMsg, 0, "Warning: failed to create new frame.\n");
+		return;     // command failed
+	}
+
+	pTemplate->InitialUpdateFrame(pFrame, &m_Doc);
+
+	CPackageView* view = (CPackageView*)pFrame->GetActiveView();
+	if(view)
+	{
+		TTRACE(TEXT("GetActiveView Successed~\r\n"));
+		view->SetViewID(viewID);
 	}
 }
 

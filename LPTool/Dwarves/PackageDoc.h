@@ -4,12 +4,16 @@
 
 
 #pragma once
+#include <Module\DBModule.h>
 
 
 class CPackageDoc : public CDocument
 {
-protected: // 仅从序列化创建
+public:
 	CPackageDoc();
+
+protected: // 仅从序列化创建
+	
 	DECLARE_DYNCREATE(CPackageDoc)
 
 // 属性
@@ -17,6 +21,20 @@ public:
 
 // 操作
 public:
+
+	virtual void SetDBModule(NSDBModule::CDBModule* pModule)
+	{
+		if(DBModule)
+		{
+			delete DBModule;
+		}
+		DBModule = pModule;
+	}
+
+	virtual NSDBModule::CDBModule* GetDBModule()
+	{
+		return DBModule;
+	}
 
 // 重写
 public:
@@ -32,6 +50,7 @@ public:
 #endif
 
 protected:
+	NSDBModule::CDBModule* DBModule;
 
 // 生成的消息映射函数
 protected:

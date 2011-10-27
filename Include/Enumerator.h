@@ -79,7 +79,7 @@ public:
 	CConvertEnumeratorEx(const CConvertEnumeratorEx& other)
 		: m_SourceOwned(other.m_SourceOwned), m_Converter(other.m_Converter)
 	{
-		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
+		m_Source = m_SourceOwned ? static_cast<IEnumerator<Ts>*>(other.m_Source->Clone()) : other.m_Source;
 	}
 
 	CConvertEnumeratorEx& operator=(const CConvertEnumeratorEx& other)
@@ -87,7 +87,7 @@ public:
 		IEnumerator<Ts>* tmp = m_SourceOwned ? m_Source : 0;
 
 		m_SourceOwned = other.m_SourceOwned;
-		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
+		m_Source = m_SourceOwned ? static_cast<IEnumerator<Ts>*>(other.m_Source->Clone()) : other.m_Source;
 		m_Converter = other.m_Converter;
 
 		if(tmp) delete tmp;

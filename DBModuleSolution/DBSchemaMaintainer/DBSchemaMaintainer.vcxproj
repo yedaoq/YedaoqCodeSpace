@@ -79,6 +79,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -140,7 +141,6 @@
     <ClCompile Include="DBSchemaMaintainer.cpp" />
     <ClCompile Include="DBSchemaMaintainerDoc.cpp" />
     <ClCompile Include="DBSchemaTableView.cpp" />
-    <ClCompile Include="DBTableViewer4GridCtrl.cpp" />
     <ClCompile Include="..\..\Include\FileEnumerator.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="..\..\Include\Helper.cpp" />
@@ -161,7 +161,7 @@
     <ClInclude Include="DBSchemaMaintainer.h" />
     <ClInclude Include="DBSchemaMaintainerDoc.h" />
     <ClInclude Include="DBSchemaTableView.h" />
-    <ClInclude Include="DBTableViewer4GridCtrl.h" />
+    <ClInclude Include="..\..\Include\Enumerator.h" />
     <ClInclude Include="..\..\Include\FileEnumerator.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="..\..\Include\Helper.h" />

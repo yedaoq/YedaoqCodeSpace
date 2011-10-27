@@ -23,6 +23,7 @@ END_MESSAGE_MAP()
 // CPackageDoc 构造/析构
 
 CPackageDoc::CPackageDoc()
+	: DBModule(0)
 {
 	// TODO: 在此添加一次性构造代码
 
@@ -42,9 +43,6 @@ BOOL CPackageDoc::OnNewDocument()
 
 	return TRUE;
 }
-
-
-
 
 // CPackageDoc 序列化
 

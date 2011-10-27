@@ -41,6 +41,9 @@ struct DwarfViewOperationItem
 interface IDwarfViewInfo
 {
 	virtual int										GetViewID() = 0;
+	virtual tstring									ToString() = 0;
+
+	virtual int										Initialize() = 0;
 
 	virtual CDBTableViewColumnCollection&			GetViewColumnCollection() = 0;
 

@@ -40,7 +40,7 @@ CDwarfViewInfoDBTblBase::~CDwarfViewInfoDBTblBase(void)
 
 int CDwarfViewInfoDBTblBase::Initialize()
 {
-	InitializeColumnViewInfo();
+	InitializeViewColumns();
 	InitializeOperations();
 	InitializeReleatedViews();	
 
@@ -84,7 +84,7 @@ int CDwarfViewInfoDBTblBase::InitializeOperations()
 
 int CDwarfViewInfoDBTblBase::InitializeViewColumns()
 {
-	InitializeViewColumns();
+	InitializeColumnViewInfo();
 
 	for (DBColumnViewInfoCollection::iterator iter = ColumnViewInfos.begin(); iter != ColumnViewInfos.end(); ++iter)
 	{
@@ -127,6 +127,11 @@ CDBColumnViewInfo CDwarfViewInfoDBTblBase::GenerateColumnViewFromSchema(const DB
 		{
 			view.SetTextFormat(&CTextFormatSwitcherNone::GetInstance());
 		}
+	}
+	else
+	{
+		view.SetEditStyle(&CEditStyleNone::GetInstance());
+		view.SetTextFormat(&CTextFormatSwitcherNone::GetInstance());
 	}
 
 	return view;

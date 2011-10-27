@@ -68,9 +68,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="DBModule1.0.lib GridCtrl.lib sqlite3.lib YedaoqLayout.lib"
+				AdditionalDependencies="DBModule1.0.lib GridCtrl.lib sqlite3.lib YedaoqLayout.lib Advapi32.lib LocalPlayerDB.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="D:\YedaoqCodeSpace\Lib\$(ConfigurationName)"
+				AdditionalLibraryDirectories="D:\YedaoqCodeSpace\Lib\$(ConfigurationName),$(OutDir)"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -199,10 +199,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DBTableViewer4GridCtrl.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\DwarfViewInfoBase.cpp"
 				>
 			</File>
@@ -294,10 +290,6 @@
 			</File>
 			<File
 				RelativePath=".\DBOptionalEditStyleProvider.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DBTableViewer4GridCtrl.h"
 				>
 			</File>
 			<File
@@ -489,5 +481,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="Dwarves.rc"
+		/>
 	</Globals>
 </VisualStudioProject>

@@ -57,6 +57,8 @@ public:
 protected:
 	CGridCtrl					GridCol;
 	CGridCtrl					GridTab;
+	CGridCtrl					GridIdx;
+
 	NSYedaoqLayout::CFlowLayout Layouter;
 	CComboBox					CmbTab;
 	CButton						BtnMerge;
@@ -88,6 +90,9 @@ protected:
 	CDBColumnViewInfo			GridCol_RelyTbl;
 	CDBColumnViewInfo			GridCol_RelyCol;
 	CDBColumnViewInfo			GridCol_VisiCol;
+
+	CDBColumnViewInfo			GridIdx_Unique;
+	CDBColumnViewInfo			GridIdx_Column;
 
 	CDBColumnInfoEnumerator		DBColEnumerator;
 	CConvertEnumerator<tstring, IDBRecord, CDBRecordToField> DBColIdxStrEnumerator;
