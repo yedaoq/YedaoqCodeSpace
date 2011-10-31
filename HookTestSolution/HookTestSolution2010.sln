@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HookInstaller", "HookInstaller\HookInstaller.vcxproj", "{87E89F21-71C4-42DA-962B-442B9FF0C99B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoCreateInstanceHook", "CoCreateInstanceHook\CoCreateInstanceHook.vcxproj", "{7EEC0C3F-B7DD-4CE1-80D1-1A45BC0C5AA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87E89F21-71C4-42DA-962B-442B9FF0C99B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{87E89F21-71C4-42DA-962B-442B9FF0C99B}.Debug|Win32.Build.0 = Debug|Win32
+		{87E89F21-71C4-42DA-962B-442B9FF0C99B}.Release|Win32.ActiveCfg = Release|Win32
+		{87E89F21-71C4-42DA-962B-442B9FF0C99B}.Release|Win32.Build.0 = Release|Win32
+		{7EEC0C3F-B7DD-4CE1-80D1-1A45BC0C5AA4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7EEC0C3F-B7DD-4CE1-80D1-1A45BC0C5AA4}.Debug|Win32.Build.0 = Debug|Win32
+		{7EEC0C3F-B7DD-4CE1-80D1-1A45BC0C5AA4}.Release|Win32.ActiveCfg = Release|Win32
+		{7EEC0C3F-B7DD-4CE1-80D1-1A45BC0C5AA4}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
