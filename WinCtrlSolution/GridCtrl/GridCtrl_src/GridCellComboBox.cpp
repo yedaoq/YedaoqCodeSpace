@@ -50,40 +50,40 @@ static char THIS_FILE[] = __FILE__;
 //////////////////////////////////////////////////////////////////////////
 // TextConvertAdapter provide a interface which convert Value string(or Text string)
 // to Text string(Value string) , and can passed to CConvertEnumerator as a converter;
-class CTextConvertAdapter
-{
-public:
-	enum EnumTarget{ View,Value };
-
-	CTextConvertAdapter()
-		: m_pCell(0), m_Target(View)
-	{}
-
-	CTextConvertAdapter(CGridCellBase* cell, EnumTarget target)
-		: m_pCell(cell), m_Target(target)
-	{}
-
-	const tstring& operator()(const tstring& orgin)
-	{
-		static tstring result;
-		if(View == m_Target)
-		{
-			result = m_pCell->GetTemplate()->GetTextFormat()->Format(orgin.c_str(), 0);
-		}
-		else
-		{
-			result = m_pCell->GetTemplate()->GetTextFormat()->Parse(orgin.c_str(), 0);
-		}
-
-		//TTRACE(TEXT("CTextConvertAdapter - %s\r\n"), result.c_str());
-
-		return result;
-	}
-
-protected:
-	CGridCellBase	*m_pCell;
-	EnumTarget		m_Target;			
-};
+//class CTextConvertAdapter
+//{
+//public:
+//	enum EnumTarget{ View,Value };
+//
+//	CTextConvertAdapter()
+//		: m_pCell(0), m_Target(View)
+//	{}
+//
+//	CTextConvertAdapter(CGridCellBase* cell, EnumTarget target)
+//		: m_pCell(cell), m_Target(target)
+//	{}
+//
+//	const tstring& operator()(const tstring& orgin)
+//	{
+//		static tstring result;
+//		if(View == m_Target)
+//		{
+//			result = m_pCell->GetTemplate()->GetTextFormat()->Format(orgin.c_str(), 0);
+//		}
+//		else
+//		{
+//			result = m_pCell->GetTemplate()->GetTextFormat()->Parse(orgin.c_str(), 0);
+//		}
+//
+//		//TTRACE(TEXT("CTextConvertAdapter - %s\r\n"), result.c_str());
+//
+//		return result;
+//	}
+//
+//protected:
+//	CGridCellBase	*m_pCell;
+//	EnumTarget		m_Target;			
+//};
 
 /////////////////////////////////////////////////////////////////////////////
 // CComboEdit
@@ -444,11 +444,11 @@ BOOL CGridCellComboBox::Edit(int nRow, int nCol, CRect rect, CPoint /* point */,
     m_bEditing = TRUE;
 
 	IEnumerator<tstring>* options = static_cast<CEditStyleOptional*>(m_Template->GetEditStyle())->Options;
-	CConvertEnumerator<tstring, tstring, CTextConvertAdapter> textopts(options, CTextConvertAdapter(this, CTextConvertAdapter::View));
+	//CConvertEnumerator<tstring, tstring, CTextConvertAdapter> textopts(options, CTextConvertAdapter(this, CTextConvertAdapter::View));
 
     // CInPlaceList auto-deletes itself
 	m_pEditWnd = new CInPlaceList(GetGrid(), rect, GetStyle(), nID, nRow, nCol, 
-                                  GetTextClr(), GetBackClr(), &textopts, GetText(), nChar);
+                                  GetTextClr(), GetBackClr(), /*&textopts*/options, GetText(), nChar);
 
     return TRUE;
 }

@@ -18,8 +18,36 @@
 #include <TypeConverter.h>
 #include <Module/DBRecordFunction.h>
 
+
+
 class CDBSchemaTableView : public CView
 {
+public:
+	class CRelyColEditStyle : CEditStyleOptional
+	{
+	public:
+		void SetTable(NSDBModule::CDBTableSchema* sch)
+		{
+			if(sch)
+			{
+				ColumnNames = std::auto_ptr<IEnumerator<tstring>>(
+					new_iterator_enumerator_ex<tstring>(sch->Columns.begin(), sch->Columns.end()));
+			}
+			else
+			{
+				
+			}
+			Options = ColumnNames.get();
+		}
+
+	protected:
+		NSDBModule::CDBTableSchema*			TblPtr;
+		std::auto_ptr<IEnumerator<tstring>>	ColumnNames;
+
+	};
+
+	class
+
 protected: // 仅从序列化创建
 	CDBSchemaTableView();
 	DECLARE_DYNCREATE(CDBSchemaTableView)

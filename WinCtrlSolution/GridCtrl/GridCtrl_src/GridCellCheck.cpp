@@ -55,7 +55,7 @@ CGridCellCheck::CGridCellCheck() : CGridCell()
     //m_Rect.IsRectNull();
 }
 
-void CGridCellCheck::SetValue(LPCTSTR szVal)
+void CGridCellCheck::SetText(LPCTSTR szVal)
 {
 	ASSERT(m_Template && dynamic_cast<CEditStyleBool*>(m_Template->GetEditStyle()));
 
@@ -64,7 +64,7 @@ void CGridCellCheck::SetValue(LPCTSTR szVal)
 	this->SetCheck(style->strTrue == szVal);
 }
 
-LPCTSTR CGridCellCheck::GetValue() const
+LPCTSTR CGridCellCheck::GetText() const
 {
 	ASSERT(m_Template && dynamic_cast<CEditStyleBool*>(m_Template->GetEditStyle()));
 

@@ -32,6 +32,8 @@ namespace NSDBModule
 		flag_t			IndexMask;	// every bit of value '1' of this member indicate that this column is index in group of all other columns that with value '1' at the same bit
 		flag_t			Flag;
 
+		operator tstring&() const	{ return Name; }
+
 		bool IsBuildin() const		{ return static_cast<bool>(Flag & EnumDBColumnSchemaFlag::BuildIn); }
 		bool IsDBExist() const		{ return static_cast<bool>(Flag & EnumDBColumnSchemaFlag::DBExist); }
 		bool IsKeyColumn() const	{ return static_cast<bool>(Flag & EnumDBColumnSchemaFlag::KeyColumn); }

@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "DBTableViewer4GridCtrl.h"
 #include "GridCtrl.h"
+#include "CellFormatContext.h"
 
 using namespace NSDBModule;
 
@@ -131,8 +132,10 @@ int CDBTableViewer4GridCtrl::GetRecordAt(int row, IDBRecord* rec)
 	{
 		if(pEnumCol->Current().IdxRecord != -1)
 		{
-			CGridCellBase* pCell = Grid_->GetCell(row, pEnumCol->Current().IdxView);
-			rec->SetField(pEnumCol->Current().IdxRecord, pCell->GetValue());
+			CellFormatContext ctx(row, pEnumCol->Current().IdxView);
+			CGridCellBase* pCell = Grid_->GetCell(ctx.Row, ctx.Col);
+			ITextFormatSwitcher* pFormat = pCell->GetTemplate()->GetTextFormat();
+			rec->SetField(pEnumCol->Current().IdxRecord, pFormat->Parse(pCell->GetText(), &ctx));
 		}
 	}
 
@@ -174,8 +177,10 @@ int CDBTableViewer4GridCtrl::SetRecordAt(int row, const IDBRecord& rec)
 	{
 		if(pEnumCol->Current().IdxRecord != -1)
 		{
-			CGridCellBase* pCell = Grid_->GetCell(row, pEnumCol->Current().IdxView);
-			pCell->SetValue(rec.GetField(pEnumCol->Current().IdxRecord).c_str());
+			CellFormatContext ctx(row, pEnumCol->Current().IdxView);
+			CGridCellBase* pCell = Grid_->GetCell(ctx.Row, ctx.Col);
+			ITextFormatSwitcher* pFormat = pCell->GetTemplate()->GetTextFormat();
+			pCell->SetText(pFormat->Format(rec.GetField(pEnumCol->Current().IdxRecord).c_str(), &ctx).c_str());
 		}
 	}
 

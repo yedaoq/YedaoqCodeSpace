@@ -223,6 +223,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GridCtrl_src\CellFormatContext.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GridCtrl_src\CellRange.h"
 				>
 			</File>

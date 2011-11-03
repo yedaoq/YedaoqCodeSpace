@@ -409,27 +409,27 @@ BOOL CGridCellBase::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEraseB
 // CGridCellBase Mouse and Cursor events
 
 // Not yet implemented
-void CGridCellBase::OnMouseEnter()
+void CGridCellBase::OnMouseEnter(int nRow, int nCol)
 {
 #ifdef _TRACEOUT
 	TRACE0("Mouse entered cell\n");
 #endif 
 }
 
-void CGridCellBase::OnMouseOver()
+void CGridCellBase::OnMouseOver(int nRow, int nCol)
 {
     //TRACE0("Mouse over cell\n");
 }
 
 // Not Yet Implemented
-void CGridCellBase::OnMouseLeave()
+void CGridCellBase::OnMouseLeave(int nRow, int nCol)
 {
 #ifdef _TRACEOUT
 	TRACE0("Mouse left cell\n");
 #endif    
 }
 
-void CGridCellBase::OnClick( CPoint PointCellRelative)
+void CGridCellBase::OnClick(int nRow, int nCol, CPoint PointCellRelative)
 {
     UNUSED_ALWAYS(PointCellRelative);
 #ifdef _TRACEOUT
@@ -438,7 +438,7 @@ void CGridCellBase::OnClick( CPoint PointCellRelative)
     
 }
 
-void CGridCellBase::OnClickDown( CPoint PointCellRelative)
+void CGridCellBase::OnClickDown(int nRow, int nCol, CPoint PointCellRelative)
 {
     UNUSED_ALWAYS(PointCellRelative);
 #ifdef _TRACEOUT
@@ -446,7 +446,7 @@ void CGridCellBase::OnClickDown( CPoint PointCellRelative)
 #endif
 }
 
-void CGridCellBase::OnRClick( CPoint PointCellRelative)
+void CGridCellBase::OnRClick(int nRow, int nCol, CPoint PointCellRelative)
 {
     UNUSED_ALWAYS(PointCellRelative);
 #ifdef _TRACEOUT
@@ -454,7 +454,7 @@ void CGridCellBase::OnRClick( CPoint PointCellRelative)
 #endif
 }
 
-void CGridCellBase::OnDblClick( CPoint PointCellRelative)
+void CGridCellBase::OnDblClick(int nRow, int nCol, CPoint PointCellRelative)
 {
     UNUSED_ALWAYS(PointCellRelative);
 #ifdef _TRACEOUT
@@ -463,7 +463,7 @@ void CGridCellBase::OnDblClick( CPoint PointCellRelative)
 }
 
 // Return TRUE if you set the cursor
-BOOL CGridCellBase::OnSetCursor()
+BOOL CGridCellBase::OnSetCursor(int nRow, int nCol)
 {
 #ifndef _WIN32_WCE_NO_CURSOR
     SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));

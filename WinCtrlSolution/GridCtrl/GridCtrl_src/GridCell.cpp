@@ -67,15 +67,15 @@ void CGridCell::operator=(const CGridCell& cell)
 
 void CGridCell::SetText(LPCTSTR szText)
 {
-	m_strValue = m_Template->GetTextFormat()->Parse(szText, 0);
-	m_strText  = m_Template->GetTextFormat()->Format(m_strValue.c_str(), 0); 
-	
+	//m_strValue = m_Template->GetTextFormat()->Parse(szText, 0);
+	//m_strText  = m_Template->GetTextFormat()->Format(m_strValue.c_str(), 0); 
+	m_strText = szText;
 }  
-void CGridCell::SetValue(LPCTSTR szVal)
-{
-	m_strValue = szVal;
-	m_strText = m_Template->GetTextFormat()-> Format(szVal, 0);
-}
+//void CGridCell::SetValue(LPCTSTR szVal)
+//{
+//	m_strValue = szVal;
+//	m_strText = m_Template->GetTextFormat()-> Format(szVal, 0);
+//}
 
 void CGridCell::Reset()
 {

@@ -63,7 +63,7 @@ BOOL CGridURLCell::Edit(int nRow, int nCol, CRect rect, CPoint point, UINT nID, 
 }
 #pragma warning(default:4100)
 
-void CGridURLCell::OnClick(CPoint PointCellRelative)
+void CGridURLCell::OnClick(int nRow, int nCol, CPoint PointCellRelative)
 {
 #ifndef _WIN32_WCE
     CString strURL;
@@ -73,7 +73,7 @@ void CGridURLCell::OnClick(CPoint PointCellRelative)
 }
 
 // Return TRUE if you set the cursor
-BOOL CGridURLCell::OnSetCursor()
+BOOL CGridURLCell::OnSetCursor(int nRow, int nCol)
 {
 #ifndef _WIN32_WCE
     CString strURL;
@@ -88,7 +88,7 @@ BOOL CGridURLCell::OnSetCursor()
 	}
 	else
 #endif
-		return CGridCell::OnSetCursor();
+		return CGridCell::OnSetCursor(nRow, nCol);
 }
 
 #ifndef _WIN32_WCE

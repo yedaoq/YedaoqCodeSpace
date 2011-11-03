@@ -5,6 +5,14 @@
 #include "stdafx.h"
 #include "HookInstaller.h"
 #include "HookInstallerDlg.h"
+#include "DebugLog.h"
+//#include "..\CoCreateInstanceHook\CoCreateInstanceHook.h"
+#include <Helper.h>
+
+HHOOK*	WINAPI GetHookHandle();
+HMODULE	WINAPI GetHookModule();
+LRESULT CALLBACK  GetMsgProc(int nCode, WPARAM wParam, LPARAM lParam);
+LRESULT	WINAPI   Clear();
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -12,9 +20,6 @@
 
 
 // CHookInstallerDlg 对话框
-
-
-
 
 CHookInstallerDlg::CHookInstallerDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CHookInstallerDlg::IDD, pParent)
@@ -34,6 +39,7 @@ BEGIN_MESSAGE_MAP(CHookInstallerDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDOK, &CHookInstallerDlg::OnBnClickedOk)
+	ON_BN_CLICKED(IDCANCEL, &CHookInstallerDlg::OnBnClickedCancel)
 END_MESSAGE_MAP()
 
 
@@ -93,5 +99,30 @@ HCURSOR CHookInstallerDlg::OnQueryDragIcon()
 void CHookInstallerDlg::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
+
+	UpdateData();
 	
+	DWORD		idThread = GetWindowThreadProcessId((HWND)m_HWndHook, 0);
+	HINSTANCE	hInst	 = GetHookModule();
+	HHOOK		hHook	 = SetWindowsHookEx(WH_GETMESSAGE, GetMsgProc, GetHookModule(), idThread);  
+
+	*GetHookHandle() = hHook;
+
+	if (*GetHookHandle()) 
+	{
+		//PostThreadMessage(idThread, WM_ENABLEAPIHOOK, 0, 0);
+	} 
+	else 
+	{
+		return;
+	}
+	//WTRACE("WM_ENABLEAPIHOOK");
+	return;
+
+}
+
+void CHookInstallerDlg::OnBnClickedCancel()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialog::OnCancel();
 }

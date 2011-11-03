@@ -44,7 +44,12 @@ CGridCellBase *CCellTemplate::CreateCell() const
 CGridCellBase *CCellTemplate::CreateCell(tstring val) const
 {
 	CGridCellBase *cell = CreateCell();
-	cell->SetValue(val.c_str());
+	//cell->SetValue(val.c_str());
+
+	//格式化并赋值
+
+	throw std::exception();
+
 	return cell;
 }
 

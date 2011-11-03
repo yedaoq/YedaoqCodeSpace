@@ -3509,7 +3509,7 @@ BOOL CGridCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
                 {
                     CGridCellBase* pCell = GetCell(cell.row, cell.col);
                     if (pCell)
-                        return pCell->OnSetCursor();
+                        return pCell->OnSetCursor(cell.row, cell.col);
                 }
             }
 
@@ -5830,7 +5830,7 @@ void CGridCtrl::OnMouseMove(UINT /*nFlags*/, CPoint point)
                 idCurrentCell = GetCellFromPt(point);
                 pCell = GetCell(idCurrentCell.row, idCurrentCell.col);
                 if (pCell)
-                    pCell->OnMouseOver();
+                    pCell->OnMouseOver(idCurrentCell.row, idCurrentCell.col);
             }
 
 #ifndef GRIDCONTROL_NO_TITLETIPS
@@ -6066,7 +6066,7 @@ void CGridCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
         {
             CGridCellBase* pCell = GetCell(cell.row, cell.col);
             if (pCell)
-                pCell->OnDblClick(pointClickedRel);
+                pCell->OnDblClick(cell.row, cell.col, pointClickedRel);
             SendMessageToParent(cell.row, cell.col, NM_DBLCLK);
         }
     }
@@ -6110,7 +6110,7 @@ void CGridCtrl::OnLButtonDown(UINT nFlags, CPoint point)
     // tell the cell about it 
     CGridCellBase* pCell = GetCell(m_LeftClickDownCell.row, m_LeftClickDownCell.col);
     if (pCell)
-        pCell->OnClickDown(GetPointClicked( m_LeftClickDownCell.row, m_LeftClickDownCell.col, point));
+        pCell->OnClickDown(m_LeftClickDownCell.row, m_LeftClickDownCell.col, GetPointClicked( m_LeftClickDownCell.row, m_LeftClickDownCell.col, point));
 
     // Clicked in the text area? Only then will cell selection work
     BOOL bInTextArea = FALSE;
@@ -6465,8 +6465,9 @@ void CGridCtrl::OnLButtonUp(UINT nFlags, CPoint point)
     {
         CGridCellBase* pCell = GetCell(m_idCurrentCell.row, m_idCurrentCell.col);
         if (pCell)
-            pCell->OnClick( GetPointClicked( m_idCurrentCell.row, m_idCurrentCell.col, point) );
-        SendMessageToParent(m_LeftClickDownCell.row, m_LeftClickDownCell.col, NM_CLICK);
+            pCell->OnClick(m_idCurrentCell.row, m_idCurrentCell.col, GetPointClicked( m_idCurrentCell.row, m_idCurrentCell.col, point) );
+        
+		SendMessageToParent(m_LeftClickDownCell.row, m_LeftClickDownCell.col, NM_CLICK);
 	    SendMessageToParent(m_LeftClickDownCell.row, m_LeftClickDownCell.col, GVN_SELCHANGING);
         ResetSelectedRange();
 	    SendMessageToParent(m_idCurrentCell.row, m_idCurrentCell.col, GVN_SELCHANGED);
@@ -6530,7 +6531,7 @@ void CGridCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 
         CGridCellBase* pCell = GetCell(m_idCurrentCell.row, m_idCurrentCell.col);
         if (pCell)
-            pCell->OnClick( GetPointClicked( m_idCurrentCell.row, m_idCurrentCell.col, point) );
+            pCell->OnClick(m_idCurrentCell.row, m_idCurrentCell.col, GetPointClicked( m_idCurrentCell.row, m_idCurrentCell.col, point) );
         SendMessageToParent(m_LeftClickDownCell.row, m_LeftClickDownCell.col, NM_CLICK);
     }
     
@@ -6586,7 +6587,7 @@ void CGridCtrl::OnRButtonUp(UINT nFlags, CPoint point)
         // tell the cell about it
         CGridCellBase* pCell = GetCell(FocusCell.row, FocusCell.col);
         if (pCell)
-            pCell->OnRClick( GetPointClicked( FocusCell.row, FocusCell.col, point) );
+            pCell->OnRClick(FocusCell.row, FocusCell.col, GetPointClicked( FocusCell.row, FocusCell.col, point) );
 
         SendMessageToParent(FocusCell.row, FocusCell.col, NM_RCLICK);
     }

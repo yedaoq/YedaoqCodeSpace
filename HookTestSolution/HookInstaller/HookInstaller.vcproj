@@ -45,6 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="D:\LocalPlayer\trunk\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -178,6 +179,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{7EEC0C3F-B7DD-4CE1-80D1-1A45BC0C5AA4}"
+			RelativePathToProject=".\CoCreateInstanceHook\CoCreateInstanceHook.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -185,6 +190,10 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath="..\..\Include\Helper.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\HookInstaller.cpp"
 				>
@@ -219,6 +228,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\Include\Helper.h"
+				>
+			</File>
 			<File
 				RelativePath=".\HookInstaller.h"
 				>

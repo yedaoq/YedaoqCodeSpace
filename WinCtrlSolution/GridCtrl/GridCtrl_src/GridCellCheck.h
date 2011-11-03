@@ -46,8 +46,8 @@ public:
 	BOOL GetCheck() const;
 
 // Operations
-	virtual void SetValue(LPCTSTR szVal);
-	virtual LPCTSTR GetValue() const;
+	virtual void SetText(LPCTSTR szVal);
+	virtual LPCTSTR GetText() const;
 	virtual CSize GetCellExtent(CDC* pDC);
     virtual void OnClick( CPoint PointCellRelative);
     virtual BOOL GetTextRect( LPRECT pRect);

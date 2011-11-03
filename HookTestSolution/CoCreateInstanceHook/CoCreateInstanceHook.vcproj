@@ -65,6 +65,7 @@
 				AdditionalDependencies="detours.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="D:\LocalPlayer\trunk\Lib"
+				ModuleDefinitionFile="CoCreateInstanceHook.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -137,6 +138,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				ModuleDefinitionFile="CoCreateInstanceHook.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -179,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CoCreateInstanceHook.def"
+				>
+			</File>
+			<File
 				RelativePath=".\dllmain.cpp"
 				>
 				<FileConfiguration
@@ -199,6 +205,10 @@
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\Include\Helper.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp"
@@ -228,6 +238,10 @@
 			>
 			<File
 				RelativePath=".\CoCreateInstanceHook.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\Helper.h"
 				>
 			</File>
 			<File

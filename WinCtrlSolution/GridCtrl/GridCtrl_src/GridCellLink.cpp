@@ -50,7 +50,7 @@ BOOL CGridCellLink::Edit(int nRow, int nCol, CRect rect, CPoint point, UINT nID,
 }
 #pragma warning(default:4100)
 
-void CGridCellLink::OnClick(CPoint PointCellRelative)
+void CGridCellLink::OnClick(int nRow, int nCol, CPoint PointCellRelative)
 {
 #ifndef _WIN32_WCE
     CString strURL;
@@ -58,14 +58,31 @@ void CGridCellLink::OnClick(CPoint PointCellRelative)
 	{
 		ASSERT(m_Template && m_Template->GetEditStyle());
 		CEditStyleLink * iInput = static_cast<CEditStyleLink*>(GetTemplate()->GetEditStyle());
-		CGridCellLinkInputContext ctx(GetValue());
-		iInput->OnLinkClicked(&ctx);
+		CGridCellLinkInputContext ctx(GetText(), nRow, nCol);
+		tstring str = iInput->OnLinkClicked(&ctx);
+
+		GV_DISPINFO dispinfo;
+
+		dispinfo.hdr.hwndFrom = NULL;
+		dispinfo.hdr.idFrom   = 0;
+		dispinfo.hdr.code     = GVN_ENDLABELEDIT;
+		dispinfo.item.row     = nRow;
+		dispinfo.item.col     = nCol;
+		dispinfo.item.strText  = str.c_str();
+
+		CGridCtrl* pGrid = GetGrid();
+		if(pGrid)
+		{
+			pGrid->SendMessage(WM_NOTIFY, 0, (LPARAM)&dispinfo );
+		}
+		
+		throw std::exception();
 	}
 #endif
 }
 
 // Return TRUE if you set the cursor
-BOOL CGridCellLink::OnSetCursor()
+BOOL CGridCellLink::OnSetCursor(int nRow, int nCol)
 {
 #ifndef _WIN32_WCE
     CString strURL;
@@ -80,7 +97,7 @@ BOOL CGridCellLink::OnSetCursor()
 	}
 	else
 #endif
-		return CGridCell::OnSetCursor();
+		return CGridCell::OnSetCursor(nRow, nCol);
 }
 
 #ifndef _WIN32_WCE

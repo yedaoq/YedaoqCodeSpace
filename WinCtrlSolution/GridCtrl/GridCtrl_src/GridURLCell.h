@@ -33,8 +33,8 @@ public:
 	BOOL GetAutoLaunchUrl() { return m_bLaunchUrl;	}
 
 protected:
-    virtual BOOL OnSetCursor();
-    virtual void OnClick(CPoint PointCellRelative);
+    virtual BOOL OnSetCursor(int nRow, int nCol);
+    virtual void OnClick(int nRow, int nCol, CPoint PointCellRelative);
 
 	BOOL HasUrl(CString str);
     BOOL OverURL(CPoint& pt, CString& strURL);

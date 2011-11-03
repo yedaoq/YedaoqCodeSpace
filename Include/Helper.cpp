@@ -40,7 +40,7 @@ void WTRACE(wchar_t const* pszFmt, ...)
 
 	char chBuf[1024];
 	WideCharToMultiByte(CP_ACP, 0, szBuf, -1, chBuf, sizeof(chBuf), NULL, NULL);
-	TRACE(chBuf);
+	OutputDebugStringA(chBuf);
 }
 tstring StringSplice(IEnumerator<tstring>& source, tstring connecter)
 {

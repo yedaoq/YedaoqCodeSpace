@@ -90,7 +90,6 @@ public:
 public:
 	virtual void SetTemplate(CCellTemplate *tpl)			{ m_Template = tpl; }
     virtual void SetText(LPCTSTR /* szText */)              = 0 ;
-	virtual void SetValue(LPCTSTR /* szVal */)				= 0 ;
     virtual void SetImage(int /* nImage */)                 = 0 ;
     virtual void SetData(LPARAM /* lParam */)               = 0 ;
     virtual void SetState(DWORD nState)                     { m_nState = nState; }
@@ -104,7 +103,6 @@ public:
 
 	virtual CCellTemplate* GetTemplate()const				{ return m_Template; }
     virtual LPCTSTR    GetText()       const                = 0 ;
-	virtual LPCTSTR	   GetValue()	   const				= 0 ;
     virtual LPCTSTR    GetTipText()    const                { return GetText(); } // may override TitleTip return
     virtual int        GetImage()      const                = 0 ;
     virtual LPARAM     GetData()       const                = 0 ;
@@ -159,14 +157,14 @@ public:
 
 protected:
     virtual void OnEndEdit();
-    virtual void OnMouseEnter();
-    virtual void OnMouseOver();
-    virtual void OnMouseLeave();
-    virtual void OnClick( CPoint PointCellRelative);
-    virtual void OnClickDown( CPoint PointCellRelative);
-    virtual void OnRClick( CPoint PointCellRelative);
-    virtual void OnDblClick( CPoint PointCellRelative);
-    virtual BOOL OnSetCursor();
+    virtual void OnMouseEnter(int nRow, int nCol);
+    virtual void OnMouseOver(int nRow, int nCol);
+    virtual void OnMouseLeave(int nRow, int nCol);
+    virtual void OnClick(int nRow, int nCol, CPoint PointCellRelative);
+    virtual void OnClickDown(int nRow, int nCol, CPoint PointCellRelative);
+    virtual void OnRClick(int nRow, int nCol, CPoint PointCellRelative);
+    virtual void OnDblClick(int nRow, int nCol, CPoint PointCellRelative);
+    virtual BOOL OnSetCursor(int nRow, int nCol);
 
 protected:
     DWORD				 m_nState;		// Cell state (selected/focus etc)
