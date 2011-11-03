@@ -1,0 +1,9 @@
+LIBRARY	"CoCreateInstanceHook"
+
+EXPORTS
+	GetHookHandle
+	GetHookModule
+	Clear
+	GetMsgProc
+	
+ 
