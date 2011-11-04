@@ -92,6 +92,10 @@ BOOL CGridCellCheck::GetTextRect( LPRECT pRect)
         pRect->left += nWidth;
         if (pRect->left > pRect->right)
             pRect->left = pRect->right;
+
+		//不显示文本
+		pRect->right = pRect->left - 1;
+		pRect->bottom = pRect->top - 1;
     }
     return bResult;
 }

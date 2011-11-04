@@ -38,12 +38,6 @@ CDBSchemaTableView::CDBSchemaTableView()
 	: Layouter(EnumLayoutDirection::Vertical), 
 	GridColViewer(&GridCol, 1), 
 	GridTabViewer(&GridTab, 1),
-	DBTblIdxStrEnumerator(&DBTblIdxEnumerator, CTypeConverter_LexicalCast<tstring,int>()),
-	DBColIdxStrEnumerator(&DBColEnumerator, CDBRecordToField(CDBColumnInfoRecord::Index)),
-	GridCol_RelyTblStyle(&DBTblIdxStrEnumerator),
-	GridCol_RelyColStyle(&DBColIdxStrEnumerator),
-	GridCol_RelyColFormat(&DBColEnumerator, CDBColumnInfoRecord::Name, CDBColumnInfoRecord::Index),
-	DBColEnumerator(0),
 	CurrentTableIndex(-1)
 {
 	// TODO: 在此处添加构造代码
@@ -336,8 +330,12 @@ void CDBSchemaTableView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
 	CDBModule& module = GetDocument()->GetDBModule();
 	
-	DBTblIdxEnumerator = CRangeEnumerator<int>(0, module.Tables().Count());
+	DBTblNameEnumerator = std::auto_ptr<IEnumerator<tstring>>(module.Tables().EnumName());
+	GridCol_RelyTblStyle.Options = DBTblNameEnumerator.get();
 	GridCol_RelyTblFormat = CTextConverter4DBTblNameIdx(&module.Tables());	
+
+	GridCol_RelyColFormat.SetModule(&GetDocument()->GetDBModule());
+	
 	CurrentTableIndex = -1;
 
 	GridTabViewer.Clear();
@@ -362,18 +360,19 @@ void CDBSchemaTableView::OnGridColSelChanged(NMHDR *pNotifyStruct, LRESULT* pRes
 	CDBModule&		module = GetDocument()->GetDBModule();
 	CDBRecordAuto	rec;
 	GridColViewer.GetCurRecord(&rec); 
+
+
 	tstring strRelayTblID = rec.GetField(CDBColumnInfoRecord::RelyTbl);
-	if(strRelayTblID.empty() || strRelayTblID == TEXT("-1"))
+	int relyTblID = -1;
+	if(!strRelayTblID.empty())
 	{
-		return;
+		relyTblID = boost::lexical_cast<int>(rec.GetField(CDBColumnInfoRecord::RelyTbl));
 	}
 
-	TTRACE(TEXT("依赖表 : %s\r\n"), strRelayTblID.c_str());
-	int relyTblID = boost::lexical_cast<int>(rec.GetField(CDBColumnInfoRecord::RelyTbl));
-	if( relyTblID != -1)
+	TTRACE(TEXT("依赖表 : %d\r\n"), relyTblID);
+	if( relyTblID >= 0)
 	{
-		DBColEnumerator.SetTable(&(module.Tables()[relyTblID]->GetSchema()));
-		GridCol_RelyColFormat.SetSource(DBColEnumerator);
+		GridCol_RelyColStyle.SetTable(&GetDocument()->GetDBModule().Tables()[relyTblID]->GetSchema());
 	}
 }
 
@@ -402,13 +401,15 @@ void CDBSchemaTableView::OnGridColTxtChanged(NMHDR *pNotifyStruct, LRESULT* pRes
 		return;
 	}
 
-	CGridCellBase* pCell = GridCol.GetCell(pItem->iRow, pItem->iColumn);
-
 	CDBColumnInfoRecord col(&tables[CurrentTableIndex]->GetSchema()[pItem->iRow - GRIDHEADERROWCOUNT]);
-	int fieldIdx = GridColColumns.GetColumnByViewCol(pItem->iColumn)->IdxRecord;
-	col.SetField(fieldIdx, pCell->GetValue());
+	
+	CDBRecordAuto rec;
+	GridColViewer.GetRecordAt(pItem->iRow - GRIDHEADERROWCOUNT, &rec);
 
-	TTRACE(TEXT("Column %s : field %d changed to %s\r\n"), col.GetField(CDBColumnInfoRecord::Name).c_str(), fieldIdx, pCell->GetText());
+	int fieldIdx = GridColColumns.GetColumnByViewCol(pItem->iColumn)->IdxRecord;
+	col.SetField(fieldIdx, rec.GetField(fieldIdx));
+
+	TTRACE(TEXT("Column %s : field %d changed to %s\r\n"), col.GetField(CDBColumnInfoRecord::Name).c_str(), fieldIdx, col.GetField(fieldIdx));
 
 	//TRACE("Grid Edited...\r\n");
 }
@@ -421,7 +422,7 @@ void CDBSchemaTableView::OnBtnMergeClicked()
 	for(int i = GRIDHEADERROWCOUNT; i < GridTab.GetRowCount(); ++i)
 	{
 		CGridCellBase* pCell = GridTab.GetCell(i, 0);
-		if(CEditStyleBool::GetInstance().strTrue == pCell->GetValue())
+		if(CEditStyleBool::GetInstance().strTrue == pCell->GetText())
 		{
 			iSelectedRows[iSelectedRowCount++] = i - GRIDHEADERROWCOUNT;
 			if(iSelectedRowCount >= 2) break;
@@ -437,8 +438,8 @@ void CDBSchemaTableView::OnBtnMergeClicked()
 	for(int i = GRIDHEADERROWCOUNT; i < GridCol.GetRowCount(); ++i)
 	{
 		CGridCellBase* pCell = GridCol.GetCell(i, 0);
-		TTRACE(pCell->GetValue());
-		if(CEditStyleBool::GetInstance().strTrue == pCell->GetValue())
+		TTRACE(pCell->GetText());
+		if(CEditStyleBool::GetInstance().strTrue == pCell->GetText())
 		{
 			iSelectedRows[iSelectedRowCount++] = i - GRIDHEADERROWCOUNT;
 			if(iSelectedRowCount >= 2) break;
@@ -458,6 +459,8 @@ int CDBSchemaTableView::ShowColumnsOfTable(int idxTbl)
 	_ASSERT(idxTbl >= 0 && idxTbl < tables.Count());
 
 	CurrentTableIndex = idxTbl;
+	GridCol_RelyColFormat.SetTable(idxTbl);
+	
 	GridColViewer.Clear();
 	GridColViewer.Fill(CDBColumnInfoEnumerator(&tables[idxTbl]->GetSchema()));
 	return 1;

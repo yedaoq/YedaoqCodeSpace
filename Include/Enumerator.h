@@ -54,6 +54,19 @@ public:
 	}
 };
 
+template<typename T>
+class CEmptyEnumerator : public IMPIREFOBJECT(IEnumerator<T>)
+{
+public:
+	virtual ~CEmptyEnumerator()		{}
+	virtual bool		MoveNext()	{ return false; };
+	virtual const T&	Current()	{ throw std::exception(); };
+	virtual void		Reset()		{};
+	virtual ICloneable* Clone() const{ return new CEmptyEnumerator(*this); }
+
+	virtual bool MoveNext(T& obj)	{ return false; }
+};
+
 template<typename Tt, typename Ts, typename Fc>
 class CConvertEnumeratorEx : public CEnumeratorBase<Tt>
 {

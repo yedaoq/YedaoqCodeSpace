@@ -24,6 +24,7 @@ namespace NSDBModule
 		int						Clear(bool bBuildIn = false);
 
 		DBTableEnumerator*		Enum() const;
+		IEnumerator<tstring>*	EnumName() const;
 
 		CDBTable*				Append(const tstring& name, CDBModule* module, bool bBuildIn = false);
 		CDBTable*				Append(const CDBTableSchema& schema, CDBModule* module, bool bBuildIn = false);

@@ -3,6 +3,7 @@
 #include <exception>
 #include "DBTable.h"
 #include "Schema\DBTableSchema.h"
+#include <TypeConverter.h>
 
 using namespace NSDBModule;
 
@@ -40,6 +41,15 @@ const CDBTable* CDBTableCollection::operator[](index_t tbl) const
 DBTableEnumerator* CDBTableCollection::Enum() const
 {
 	return new_iterator_enumerator(Tables.begin(), Tables.end());
+}
+
+IEnumerator<tstring>* CDBTableCollection::EnumName() const
+{
+	return 
+		new_convert_enumerator<tstring>(
+			make_iterator_enumerator(Tables.begin(), Tables.end()),
+			CTypeConverter_Dereference<const CDBTable&, const CDBTable*>()
+			);
 }
 
 CDBTable* CDBTableCollection::Append(const tstring& name, CDBModule* module, bool bBuildIn )

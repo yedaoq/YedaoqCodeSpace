@@ -5,6 +5,7 @@
 #pragma once
 
 #include "GridCtrl.h"
+#include "CellFormatContext.h"
 #include "Layout/FlowLayout.h"
 #include "Layout/CtrlLayout.h"
 #include "Module/Schema/DBTableSchema.h"
@@ -17,13 +18,13 @@
 #include <View/TextConverter4DBMap.h>
 #include <TypeConverter.h>
 #include <Module/DBRecordFunction.h>
-
+#include <memory>
 
 
 class CDBSchemaTableView : public CView
 {
 public:
-	class CRelyColEditStyle : CEditStyleOptional
+	class CRelyColEditStyle : public CEditStyleOptional
 	{
 	public:
 		void SetTable(NSDBModule::CDBTableSchema* sch)
@@ -35,18 +36,76 @@ public:
 			}
 			else
 			{
-				
+				ColumnNames = std::auto_ptr<IEnumerator<tstring>>(
+					new CEmptyEnumerator<tstring>());
 			}
 			Options = ColumnNames.get();
 		}
 
+		CRelyColEditStyle(NSDBModule::CDBTableSchema* pTbl = 0)
+			: TblPtr(pTbl)
+		{}
+
 	protected:
 		NSDBModule::CDBTableSchema*			TblPtr;
 		std::auto_ptr<IEnumerator<tstring>>	ColumnNames;
-
 	};
 
-	class
+	class CRelyColFormater : public ITextFormatSwitcher
+	{
+	public:
+		CRelyColFormater(NSDBModule::CDBModule* pModule = 0, int tbl = -1)
+			: ModulePtr(pModule), TblIdx(tbl)
+		{}
+
+		void SetModule(NSDBModule::CDBModule* pModule) { ModulePtr = pModule; }
+		void SetTable(int idx) { TblIdx = idx; }
+
+		virtual tstring Parse(const tstring& val, IContext* ctx)
+		{
+			tstring strRet;
+			if(TblIdx >= 0) 
+			{
+				CellFormatContext* pCtx = static_cast<CellFormatContext*>(ctx);
+				DBColumnSchema& colCur = ModulePtr->Tables()[TblIdx]->GetSchema()[pCtx->Row - GRIDHEADERROWCOUNT];
+				int tblRely = colCur.RelyTblID;
+				if(tblRely >= 0)
+				{
+					std::auto_ptr<IEnumerator<DBColumnSchema>> pEnumCol(ModulePtr->Tables()[tblRely]->EnumColumn());
+					while(pEnumCol->MoveNext())
+					{
+						if(pEnumCol->Current().Name == val)
+						{
+							strRet = boost::lexical_cast<tstring>(pEnumCol->Current().Index);
+							break;
+						}
+					}
+				}
+			}
+			
+			return strRet;
+		}
+
+		virtual tstring Format(const tstring& val, IContext* ctx) 
+		{ 
+			tstring strRet;
+			if(TblIdx >= 0) 
+			{
+				CellFormatContext* pCtx = static_cast<CellFormatContext*>(ctx);
+				DBColumnSchema& colCur = ModulePtr->Tables()[TblIdx]->GetSchema()[pCtx->Row - GRIDHEADERROWCOUNT];
+				int tblRely = colCur.RelyTblID;
+				if(tblRely >= 0)
+				{
+					strRet = ModulePtr->Tables()[tblRely]->GetSchema()[colCur.RelyColID].Name;
+				}
+			}
+			return strRet;
+		}
+
+	protected:
+		NSDBModule::CDBModule* ModulePtr;
+		int					   TblIdx;
+	};
 
 protected: // 仅从序列化创建
 	CDBSchemaTableView();
@@ -121,18 +180,14 @@ protected:
 
 	CDBColumnViewInfo			GridIdx_Unique;
 	CDBColumnViewInfo			GridIdx_Column;
-
-	CDBColumnInfoEnumerator		DBColEnumerator;
-	CConvertEnumerator<tstring, IDBRecord, CDBRecordToField> DBColIdxStrEnumerator;
 	
-	CRangeEnumerator<int>		DBTblIdxEnumerator;
-	CConvertEnumeratorEx<tstring, int, CTypeConverter_LexicalCast<tstring, int>> DBTblIdxStrEnumerator;
+	std::auto_ptr<IEnumerator<tstring>>	DBTblNameEnumerator;
 	
 	CEditStyleOptional			GridCol_RelyTblStyle;
 	CTextConverter4DBTblNameIdx GridCol_RelyTblFormat;
 
-	NSDBModule::CTextConverter4DBMap	GridCol_RelyColFormat;
-	CEditStyleOptional			GridCol_RelyColStyle;
+	CRelyColFormater			GridCol_RelyColFormat;
+	CRelyColEditStyle			GridCol_RelyColStyle;
 
 protected:
 
