@@ -10,6 +10,11 @@ public:
 	CDynamicLinkLibrary(LPCTSTR dllFile)
 	{
 		Module_ = ::LoadLibrary(dllFile);
+		if(!Module_)
+		{
+			DWORD dwErr = ::GetLastError();
+			dwErr = dwErr;
+		}
 	}
 
 	CDynamicLinkLibrary& operator=(CDynamicLinkLibrary& other)

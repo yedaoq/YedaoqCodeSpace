@@ -1,37 +1,44 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LocalPlayerDB", "LocalPlayerDB\LocalPlayerDB.vcxproj", "{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBModule1.0", "..\DBModuleSolution\DBModule1.0\DBModule1.0.vcxproj", "{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dwarves", "Dwarves\Dwarves.vcxproj", "{7461330B-84DF-4597-95DB-749D9BBD0506}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBModule1.0", "..\DBModuleSolution\DBModule1.0\DBModule1.0.vcxproj", "{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LocalPlayerDB", "LocalPlayerDB\LocalPlayerDB.vcxproj", "{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		DebugDLL|Win32 = DebugDLL|Win32
 		Release|Win32 = Release|Win32
+		Template|Win32 = Template|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.Debug|Win32.Build.0 = Debug|Win32
-		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
-		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
-		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.Release|Win32.ActiveCfg = Release|Win32
-		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.Release|Win32.Build.0 = Release|Win32
-		{7461330B-84DF-4597-95DB-749D9BBD0506}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7461330B-84DF-4597-95DB-749D9BBD0506}.Debug|Win32.Build.0 = Debug|Win32
-		{7461330B-84DF-4597-95DB-749D9BBD0506}.DebugDLL|Win32.ActiveCfg = Debug|Win32
-		{7461330B-84DF-4597-95DB-749D9BBD0506}.DebugDLL|Win32.Build.0 = Debug|Win32
-		{7461330B-84DF-4597-95DB-749D9BBD0506}.Release|Win32.ActiveCfg = Release|Win32
-		{7461330B-84DF-4597-95DB-749D9BBD0506}.Release|Win32.Build.0 = Release|Win32
 		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Debug|Win32.Build.0 = Debug|Win32
 		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.DebugDLL|Win32.ActiveCfg = Debug|Win32
 		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.DebugDLL|Win32.Build.0 = Debug|Win32
 		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Release|Win32.ActiveCfg = Release|Win32
 		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Release|Win32.Build.0 = Release|Win32
+		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Template|Win32.ActiveCfg = Release|Win32
+		{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}.Template|Win32.Build.0 = Release|Win32
+		{7461330B-84DF-4597-95DB-749D9BBD0506}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7461330B-84DF-4597-95DB-749D9BBD0506}.Debug|Win32.Build.0 = Debug|Win32
+		{7461330B-84DF-4597-95DB-749D9BBD0506}.DebugDLL|Win32.ActiveCfg = Debug|Win32
+		{7461330B-84DF-4597-95DB-749D9BBD0506}.DebugDLL|Win32.Build.0 = Debug|Win32
+		{7461330B-84DF-4597-95DB-749D9BBD0506}.Release|Win32.ActiveCfg = Release|Win32
+		{7461330B-84DF-4597-95DB-749D9BBD0506}.Release|Win32.Build.0 = Release|Win32
+		{7461330B-84DF-4597-95DB-749D9BBD0506}.Template|Win32.ActiveCfg = Template|Win32
+		{7461330B-84DF-4597-95DB-749D9BBD0506}.Template|Win32.Build.0 = Template|Win32
+		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.Debug|Win32.Build.0 = Debug|Win32
+		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
+		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
+		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.Release|Win32.ActiveCfg = Release|Win32
+		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.Release|Win32.Build.0 = Release|Win32
+		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.Template|Win32.ActiveCfg = Release|Win32
+		{A08FE7F8-08AE-4F6E-B19B-6EFEA25DA902}.Template|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

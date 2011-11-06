@@ -262,18 +262,34 @@ int CDBSchemaMaintainerDoc::MergeColumn(int iTbl, int iCol1, int iCol2)
 bool CDBSchemaMaintainerDoc::FindDBProviderDLL(tstring& filePath)
 {
 	TCHAR AppPath[MAX_PATH] = {0};
+	TCHAR DllPath[MAX_PATH] = {0};
 	GetModuleFileName(NULL, AppPath, MAX_PATH);
 	PathRemoveFileSpec(AppPath);
 	CFileEnumerator EnumFile(AppPath, TEXT("*.dll"));
 
 	while(EnumFile.MoveNext())
 	{
-		CDynamicLinkLibrary dll(EnumFile.Current().cFileName);
+		if(PathIsRelative(EnumFile.Current().cFileName))
+		{
+			StrCpyN(DllPath, AppPath, MAX_PATH - 1);
+			PathAppend(DllPath, EnumFile.Current().cFileName);
+		}
+		else
+		{
+			StrCpyN(DllPath, EnumFile.Current().cFileName, MAX_PATH - 1);
+		}
+
+		CDynamicLinkLibrary dll(DllPath);
 
 		if(dll.GetModule() && dll.GetProcAddress("GetDBSourceManager"))
 		{
 			filePath = EnumFile.Current().cFileName;
 			return true;
+		}
+		else
+		{
+			DWORD dwErr = GetLastError();
+			TTRACE(TEXT("Error %u\n"), dwErr);
 		}
 	}
 
