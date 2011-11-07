@@ -283,7 +283,7 @@ bool CDBSchemaMaintainerDoc::FindDBProviderDLL(tstring& filePath)
 
 		if(dll.GetModule() && dll.GetProcAddress("GetDBSourceManager"))
 		{
-			filePath = EnumFile.Current().cFileName;
+			filePath = DllPath;
 			return true;
 		}
 		else

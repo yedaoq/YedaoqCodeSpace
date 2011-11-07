@@ -38,7 +38,7 @@ namespace NSDBModule
 		int InitializeStore();
 		int initializeAccess();
 
-		operator						tstring() const			{ return GetName(); }
+		operator						const tstring&() const		{ return GetName(); }
 
 		const tstring&					GetName() const			{ return Schema_.Name; }
 		const tstring&					GetDBName() const		{ return Schema_.DBName; }

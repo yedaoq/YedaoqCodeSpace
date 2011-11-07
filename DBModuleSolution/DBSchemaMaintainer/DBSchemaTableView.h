@@ -63,7 +63,7 @@ public:
 
 		virtual tstring Parse(const tstring& val, IContext* ctx)
 		{
-			tstring strRet;
+			tstring strRet = TEXT("-1");
 			if(TblIdx >= 0) 
 			{
 				CellFormatContext* pCtx = static_cast<CellFormatContext*>(ctx);
@@ -94,7 +94,7 @@ public:
 				CellFormatContext* pCtx = static_cast<CellFormatContext*>(ctx);
 				DBColumnSchema& colCur = ModulePtr->Tables()[TblIdx]->GetSchema()[pCtx->Row - GRIDHEADERROWCOUNT];
 				int tblRely = colCur.RelyTblID;
-				if(tblRely >= 0)
+				if(tblRely >= 0 && colCur.RelyColID >= 0)
 				{
 					strRet = ModulePtr->Tables()[tblRely]->GetSchema()[colCur.RelyColID].Name;
 				}
