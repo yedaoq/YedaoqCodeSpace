@@ -29,13 +29,13 @@ BEGIN_DBTABLE(Stream)
 DBCOLUMN(Stream                        , StreamId                      , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
 DBCOLUMN(Stream                        , StreamName                    , CppString , 0x00000000, BuildIn, -1, -1, -1)
 DBCOLUMN(Stream                        , StreamMajorType               , CppString , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(Stream                        , StreamSubType                 , CppString , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(Stream                        , FormatType                    , CppString , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(Stream                        , StreamSubType                 , CppString , 0x00000000, BuildIn, 3, 0, 1)
+DBCOLUMN(Stream                        , FormatType                    , CppString , 0x00000000, BuildIn, 3, 0, 1)
 END_DBTABLE
 
 BEGIN_DBTABLE(CodecPin)
-DBCOLUMN(CodecPin                      , CodecClsid                    , CppString , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(CodecPin                      , StreamId                      , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(CodecPin                      , CodecClsid                    , CppString , 0x00000000, BuildIn, 23, 2, 3)
+DBCOLUMN(CodecPin                      , StreamId                      , CppInt32  , 0x00000000, BuildIn, 4, 0, 1)
 DBCOLUMN(CodecPin                      , PinType                       , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
 END_DBTABLE
 
@@ -94,8 +94,8 @@ DBCOLUMN(Rules                         , Priority                      , CppInt3
 END_DBTABLE
 
 BEGIN_DBTABLE(PackageDepends)
-DBCOLUMN(PackageDepends                , PckId                         , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(PackageDepends                , DependsPckId                  , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(PackageDepends                , PckId                         , CppInt32  , 0x00000000, BuildIn, 25, 0, 1)
+DBCOLUMN(PackageDepends                , DependsPckId                  , CppInt32  , 0x00000000, BuildIn, 25, 0, 1)
 END_DBTABLE
 
 BEGIN_DBTABLE(CheckBytes)
@@ -109,10 +109,10 @@ DBCOLUMN(CheckBytes                    , IgnoreChar                    , CppInt3
 END_DBTABLE
 
 BEGIN_DBTABLE(LinkInfo)
-DBCOLUMN(LinkInfo                      , LinkId                        , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(LinkInfo                      , CodecClsid                    , CppString , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(LinkInfo                      , LinkId                        , CppInt32  , 0x00000000, BuildIn, 8, 0, 1)
+DBCOLUMN(LinkInfo                      , CodecClsid                    , CppString , 0x00000000, BuildIn, 23, 2, 3)
 DBCOLUMN(LinkInfo                      , LinkPosition                  , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(LinkInfo                      , StreamId                      , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(LinkInfo                      , StreamId                      , CppInt32  , 0x00000000, BuildIn, 4, 0, 1)
 END_DBTABLE
 
 BEGIN_DBTABLE(ParserResult)
@@ -151,24 +151,24 @@ DBCOLUMN(SourceConfig                  , Priority                      , CppInt3
 END_DBTABLE
 
 BEGIN_DBTABLE(LinkInput)
-DBCOLUMN(LinkInput                     , LinkId                        , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(LinkInput                     , StreamId                      , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(LinkInput                     , LinkId                        , CppInt32  , 0x00000000, BuildIn, 8, 0, 1)
+DBCOLUMN(LinkInput                     , StreamId                      , CppInt32  , 0x00000000, BuildIn, 4, 0, 1)
 DBCOLUMN(LinkInput                     , Priority                      , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
 END_DBTABLE
 
 BEGIN_DBTABLE(Codecs)
-DBCOLUMN(Codecs                        , PckId                         , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(Codecs                        , FileId                        , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(Codecs                        , PckId                         , CppInt32  , 0x00000000, BuildIn, 25, 0, 1)
+DBCOLUMN(Codecs                        , FileId                        , CppInt32  , 0x00000000, BuildIn, 0, 0, 1)
 DBCOLUMN(Codecs                        , CodecClsid                    , CppString , 0x00000000, BuildIn, -1, -1, -1)
 DBCOLUMN(Codecs                        , CodecName                     , CppString , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(Codecs                        , FilterType                    , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(Codecs                        , CodecType                     , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(Codecs                        , FilterType                    , CppInt32  , 0x00000000, BuildIn, 6, 0, 1)
+DBCOLUMN(Codecs                        , CodecType                     , CppInt32  , 0x00000000, BuildIn, 7, 0, 1)
 DBCOLUMN(Codecs                        , ReleaseTime                   , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
 END_DBTABLE
 
 BEGIN_DBTABLE(PackageIndex)
-DBCOLUMN(PackageIndex                  , PckId                         , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
-DBCOLUMN(PackageIndex                  , FileId                        , CppInt32  , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(PackageIndex                  , PckId                         , CppInt32  , 0x00000000, BuildIn, 25, 0, 1)
+DBCOLUMN(PackageIndex                  , FileId                        , CppInt32  , 0x00000000, BuildIn, 0, 0, 1)
 END_DBTABLE
 
 BEGIN_DBTABLE(PackageInfo)

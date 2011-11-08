@@ -27,6 +27,7 @@ public:
 	class CRelyColEditStyle : public CEditStyleOptional
 	{
 	public:
+
 		void SetTable(NSDBModule::CDBTableSchema* sch)
 		{
 			if(sch)
@@ -44,7 +45,9 @@ public:
 
 		CRelyColEditStyle(NSDBModule::CDBTableSchema* pTbl = 0)
 			: TblPtr(pTbl)
-		{}
+		{
+			SetTable(NULL);
+		}
 
 	protected:
 		NSDBModule::CDBTableSchema*			TblPtr;
@@ -89,16 +92,24 @@ public:
 		virtual tstring Format(const tstring& val, IContext* ctx) 
 		{ 
 			tstring strRet;
-			if(TblIdx >= 0) 
+			int relyColID = -1;
+
+			if(!val.empty())
+			{
+				relyColID = boost::lexical_cast<int>(val);
+			}
+
+			if(TblIdx >= 0 && relyColID >= 0) 
 			{
 				CellFormatContext* pCtx = static_cast<CellFormatContext*>(ctx);
 				DBColumnSchema& colCur = ModulePtr->Tables()[TblIdx]->GetSchema()[pCtx->Row - GRIDHEADERROWCOUNT];
 				int tblRely = colCur.RelyTblID;
 				if(tblRely >= 0 && colCur.RelyColID >= 0)
 				{
-					strRet = ModulePtr->Tables()[tblRely]->GetSchema()[colCur.RelyColID].Name;
+					strRet = ModulePtr->Tables()[tblRely]->GetSchema()[relyColID].Name;
 				}
 			}
+			TTRACE(TEXT("CRelyColFormater::Format : %s - %s\n"),val.c_str(), strRet.c_str());
 			return strRet;
 		}
 

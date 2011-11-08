@@ -1,5 +1,7 @@
 #pragma once
-enum EnumLocalPlayerTables{
+
+enum EnumLocalPlayerTables
+{
 	TBL_FileInfo,
 	TBL_Parser,
 	TBL_PlayerKernel,
@@ -37,24 +39,28 @@ enum EnumFileInfoColumns
 	COL_FileInfo_FileVer,
 	COL_FileInfo_FileMd5,
 };
+
 enum EnumParserColumns
 {
 	COL_Parser_ParserId,
 	COL_Parser_ParserName,
 	COL_Parser_ParseDesc,
 };
+
 enum EnumPlayerKernelColumns
 {
 	COL_PlayerKernel_KernelType,
 	COL_PlayerKernel_KernelName,
 	COL_PlayerKernel_Desc,
 };
+
 enum EnumGuidInfoColumns
 {
 	COL_GuidInfo_Guid,
 	COL_GuidInfo_GuidName,
 	COL_GuidInfo_Code,
 };
+
 enum EnumStreamColumns
 {
 	COL_Stream_StreamId,
@@ -63,22 +69,26 @@ enum EnumStreamColumns
 	COL_Stream_StreamSubType,
 	COL_Stream_FormatType,
 };
+
 enum EnumCodecPinColumns
 {
 	COL_CodecPin_CodecClsid,
 	COL_CodecPin_StreamId,
 	COL_CodecPin_PinType,
 };
+
 enum EnumFilterTypeColumns
 {
 	COL_FilterType_FilterType,
 	COL_FilterType_CodecTypeName,
 };
+
 enum EnumCodecTypeColumns
 {
 	COL_CodecType_CodecType,
 	COL_CodecType_CodecTypeName,
 };
+
 enum EnumLinksColumns
 {
 	COL_Links_LinkId,
@@ -86,6 +96,7 @@ enum EnumLinksColumns
 	COL_Links_Preconnected,
 	COL_Links_Merit,
 };
+
 enum EnumPackageLuaColumns
 {
 	COL_PackageLua_PckId,
@@ -94,6 +105,7 @@ enum EnumPackageLuaColumns
 	COL_PackageLua_LuaCheck,
 	COL_PackageLua_LuaUninstall,
 };
+
 enum EnumLinkLinkColumns
 {
 	COL_LinkLink_LinkId,
@@ -101,6 +113,7 @@ enum EnumLinkLinkColumns
 	COL_LinkLink_NextLinkId,
 	COL_LinkLink_RuleId,
 };
+
 enum EnumParserConditionColumns
 {
 	COL_ParserCondition_ConditionId,
@@ -109,6 +122,7 @@ enum EnumParserConditionColumns
 	COL_ParserCondition_Value,
 	COL_ParserCondition_Priority,
 };
+
 enum EnumLinkRulesColumns
 {
 	COL_LinkRules_LinkId,
@@ -116,6 +130,7 @@ enum EnumLinkRulesColumns
 	COL_LinkRules_Validation,
 	COL_LinkRules_Priority,
 };
+
 enum EnumRulesColumns
 {
 	COL_Rules_RuleId,
@@ -123,11 +138,13 @@ enum EnumRulesColumns
 	COL_Rules_Validation,
 	COL_Rules_Priority,
 };
+
 enum EnumPackageDependsColumns
 {
 	COL_PackageDepends_PckId,
 	COL_PackageDepends_DependsPckId,
 };
+
 enum EnumCheckBytesColumns
 {
 	COL_CheckBytes_MediaTypeId,
@@ -138,6 +155,7 @@ enum EnumCheckBytesColumns
 	COL_CheckBytes_IsIgnoreFirst,
 	COL_CheckBytes_IgnoreChar,
 };
+
 enum EnumLinkInfoColumns
 {
 	COL_LinkInfo_LinkId,
@@ -145,6 +163,7 @@ enum EnumLinkInfoColumns
 	COL_LinkInfo_LinkPosition,
 	COL_LinkInfo_StreamId,
 };
+
 enum EnumParserResultColumns
 {
 	COL_ParserResult_ParserId,
@@ -153,6 +172,7 @@ enum EnumParserResultColumns
 	COL_ParserResult_Value,
 	COL_ParserResult_Desc,
 };
+
 enum EnumSourceLinkColumns
 {
 	COL_SourceLink_PreStepId,
@@ -163,16 +183,19 @@ enum EnumSourceLinkColumns
 	COL_SourceLink_Param,
 	COL_SourceLink_ConfigId,
 };
+
 enum EnumMediaExtensionColumns
 {
 	COL_MediaExtension_MediaTypeId,
 	COL_MediaExtension_FileExtension,
 };
+
 enum EnumMediaTypeColumns
 {
 	COL_MediaType_MediaTypeId,
 	COL_MediaType_MediaTypeName,
 };
+
 enum EnumSourceConfigColumns
 {
 	COL_SourceConfig_ConfigId,
@@ -180,12 +203,14 @@ enum EnumSourceConfigColumns
 	COL_SourceConfig_LinkId,
 	COL_SourceConfig_Priority,
 };
+
 enum EnumLinkInputColumns
 {
 	COL_LinkInput_LinkId,
 	COL_LinkInput_StreamId,
 	COL_LinkInput_Priority,
 };
+
 enum EnumCodecsColumns
 {
 	COL_Codecs_PckId,
@@ -196,14 +221,17 @@ enum EnumCodecsColumns
 	COL_Codecs_CodecType,
 	COL_Codecs_ReleaseTime,
 };
+
 enum EnumPackageIndexColumns
 {
 	COL_PackageIndex_PckId,
 	COL_PackageIndex_FileId,
 };
+
 enum EnumPackageInfoColumns
 {
 	COL_PackageInfo_PckId,
 	COL_PackageInfo_PckName,
 	COL_PackageInfo_Url,
 };
+

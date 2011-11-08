@@ -24,14 +24,14 @@ namespace NSDBModule
 
 		template<typename iter_t>
 		CTextConverter4DBMap(const iter_t& begin, const iter_t& end, int fieldView, int fieldValue)
-			: m_FieldView(fieldView), m_FieldValue(fieldValue)
+			: m_SourceOwned(true), m_FieldView(fieldView), m_FieldValue(fieldValue)
 		{
-			m_SourceOwned	= true;
 			m_Source		= new_iterator_enumerator_ex<IDBRecord>(begin, end);
 			ASSERT(m_FieldView >= 0 && m_FieldValue >= 0 && m_Source);
 		}
 
 		CTextConverter4DBMap(const CTextConverter4DBMap& other)
+			: m_SourceOwned(0), m_Source(0)
 		{
 			operator=(other);	
 		}
