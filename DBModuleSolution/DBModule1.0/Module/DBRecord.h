@@ -46,10 +46,21 @@ public:
 		}
 	}
 
-	CDBRecordBase& operator=(const CDBRecordBase& other)
+	virtual CDBRecordBase& operator=(const CDBRecordBase& other)
 	{
 		this->Fields_.swap(std::vector<tstring>(other.Fields_));
 		FieldCount_ = other.FieldCount_;
+		return *this;
+	}
+
+	virtual CDBRecordBase& operator=(const IDBRecord& other)
+	{
+		this->FieldCount_ = other.GetFieldCount();
+		this->Fields_.resize(FieldCount_);
+		for (int i = 0; i < GetFieldCount(); ++i)
+		{
+			this->Fields_[i] = other.GetField(i);
+		}
 		return *this;
 	}
 
@@ -73,17 +84,17 @@ public:
 		: CDBRecordBase(other)
 	{}
 
-	CDBRecordAuto& operator=(const CDBRecordAuto& other)
-	{
-		CDBRecordBase::operator=(other);
-		return *this;
-	}
+	//CDBRecordAuto& operator=(const IDBRecord& other)
+	//{
+	//	CDBRecordBase::operator=(other);
+	//	return *this;
+	//}
 
-	CDBRecordAuto& operator=(const CDBRecordBase& other)
-	{
-		CDBRecordBase::operator=(other);
-		return *this;
-	}
+	//CDBRecordAuto& operator=(const CDBRecordBase& other)
+	//{
+	//	CDBRecordBase::operator=(other);
+	//	return *this;
+	//}
 
 	virtual index_t GetFieldCount() const { return FieldCount_; }
 

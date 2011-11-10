@@ -78,9 +78,10 @@ namespace NSDBModule
 		virtual tstring Parse(const tstring& text, IContext* ctx)
 		{
 			m_Source->Reset();
-			CDBRecordAuto rec;
-			while(m_Source->MoveNext(rec))
+			CDBRecordBase rec;
+			while(m_Source->MoveNext())
 			{
+				rec = m_Source->Current();
 				if(rec.GetField(m_FieldView) == text)
 				{
 					return rec.GetField(m_FieldValue);
@@ -93,13 +94,14 @@ namespace NSDBModule
 		{
 			//TTRACE(TEXT("DBMap : %s -> "), val.c_str());
 			m_Source->Reset();
-			CDBRecordAuto rec;
-			while(m_Source->MoveNext(rec))
+			CDBRecordBase rec;
+			while(m_Source->MoveNext())
 			{
-				TTRACE(TEXT("DBMap Enum : %s  Target : %s\r\n"), rec.GetField(m_FieldValue).c_str(), val.c_str());
+				rec = m_Source->Current();
+				//TTRACE(TEXT("DBMap Enum : %s  Target : %s\r\n"), rec.GetField(m_FieldValue).c_str(), val.c_str());
 				if(rec.GetField(m_FieldValue) == val)
 				{
-					TTRACE(TEXT("DBMap Format Result : %s\r\n"), rec.GetField(m_FieldView).c_str());
+					//TTRACE(TEXT("DBMap Format Result : %s\r\n"), rec.GetField(m_FieldView).c_str());
 					return rec.GetField(m_FieldView);
 				}
 			}

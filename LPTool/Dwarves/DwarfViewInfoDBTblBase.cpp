@@ -40,11 +40,13 @@ CDwarfViewInfoDBTblBase::~CDwarfViewInfoDBTblBase(void)
 
 int CDwarfViewInfoDBTblBase::Initialize()
 {
+	if(Initialized()) return 1;
+
 	InitializeViewColumns();
 	InitializeOperations();
 	InitializeReleatedViews();	
 
-	return 1;
+	return __super::Initialize();
 }
 
 int CDwarfViewInfoDBTblBase::InitializeReleatedViews()

@@ -55,10 +55,12 @@ public:
 	typedef std::vector<IDwarfViewInfo*>	RelatedViewCollection;
 
 	CDwarfViewInfoBase(int id)
-		: ViewID(id)
+		: ViewID(id), InitializeFlag(false)
 	{}
 
 	virtual int										GetViewID() { return ViewID; };
+
+	virtual int										Initialize() { InitializeFlag = true; return 1; }
 
 	virtual CDBTableViewColumnCollection&			GetViewColumnCollection() { return ViewColumns; }
 
@@ -70,10 +72,13 @@ public:
 	virtual IEnumerator<DwarfViewOperationItem>*	EnumOperation() { return new_iterator_enumerator(Operations.Items.begin(), Operations.Items.end()); }
 	virtual void									ExecuteOperation(index_t id, DwarfViewOperationContext* pCtx);
 
+	virtual bool									Initialized() const { return InitializeFlag; }
+
 protected:
 	CDwarfViewOperationCollection	Operations;			// 视图操作集合
 	RelatedViewCollection			ReleatedViews;		// 关联视图集合
 	CDBTableViewColumnCollection	ViewColumns;		// 视图中的列集
 	DBColumnViewInfoCollection		ColumnViewInfos;	// 列的展示信息的集合
 	int								ViewID;				// 视图的ID
+	bool							InitializeFlag;
 };
