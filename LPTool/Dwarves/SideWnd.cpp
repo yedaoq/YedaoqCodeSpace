@@ -1,9 +1,11 @@
 
 #include "stdafx.h"
 
-#include "OutputWnd.h"
+#include "SideWnd.h"
 #include "Resource.h"
 #include "MainFrm.h"
+#include "SideTab.h"
+#include "DwarfViewInfo.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -12,22 +14,24 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// COutputBar
+// CSideBar
 
-COutputWnd::COutputWnd()
+CSideWnd::CSideWnd()
+	: m_MainViewID(CDwarfViewProvider::InvalidViewID)
 {
 }
 
-COutputWnd::~COutputWnd()
+CSideWnd::~CSideWnd()
 {
 }
 
-BEGIN_MESSAGE_MAP(COutputWnd, CDockablePane)
+BEGIN_MESSAGE_MAP(CSideWnd, CDockablePane)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
+	ON_REGISTERED_MESSAGE(AFX_WM_CHANGE_ACTIVE_TAB, &CSideWnd::OnTabActivate)
 END_MESSAGE_MAP()
 
-int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int CSideWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
@@ -73,15 +77,10 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	ASSERT(bNameValid);
 	m_wndTabs.AddTab(&m_wndOutputFind, strTabName, (UINT)2);
 
-	// 使用一些虚拟文本填写输出选项卡(无需复杂数据)
-	FillBuildWindow();
-	FillDebugWindow();
-	FillFindWindow();
-
 	return 0;
 }
 
-void COutputWnd::OnSize(UINT nType, int cx, int cy)
+void CSideWnd::OnSize(UINT nType, int cx, int cy)
 {
 	CDockablePane::OnSize(nType, cx, cy);
 
@@ -89,7 +88,24 @@ void COutputWnd::OnSize(UINT nType, int cx, int cy)
 	m_wndTabs.SetWindowPos (NULL, -1, -1, cx, cy, SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
-void COutputWnd::AdjustHorzScroll(CListBox& wndListBox)
+LRESULT CSideWnd::OnTabActivate(WPARAM wParam, LPARAM lParam)
+{
+	int idTabActive = m_wndTabs.GetActiveTab();
+	ASSERT(idTabActive == (int)wParam);
+
+	CWnd* pWndActive = m_wndTabs.GetActiveWnd();
+	if(!pWndActive) return 0;
+
+	ISideTab* pSideTab = static_cast<ISideTab*>(pWndActive);
+	
+	if(pSideTab->GetValidityCounter() != m_ValidityCounter && m_MainViewID != CDwarfViewProvider::InvalidViewID)
+	{
+		pSideTab->ContentUpdate(m_MainViewID, &m_Context);
+		pSideTab->SetValidityCounter(m_ValidityCounter);
+	}
+}
+
+void CSideWnd::AdjustHorzScroll(CListBox& wndListBox)
 {
 	CClientDC dc(this);
 	CFont* pOldFont = dc.SelectObject(&m_Font);
@@ -108,25 +124,49 @@ void COutputWnd::AdjustHorzScroll(CListBox& wndListBox)
 	dc.SelectObject(pOldFont);
 }
 
-void COutputWnd::FillBuildWindow()
+void CSideWnd::IncreaseValidityCounter()
 {
-	m_wndOutputBuild.AddString(_T("生成输出正显示在此处。"));
-	m_wndOutputBuild.AddString(_T("输出正显示在列表视图的行中"));
-	m_wndOutputBuild.AddString(_T("但您可以根据需要更改其显示方式..."));
+	++m_ValidityCounter;
 }
 
-void COutputWnd::FillDebugWindow()
+void CSideWnd::ShowRelatedTabsForView(IDwarfViewInfo* pViewInfo)
 {
-	m_wndOutputDebug.AddString(_T("调试输出正显示在此处。"));
-	m_wndOutputDebug.AddString(_T("输出正显示在列表视图的行中"));
-	m_wndOutputDebug.AddString(_T("但您可以根据需要更改其显示方式..."));
+	ClearTabs();
+
+	if(!pViewInfo) return;
+
+	std::auto_ptr<IEnumerator<IDwarfViewInfo*>> pEnumView(pViewInfo->EnumReleatedView());
+
+	if(pEnumView) return;
+
+	while(pEnumView->MoveNext())
+	{
+		
+	}
 }
 
-void COutputWnd::FillFindWindow()
+void CSideWnd::ClearTabs()
 {
-	m_wndOutputFind.AddString(_T("查找输出正显示在此处。"));
-	m_wndOutputFind.AddString(_T("输出正显示在列表视图的行中"));
-	m_wndOutputFind.AddString(_T("但您可以根据需要更改其显示方式..."));
+	m_wndTabs.RemoveAllTabs();
+}
+
+void CSideWnd::OnMainViewActivated(int mainView)
+{
+	m_MainViewID = mainView;
+}
+
+void CSideWnd::OnMainViewContextChanged(const DwarfViewOperationContext* pCtx)
+{
+	if(pCtx)
+	{
+		m_Context = *pCtx;
+		OnTabActivate(0, 0);
+	}
+}
+
+CDwarfSideTab* CSideWnd::GetDwarfSideTab(int view)
+{
+
 }
 
 /////////////////////////////////////////////////////////////////////////////

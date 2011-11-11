@@ -48,15 +48,15 @@ ChildFrm.h, ChildFrm.cpp
 
 应用程序向导创建一个文档类型和一个视图:
 
-PackageDoc.h，PackageDoc.cpp - 文档
-    这些文件包含 CPackageDoc 类。编辑这些文件可以添加特殊文档数据并可实现文件保存和加载(通过 CPackageDoc::Serialize)。
+DwarfDoc.h，DwarfDoc.cpp - 文档
+    这些文件包含 CDwarfDoc 类。编辑这些文件可以添加特殊文档数据并可实现文件保存和加载(通过 CDwarfDoc::Serialize)。
 
-PackageView.h，PackageView.cpp - 文档的视图
-    这些文件包含 CPackageView 类。
-    CPackageView 对象用于查看 CPackageDoc 对象。
+DwarfView.h，DwarfView.cpp - 文档的视图
+    这些文件包含 CDwarfView 类。
+    CDwarfView 对象用于查看 CDwarfDoc 对象。
 
 res\DwarvesDoc.ico
-    这是图标文件，它用作 CPackageDoc 类的 MDI 子窗口的图标。此图标包括在主要资源文件 Dwarves.rc 中。
+    这是图标文件，它用作 CDwarfDoc 类的 MDI 子窗口的图标。此图标包括在主要资源文件 Dwarves.rc 中。
 
 
 

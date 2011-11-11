@@ -1,5 +1,5 @@
 
-// PackageDoc.h : CPackageDoc 类的接口
+// DwarfDoc.h : CDwarfDoc 类的接口
 //
 
 
@@ -7,14 +7,14 @@
 #include <Module\DBModule.h>
 
 
-class CPackageDoc : public CDocument
+class CDwarfDoc : public CDocument
 {
 public:
-	CPackageDoc();
+	CDwarfDoc();
 
 protected: // 仅从序列化创建
 	
-	DECLARE_DYNCREATE(CPackageDoc)
+	DECLARE_DYNCREATE(CDwarfDoc)
 
 // 属性
 public:
@@ -43,7 +43,7 @@ public:
 
 // 实现
 public:
-	virtual ~CPackageDoc();
+	virtual ~CDwarfDoc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;

@@ -9,7 +9,7 @@
 #include <Helper.h>
 #include "CommandIDAlloter.h"
 //#include <afxcoll.h>
-#include "PackageView.h"
+#include "DwarfView.h"
 #include <algorithm>
 #include "DwarfViewInfo.h"
 #include <Enumerator.h>
@@ -271,11 +271,11 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // 未能创建
 	}
 
-	// 创建输出窗口
-	CString strOutputWnd;
-	bNameValid = strOutputWnd.LoadString(IDS_OUTPUT_WND);
+	// 创建附属窗口
+	CString strSideWnd;
+	bNameValid = strSideWnd.LoadString(IDS_OUTPUT_WND);
 	ASSERT(bNameValid);
-	if (!m_wndOutput.Create(strOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+	if (!m_wndOutput.Create(strSideWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("未能创建输出窗口\n");
 		return FALSE; // 未能创建

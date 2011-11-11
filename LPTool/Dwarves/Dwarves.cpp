@@ -7,8 +7,8 @@
 #include "Dwarves.h"
 #include "MainFrm.h"
 #include "ChildFrm.h"
-#include "PackageDoc.h"
-#include "PackageView.h"
+#include "DwarfDoc.h"
+#include "DwarfView.h"
 #include "DBInterface\DBSourcePath.h"
 #include "DBInterface\DBDataAdapter.h"
 #include "DBNameMappingLP.h"
@@ -103,9 +103,9 @@ BOOL CDwarvesApp::InitInstance()
 	// 将用作文档、框架窗口和视图之间的连接
 	CMultiDocTemplate* pDocTemplate;
 	pDocTemplate = new CMultiDocTemplate(IDR_DwarvesTYPE,
-		RUNTIME_CLASS(CPackageDoc),
+		RUNTIME_CLASS(CDwarfDoc),
 		RUNTIME_CLASS(CChildFrame), // 自定义 MDI 子框架
-		RUNTIME_CLASS(CPackageView));
+		RUNTIME_CLASS(CDwarfView));
 	if (!pDocTemplate)
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
@@ -225,7 +225,7 @@ void CDwarvesApp::OnViewOpen(UINT id)
 
 	pTemplate->InitialUpdateFrame(pFrame, &m_Doc);
 
-	CPackageView* view = (CPackageView*)pFrame->GetActiveView();
+	CDwarfView* view = (CDwarfView*)pFrame->GetActiveView();
 	if(view)
 	{
 		TTRACE(TEXT("GetActiveView Successed~\r\n"));

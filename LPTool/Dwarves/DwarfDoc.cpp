@@ -1,39 +1,39 @@
 
-// PackageDoc.cpp : CPackageDoc 类的实现
+// DwarfDoc.cpp : CDwarfDoc 类的实现
 //
 
 #include "stdafx.h"
 #include "Dwarves.h"
 
-#include "PackageDoc.h"
+#include "DwarfDoc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-// CPackageDoc
+// CDwarfDoc
 
-IMPLEMENT_DYNCREATE(CPackageDoc, CDocument)
+IMPLEMENT_DYNCREATE(CDwarfDoc, CDocument)
 
-BEGIN_MESSAGE_MAP(CPackageDoc, CDocument)
+BEGIN_MESSAGE_MAP(CDwarfDoc, CDocument)
 END_MESSAGE_MAP()
 
 
-// CPackageDoc 构造/析构
+// CDwarfDoc 构造/析构
 
-CPackageDoc::CPackageDoc()
+CDwarfDoc::CDwarfDoc()
 	: DBModule(0)
 {
 	// TODO: 在此添加一次性构造代码
 
 }
 
-CPackageDoc::~CPackageDoc()
+CDwarfDoc::~CDwarfDoc()
 {
 }
 
-BOOL CPackageDoc::OnNewDocument()
+BOOL CDwarfDoc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
 		return FALSE;
@@ -44,9 +44,9 @@ BOOL CPackageDoc::OnNewDocument()
 	return TRUE;
 }
 
-// CPackageDoc 序列化
+// CDwarfDoc 序列化
 
-void CPackageDoc::Serialize(CArchive& ar)
+void CDwarfDoc::Serialize(CArchive& ar)
 {
 	if (ar.IsStoring())
 	{
@@ -59,19 +59,19 @@ void CPackageDoc::Serialize(CArchive& ar)
 }
 
 
-// CPackageDoc 诊断
+// CDwarfDoc 诊断
 
 #ifdef _DEBUG
-void CPackageDoc::AssertValid() const
+void CDwarfDoc::AssertValid() const
 {
 	CDocument::AssertValid();
 }
 
-void CPackageDoc::Dump(CDumpContext& dc) const
+void CDwarfDoc::Dump(CDumpContext& dc) const
 {
 	CDocument::Dump(dc);
 }
 #endif //_DEBUG
 
 
-// CPackageDoc 命令
+// CDwarfDoc 命令

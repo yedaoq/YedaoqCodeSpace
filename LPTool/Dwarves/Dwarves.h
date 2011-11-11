@@ -8,7 +8,7 @@
 #endif
 
 #include "resource.h"       // Ö÷·ûºÅ
-#include "PackageDoc.h"
+#include "DwarfDoc.h"
 
 
 // CDwarvesApp:
@@ -29,7 +29,7 @@ public:
 	UINT  m_nAppLook;
 	BOOL  m_bHiColorIcons;
 
-	CPackageDoc	m_Doc;
+	CDwarfDoc	m_Doc;
 
 	virtual void PreLoadState();
 	virtual void LoadCustomState();

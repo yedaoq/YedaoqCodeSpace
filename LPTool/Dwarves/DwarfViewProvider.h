@@ -11,6 +11,8 @@ class CDwarfViewProvider : public CSingleton<CDwarfViewProvider>
 public:
 	typedef std::map<int, IDwarfViewInfo*> ViewMap;
 
+	static const int InvalidViewID = -1;
+
 	struct MapItem2DwarfViewInfo
 	{
 		IDwarfViewInfo*& operator()(ViewMap::iterator iter){	return iter->second; }

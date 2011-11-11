@@ -1,26 +1,26 @@
 
-// PackageView.h : CPackageView 类的接口
+// DwarfView.h : CDwarfView 类的接口
 //
 
 
 #pragma once
-#include "PackageDoc.h"
+#include "DwarfDoc.h"
 #include <Layout\FlowLayout.h>
 #include <GridCtrl.h>
 #include "DBTableViewer4GridCtrl.h"
 
-class CPackageView : public CView
+class CDwarfView : public CView
 {
 public:
 	typedef std::vector<CButton*> OpBtnCollection;
 
 protected: // 仅从序列化创建
-	CPackageView();
-	DECLARE_DYNCREATE(CPackageView)
+	CDwarfView();
+	DECLARE_DYNCREATE(CDwarfView)
 
 // 属性
 public:
-	CPackageDoc* GetDocument() const;
+	CDwarfDoc* GetDocument() const;
 
 // 操作
 public:
@@ -49,7 +49,7 @@ protected:
 
 // 实现
 public:
-	virtual ~CPackageView();
+	virtual ~CDwarfView();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
@@ -79,8 +79,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-#ifndef _DEBUG  // PackageView.cpp 中的调试版本
-inline CPackageDoc* CPackageView::GetDocument() const
-   { return reinterpret_cast<CPackageDoc*>(m_pDocument); }
+#ifndef _DEBUG  // DwarfView.cpp 中的调试版本
+inline CDwarfDoc* CDwarfView::GetDocument() const
+   { return reinterpret_cast<CDwarfDoc*>(m_pDocument); }
 #endif
 

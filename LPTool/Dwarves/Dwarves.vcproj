@@ -199,11 +199,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DwarfViewInfoBase.cpp"
+				RelativePath=".\DwarfDoc.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\DwarfViewInfoDBTblBase.cpp"
+				RelativePath=".\DwarfSideTab.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfView.cpp"
 				>
 			</File>
 			<File
@@ -215,27 +219,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Include\Helper.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\MainFrm.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\OutputWnd.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\PackageDoc.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\PackageView.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\PropertiesWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SideWnd.cpp"
 				>
 			</File>
 			<File
@@ -277,39 +269,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CommandIDAlloter.h"
+				RelativePath=".\DwarfDoc.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DBEnumeratorProvider.h"
+				RelativePath=".\DwarfSideTab.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DBMapFormatProvider.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DBOptionalEditStyleProvider.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DwarfViewInfo.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DwarfViewInfoBase.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DwarfViewInfoDBTable.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DwarfViewInfoDBTblBase.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DwarfViewProvider.h"
+				RelativePath=".\DwarfView.h"
 				>
 			</File>
 			<File
@@ -321,23 +289,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Include\Helper.h"
-				>
-			</File>
-			<File
 				RelativePath=".\MainFrm.h"
-				>
-			</File>
-			<File
-				RelativePath=".\OutputWnd.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PackageDoc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PackageView.h"
 				>
 			</File>
 			<File
@@ -346,6 +298,10 @@
 			</File>
 			<File
 				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SideWnd.h"
 				>
 			</File>
 			<File
@@ -472,6 +428,70 @@
 			</File>
 			<File
 				RelativePath=".\UserImages.bmp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="DwarfViewInfo"
+			>
+			<File
+				RelativePath=".\DwarfViewInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfViewInfoBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfViewInfoBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfViewInfoDBTable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfViewInfoDBTblBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfViewInfoDBTblBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfViewProvider.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SideTab.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Utils"
+			>
+			<File
+				RelativePath=".\CommandIDAlloter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBEnumeratorProvider.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBMapFormatProvider.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBOptionalEditStyleProvider.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\Helper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\Helper.h"
 				>
 			</File>
 		</Filter>

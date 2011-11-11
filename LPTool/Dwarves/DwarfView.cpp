@@ -1,11 +1,11 @@
 
-// PackageView.cpp : CPackageView 类的实现
+// DwarfView.cpp : CDwarfView 类的实现
 //
 
 #include "stdafx.h"
 #include "Dwarves.h"
-#include "PackageDoc.h"
-#include "PackageView.h"
+#include "DwarfDoc.h"
+#include "DwarfView.h"
 #include "CommandIDAlloter.h"
 #include "ChildFrm.h"
 #include <memory>
@@ -18,34 +18,34 @@
 
 using namespace NSYedaoqLayout;
 
-// CPackageView
+// CDwarfView
 
-IMPLEMENT_DYNCREATE(CPackageView, CView)
+IMPLEMENT_DYNCREATE(CDwarfView, CView)
 
-BEGIN_MESSAGE_MAP(CPackageView, CView)
+BEGIN_MESSAGE_MAP(CDwarfView, CView)
 	// 标准打印命令
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CPackageView::OnFilePrintPreview)
+	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CDwarfView::OnFilePrintPreview)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
-	ON_CONTROL_RANGE(BN_CLICKED, MinViewOpID, MaxViewOpID, &CPackageView::OnViewOperation)
+	ON_CONTROL_RANGE(BN_CLICKED, MinViewOpID, MaxViewOpID, &CDwarfView::OnViewOperation)
 END_MESSAGE_MAP()
 
-// CPackageView 构造/析构
+// CDwarfView 构造/析构
 
-CPackageView::CPackageView()
+CDwarfView::CDwarfView()
 	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1)
 {
 	// TODO: 在此处添加构造代码
 	
 }
 
-CPackageView::~CPackageView()
+CDwarfView::~CDwarfView()
 {
 }
 
-BOOL CPackageView::PreCreateWindow(CREATESTRUCT& cs)
+BOOL CDwarfView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: 在此处通过修改
 	//  CREATESTRUCT cs 来修改窗口类或样式
@@ -53,11 +53,11 @@ BOOL CPackageView::PreCreateWindow(CREATESTRUCT& cs)
 	return CView::PreCreateWindow(cs);
 }
 
-// CPackageView 绘制
+// CDwarfView 绘制
 
-void CPackageView::OnDraw(CDC* /*pDC*/)
+void CDwarfView::OnDraw(CDC* /*pDC*/)
 {
-	CPackageDoc* pDoc = GetDocument();
+	CDwarfDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
@@ -65,7 +65,7 @@ void CPackageView::OnDraw(CDC* /*pDC*/)
 	// TODO: 在此处为本机数据添加绘制代码
 }
 
-int CPackageView::OnCreate(LPCREATESTRUCT lpcs)
+int CDwarfView::OnCreate(LPCREATESTRUCT lpcs)
 {
 	if (CView::OnCreate(lpcs) == -1)
 		return -1;
@@ -83,84 +83,84 @@ int CPackageView::OnCreate(LPCREATESTRUCT lpcs)
 	return 0;
 }
 
-void CPackageView::OnSize(UINT nType, int cx, int cy)
+void CDwarfView::OnSize(UINT nType, int cx, int cy)
 {
 	FlowLayoutMain.Layout(LayoutPoint(3,3), LayoutSize(cx - 6, cy - 6));
 }
 
-//void CPackageView::OnInitialUpdate()
+//void CDwarfView::OnInitialUpdate()
 //{
 //	__super::OnInitialUpdate();
 //	ResetTitle();
 //}
 
-void CPackageView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
+void CDwarfView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
 	__super::OnUpdate(pSender, lHint, pHint);
 }
 
-// CPackageView 打印
+// CDwarfView 打印
 
 
-void CPackageView::OnFilePrintPreview()
+void CDwarfView::OnFilePrintPreview()
 {
 	AFXPrintPreview(this);
 }
 
-BOOL CPackageView::OnPreparePrinting(CPrintInfo* pInfo)
+BOOL CDwarfView::OnPreparePrinting(CPrintInfo* pInfo)
 {
 	// 默认准备
 	return DoPreparePrinting(pInfo);
 }
 
-void CPackageView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
+void CDwarfView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
 	// TODO: 添加额外的打印前进行的初始化过程
 }
 
-void CPackageView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
+void CDwarfView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
 	// TODO: 添加打印后进行的清理过程
 }
 
-void CPackageView::OnRButtonUp(UINT nFlags, CPoint point)
+void CDwarfView::OnRButtonUp(UINT nFlags, CPoint point)
 {
 	ClientToScreen(&point);
 	OnContextMenu(this, point);
 }
 
-void CPackageView::OnContextMenu(CWnd* pWnd, CPoint point)
+void CDwarfView::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
 }
 
-void CPackageView::OnViewOperation(UINT id)
+void CDwarfView::OnViewOperation(UINT id)
 {
 	int opID = id - MinViewOpID;
 	
 }
 
-// CPackageView 诊断
+// CDwarfView 诊断
 
 #ifdef _DEBUG
-void CPackageView::AssertValid() const
+void CDwarfView::AssertValid() const
 {
 	CView::AssertValid();
 }
 
-void CPackageView::Dump(CDumpContext& dc) const
+void CDwarfView::Dump(CDumpContext& dc) const
 {
 	CView::Dump(dc);
 }
 
-CPackageDoc* CPackageView::GetDocument() const // 非调试版本是内联的
+CDwarfDoc* CDwarfView::GetDocument() const // 非调试版本是内联的
 {
-	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CPackageDoc)));
-	return (CPackageDoc*)m_pDocument;
+	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CDwarfDoc)));
+	return (CDwarfDoc*)m_pDocument;
 }
 #endif //_DEBUG
 
-void CPackageView::SetViewID(int id)
+void CDwarfView::SetViewID(int id)
 { 
 	if(id < 0)
 	{
@@ -175,7 +175,7 @@ void CPackageView::SetViewID(int id)
 	ShowRecords();
 }
 
-void CPackageView::ResetTitle()
+void CDwarfView::ResetTitle()
 {
 	CChildFrame* pChildFrm = (CChildFrame*)GetParent();
 
@@ -189,7 +189,7 @@ void CPackageView::ResetTitle()
 	}
 }
 
-int CPackageView::Initialize()
+int CDwarfView::Initialize()
 {	
 	IDwarfViewInfo* pView = CDwarfViewProvider::GetInstance()[ViewID];
 
@@ -233,7 +233,7 @@ int CPackageView::Initialize()
 	return 0;
 }
 
-int CPackageView::ShowRecords()
+int CDwarfView::ShowRecords()
 {
 	IDwarfViewInfo* pView = CDwarfViewProvider::GetInstance()[ViewID];
 
@@ -250,9 +250,9 @@ int CPackageView::ShowRecords()
 }
 
 
-// CPackageView 消息处理程序
+// CDwarfView 消息处理程序
 
-void CPackageView::CreateButton(CButton& btn, UINT id, CWnd* pParent, LPCTSTR lpTitle, UINT width, UINT height, DWORD dwStyle, CFont* pFont)
+void CDwarfView::CreateButton(CButton& btn, UINT id, CWnd* pParent, LPCTSTR lpTitle, UINT width, UINT height, DWORD dwStyle, CFont* pFont)
 {
 	static CFont* pDefaultFont = 0;
 

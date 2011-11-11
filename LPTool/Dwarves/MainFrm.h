@@ -5,7 +5,7 @@
 #pragma once
 #include "FileView.h"
 #include "ClassView.h"
-#include "OutputWnd.h"
+#include "SideWnd.h"
 #include "PropertiesWnd.h"
 
 class CMainFrame : public CMDIFrameWndEx
@@ -43,7 +43,7 @@ protected:  // 控件条嵌入成员
 	CMFCToolBarImages m_UserImages;
 	CFileView         m_wndFileView;
 	CClassView        m_wndClassView;
-	COutputWnd        m_wndOutput;
+	CSideWnd        m_wndOutput;
 	CPropertiesWnd    m_wndProperties;
 
 	std::vector<HMENU> m_wndMenuWithViews;
