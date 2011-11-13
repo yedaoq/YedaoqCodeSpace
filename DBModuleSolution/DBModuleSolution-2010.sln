@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBModule1.0", "DBModule1.0\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBSchemaMaintainer", "DBSchemaMaintainer\DBSchemaMaintainer.vcxproj", "{20DC88E4-337F-4245-92EE-95E97732B20A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GridCtrl", "..\WinCtrlSolution\GridCtrl\GridCtrl.vcxproj", "{E024DD40-C04B-498F-8222-9DD2F5611113}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -24,6 +26,12 @@ Global
 		{20DC88E4-337F-4245-92EE-95E97732B20A}.Release|Win32.Build.0 = Release|Win32
 		{20DC88E4-337F-4245-92EE-95E97732B20A}.Template|Win32.ActiveCfg = Template|Win32
 		{20DC88E4-337F-4245-92EE-95E97732B20A}.Template|Win32.Build.0 = Template|Win32
+		{E024DD40-C04B-498F-8222-9DD2F5611113}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E024DD40-C04B-498F-8222-9DD2F5611113}.Debug|Win32.Build.0 = Debug|Win32
+		{E024DD40-C04B-498F-8222-9DD2F5611113}.Release|Win32.ActiveCfg = Release|Win32
+		{E024DD40-C04B-498F-8222-9DD2F5611113}.Release|Win32.Build.0 = Release|Win32
+		{E024DD40-C04B-498F-8222-9DD2F5611113}.Template|Win32.ActiveCfg = Release|Win32
+		{E024DD40-C04B-498F-8222-9DD2F5611113}.Template|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

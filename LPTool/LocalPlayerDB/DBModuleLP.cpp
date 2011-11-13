@@ -8,25 +8,29 @@
 #include "DBInterface/DBDataAdapter.h"
 #include "DBInterface/DBFactory.h"
 #include "Sqlite/SqliteSource.h"
-
+#include "mytype.h"
+#include <fstream>
+#include <iosfwd>
 
 using namespace NSDBModule;
+using namespace std;
 
 int	CDBModuleLP::InitializeBuildinSchema()
 {
 	CBuildInSchemaSerializer serializer; 
 	CBuildInSchemaSerializer::FileRowCollection rows;
+	static const int szBufSize = 1024;
+	tchar szBuf[szBufSize];
 
 	Clear(true);	
 
 	//read file
-	CStdioFile file(TEXT("LocalPlayer.dbschema"), CStdioFile::modeRead);
-	CString line;
-	while(file.ReadString(line))
+	tifstream file("LocalPlayer.dbschema");
+	while(file.getline(szBuf, szBufSize))
 	{
-		rows.push_back((LPCTSTR)line);
+		rows.push_back(szBuf);
 	}
-	file.Close();
+	file.close();
 
 	serializer.Read(make_iterator_enumerator(rows.begin(), rows.end()), *this);
 

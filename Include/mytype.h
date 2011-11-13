@@ -24,6 +24,7 @@
 	#define _tcscmp			wcscmp
 	#define tprintf_s		wprintf_s
 	#define vstprintf_s		vswprintf_s
+	#define tifstream		wifstream
 #else
 	#define tregex			boost::xpressive::sregex
 	#define tcregex			boost::xpressive::cregex
@@ -42,6 +43,7 @@
 	#define _tcscmp			strcmp
 	#define tprintf_s		sprintf_s
 	#define vstprintf_s		vsprintf_s
+	#define tifstream		ifstream
 #endif
 
 typedef unsigned int index_t;

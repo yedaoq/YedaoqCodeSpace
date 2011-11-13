@@ -69,29 +69,25 @@ IDBConnection* CSqliteSourceManager::PromptSelectDBSource(IDBConnection* pDefaul
 		fileName = pDefault->GetProperty(PathProperty);
 	}
 
-	if(IDOK != dlg.DoModal())
-	{
-		return 0;
-	}
-
-	POSITION Pos = dlg.GetStartPosition();
-	if (Pos == NULL)
-	{
-		return 0;
-	}
-	
-	fileName = dlg.GetNextPathName(Pos);
-
-	CFileDialogST dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ALLOWMULTISELECT, pszFilter);
+	CFileDialogST dlg(TRUE, NULL, fileName.c_str(), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, pszFilter);
 
 	//CFileDialog dlg(TRUE, NULL, fileName.c_str(), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, pszFilter);
 
-	if(dlg.DoModal() != IDOK)
+	if(IDOK != dlg.DoModal())
 	{
+		DWORD dwErr = GetLastError();
 		return 0;
 	}
 
-	CSqliteConnection* pConn = new CSqliteConnection((LPCTSTR)dlg.GetPathName());
+	/*POSITION Pos = dlg.GetStartPosition();
+	if (Pos == NULL)
+	{
+		return 0;
+	}*/
+
+	fileName = dlg.GetFileName();
+
+	CSqliteConnection* pConn = new CSqliteConnection(fileName.c_str());
 	return pConn;
 }
 
