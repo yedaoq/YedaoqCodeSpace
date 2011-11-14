@@ -1,6 +1,10 @@
 #include "StdAfx.h"
 #include "DwarfSideTab.h"
 #include "DwarfViewInfo.h"
+#include <Layout\Layout.h>
+#include "DwarfViewProvider.h"
+
+using namespace NSYedaoqLayout;
 
 CDwarfSideTab::CDwarfSideTab(void)
 	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1), View(0), ValidityCounter(-1)
@@ -18,7 +22,7 @@ END_MESSAGE_MAP()
 
 int CDwarfSideTab::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
+	if (CWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
 	RECT rect = {0, 0, 10, 10};
@@ -35,7 +39,7 @@ int CDwarfSideTab::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CDwarfSideTab::OnSize(UINT nType, int cx, int cy)
 {
-	CDockablePane::OnSize(nType, cx, cy);
+	//CDockablePane::OnSize(nType, cx, cy);
 
 	// 选项卡控件应覆盖整个工作区:
 	FlowLayoutMain.Layout(NSYedaoqLayout::LayoutPoint(0,0), NSYedaoqLayout::LayoutSize(cx, cy));
@@ -74,6 +78,7 @@ int CDwarfSideTab::GetValidityCounter()
 int CDwarfSideTab::SetValidityCounter(int val)
 {
 	ValidityCounter = val;
+	return 1;
 }
 
 int CDwarfSideTab::ContentUpdate(int mainViewID, DwarfViewOperationContext* pCtx)

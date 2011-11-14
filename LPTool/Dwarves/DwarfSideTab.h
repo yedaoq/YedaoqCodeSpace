@@ -1,7 +1,12 @@
 #pragma once
 #include "SideTab.h"
+#include <Layout\FlowLayout.h>
+#include <GridCtrl.h>
+#include <DBTableViewer4GridCtrl.h>
 
-class CDwarfSideTab : CWnd, ISideTab
+interface IDwarfViewInfo;
+
+class CDwarfSideTab : public CWnd, public ISideTab
 {
 public:
 	CDwarfSideTab(void);

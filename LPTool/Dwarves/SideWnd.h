@@ -1,7 +1,10 @@
 
 #pragma once
+#include <map>
+#include "DwarfViewInfo.h"
 
 interface IDwarfViewInfo;
+class	  CDwarfSideTab;
 
 class CSideWnd : public CDockablePane
 {
