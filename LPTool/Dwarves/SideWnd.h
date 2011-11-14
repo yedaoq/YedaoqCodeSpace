@@ -10,11 +10,11 @@ class CSideWnd : public CDockablePane
 {
 // ππ‘Ï
 public:
-	typedef std::map<int, CDwarfSideTab> DwarfSideTabMap;
+	typedef std::map<int, CDwarfSideTab*> DwarfSideTabMap;
 
 	CSideWnd();
 
-	void ShowRelatedTabsForView(IDwarfViewInfo* pViewInfo);
+	void ShowRelatedTabsForView(int viewID);
 	void ClearTabs();
 
 	CDwarfSideTab*				GetDwarfSideTab(int view);

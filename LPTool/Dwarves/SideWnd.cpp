@@ -131,19 +131,22 @@ void CSideWnd::IncreaseValidityCounter()
 	++m_ValidityCounter;
 }
 
-void CSideWnd::ShowRelatedTabsForView(IDwarfViewInfo* pViewInfo)
+void CSideWnd::ShowRelatedTabsForView(int viewID)
 {
 	ClearTabs();
 
-	if(!pViewInfo) return;
+	IDwarfViewInfo* pView = CDwarfViewProvider::GetInstance()[viewID];
 
-	std::auto_ptr<IEnumerator<IDwarfViewInfo*>> pEnumView(pViewInfo->EnumReleatedView());
+	if(!pView) return;
+
+	std::auto_ptr<IEnumerator<IDwarfViewInfo*>> pEnumView(pView->EnumReleatedView());
 
 	if(pEnumView.get()) return;
 
 	while(pEnumView->MoveNext())
 	{
-		
+		CDwarfSideTab* tab = GetDwarfSideTab(pEnumView->Current()->GetViewID());
+		m_wndTabs.AddTab(tab, pEnumView->Current()->ToString().c_str());
 	}
 }
 
@@ -168,8 +171,13 @@ void CSideWnd::OnMainViewContextChanged(const DwarfViewOperationContext* pCtx)
 
 CDwarfSideTab* CSideWnd::GetDwarfSideTab(int view)
 {
-
-	return 0;
+	DwarfSideTabMap::iterator iter = m_SideTabCache.find(view);
+	if(m_SideTabCache.end() == iter)
+	{
+		iter = m_SideTabCache.insert(std::make_pair(view, new CDwarfSideTab())).first;
+		iter->second->Initialize(this, CDwarfViewProvider::GetInstance()[view]);
+	}
+	return iter->second;
 }
 
 /////////////////////////////////////////////////////////////////////////////

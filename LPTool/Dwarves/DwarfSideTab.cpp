@@ -45,10 +45,13 @@ void CDwarfSideTab::OnSize(UINT nType, int cx, int cy)
 	FlowLayoutMain.Layout(NSYedaoqLayout::LayoutPoint(0,0), NSYedaoqLayout::LayoutSize(cx, cy));
 }
 
-int CDwarfSideTab::Initialize(IDwarfViewInfo* pView)
+int CDwarfSideTab::Initialize(CWnd* pParent, IDwarfViewInfo* pView)
 {
 	if(!pView) return -1;
 	View = pView;
+
+	RECT rect = {0,0,1,1};
+	CWnd::Create(NULL, TEXT("TAB"), LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE, rect, pParent, pView->GetViewID());
 
 	GridViewer.Initialize(pView->GetViewColumnCollection());
 

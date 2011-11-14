@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			CharacterSet="1"
 			>
 			<Tool
@@ -60,20 +60,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="sqlite3.lib DBModule1.0.lib"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;D:\YedaoqCodeSpace\Lib\$(ConfigurationName)&quot;"
-				ModuleDefinitionFile="LocalPlayerDB.def"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -83,9 +73,6 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

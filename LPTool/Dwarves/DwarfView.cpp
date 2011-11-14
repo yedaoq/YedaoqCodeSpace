@@ -11,6 +11,7 @@
 #include <memory>
 #include "DwarfViewInfo.h"
 #include "DwarfViewProvider.h"
+#include "SideWnd.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -27,6 +28,7 @@ BEGIN_MESSAGE_MAP(CDwarfView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CDwarfView::OnFilePrintPreview)
+	ON_WM_MDIACTIVATE()
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_CONTROL_RANGE(BN_CLICKED, MinViewOpID, MaxViewOpID, &CDwarfView::OnViewOperation)
@@ -138,6 +140,15 @@ void CDwarfView::OnViewOperation(UINT id)
 {
 	int opID = id - MinViewOpID;
 	
+}
+
+void CDwarfView::OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd)
+{
+	if(bActivate && pActivateWnd && theApp.m_SideWnd)
+	{
+		CDwarfView* pView = static_cast<CDwarfView*>(pActivateWnd);
+		theApp.m_SideWnd->ShowRelatedTabsForView(pView->GetViewID());
+	}
 }
 
 // CDwarfView ’Ô∂œ

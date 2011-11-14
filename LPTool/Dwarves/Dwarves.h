@@ -15,6 +15,8 @@
 // 有关此类的实现，请参阅 Dwarves.cpp
 //
 
+class CSideWnd;
+
 class CDwarvesApp : public CWinAppEx
 {
 public:
@@ -30,6 +32,7 @@ public:
 	BOOL  m_bHiColorIcons;
 
 	CDwarfDoc	m_Doc;
+	CSideWnd*	m_SideWnd;
 
 	virtual void PreLoadState();
 	virtual void LoadCustomState();

@@ -14,7 +14,7 @@ public:
 
 	enum { EIDC_GRID = 1 };
 
-	virtual int  Initialize(IDwarfViewInfo* pView);
+	virtual int  Initialize(CWnd* pParent, IDwarfViewInfo* pView);
 
 	virtual bool IsRelatedToMainView();
 	virtual int  GetViewID();

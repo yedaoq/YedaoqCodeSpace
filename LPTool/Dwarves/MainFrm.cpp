@@ -33,6 +33,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_ACTIVATE()
 	ON_WM_SHOWWINDOW()
 	ON_COMMAND(ID_WINDOW_NEW, &CMainFrame::OnWindowNew)
+	ON_WM_MDIACTIVATE()
 	//ON_MESSAGE(WM_MDISETMENU, &CMainFrame::OnSetMenu)
 
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
@@ -145,8 +146,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	DockPane(&m_wndFileView);
 	CDockablePane* pTabbedBar = NULL;
 	m_wndClassView.AttachToTabWnd(&m_wndFileView, DM_SHOW, TRUE, &pTabbedBar);
-	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndOutput);
+	m_wndSide.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndSide);
 	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndProperties);
 
@@ -237,6 +238,15 @@ BOOL CMainFrame::OnSetMenu(HMENU hmenu)
 	return TRUE;
 }
 
+void CMainFrame::OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd)
+{
+	if(bActivate && pActivateWnd && theApp.m_SideWnd)
+	{
+		CDwarfView* pView = static_cast<CDwarfView*>(pActivateWnd);
+		theApp.m_SideWnd->ShowRelatedTabsForView(pView->GetViewID());
+	}
+}
+
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	if( !CMDIFrameWndEx::PreCreateWindow(cs) )
@@ -275,11 +285,12 @@ BOOL CMainFrame::CreateDockingWindows()
 	CString strSideWnd;
 	bNameValid = strSideWnd.LoadString(IDS_OUTPUT_WND);
 	ASSERT(bNameValid);
-	if (!m_wndOutput.Create(strSideWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
+	if (!m_wndSide.Create(strSideWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("未能创建输出窗口\n");
 		return FALSE; // 未能创建
 	}
+	theApp.m_SideWnd = &m_wndSide;
 
 	// 创建属性窗口
 	CString strPropertiesWnd;
@@ -304,7 +315,7 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 	m_wndClassView.SetIcon(hClassViewIcon, FALSE);
 
 	HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	m_wndOutput.SetIcon(hOutputBarIcon, FALSE);
+	m_wndSide.SetIcon(hOutputBarIcon, FALSE);
 
 	HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_PROPERTIES_WND_HC : IDI_PROPERTIES_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_wndProperties.SetIcon(hPropertiesBarIcon, FALSE);

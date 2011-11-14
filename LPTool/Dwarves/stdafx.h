@@ -60,4 +60,5 @@
 #include "Module/Schema/DBTableSchema.h"
 #include "Enumerator.h"
 #include <memory>
+#include "mytype.h"
 
