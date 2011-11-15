@@ -10,6 +10,7 @@ int	CDBTableViewer4GridCtrl::Initialize(const CDBTableViewColumnCollection& colu
 	ColumnInfos_ = columns;
 
 	if(HeadRowCount_ == -1) HeadRowCount_ = 1;
+
 	Grid_->SetColumnCount(columns.Count());
 	Grid_->SetFixedRowCount(HeadRowCount_);
 	Grid_->SetRowCount(HeadRowCount_);	

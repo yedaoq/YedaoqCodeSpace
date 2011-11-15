@@ -28,6 +28,11 @@ public:
 			return 0;
 		}
 
+		//if(!iter->second->Initialized())
+		//{
+		//	iter->second->Initialize();
+		//}
+
 		return iter->second;
 	}
 

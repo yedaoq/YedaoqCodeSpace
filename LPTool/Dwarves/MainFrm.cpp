@@ -33,7 +33,6 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_ACTIVATE()
 	ON_WM_SHOWWINDOW()
 	ON_COMMAND(ID_WINDOW_NEW, &CMainFrame::OnWindowNew)
-	ON_WM_MDIACTIVATE()
 	//ON_MESSAGE(WM_MDISETMENU, &CMainFrame::OnSetMenu)
 
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
@@ -236,15 +235,6 @@ BOOL CMainFrame::OnSetMenu(HMENU hmenu)
 
 	m_wndMenuBar.CreateFromMenu(hmenu, 0, TRUE);
 	return TRUE;
-}
-
-void CMainFrame::OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd)
-{
-	if(bActivate && pActivateWnd && theApp.m_SideWnd)
-	{
-		CDwarfView* pView = static_cast<CDwarfView*>(pActivateWnd);
-		theApp.m_SideWnd->ShowRelatedTabsForView(pView->GetViewID());
-	}
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)

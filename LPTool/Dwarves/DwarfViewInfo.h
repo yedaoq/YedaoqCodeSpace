@@ -44,6 +44,7 @@ interface IDwarfViewInfo
 	virtual tstring									ToString() = 0;
 
 	virtual int										Initialize() = 0;
+	virtual bool									Initialized() const = 0;
 
 	virtual CDBTableViewColumnCollection&			GetViewColumnCollection() = 0;
 

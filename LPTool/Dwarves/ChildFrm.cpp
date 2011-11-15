@@ -6,6 +6,8 @@
 #include "Dwarves.h"
 
 #include "ChildFrm.h"
+#include "DwarfView.h"
+#include "SideWnd.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -16,6 +18,7 @@
 IMPLEMENT_DYNCREATE(CChildFrame, CMDIChildWndEx)
 
 BEGIN_MESSAGE_MAP(CChildFrame, CMDIChildWndEx)
+	ON_WM_MDIACTIVATE()
 END_MESSAGE_MAP()
 
 // CChildFrame 构造/析构
@@ -57,3 +60,13 @@ void CChildFrame::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 // CChildFrame 消息处理程序
+void CChildFrame::OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd)
+{
+	if(bActivate && pActivateWnd && theApp.m_SideWnd)
+	{
+		CChildFrame* pChildFrame= static_cast<CChildFrame*>(pActivateWnd);
+		CDwarfView*  pView		= static_cast<CDwarfView*>(pChildFrame->GetActiveView());
+		int			 view		= pView->GetViewID();
+		theApp.m_SideWnd->ShowRelatedTabsForView(view);
+	}
+}

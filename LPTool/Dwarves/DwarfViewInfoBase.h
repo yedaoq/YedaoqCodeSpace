@@ -62,14 +62,14 @@ public:
 
 	virtual int										Initialize() { InitializeFlag = true; return 1; }
 
-	virtual CDBTableViewColumnCollection&			GetViewColumnCollection() { return ViewColumns; }
+	virtual CDBTableViewColumnCollection&			GetViewColumnCollection();// { return ViewColumns; }
 
-	virtual IEnumerator<IDwarfViewInfo*>*			EnumReleatedView() { return new_iterator_enumerator(ReleatedViews.begin(), ReleatedViews.end()); }
+	virtual IEnumerator<IDwarfViewInfo*>*			EnumReleatedView();// { return new_iterator_enumerator(ReleatedViews.begin(), ReleatedViews.end()); }
 
 	virtual IEnumerator<IDBRecord>*					EnumRecordAsRelatedView(IDwarfViewInfo* pView, DwarfViewOperationContext* pCtx) = 0;
 	virtual IEnumerator<IDBRecord>*					EnumRecord() = 0;
 
-	virtual IEnumerator<DwarfViewOperationItem>*	EnumOperation() { return new_iterator_enumerator(Operations.Items.begin(), Operations.Items.end()); }
+	virtual IEnumerator<DwarfViewOperationItem>*	EnumOperation();// { return new_iterator_enumerator(Operations.Items.begin(), Operations.Items.end()); }
 	virtual void									ExecuteOperation(index_t id, DwarfViewOperationContext* pCtx);
 
 	virtual bool									Initialized() const { return InitializeFlag; }

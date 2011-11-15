@@ -141,7 +141,7 @@ void CSideWnd::ShowRelatedTabsForView(int viewID)
 
 	std::auto_ptr<IEnumerator<IDwarfViewInfo*>> pEnumView(pView->EnumReleatedView());
 
-	if(pEnumView.get()) return;
+	if(!pEnumView.get()) return;
 
 	while(pEnumView->MoveNext())
 	{

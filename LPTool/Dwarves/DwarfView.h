@@ -76,7 +76,7 @@ protected:
 	afx_msg void OnViewOperation(UINT id);
 	afx_msg int OnCreate(LPCREATESTRUCT lpcs);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd);
+	//afx_msg void OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd);
 	DECLARE_MESSAGE_MAP()
 };
 

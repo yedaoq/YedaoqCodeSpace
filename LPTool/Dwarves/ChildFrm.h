@@ -15,6 +15,7 @@ public:
 
 // 操作
 public:
+	afx_msg void OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd);
 
 // 重写
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -30,4 +31,5 @@ public:
 // 生成的消息映射函数
 protected:
 	DECLARE_MESSAGE_MAP()
+
 };

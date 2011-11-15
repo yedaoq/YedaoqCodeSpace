@@ -28,7 +28,6 @@ BEGIN_MESSAGE_MAP(CDwarfView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CDwarfView::OnFilePrintPreview)
-	ON_WM_MDIACTIVATE()
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_CONTROL_RANGE(BN_CLICKED, MinViewOpID, MaxViewOpID, &CDwarfView::OnViewOperation)
@@ -37,7 +36,7 @@ END_MESSAGE_MAP()
 // CDwarfView 构造/析构
 
 CDwarfView::CDwarfView()
-	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1)
+	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1), ViewID(-1)
 {
 	// TODO: 在此处添加构造代码
 	
@@ -142,15 +141,6 @@ void CDwarfView::OnViewOperation(UINT id)
 	
 }
 
-void CDwarfView::OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd)
-{
-	if(bActivate && pActivateWnd && theApp.m_SideWnd)
-	{
-		CDwarfView* pView = static_cast<CDwarfView*>(pActivateWnd);
-		theApp.m_SideWnd->ShowRelatedTabsForView(pView->GetViewID());
-	}
-}
-
 // CDwarfView 诊断
 
 #ifdef _DEBUG
@@ -184,6 +174,9 @@ void CDwarfView::SetViewID(int id)
 	ResetTitle();
 	Initialize();
 	ShowRecords();
+
+	CChildFrame* pChildFrame = static_cast<CChildFrame*>(GetParentFrame());
+	pChildFrame->OnMDIActivate(TRUE, pChildFrame, NULL);
 }
 
 void CDwarfView::ResetTitle()
