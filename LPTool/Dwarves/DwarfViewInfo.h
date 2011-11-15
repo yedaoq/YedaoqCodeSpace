@@ -16,8 +16,16 @@ enum EnumRecordRange
 
 struct DwarfViewOperationContext
 {
+	__in	int								MainViewID;
+	__in	CDBRecordAuto*					pFocusedMainRecord;
 	__in	IEnumerator<IDBRecord>*			pSelectedRecords;
 	__in	IEnumerator<DBTableViewColumn>*	pSelectedColumns;
+
+	__in	int								SideViewID;
+	__in	CDBRecordAuto*					pFocusedSideRecord;
+	__in	IEnumerator<IDBRecord>*			pSelectedSideRecords;
+	__in	IEnumerator<DBTableViewColumn>* pSelectedSideColumns;
+
 	__out	EnumRecordRange*				pRecordsToRefresh;
 };
 

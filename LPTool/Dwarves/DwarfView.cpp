@@ -28,6 +28,7 @@ BEGIN_MESSAGE_MAP(CDwarfView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CDwarfView::OnFilePrintPreview)
+	ON_NOTIFY(GVN_SELCHANGED, EIDC_GRID, &CDwarfView::OnGridSelChanged)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_CONTROL_RANGE(BN_CLICKED, MinViewOpID, MaxViewOpID, &CDwarfView::OnViewOperation)
@@ -139,6 +140,13 @@ void CDwarfView::OnViewOperation(UINT id)
 {
 	int opID = id - MinViewOpID;
 	
+}
+
+void CDwarfView::OnGridSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult)
+{
+	CDBModule&		module = GetDocument()->GetDBModule();
+	CDBRecordAuto	rec;
+	GridViewer.GetCurRecord(&rec); 
 }
 
 // CDwarfView ’Ô∂œ

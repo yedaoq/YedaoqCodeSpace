@@ -66,6 +66,8 @@ protected:
 	CGridCtrl					Grid;
 	CButton						BtnSearch;
 	CDBTableViewer4GridCtrl		GridViewer;
+	DwarfViewOperationContext	Context;
+	CDBRecordAuto				FocusedRecord;
 
 
 // 生成的消息映射函数
@@ -76,7 +78,7 @@ protected:
 	afx_msg void OnViewOperation(UINT id);
 	afx_msg int OnCreate(LPCREATESTRUCT lpcs);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	//afx_msg void OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd);
+	afx_msg void OnGridSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult);
 	DECLARE_MESSAGE_MAP()
 };
 
