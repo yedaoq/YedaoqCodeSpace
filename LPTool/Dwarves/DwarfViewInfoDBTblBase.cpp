@@ -88,6 +88,9 @@ int CDwarfViewInfoDBTblBase::InitializeViewColumns()
 {
 	InitializeColumnViewInfo();
 
+
+	ViewColumns.AppendVirtual(&GetGridCol4Select(), 0);
+
 	for (DBColumnViewInfoCollection::iterator iter = ColumnViewInfos.begin(); iter != ColumnViewInfos.end(); ++iter)
 	{
 		ViewColumns.Append(&(*iter));

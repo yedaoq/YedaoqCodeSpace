@@ -61,4 +61,7 @@
 #include "Enumerator.h"
 #include <memory>
 #include "mytype.h"
+#include <EditStyle.h>
+#include <ITextFormater.h>
+
 

@@ -23,3 +23,19 @@ void CDwarfViewInfoBase::ExecuteOperation(index_t id, DwarfViewOperationContext*
 {
 
 }
+
+CDBColumnViewInfo& GetGridCol4Select()
+{
+	static CDBColumnViewInfo selcol;
+	static bool				 iniflag = false;
+	if(!iniflag)
+	{
+		iniflag = true;
+		selcol.SetEditStyle(&CEditStyleBool::GetInstance());
+		selcol.SetTextFormat(&CTextFormatSwitcherNone::GetInstance());
+		selcol.SetDefaultWidth(20);
+		selcol.SetReadOnly(false);
+		selcol.SetTitle(TEXT(""));
+	}
+	return selcol;
+}

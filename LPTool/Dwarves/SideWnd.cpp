@@ -49,6 +49,7 @@ int CSideWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("未能创建输出选项卡窗口\n");
 		return -1;      // 未能创建
 	}
+	m_wndTabs.AutoDestroyWindow(FALSE);
 
 	// 创建输出窗格:
 	const DWORD dwStyle = LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL;

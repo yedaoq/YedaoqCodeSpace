@@ -26,7 +26,8 @@ struct DwarfViewOperationContext
 	__in	IEnumerator<IDBRecord>*			pSelectedSideRecords;
 	__in	IEnumerator<DBTableViewColumn>* pSelectedSideColumns;
 
-	__out	EnumRecordRange*				pRecordsToRefresh;
+	__out	EnumRecordRange					RecordsToRefresh;
+	__out	bool							SideVideRefresh;
 };
 
 typedef void (AFX_MSG_CALL IDwarfViewInfo::*DelegateOperation)(DwarfViewOperationContext* pCtx);

@@ -66,7 +66,12 @@ void CChildFrame::OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeact
 	{
 		CChildFrame* pChildFrame= static_cast<CChildFrame*>(pActivateWnd);
 		CDwarfView*  pView		= static_cast<CDwarfView*>(pChildFrame->GetActiveView());
-		int			 view		= pView->GetViewID();
-		theApp.m_SideWnd->ShowRelatedTabsForView(view);
+		int			 viewID		= -1;
+		if(pView && (viewID = pView->GetViewID()) > 0)
+		{
+			theApp.m_SideWnd->ShowRelatedTabsForView(viewID);
+		}
 	}
+
+	__super::OnMDIActivate(bActivate, pActivateWnd, pDeactivateWnd);
 }

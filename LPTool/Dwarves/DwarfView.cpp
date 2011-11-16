@@ -144,7 +144,7 @@ void CDwarfView::OnViewOperation(UINT id)
 
 void CDwarfView::OnGridSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult)
 {
-	CDBModule&		module = GetDocument()->GetDBModule();
+	CDBModule*		module = GetDocument()->GetDBModule();
 	CDBRecordAuto	rec;
 	GridViewer.GetCurRecord(&rec); 
 }

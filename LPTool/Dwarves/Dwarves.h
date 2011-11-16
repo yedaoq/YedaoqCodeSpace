@@ -16,6 +16,7 @@
 //
 
 class CSideWnd;
+class CDwarfView;
 
 class CDwarvesApp : public CWinAppEx
 {
@@ -26,6 +27,9 @@ public:
 // ÷ÿ–¥
 public:
 	virtual BOOL InitInstance();
+
+	CDwarfView* GetExistedViewByID(int id);
+	CDwarfView* NewView(int id);
 
 //  µœ÷
 	UINT  m_nAppLook;

@@ -8,6 +8,7 @@
 #include <Layout\FlowLayout.h>
 #include <GridCtrl.h>
 #include "DBTableViewer4GridCtrl.h"
+#include "DwarfViewInfo.h"
 
 class CDwarfView : public CView
 {
@@ -32,6 +33,8 @@ public:
 
 	virtual int GetViewID() {return ViewID; }
 	virtual void SetViewID(int id);
+
+	virtual DwarfViewOperationContext& GetContext() { return Context; };
 
 	virtual void ResetTitle();
 

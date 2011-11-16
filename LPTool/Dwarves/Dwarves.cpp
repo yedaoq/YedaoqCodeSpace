@@ -145,6 +145,46 @@ BOOL CDwarvesApp::InitInstance()
 	return TRUE;
 }
 
+CDwarfView* CDwarvesApp::GetExistedViewByID(int id)
+{
+	POSITION pos = m_Doc.GetFirstViewPosition();
+	while(pos)
+	{
+		CView* pView = m_Doc.GetNextView(pos);
+		if(!pView) continue;
+		CDwarfView* pDwarfView = dynamic_cast<CDwarfView*>(pView);
+		if(pDwarfView && pDwarfView->GetViewID() == id)
+		{
+			return pDwarfView;
+		}
+	}
+
+	return 0;
+}
+
+CDwarfView* CDwarvesApp::NewView(int id)
+{
+	CDocTemplate* pTemplate = m_Doc.GetDocTemplate();
+	ASSERT_VALID(pTemplate);
+
+	CFrameWnd* pFrame = pTemplate->CreateNewFrame(&m_Doc, 0);
+	if (pFrame == NULL)
+	{
+		TRACE(traceAppMsg, 0, "Warning: failed to create new frame.\n");
+		return 0;     // command failed
+	}
+
+	pTemplate->InitialUpdateFrame(pFrame, &m_Doc);
+
+	CDwarfView* pView = (CDwarfView*)pFrame->GetActiveView();
+	if(pView)
+	{
+		TTRACE(TEXT("GetActiveView Successed~\r\n"));
+		pView->SetViewID(id);
+	}
+
+	return pView;
+}
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -213,23 +253,24 @@ void CDwarvesApp::OnViewOpen(UINT id)
 {
 	int viewID = id - MinMenuViewID;
 
-	CDocTemplate* pTemplate = m_Doc.GetDocTemplate();
-	ASSERT_VALID(pTemplate);
+	CDwarfView* pView = GetExistedViewByID(viewID);
 
-	CFrameWnd* pFrame = pTemplate->CreateNewFrame(&m_Doc, 0);
-	if (pFrame == NULL)
+	if(!pView)
 	{
-		TRACE(traceAppMsg, 0, "Warning: failed to create new frame.\n");
-		return;     // command failed
+		pView = NewView(viewID);
 	}
-
-	pTemplate->InitialUpdateFrame(pFrame, &m_Doc);
-
-	CDwarfView* view = (CDwarfView*)pFrame->GetActiveView();
-	if(view)
+	else
 	{
-		TTRACE(TEXT("GetActiveView Successed~\r\n"));
-		view->SetViewID(viewID);
+		CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
+		pMainFrame->MDIActivate(pView->GetParentFrame());
+
+		//CMFCTabCtrl& tab = pMainFrame->GetMDITabs();
+		//tab.SetActiveTab(tab.GetActiveTab());
+		//tab.EnableActiveTabCloseButton(FALSE);
+
+		/*CChildFrame* pChildFrame = static_cast<CChildFrame*>(pView->GetParentFrame());
+		pChildFrame->SetActiveView(pView, TRUE);
+		pChildFrame->MDIActivate();		*/
 	}
 }
 

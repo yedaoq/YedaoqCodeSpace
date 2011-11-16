@@ -2,6 +2,7 @@
 #include "DwarfViewInfo.h"
 #include "DBTableViewer4GridCtrl.h"
 
+
 class CDwarfViewOperationCollection
 {
 public:
@@ -82,3 +83,5 @@ protected:
 	int								ViewID;				// ÊÓÍ¼µÄID
 	bool							InitializeFlag;
 };
+
+CDBColumnViewInfo& GetGridCol4Select();
