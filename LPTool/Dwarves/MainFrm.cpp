@@ -170,34 +170,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		}
 	}
 
-	// 启用菜单个性化(最近使用的命令)
-	// TODO: 定义您自己的基本命令，确保每个下拉菜单至少有一个基本命令。
-	CList<UINT, UINT> lstBasicCommands;
-
-	lstBasicCommands.AddTail(ID_FILE_NEW);
-	lstBasicCommands.AddTail(ID_FILE_OPEN);
-	lstBasicCommands.AddTail(ID_FILE_SAVE);
-	lstBasicCommands.AddTail(ID_FILE_PRINT);
-	lstBasicCommands.AddTail(ID_APP_EXIT);
-	lstBasicCommands.AddTail(ID_EDIT_CUT);
-	lstBasicCommands.AddTail(ID_EDIT_PASTE);
-	lstBasicCommands.AddTail(ID_EDIT_UNDO);
-	lstBasicCommands.AddTail(ID_APP_ABOUT);
-	lstBasicCommands.AddTail(ID_VIEW_STATUS_BAR);
-	lstBasicCommands.AddTail(ID_VIEW_TOOLBAR);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2003);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_VS_2005);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLUE);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_SILVER);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLACK);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_AQUA);
-	lstBasicCommands.AddTail(ID_SORTING_SORTALPHABETIC);
-	lstBasicCommands.AddTail(ID_SORTING_SORTBYTYPE);
-	lstBasicCommands.AddTail(ID_SORTING_SORTBYACCESS);
-	lstBasicCommands.AddTail(ID_SORTING_GROUPBYTYPE);
-
-	CMFCToolBar::SetBasicCommands(lstBasicCommands);
-
 	return 0;
 }
 

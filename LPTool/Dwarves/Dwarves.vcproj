@@ -487,6 +487,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GlobalData.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GlobalData.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Include\Helper.cpp"
 				>
 			</File>

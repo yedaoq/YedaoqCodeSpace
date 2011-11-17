@@ -72,6 +72,8 @@ protected:
 	DwarfViewOperationContext	Context;
 	CDBRecordAuto				FocusedRecord;
 
+	static bool					BkColorInitFlag;
+
 
 // 生成的消息映射函数
 protected:

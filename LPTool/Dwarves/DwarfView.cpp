@@ -19,6 +19,8 @@
 
 using namespace NSYedaoqLayout;
 
+bool   CDwarfView::BkColorInitFlag = false;
+
 // CDwarfView
 
 IMPLEMENT_DYNCREATE(CDwarfView, CView)
@@ -72,8 +74,16 @@ int CDwarfView::OnCreate(LPCREATESTRUCT lpcs)
 	if (CView::OnCreate(lpcs) == -1)
 		return -1;
 
+	if(!BkColorInitFlag)
+	{
+		BkColorInitFlag = true;
+		::SetClassLong(this->GetSafeHwnd(), GCL_HBRBACKGROUND, (LONG)::GetSysColorBrush(COLOR_BTNFACE));
+	}
+
 	RECT rect = {0, 0, lpcs->cx, lpcs->cy};
 	Grid.Create(rect, this, EIDC_GRID, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
+	Grid.SetBkColor((COLORREF)::GetSysColor(COLOR_BTNFACE));
+	Grid.GetDefaultCell(FALSE, FALSE)->SetBackClr((COLORREF)0xAAFFE0);
 
 	CreateButton(BtnSearch, EIDC_BTNSEARCH, this, TEXT("≤È’“"));
 
@@ -87,7 +97,7 @@ int CDwarfView::OnCreate(LPCREATESTRUCT lpcs)
 
 void CDwarfView::OnSize(UINT nType, int cx, int cy)
 {
-	FlowLayoutMain.Layout(LayoutPoint(3,3), LayoutSize(cx - 6, cy - 6));
+	FlowLayoutMain.Layout(LayoutPoint(2,2), LayoutSize(cx - 4, cy - 4));
 }
 
 //void CDwarfView::OnInitialUpdate()
