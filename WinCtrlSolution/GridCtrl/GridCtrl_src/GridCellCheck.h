@@ -49,8 +49,9 @@ public:
 	virtual void SetText(LPCTSTR szVal);
 	virtual LPCTSTR GetText() const;
 	virtual CSize GetCellExtent(CDC* pDC);
-    virtual void OnClick( CPoint PointCellRelative);
+    virtual void OnClick(int nRow, int nCol, CPoint PointCellRelative);
     virtual BOOL GetTextRect( LPRECT pRect);
+	virtual CSize GetTextExtent(LPCTSTR str, CDC* pDC = NULL);
 
 protected:
 	CRect GetCheckPlacement();

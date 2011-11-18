@@ -18,7 +18,6 @@
 #include <Helper.h>
 #include "DBModuleLP.h"
 
-
 using namespace NSDBModule;
 
 #ifdef _DEBUG
@@ -137,20 +136,24 @@ BOOL CDwarvesApp::InitInstance()
 	// 主窗口已初始化，因此显示它并对其进行更新
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
-	m_Doc.m_bAutoDelete = FALSE;
-	m_Doc.SetTitle(TEXT("请选择数据库"));
-	m_Doc.SetDBModule(&g_DBModule);
-	pDocTemplate->AddDocument(&m_Doc);
+
+	//初始化唯一的文档对象
+	CDwarfDoc* pDoc = CGlobalData::GetCurrentDoc();
+	pDoc->m_bAutoDelete = FALSE;
+	pDoc->SetTitle(TEXT("请选择数据库"));
+	pDoc->SetDBModule(&g_DBModule);
+	pDocTemplate->AddDocument(pDoc);
 
 	return TRUE;
 }
 
 CDwarfView* CDwarvesApp::GetExistedViewByID(int id)
 {
-	POSITION pos = m_Doc.GetFirstViewPosition();
+	CDwarfDoc* pDoc = CGlobalData::GetCurrentDoc();
+	POSITION pos = pDoc->GetFirstViewPosition();
 	while(pos)
 	{
-		CView* pView = m_Doc.GetNextView(pos);
+		CView* pView = pDoc->GetNextView(pos);
 		if(!pView) continue;
 		CDwarfView* pDwarfView = dynamic_cast<CDwarfView*>(pView);
 		if(pDwarfView && pDwarfView->GetViewID() == id)
@@ -164,17 +167,19 @@ CDwarfView* CDwarvesApp::GetExistedViewByID(int id)
 
 CDwarfView* CDwarvesApp::NewView(int id)
 {
-	CDocTemplate* pTemplate = m_Doc.GetDocTemplate();
+	CDwarfDoc*		pDoc		= CGlobalData::GetCurrentDoc();
+	CDocTemplate*	pTemplate	= pDoc->GetDocTemplate();
+	
 	ASSERT_VALID(pTemplate);
 
-	CFrameWnd* pFrame = pTemplate->CreateNewFrame(&m_Doc, 0);
+	CFrameWnd* pFrame = pTemplate->CreateNewFrame(pDoc, 0);
 	if (pFrame == NULL)
 	{
 		TRACE(traceAppMsg, 0, "Warning: failed to create new frame.\n");
 		return 0;     // command failed
 	}
 
-	pTemplate->InitialUpdateFrame(pFrame, &m_Doc);
+	pTemplate->InitialUpdateFrame(pFrame, pDoc);
 
 	CDwarfView* pView = (CDwarfView*)pFrame->GetActiveView();
 	if(pView)
@@ -240,7 +245,7 @@ void CDwarvesApp::OnFileOpen()
 	g_DBModule.AttachToDatabase(PAdapter, pFactory, pMapping);
 	g_DBModule.RefreshData();
 
-	m_Doc.SetTitle(pConn->ToString().c_str());
+	CGlobalData::GetCurrentDoc()->SetTitle(pConn->ToString().c_str());
 
 	RegDeleteKey(HKEY_CURRENT_USER, TEXT("Software\\应用程序向导生成的本地应用程序\\Dwarves"));
 

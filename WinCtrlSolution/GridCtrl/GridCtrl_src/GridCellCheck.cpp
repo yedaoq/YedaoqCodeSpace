@@ -100,6 +100,11 @@ BOOL CGridCellCheck::GetTextRect( LPRECT pRect)
     return bResult;
 }
 
+CSize CGridCellCheck::GetTextExtent(LPCTSTR szText, CDC* pDC /*= NULL*/)
+{
+	return CSize(0,0);
+}
+
 // Override draw so that when the cell is selected, a drop arrow is shown in the RHS.
 BOOL CGridCellCheck::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEraseBkgnd /*=TRUE*/)
 {
@@ -124,7 +129,7 @@ BOOL CGridCellCheck::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bErase
     return bResult;
 }
 
-void CGridCellCheck::OnClick(CPoint PointCellRelative)
+void CGridCellCheck::OnClick(int nRow, int nCol, CPoint PointCellRelative)
 {
 	// PointCellRelative is relative to the topleft of the cell. Convert to client coords
 	PointCellRelative += m_Rect.TopLeft();
@@ -134,10 +139,13 @@ void CGridCellCheck::OnClick(CPoint PointCellRelative)
     if (!GetGrid()->IsCellEditable(cell))		
         return;
 
+	//TRACE("Check Changeable !\n");
+
 	// GetCheckPlacement returns the checkbox dimensions in client coords. Only check/
 	// uncheck if the user clicked in the box
 	if (GetCheckPlacement().PtInRect(PointCellRelative))
 	{
+		//TRACE("Check Changed!\n");
 		m_bChecked = !m_bChecked;
 		GetGrid()->InvalidateRect(m_Rect);
 	}

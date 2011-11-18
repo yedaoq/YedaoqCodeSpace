@@ -63,5 +63,5 @@
 #include "mytype.h"
 #include <EditStyle.h>
 #include <ITextFormater.h>
-
+#include "GlobalData.h"
 

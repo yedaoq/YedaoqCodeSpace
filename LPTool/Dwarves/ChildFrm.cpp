@@ -62,14 +62,14 @@ void CChildFrame::Dump(CDumpContext& dc) const
 // CChildFrame 消息处理程序
 void CChildFrame::OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd)
 {
-	if(bActivate && pActivateWnd && theApp.m_SideWnd)
+	if(bActivate && pActivateWnd && CGlobalData::GetSideWnd())
 	{
 		CChildFrame* pChildFrame= static_cast<CChildFrame*>(pActivateWnd);
 		CDwarfView*  pView		= static_cast<CDwarfView*>(pChildFrame->GetActiveView());
 		int			 viewID		= -1;
 		if(pView && (viewID = pView->GetViewID()) > 0)
 		{
-			theApp.m_SideWnd->ShowRelatedTabsForView(viewID);
+			CGlobalData::GetSideWnd()->ShowRelatedTabsForView(viewID);
 		}
 	}
 

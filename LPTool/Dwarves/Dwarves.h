@@ -35,9 +35,6 @@ public:
 	UINT  m_nAppLook;
 	BOOL  m_bHiColorIcons;
 
-	CDwarfDoc	m_Doc;
-	CSideWnd*	m_SideWnd;
-
 	virtual void PreLoadState();
 	virtual void LoadCustomState();
 	virtual void SaveCustomState();

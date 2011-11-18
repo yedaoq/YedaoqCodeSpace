@@ -252,7 +252,7 @@ BOOL CMainFrame::CreateDockingWindows()
 		TRACE0("未能创建输出窗口\n");
 		return FALSE; // 未能创建
 	}
-	theApp.m_SideWnd = &m_wndSide;
+	CGlobalData::SetSideWnd(&m_wndSide);
 
 	// 创建属性窗口
 	CString strPropertiesWnd;

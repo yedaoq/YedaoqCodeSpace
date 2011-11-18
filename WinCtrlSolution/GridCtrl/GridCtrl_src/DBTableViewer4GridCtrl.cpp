@@ -54,6 +54,10 @@ CGridColumn	CDBTableViewer4GridCtrl::GetGridColumnFromDBColInfo(CDBColumnViewInf
 	{
 		state |= GVIS_READONLY;
 	}
+	else
+	{
+		state &= ~GVIS_READONLY;
+	}
 
 	return CGridColumn(info->GetTitle(), info->GetDefaultWidth(), tpl, state);
 }
