@@ -9,6 +9,7 @@
 #include <GridCtrl.h>
 #include "DBTableViewer4GridCtrl.h"
 #include "DwarfViewInfo.h"
+#include "GridSelectedRecordsEnumerator.h"
 
 class CDwarfView : public CView
 {
@@ -25,24 +26,24 @@ public:
 
 // 操作
 public:
+	int			GetViewID()				{return ViewID; }
+	void		SetViewID(int id);
+
+	void		ResetTitle();
+
+	int			Initialize();
+	int			ShowRecords();
+
+	IDBRecord*				GetFocusedRecord();
+	IEnumerator<IDBRecord>*	GetSelectedRecords();
+
+	void CreateButton(CButton& btn, UINT id, CWnd* pParent, LPCTSTR lpTitle = NULL, UINT width = 75, UINT height = 23, DWORD dwStyle = WS_CHILD | BS_CENTER | BS_VCENTER | BS_TEXT | BS_PUSHBUTTON, CFont* font = NULL);
 
 // 重写
 public:
 	virtual void OnDraw(CDC* pDC);  // 重写以绘制该视图
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-
-	virtual int GetViewID() {return ViewID; }
-	virtual void SetViewID(int id);
-
-	virtual DwarfViewOperationContext& GetContext() { return Context; };
-
-	virtual void ResetTitle();
-
-	virtual int Initialize();
-	virtual int ShowRecords();
-
-	void	CreateButton(CButton& btn, UINT id, CWnd* pParent, LPCTSTR lpTitle = NULL, UINT width = 75, UINT height = 23, DWORD dwStyle = WS_CHILD | BS_CENTER | BS_VCENTER | BS_TEXT | BS_PUSHBUTTON, CFont* font = NULL);
-
+	
 protected:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
@@ -65,12 +66,16 @@ protected:
 
 	NSYedaoqLayout::CFlowLayout FlowLayoutMain;
 
-	OpBtnCollection				BtnOps;
 	CGridCtrl					Grid;
+	OpBtnCollection				BtnOps;
 	CButton						BtnSearch;
+
 	CDBTableViewer4GridCtrl		GridViewer;
+
 	DwarfViewOperationContext	Context;
 	CDBRecordAuto				FocusedRecord;
+	int							FocusedRecordIdx;
+	CGridSelectedRecordsEnumerator SelectedRecords;
 
 	static bool					BkColorInitFlag;
 

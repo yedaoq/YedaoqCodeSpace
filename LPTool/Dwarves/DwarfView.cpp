@@ -39,7 +39,9 @@ END_MESSAGE_MAP()
 // CDwarfView 构造/析构
 
 CDwarfView::CDwarfView()
-	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1), ViewID(-1)
+	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1), ViewID(-1),
+	SelectedRecords(&Grid, &GridViewer),
+	FocusedRecordIdx(-1)
 {
 	// TODO: 在此处添加构造代码
 	
@@ -154,9 +156,12 @@ void CDwarfView::OnViewOperation(UINT id)
 
 void CDwarfView::OnGridSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult)
 {
-	CDBModule*		module = GetDocument()->GetDBModule();
-	CDBRecordAuto	rec;
-	GridViewer.GetCurRecord(&rec); 
+	int idx = GridViewer.GetCurRecord(0); 
+	if(idx != FocusedRecordIdx)
+	{
+		FocusedRecordIdx = idx;
+		CGlobalData::GetSideWnd()->RefreshSideView();
+	}
 }
 
 // CDwarfView 诊断
@@ -269,6 +274,17 @@ int CDwarfView::ShowRecords()
 	GridViewer.Fill(*pEnumRec);
 	
 	Grid.AutoSizeColumns();
+}
+
+IDBRecord* CDwarfView::GetFocusedRecord()
+{
+	int idx = GridViewer.GetCurRecord(&FocusedRecord);
+	return (idx >= 0) ? &FocusedRecord : 0;
+}
+
+IEnumerator<IDBRecord>*	CDwarfView::GetSelectedRecords()
+{
+	return &SelectedRecords;
 }
 
 

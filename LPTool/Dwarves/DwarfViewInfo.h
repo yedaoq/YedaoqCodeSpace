@@ -16,18 +16,8 @@ enum EnumRecordRange
 
 struct DwarfViewOperationContext
 {
-	__in	int								MainViewID;
-	__in	CDBRecordAuto*					pFocusedMainRecord;
-	__in	IEnumerator<IDBRecord>*			pSelectedRecords;
-	__in	IEnumerator<DBTableViewColumn>*	pSelectedColumns;
-
-	__in	int								SideViewID;
-	__in	CDBRecordAuto*					pFocusedSideRecord;
-	__in	IEnumerator<IDBRecord>*			pSelectedSideRecords;
-	__in	IEnumerator<DBTableViewColumn>* pSelectedSideColumns;
-
-	__out	EnumRecordRange					RecordsToRefresh;
-	__out	bool							SideVideRefresh;
+	int	MainViewID;
+	int	SideViewID;
 };
 
 typedef void (AFX_MSG_CALL IDwarfViewInfo::*DelegateOperation)(DwarfViewOperationContext* pCtx);
@@ -59,7 +49,7 @@ interface IDwarfViewInfo
 
 	virtual IEnumerator<IDwarfViewInfo*>*			EnumReleatedView() = 0;
 
-	virtual IEnumerator<IDBRecord>*					EnumRecordAsRelatedView(IDwarfViewInfo* pView, DwarfViewOperationContext* pCtx) = 0;
+	virtual IEnumerator<IDBRecord>*					EnumRecordAsRelatedView(DwarfViewOperationContext* pCtx) = 0;
 	virtual IEnumerator<IDBRecord>*					EnumRecord() = 0;
 
 	virtual IEnumerator<DwarfViewOperationItem>*	EnumOperation() = 0;

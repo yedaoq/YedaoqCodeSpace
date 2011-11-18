@@ -67,7 +67,7 @@ public:
 
 	virtual IEnumerator<IDwarfViewInfo*>*			EnumReleatedView();// { return new_iterator_enumerator(ReleatedViews.begin(), ReleatedViews.end()); }
 
-	virtual IEnumerator<IDBRecord>*					EnumRecordAsRelatedView(IDwarfViewInfo* pView, DwarfViewOperationContext* pCtx) = 0;
+	virtual IEnumerator<IDBRecord>*					EnumRecordAsRelatedView(DwarfViewOperationContext* pCtx) = 0;
 	virtual IEnumerator<IDBRecord>*					EnumRecord() = 0;
 
 	virtual IEnumerator<DwarfViewOperationItem>*	EnumOperation();// { return new_iterator_enumerator(Operations.Items.begin(), Operations.Items.end()); }

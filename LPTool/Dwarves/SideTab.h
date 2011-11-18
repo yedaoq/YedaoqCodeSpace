@@ -10,5 +10,5 @@ public:
 
 	virtual int  GetValidityCounter() = 0;
 	virtual int  SetValidityCounter(int counter) = 0;
-	virtual int  ContentUpdate(int mainViewID, DwarfViewOperationContext* pCtx) = 0;
+	virtual int  ContentUpdate(DwarfViewOperationContext* pCtx) = 0;
 };

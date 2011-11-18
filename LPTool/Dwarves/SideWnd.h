@@ -15,9 +15,10 @@ public:
 	CSideWnd();
 
 	void ShowRelatedTabsForView(int viewID);
+	void RefreshSideView();
 	void ClearTabs();
 
-	CDwarfSideTab*				GetDwarfSideTab(int view);
+	CDwarfSideTab*				GetDwarfSideTab(int view, bool autoCreate = true);
 
 //  Ù–‘
 protected:
@@ -27,7 +28,6 @@ protected:
 	int							m_ValidityCounter;
 
 	DwarfViewOperationContext	m_Context;
-	int							m_MainViewID;
 
 	DwarfSideTabMap				m_SideTabCache;
 

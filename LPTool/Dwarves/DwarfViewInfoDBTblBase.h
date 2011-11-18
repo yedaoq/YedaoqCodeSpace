@@ -21,7 +21,7 @@ public:
 
 	virtual tstring	ToString() { return DBModule->Tables()[ViewID]->GetName(); }
 
-	virtual IEnumerator<IDBRecord>*	EnumRecordAsRelatedView(IDwarfViewInfo* pView, DwarfViewOperationContext* pCtx);
+	virtual IEnumerator<IDBRecord>*	EnumRecordAsRelatedView(DwarfViewOperationContext* pCtx);
 	virtual IEnumerator<IDBRecord>*	EnumRecord();
 
 	virtual int Initialize();

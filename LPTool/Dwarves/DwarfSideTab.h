@@ -3,6 +3,7 @@
 #include <Layout\FlowLayout.h>
 #include <GridCtrl.h>
 #include <DBTableViewer4GridCtrl.h>
+#include "GridSelectedRecordsEnumerator.h"
 
 interface IDwarfViewInfo;
 
@@ -21,7 +22,11 @@ public:
 
 	virtual int  GetValidityCounter();
 	virtual int  SetValidityCounter(int);
-	virtual int  ContentUpdate(int mainViewID, DwarfViewOperationContext* pCtx);
+	virtual int  ContentUpdate(DwarfViewOperationContext* pCtx);
+
+public:
+	IDBRecord*				GetFocusedRecord();
+	IEnumerator<IDBRecord>*	GetSelectedRecords();
 
 protected:
 	IDwarfViewInfo*				View;
@@ -29,6 +34,9 @@ protected:
 	CGridCtrl					Grid;
 	CDBTableViewer4GridCtrl		GridViewer;
 	int							ValidityCounter;
+
+	CDBRecordAuto				FocusedRecord;
+	CGridSelectedRecordsEnumerator SelectedRecords;
 
 protected:
 	DECLARE_MESSAGE_MAP()

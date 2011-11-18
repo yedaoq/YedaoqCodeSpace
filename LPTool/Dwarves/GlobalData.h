@@ -31,7 +31,7 @@ public:
 
 	//获取指定信息
 	static CDwarfView*		GetViewByID(int id)		{ return static_cast<CDwarvesApp*>(AfxGetApp())->GetExistedViewByID(id); }
-	static CDwarfSideTab*	GetSideTabByID(int id)	{ return GetSideWnd()->GetDwarfSideTab(id); }
+	static CDwarfSideTab*	GetSideTabByID(int id)	{ return GetSideWnd()->GetDwarfSideTab(id, false); }
 
 protected:
 	static CDwarfDoc		m_Doc;

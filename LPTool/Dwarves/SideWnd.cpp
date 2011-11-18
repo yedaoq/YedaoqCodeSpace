@@ -19,8 +19,9 @@ static char THIS_FILE[] = __FILE__;
 // CSideBar
 
 CSideWnd::CSideWnd()
-	: m_MainViewID(CDwarfViewProvider::InvalidViewID)
 {
+	m_Context.MainViewID = CDwarfViewProvider::InvalidViewID;
+	m_Context.SideViewID = CDwarfViewProvider::InvalidViewID;
 }
 
 CSideWnd::~CSideWnd()
@@ -101,9 +102,9 @@ LRESULT CSideWnd::OnTabActivate(WPARAM wParam, LPARAM lParam)
 
 	ISideTab* pSideTab = static_cast<ISideTab*>(static_cast<CDwarfSideTab*>(pWndActive));
 	
-	if(pSideTab->GetValidityCounter() != m_ValidityCounter && m_MainViewID != CDwarfViewProvider::InvalidViewID)
+	if(pSideTab->GetValidityCounter() != m_ValidityCounter && m_Context.MainViewID != CDwarfViewProvider::InvalidViewID)
 	{
-		pSideTab->ContentUpdate(m_MainViewID, &m_Context);
+		pSideTab->ContentUpdate(&m_Context);
 		pSideTab->SetValidityCounter(m_ValidityCounter);
 	}
 }
@@ -140,6 +141,8 @@ void CSideWnd::ShowRelatedTabsForView(int viewID)
 
 	if(!pView) return;
 
+	m_Context.MainViewID = viewID;
+
 	std::auto_ptr<IEnumerator<IDwarfViewInfo*>> pEnumView(pView->EnumReleatedView());
 
 	if(!pEnumView.get()) return;
@@ -151,30 +154,24 @@ void CSideWnd::ShowRelatedTabsForView(int viewID)
 	}
 }
 
+void CSideWnd::RefreshSideView()
+{
+	IncreaseValidityCounter();
+	OnTabActivate(m_wndTabs.GetActiveTab(), 0);	
+}
+
 void CSideWnd::ClearTabs()
 {
 	m_wndTabs.RemoveAllTabs();
 }
 
-void CSideWnd::OnMainViewActivated(int mainView)
-{
-	m_MainViewID = mainView;
-}
-
-void CSideWnd::OnMainViewContextChanged(const DwarfViewOperationContext* pCtx)
-{
-	if(pCtx)
-	{
-		m_Context = *pCtx;
-		OnTabActivate(0, 0);
-	}
-}
-
-CDwarfSideTab* CSideWnd::GetDwarfSideTab(int view)
+CDwarfSideTab* CSideWnd::GetDwarfSideTab(int view, bool autoCreate)
 {
 	DwarfSideTabMap::iterator iter = m_SideTabCache.find(view);
 	if(m_SideTabCache.end() == iter)
 	{
+		if(!autoCreate) return 0;
+
 		iter = m_SideTabCache.insert(std::make_pair(view, new CDwarfSideTab())).first;
 		iter->second->Initialize(this, CDwarfViewProvider::GetInstance()[view]);
 	}

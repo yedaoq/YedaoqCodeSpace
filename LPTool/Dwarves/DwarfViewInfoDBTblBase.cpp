@@ -142,12 +142,12 @@ CDBColumnViewInfo CDwarfViewInfoDBTblBase::GenerateColumnViewFromSchema(const DB
 	return view;
 }
 
-IEnumerator<IDBRecord>*	CDwarfViewInfoDBTblBase::EnumRecordAsRelatedView(IDwarfViewInfo* pView, DwarfViewOperationContext* pCtx)
+IEnumerator<IDBRecord>*	CDwarfViewInfoDBTblBase::EnumRecordAsRelatedView(DwarfViewOperationContext* pCtx)
 {
 	// 1. 判断从属视图是否依赖了主视图，若是，则根据该依赖关系过滤
 	// 2. 判断主视图是否依赖了从属视图，若是，则根据该依赖关系过滤
 
-	if(!pView || !pCtx->pSelectedRecords || !pCtx->pSelectedRecords->MoveNext())
+	if(!pCtx)
 	{
 		_ASSERT(false);
 		return 0;
@@ -157,13 +157,19 @@ IEnumerator<IDBRecord>*	CDwarfViewInfoDBTblBase::EnumRecordAsRelatedView(IDwarfV
 	int iRelatedColIDOfCurrentTbl = -1;
 	int iRelatedColIDOfMainTbl = -1;
 
-	if(IsDBTableRelated(GetViewID(), pView->GetViewID(), &iRelatedColIDOfCurrentTbl, &iRelatedColIDOfMainTbl))
+	CDwarfView* pMainView = CGlobalData::GetViewByID(pCtx->MainViewID);
+	if(!pMainView) return 0;
+
+	IDBRecord* pMainRec = pMainView->GetFocusedRecord();
+	if(!pMainRec) return 0;
+
+	if(IsDBTableRelated(GetViewID(), pMainView->GetViewID(), &iRelatedColIDOfCurrentTbl, &iRelatedColIDOfMainTbl))
 	{
-		iRelatedTblID = pView->GetViewID();
+		iRelatedTblID = pMainView->GetViewID();
 	}
-	else if(IsDBTableRelated(pView->GetViewID(), GetViewID(), &iRelatedColIDOfMainTbl, &iRelatedColIDOfCurrentTbl))
+	else if(IsDBTableRelated(pMainView->GetViewID(), GetViewID(), &iRelatedColIDOfMainTbl, &iRelatedColIDOfCurrentTbl))
 	{
-		iRelatedTblID = pView->GetViewID();
+		iRelatedTblID = pMainView->GetViewID();
 	}
 
 	if(iRelatedTblID == DBColumnSchema::InvalidRelyTableID)
@@ -172,7 +178,7 @@ IEnumerator<IDBRecord>*	CDwarfViewInfoDBTblBase::EnumRecordAsRelatedView(IDwarfV
 	}
 
 	CDBRecordBase rec = DBModule->Tables()[GetViewID()]->RecordTemplate();
-	rec.SetField(iRelatedColIDOfCurrentTbl, pCtx->pSelectedRecords->Current().GetField(iRelatedColIDOfMainTbl));
+	rec.SetField(iRelatedColIDOfCurrentTbl, pMainRec->GetField(iRelatedColIDOfMainTbl));
 	CDBRecordComparison cmp(1, iRelatedColIDOfCurrentTbl);
 
 	return DBModule->Tables()[GetViewID()]->FindAll(rec, cmp);

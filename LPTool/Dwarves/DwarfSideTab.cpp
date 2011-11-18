@@ -7,7 +7,8 @@
 using namespace NSYedaoqLayout;
 
 CDwarfSideTab::CDwarfSideTab(void)
-	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1), View(0), ValidityCounter(-1)
+	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1), View(0), ValidityCounter(-1),
+	SelectedRecords(&Grid, &GridViewer)
 {
 }
 
@@ -84,15 +85,26 @@ int CDwarfSideTab::SetValidityCounter(int val)
 	return 1;
 }
 
-int CDwarfSideTab::ContentUpdate(int mainViewID, DwarfViewOperationContext* pCtx)
+int CDwarfSideTab::ContentUpdate(DwarfViewOperationContext* pCtx)
 {
-	IDwarfViewInfo* pMainView = CDwarfViewProvider::GetInstance()[mainViewID];
-	std::auto_ptr<IEnumerator<IDBRecord>> pEnumRec(View->EnumRecordAsRelatedView(pMainView, pCtx));
+	std::auto_ptr<IEnumerator<IDBRecord>> pEnumRec(View->EnumRecordAsRelatedView(pCtx));
 	if(pEnumRec.get())
 	{
 		GridViewer.Clear();
 		GridViewer.Fill(*pEnumRec);
+		Grid.AutoSizeColumns();
 	}
 
 	return 1;
+}
+
+IDBRecord* CDwarfSideTab::GetFocusedRecord()
+{
+	int idx = GridViewer.GetCurRecord(&FocusedRecord);
+	return (idx >= 0) ? &FocusedRecord : 0;
+}
+
+IEnumerator<IDBRecord>*	CDwarfSideTab::GetSelectedRecords()
+{
+	return &SelectedRecords;
 }
