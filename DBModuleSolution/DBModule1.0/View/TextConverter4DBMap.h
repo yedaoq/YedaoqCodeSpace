@@ -5,6 +5,7 @@
 #include <Helper.h>
 #include <Enumerator.h>
 #include "Module\DBRecord.h"
+#include <atlsync.h>
 
 namespace NSDBModule
 {
@@ -84,14 +85,18 @@ namespace NSDBModule
 				rec = m_Source->Current();
 				if(rec.GetField(m_FieldView) == text)
 				{
+					//TTRACE(TEXT("DBMap Parse End \n"));
 					return rec.GetField(m_FieldValue);
 				}
 			}
+			//TTRACE(TEXT("DBMap Parse End \n"));
 			return text;
 		}
 
 		virtual tstring Format(const tstring& val, IContext* ctx)
 		{
+			//cs.Enter();
+			//TTRACE(TEXT("DBMap Format Begin \n"));
 			//TTRACE(TEXT("DBMap : %s -> "), val.c_str());
 			m_Source->Reset();
 			CDBRecordBase rec;
@@ -101,13 +106,16 @@ namespace NSDBModule
 				//TTRACE(TEXT("DBMap Enum : %s  Target : %s\r\n"), rec.GetField(m_FieldValue).c_str(), val.c_str());
 				if(rec.GetField(m_FieldValue) == val)
 				{
+					//cs.Leave();
+					//TTRACE(TEXT("DBMap Format End \n"));
 					//TTRACE(TEXT("DBMap Format Result : %s\r\n"), rec.GetField(m_FieldView).c_str());
 					return rec.GetField(m_FieldView);
 				}
 			}
 
 			//TTRACE(TEXT("%s\r\n"), val.c_str());
-
+			//TTRACE(TEXT("DBMap Format End \n"));
+			//cs.Leave();
 			return val;
 		}
 
@@ -118,6 +126,8 @@ namespace NSDBModule
 
 		int						m_FieldView;
 		int						m_FieldValue;
+
+		//ATL::CCriticalSection	cs;
 
 	public:
 		tstring m_DefaultView;

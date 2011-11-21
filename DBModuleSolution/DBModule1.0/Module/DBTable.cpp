@@ -142,6 +142,9 @@ int	CDBTable::LoadData()
 		}
 	}
 
+	FlagLoaded_ = true;
+	FlagDirty_  = false;
+
 	return 1;
 }
 

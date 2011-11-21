@@ -1,4 +1,5 @@
 #pragma once
+#include <atlsync.h>
 
 #ifndef interface
 #define interface struct

@@ -149,8 +149,12 @@ void CSideWnd::ShowRelatedTabsForView(int viewID)
 
 	while(pEnumView->MoveNext())
 	{
-		CDwarfSideTab* tab = GetDwarfSideTab(pEnumView->Current()->GetViewID());
-		m_wndTabs.AddTab(tab, pEnumView->Current()->ToString().c_str());
+		CDwarfSideTab* tab = GetDwarfSideTab(pEnumView->Current()->GetViewID(), true);
+		
+		if(tab && -1 == m_wndTabs.GetTabFromHwnd(tab->GetSafeHwnd()))
+		{
+			m_wndTabs.AddTab(tab, pEnumView->Current()->ToString().c_str());
+		}		
 	}
 }
 
