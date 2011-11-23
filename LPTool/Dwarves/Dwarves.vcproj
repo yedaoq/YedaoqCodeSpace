@@ -459,6 +459,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DwarfViewInfoDBTblPackage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfViewInfoDBTblPackage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DwarfViewProvider.h"
 				>
 			</File>

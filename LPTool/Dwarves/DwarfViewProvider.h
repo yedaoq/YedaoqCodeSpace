@@ -5,6 +5,7 @@
 #include "DwarfViewInfoDBTable.h"
 #include "LocalPlayerObjEnum.h"
 #include <Enumerator.h>
+#include "DwarfViewInfoDBTblPackage.h"
 
 class CDwarfViewProvider : public CSingleton<CDwarfViewProvider>
 {

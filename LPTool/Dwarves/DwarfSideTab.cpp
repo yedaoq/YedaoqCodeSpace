@@ -52,7 +52,7 @@ int CDwarfSideTab::Initialize(CWnd* pParent, IDwarfViewInfo* pView)
 	View = pView;
 
 	RECT rect = {0,0,1,1};
-	CWnd::Create(NULL, TEXT("TAB"), LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE, rect, pParent, pView->GetViewID());
+	CWnd::Create(NULL, TEXT("TAB"), WS_CHILD | WS_VISIBLE, rect, pParent, pView->GetViewID());
 
 	GridViewer.Initialize(pView->GetViewColumnCollection());
 
