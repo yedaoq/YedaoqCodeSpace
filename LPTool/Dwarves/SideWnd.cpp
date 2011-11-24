@@ -61,7 +61,6 @@ int CSideWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // Î´ÄÜ´´½¨
 	}
 
-	m_wndOutputBuild.Init();
 	m_wndOutputBuild.SetFont(&m_Font);
 
 	CString strTabName;

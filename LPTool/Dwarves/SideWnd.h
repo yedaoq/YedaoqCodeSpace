@@ -6,6 +6,28 @@
 interface IDwarfViewInfo;
 class	  CDwarfSideTab;
 
+// COutputList 窗口
+
+class COutputList : public CListBox
+{
+	// 构造
+public:
+	COutputList();
+
+	// 实现
+public:
+	virtual ~COutputList();
+
+protected:
+	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg void OnEditCopy();
+	afx_msg void OnEditClear();
+	afx_msg void OnViewOutput();
+
+	DECLARE_MESSAGE_MAP()
+};
+
+
 class CSideWnd : public CDockablePane
 {
 // 构造
@@ -31,6 +53,8 @@ protected:
 
 	DwarfSideTabMap				m_SideTabCache;
 
+	COutputList					m_wndOutputBuild;
+
 protected:
 	void IncreaseValidityCounter();
 
@@ -52,23 +76,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// COutputList 窗口
-
-class COutputList : public CListBox
-{
-	// 构造
-public:
-	COutputList();
-
-	// 实现
-public:
-	virtual ~COutputList();
-
-protected:
-	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
-	afx_msg void OnEditCopy();
-	afx_msg void OnEditClear();
-	afx_msg void OnViewOutput();
-
-	DECLARE_MESSAGE_MAP()
-};
