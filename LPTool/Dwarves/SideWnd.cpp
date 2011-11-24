@@ -52,6 +52,24 @@ int CSideWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	m_wndTabs.AutoDestroyWindow(FALSE);
 
+	// 创建输出窗格:
+	const DWORD dwStyle = LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL;
+
+	if (!m_wndOutputBuild.Create(dwStyle, rectDummy, &m_wndTabs, 2))
+	{
+		TRACE0("未能创建输出窗口\n");
+		return -1;      // 未能创建
+	}
+
+	m_wndOutputBuild.Init();
+	m_wndOutputBuild.SetFont(&m_Font);
+
+	CString strTabName;
+
+	// 将列表窗口附加到选项卡:
+	strTabName.LoadString(IDS_BUILD_TAB);
+	m_wndTabs.AddTab(&m_wndOutputBuild, strTabName, (UINT)0);
+
 	return 0;
 }
 
@@ -71,7 +89,7 @@ LRESULT CSideWnd::OnTabActivate(WPARAM wParam, LPARAM lParam)
 	CWnd* pWndActive = m_wndTabs.GetActiveWnd();
 	if(!pWndActive) return 0;
 
-	ISideTab* pSideTab = static_cast<ISideTab*>(static_cast<CDwarfSideTab*>(pWndActive));
+	ISideTab* pSideTab = dynamic_cast<ISideTab*>(pWndActive);
 	
 	if(pSideTab->GetValidityCounter() != m_ValidityCounter && m_Context.MainViewID != CDwarfViewProvider::InvalidViewID)
 	{
@@ -107,6 +125,7 @@ void CSideWnd::IncreaseValidityCounter()
 void CSideWnd::ShowRelatedTabsForView(int viewID)
 {
 	ClearTabs();
+	m_wndTabs.AddTab(&m_wndOutputBuild, TEXT("输出"));
 
 	IDwarfViewInfo* pView = CDwarfViewProvider::GetInstance()[viewID];
 
@@ -148,7 +167,7 @@ CDwarfSideTab* CSideWnd::GetDwarfSideTab(int view, bool autoCreate)
 		if(!autoCreate) return 0;
 
 		iter = m_SideTabCache.insert(std::make_pair(view, new CDwarfSideTab())).first;
-		iter->second->Initialize(this, CDwarfViewProvider::GetInstance()[view]);
+		iter->second->Initialize(&m_wndTabs, CDwarfViewProvider::GetInstance()[view]);
 	}
 	return iter->second;
 }
