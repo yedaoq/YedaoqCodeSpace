@@ -55,7 +55,7 @@ LPTSTR _tcschrs( LPCTSTR psz, LPCTSTR pszchs )
 {
 	while( psz && *psz )
 	{
-		if( strchr( pszchs, *psz ) )
+		if( _tcschr( pszchs, *psz ) )
 			return (LPTSTR)psz;
 		psz++;
 	}
@@ -323,9 +323,9 @@ void _tagXMLNode::Close()
 			delete p; childs[i] = NULL;
 		}
 	}
-	childs.clear();
+	if(!childs.empty())	childs.clear();
 	
-	for( i = 0 ; i < attrs.size(); i ++)
+	for(int i = 0 ; i < attrs.size(); i ++)
 	{
 		LPXAttr p = attrs[i];
 		if( p )
@@ -333,7 +333,8 @@ void _tagXMLNode::Close()
 			delete p; attrs[i] = NULL;
 		}
 	}
-	attrs.clear();
+	
+	if(!attrs.empty()) attrs.clear();
 }
 	
 // attr1="value1" attr2='value2' attr3=value3 />
@@ -362,7 +363,7 @@ LPTSTR _tagXMLNode::LoadAttributes( LPCTSTR pszAttrs , LPPARSEINFO pi /*= &piDef
 				return xml;
 
 			// XML Attr Name
-			TCHAR* pEnd = _tcspbrk( xml, " =" );
+			TCHAR* pEnd = _tcspbrk( xml, TEXT(" =") );
 			if( pEnd == NULL ) 
 			{
 				// error
@@ -455,7 +456,7 @@ LPTSTR _tagXMLNode::LoadAttributes( LPCTSTR pszAttrs, LPCTSTR pszEnd, LPPARSEINF
 				return xml;
 
 			// XML Attr Name
-			TCHAR* pEnd = _tcspbrk( xml, " =" );
+			TCHAR* pEnd = _tcspbrk( xml, TEXT(" =") );
 			if( pEnd == NULL ) 
 			{
 				// error
@@ -551,7 +552,7 @@ LPTSTR _tagXMLNode::LoadProcessingInstrunction( LPCTSTR pszXml, LPPARSEINFO pi /
 		node->type = XNODE_PI;
 		
 		xml += sizeof(szXMLPIOpen)-1;
-		TCHAR* pTagEnd = _tcspbrk( xml, " ?>" );
+		TCHAR* pTagEnd = _tcspbrk( xml, TEXT(" ?>") );
 		_SetString( xml, pTagEnd, &node->name );
 		xml = pTagEnd;
 		
@@ -773,7 +774,7 @@ LPTSTR _tagXMLNode::Load( LPCTSTR pszXml, LPPARSEINFO pi /*= &piDefault*/ )
 
 	// XML Node Tag Name Open
 	xml++;
-	TCHAR* pTagEnd = _tcspbrk( xml, " />\t\r\n" );
+	TCHAR* pTagEnd = _tcspbrk( xml, TEXT(" />\t\r\n") );
 	_SetString( xml, pTagEnd, &name );
 	xml = pTagEnd;
 	// Generate XML Attributte List
@@ -864,7 +865,7 @@ LPTSTR _tagXMLNode::Load( LPCTSTR pszXml, LPPARSEINFO pi /*= &piDefault*/ )
 					if( xml = _tcsskip( xml ) )
 					{
 						CString closename;
-						TCHAR* pEnd = _tcspbrk( xml, " >" );
+						TCHAR* pEnd = _tcspbrk( xml, TEXT(" >") );
 						if( pEnd == NULL ) 
 						{
 							if( pi->erorr_occur == false ) 
@@ -1013,7 +1014,7 @@ LPXNode	_tagXMLDocument::GetRoot()
 //========================================================
 CString _tagXMLAttr::GetXML( LPDISP_OPT opt /*= &optDefault*/ )
 {
-	std::ostringstream os;
+	std::wostringstream os;
 	//os << (LPCTSTR)name << "='" << (LPCTSTR)value << "' ";
 	
 	os << (LPCTSTR)name << "=" << (char)opt->value_quotation_mark 
@@ -1033,7 +1034,7 @@ CString _tagXMLAttr::GetXML( LPDISP_OPT opt /*= &optDefault*/ )
 //========================================================
 CString _tagXMLNode::GetXML( LPDISP_OPT opt /*= &optDefault*/ )
 {
-	std::ostringstream os;
+	std::wostringstream os;
 
 	// tab
 	if( opt && opt->newline )
@@ -1154,7 +1155,7 @@ CString _tagXMLNode::GetXML( LPDISP_OPT opt /*= &optDefault*/ )
 //========================================================
 CString _tagXMLNode::GetText( LPDISP_OPT opt /*= &optDefault*/ )
 {
-	std::ostringstream os;
+	std::wostringstream os;
 
 	if( type == XNODE_DOC )
 	{
@@ -1421,7 +1422,7 @@ XNodes::iterator _tagXMLNode::GetChildIterator( LPXNode node )
 		if( *it == node )
 			return it;
 	}
-	return NULL;
+	return XNodes::iterator();
 }
 
 //========================================================
@@ -1449,6 +1450,7 @@ LPXNode	_tagXMLNode::AppendChild( LPCTSTR name /*= NULL*/, LPCTSTR value /*= NUL
 //========================================================
 LPXNode _tagXMLNode::AppendChild( LPXNode node )
 {
+	ASSERT(node != this);
 	node->parent = this;
 	node->doc = doc;
 	childs.push_back( node );
@@ -1467,7 +1469,7 @@ LPXNode _tagXMLNode::AppendChild( LPXNode node )
 bool _tagXMLNode::RemoveChild( LPXNode node )
 {
 	XNodes::iterator it = GetChildIterator( node );
-	if( it )
+	if( *it )
 	{
 		delete *it;
 		childs.erase( it );
@@ -1509,7 +1511,7 @@ XAttrs::iterator _tagXMLNode::GetAttrIterator( LPXAttr attr )
 		if( *it == attr )
 			return it;
 	}
-	return NULL;
+	return XAttrs::iterator();
 }
 
 //========================================================
@@ -1540,7 +1542,7 @@ LPXAttr _tagXMLNode::AppendAttr( LPXAttr attr )
 bool _tagXMLNode::RemoveAttr( LPXAttr attr )
 {
 	XAttrs::iterator it = GetAttrIterator( attr );
-	if( it )
+	if( it._Ptr )
 	{
 		delete *it;
 		attrs.erase( it );
@@ -1609,7 +1611,7 @@ LPXAttr _tagXMLNode::AppendAttr( LPCTSTR name /*= NULL*/, LPCTSTR value /*= NULL
 LPXNode _tagXMLNode::DetachChild( LPXNode node )
 {
 	XNodes::iterator it = GetChildIterator( node );
-	if( it )
+	if( it._Ptr )
 	{
 		childs.erase( it );
 		return node;
@@ -1629,7 +1631,7 @@ LPXNode _tagXMLNode::DetachChild( LPXNode node )
 LPXAttr _tagXMLNode::DetachAttr( LPXAttr attr )
 {
 	XAttrs::iterator it = GetAttrIterator( attr );
-	if( it )
+	if( it._Ptr )
 	{
 		attrs.erase( it );
 		return attr;
