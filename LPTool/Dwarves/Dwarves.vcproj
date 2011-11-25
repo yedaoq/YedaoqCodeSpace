@@ -203,6 +203,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DwarfOptions.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DwarfSideTab.cpp"
 				>
 			</File>
@@ -270,6 +274,10 @@
 			</File>
 			<File
 				RelativePath=".\DwarfDoc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfOptions.h"
 				>
 			</File>
 			<File

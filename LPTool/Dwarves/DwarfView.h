@@ -37,6 +37,8 @@ public:
 	IDBRecord*				GetFocusedRecord();
 	IEnumerator<IDBRecord>*	GetSelectedRecords();
 
+	void					GetUpdatedRecord(IDBRecord* cur, IDBRecord* ori);
+
 	void CreateButton(CButton& btn, UINT id, CWnd* pParent, LPCTSTR lpTitle = NULL, UINT width = 75, UINT height = 23, DWORD dwStyle = WS_CHILD | BS_CENTER | BS_VCENTER | BS_TEXT | BS_PUSHBUTTON, CFont* font = NULL);
 
 // ÖØÐ´
@@ -67,14 +69,20 @@ protected:
 	NSYedaoqLayout::CFlowLayout FlowLayoutMain;
 
 	CGridCtrl					Grid;
+	CGridCtrl					GridEdit;
 	OpBtnCollection				BtnOps;
 	CButton						BtnSearch;
 
 	CDBTableViewer4GridCtrl		GridViewer;
+	CDBTableViewer4GridCtrl		GridEditViewer;
 
 	DwarfViewOperationContext	Context;
-	CDBRecordAuto				FocusedRecord;
-	int							FocusedRecordIdx;
+
+	CDBRecordAuto				RecordFocused;
+	int							RecordIdxFocused;
+
+	CDBRecordAuto				RecordUpdated;
+
 	CGridSelectedRecordsEnumerator SelectedRecords;
 
 	static bool					BkColorInitFlag;
@@ -89,6 +97,8 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpcs);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnGridSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult);
+	afx_msg void OnGridSelDBClick(NMHDR *pNotifyStruct, LRESULT* pResult);
+	
 	DECLARE_MESSAGE_MAP()
 };
 

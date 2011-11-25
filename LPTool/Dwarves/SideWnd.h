@@ -2,13 +2,14 @@
 #pragma once
 #include <map>
 #include "DwarfViewInfo.h"
+#include "SideTab.h"
 
 interface IDwarfViewInfo;
 class	  CDwarfSideTab;
 
 // COutputList 窗口
 
-class COutputList : public CListBox
+class COutputList : public CListBox, public ISideTab
 {
 	// 构造
 public:
@@ -17,6 +18,15 @@ public:
 	// 实现
 public:
 	virtual ~COutputList();
+
+	virtual int  Initialize(CWnd* pParent, IDwarfViewInfo* pView) {return 1;};
+
+	virtual bool IsRelatedToMainView() {return false;};
+	virtual int  GetViewID() { return -1;};
+
+	virtual int  GetValidityCounter(){return -1;};
+	virtual int  SetValidityCounter(int){return 1;};
+	virtual int  ContentUpdate(DwarfViewOperationContext* pCtx) {return 1;};
 
 protected:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
@@ -39,6 +49,7 @@ public:
 	void ShowRelatedTabsForView(int viewID);
 	void RefreshSideView();
 	void ClearTabs();
+	int GetCurrentSideViewID();
 
 	CDwarfSideTab*				GetDwarfSideTab(int view, bool autoCreate = true);
 
@@ -73,6 +84,7 @@ protected:
 	afx_msg void OnMainViewContextChanged(const DwarfViewOperationContext* ctx);
 
 	DECLARE_MESSAGE_MAP()
+	
 };
 
 /////////////////////////////////////////////////////////////////////////////

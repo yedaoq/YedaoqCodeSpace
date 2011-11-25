@@ -39,7 +39,10 @@ int	CDBTableViewer4GridCtrl::Initialize(const CDBTableViewColumnCollection& colu
 			DT_CENTER|DT_VCENTER|DT_SINGLELINE, 
 			vCol.IdxView);
 
-		Grid_->SetItemText(0, vCol.IdxView, vCol.ViewInfo->GetTitle().c_str());
+		if(HeadRowCount_ > 0)
+		{
+			Grid_->SetItemText(0, vCol.IdxView, vCol.ViewInfo->GetTitle().c_str());
+		}
 	}
 
 	return 1;

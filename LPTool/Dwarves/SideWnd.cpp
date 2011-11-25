@@ -153,6 +153,20 @@ void CSideWnd::RefreshSideView()
 	OnTabActivate(m_wndTabs.GetActiveTab(), 0);	
 }
 
+int CSideWnd::GetCurrentSideViewID()
+{
+	CWnd* pWndActive = m_wndTabs.GetActiveWnd();
+	if(!pWndActive) return -1;
+
+	ISideTab* pSideTab = dynamic_cast<ISideTab*>(pWndActive);
+	if(pSideTab && pSideTab->IsRelatedToMainView())
+	{
+		return pSideTab->GetViewID();
+	}
+
+	return -1;
+}
+
 void CSideWnd::ClearTabs()
 {
 	m_wndTabs.RemoveAllTabs();

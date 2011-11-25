@@ -21,7 +21,8 @@ CDBTableViewColumnCollection& CDwarfViewInfoBase::GetViewColumnCollection()
 
 void CDwarfViewInfoBase::ExecuteOperation(index_t id, DwarfViewOperationContext* pCtx)
 {
-
+	DwarfViewOperationItem& item = Operations[id];
+	(this->*(item.Operation))(pCtx);
 }
 
 CDBColumnViewInfo& GetGridCol4Select()

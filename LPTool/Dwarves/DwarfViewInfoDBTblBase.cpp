@@ -77,7 +77,7 @@ int CDwarfViewInfoDBTblBase::InitializeReleatedViews()
 
 int CDwarfViewInfoDBTblBase::InitializeOperations()
 {
-	this->Operations.Append(TEXT("修改"), static_cast<DelegateOperation>(&CDwarfViewInfoDBTblBase::OnRecordModify));
+	this->Operations.Append(TEXT("更新"), static_cast<DelegateOperation>(&CDwarfViewInfoDBTblBase::OnRecordModify));
 	this->Operations.Append(TEXT("添加"), static_cast<DelegateOperation>(&CDwarfViewInfoDBTblBase::OnRecordInsert));
 	this->Operations.Append(TEXT("删除"), static_cast<DelegateOperation>(&CDwarfViewInfoDBTblBase::OnRecordDelete));
 	
@@ -123,7 +123,15 @@ CDBColumnViewInfo CDwarfViewInfoDBTblBase::GenerateColumnViewFromSchema(const DB
 	}
 	else if(col.RelyTblID >= 0 && col.RelyColID >= 0)
 	{
-		view.SetEditStyle(&CDBOptionalEditStyleProvider::GetInstance().Get(col.RelyTblID, col.RelyColID));
+		if(col.VisiColID >= 0)
+		{
+			view.SetEditStyle(&CDBOptionalEditStyleProvider::GetInstance().Get(col.RelyTblID, col.VisiColID));
+		}
+		else
+		{
+			view.SetEditStyle(&CDBOptionalEditStyleProvider::GetInstance().Get(col.RelyTblID, col.RelyColID));
+		}
+
 		if(col.VisiColID >= 0 && col.VisiColID != col.RelyColID)
 		{
 			view.SetTextFormat(&CDBMapFormatProvider::GetInstance().Get(col.RelyTblID, col.RelyColID, col.VisiColID));
@@ -191,7 +199,10 @@ IEnumerator<IDBRecord>*	CDwarfViewInfoDBTblBase::EnumRecord()
 
 void CDwarfViewInfoDBTblBase::OnRecordModify(DwarfViewOperationContext* pCtx)
 {
+	CDwarfView* pMainView = CGlobalData::GetViewByID(pCtx->MainViewID);
+	if(!pMainView) return 0;
 
+	
 }
 
 void CDwarfViewInfoDBTblBase::OnRecordDelete(DwarfViewOperationContext* pCtx)
