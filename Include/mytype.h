@@ -25,6 +25,7 @@
 	#define tprintf_s		wprintf_s
 	#define vstprintf_s		vswprintf_s
 	#define tifstream		wifstream
+	#define tofstream		wofstream
 #else
 	#define tregex			boost::xpressive::sregex
 	#define tcregex			boost::xpressive::cregex
@@ -44,6 +45,7 @@
 	#define tprintf_s		sprintf_s
 	#define vstprintf_s		vsprintf_s
 	#define tifstream		ifstream
+	#define tofstream		ofstream
 #endif
 
 typedef unsigned int index_t;

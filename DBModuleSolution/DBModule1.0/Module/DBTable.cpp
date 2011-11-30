@@ -155,7 +155,7 @@ int	CDBTable::Find(IDBRecord& rec) /*const*/
 	DBRecordIterator iter = Records_.find(rec);
 	if(iter != Records_.end())
 	{
-		rec = *iter;
+		DBRecordAssign(rec, *iter);
 		return 1;
 	}
 
@@ -170,11 +170,32 @@ int	CDBTable::Find(IDBRecord& rec, const CDBRecordComparison& cmp)
 	{
 		if(0 == cmp(rec, *iter))
 		{
-			rec = *iter;
+			DBRecordAssign(rec, *iter);
 			return 1;
 		}
 	}
 	return 0;
+}
+
+int	CDBTable::Find(int col, const tstring& val, IDBRecord& recDst)
+{
+	if(col < 0 || col >= RecordTemplate().GetFieldCount())
+	{
+		//ASSERT(false);
+		return 0;
+	}
+
+	CDBRecordComparison cmp(1, col);
+	CDBRecordBase rec = RecordTemplate();
+	rec.SetField(col, val);
+
+	int iRet = Find(rec, cmp);
+	if(iRet > 0)
+	{
+		DBRecordAssign(recDst, rec);
+	}
+
+	return iRet;
 }
 
 IEnumerator<IDBRecord>* CDBTable::FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp) /*const*/
@@ -184,6 +205,23 @@ IEnumerator<IDBRecord>* CDBTable::FindAll(const IDBRecord& rec, const CDBRecordC
 	return new_filter_enumerator(
 		make_iterator_enumerator_ex<IDBRecord>(Records_.begin(), Records_.end()),
 		CDBRecordFilter(rec, cmp));
+}
+
+IEnumerator<IDBRecord>*	CDBTable::FindAll(int col, const tstring& val)
+{
+	LoadData();
+
+	if(col < 0 || col >= RecordTemplate().GetFieldCount())
+	{
+		//ASSERT(false);
+		return 0;
+	}
+
+	CDBRecordComparison cmp(1, col);
+	CDBRecordBase rec = RecordTemplate();
+	rec.SetField(col, val);
+
+	return FindAll(rec, cmp);
 }
 
 int	CDBTable::Update(const IDBRecord& cur, const IDBRecord& ori)
@@ -208,7 +246,7 @@ int	CDBTable::Update(const IDBRecord& cur, const IDBRecord& ori)
 
 	// update to database
 	IDBCommand* cmd;
-	CommandBuilder_->GetCmdUpdate(cur, ori, Comparison_, &cmd);
+	CommandBuilder_->GetCmdUpdate(ori, cur, Comparison_, &cmd);
 
 	if(DBModule_->DBAdapter()->Execute(*cmd))
 	{

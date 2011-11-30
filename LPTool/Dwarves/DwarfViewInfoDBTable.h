@@ -10,4 +10,5 @@ public:
 	CDwarfViewInfoDBTable()
 		: CDwarfViewInfoDBTblBase(&g_DBModule, TblID)
 	{}
+
 };

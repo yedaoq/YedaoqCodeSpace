@@ -54,7 +54,7 @@ int	CSqliteDataAdapter::Execute(const IDBCommand& cmd)
 		throw std::exception();
 	}
 
-	return SqliteDB.execScalar(cmd.Text().c_str());
+	return SqliteDB.execDML(cmd.Text().c_str());
 }
 
 bool CSqliteTableEnumerator::MoveNext()

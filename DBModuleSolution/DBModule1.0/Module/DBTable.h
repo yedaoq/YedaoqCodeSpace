@@ -61,8 +61,10 @@ namespace NSDBModule
 		bool							Invalidate() { FlagDirty_ = true; }
 
 		int								Find(IDBRecord& rec);
+		int								Find(int col, const tstring& val, IDBRecord& recDst);
 		int								Find(IDBRecord& rec, const CDBRecordComparison& cmp);
 		IEnumerator<IDBRecord>*			FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp);
+		IEnumerator<IDBRecord>*			FindAll(int col, const tstring& val);
 	
 		int								Update(const IDBRecord& cur, const IDBRecord& ori);
 		int								Insert(const IDBRecord& rec);

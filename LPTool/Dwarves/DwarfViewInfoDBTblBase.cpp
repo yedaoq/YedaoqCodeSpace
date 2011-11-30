@@ -200,9 +200,12 @@ IEnumerator<IDBRecord>*	CDwarfViewInfoDBTblBase::EnumRecord()
 void CDwarfViewInfoDBTblBase::OnRecordModify(DwarfViewOperationContext* pCtx)
 {
 	CDwarfView* pMainView = CGlobalData::GetViewByID(pCtx->MainViewID);
-	if(!pMainView) return 0;
+	if(!pMainView) return;
 
-	
+	CDBRecordBase recOri = DBModule->Tables()[pMainView->GetViewID()]->RecordTemplate();
+	CDBRecordBase recCur = recOri;
+	pMainView->GetUpdatedRecord(&recCur, &recOri);
+	DBModule->Tables()[pMainView->GetViewID()]->Update(recCur, recOri);
 }
 
 void CDwarfViewInfoDBTblBase::OnRecordDelete(DwarfViewOperationContext* pCtx)

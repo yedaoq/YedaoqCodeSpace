@@ -223,6 +223,7 @@ void CDwarfView::SetViewID(int id)
 	}
 
 	ViewID = id; 
+	Context.MainViewID = id;
 
 	ResetTitle();
 	Initialize();
