@@ -12,6 +12,10 @@
 #include "DwarfViewInfo.h"
 #include "DwarfViewProvider.h"
 #include "SideWnd.h"
+#include <Helper.h>
+#include <GridCtrl.h>
+#include <GridCellBase.h>
+#include <EditStyle.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -42,7 +46,7 @@ END_MESSAGE_MAP()
 CDwarfView::CDwarfView()
 	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1), GridEditViewer(&GridEdit, 0), ViewID(-1),
 	SelectedRecords(&Grid, &GridViewer),
-	RecordIdxFocused(-1)
+	RecordIdxFocused(-1), RecordIdxUpdated(-1)
 {
 	// TODO: 在此处添加构造代码
 	
@@ -182,13 +186,8 @@ void CDwarfView::OnGridSelDBClick( NMHDR *pNotifyStruct, LRESULT* pResult )
 
 	if(pNm->iRow > 0 && pNm->iRow < Grid.GetRowCount())
 	{
-		GridViewer.GetCurRecord(&RecordUpdated);
+		RecordIdxUpdated = GridViewer.GetCurRecord(&RecordUpdated);
 		GridEditViewer.SetRecordAt(0, RecordUpdated);
-
-		/*for (int i = 0; i < GridEdit.GetColumnCount(); ++i)
-		{
-			GridEdit.GetCell(0, i)->SetText(Grid.GetItemText(pNm->iRow, i));
-		}*/
 
 		GridEdit.Invalidate();
 	}
@@ -301,6 +300,57 @@ int CDwarfView::Initialize()
 	return 0;
 }
 
+int	CDwarfView::RemoveRecordUpdated()
+{
+	if(RecordIdxUpdated < 0 || RecordIdxUpdated >= GridViewer.GetRecordCount())
+	{
+		return 0;
+	}
+
+	GridViewer.DelRecordAt(RecordIdxUpdated, 0);
+	RecordIdxUpdated = -1;
+
+	Grid.Invalidate();
+	return 1;
+}
+
+int	CDwarfView::RemoveRecordFocused()
+{
+	if(RecordIdxFocused < 0 || RecordIdxFocused >= GridViewer.GetRecordCount())
+	{
+		return 0;
+	}
+
+	GridViewer.DelRecordAt(RecordIdxFocused, 0);
+	RecordIdxFocused = -1;
+
+	Grid.Invalidate();
+	return 1;
+}
+
+int	CDwarfView::RemoveRecordSelected()
+{
+	for (int i = GridViewer.GetRecordCount() + GridViewer.HeadRowCount() - 1; i >= GridViewer.HeadRowCount(); --i)
+	{
+		if(CEditStyleBool::GetInstance().strTrue == Grid.GetCell(0, i)->GetText())
+		{
+			Grid.DeleteRow(i);
+		}
+	}
+
+	Grid.Invalidate();
+	
+	return 1;
+}
+
+int	CDwarfView::AddRecord(const IDBRecord& rec)
+{
+	GridViewer.NewRecordAt(0, rec);
+
+	Grid.Invalidate();
+	return 1;
+}
+
 int CDwarfView::ShowRecords()
 {
 	IDwarfViewInfo* pView = CDwarfViewProvider::GetInstance()[ViewID];
@@ -335,7 +385,7 @@ IEnumerator<IDBRecord>*	CDwarfView::GetSelectedRecords()
 	return &SelectedRecords;
 }
 
-void CDwarfView::GetUpdatedRecord( IDBRecord* cur, IDBRecord* ori )
+int CDwarfView::GetUpdatedRecord( IDBRecord* cur, IDBRecord* ori )
 {
 	if(cur)
 	{
@@ -344,8 +394,15 @@ void CDwarfView::GetUpdatedRecord( IDBRecord* cur, IDBRecord* ori )
 
 	if(ori)
 	{
+		if(RecordIdxUpdated < 0 || RecordIdxUpdated >= GridViewer.GetRecordCount())
+		{
+			MsgboxPrompt(TEXT("请选双击纪录并进行编辑！"));
+			return -1;
+		}
 		DBRecordAssign(*ori, RecordUpdated);
 	}
+
+	return 1;
 }
 
 // CDwarfView 消息处理程序

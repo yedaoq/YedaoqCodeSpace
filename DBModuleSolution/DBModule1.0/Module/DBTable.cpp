@@ -9,6 +9,7 @@
 #include <crtdbg.h>
 #include "DBRecord.h"
 #include "DBRecordFunction.h"
+#include <DMLNotifier.h>
 
 using namespace NSDBModule;
 
@@ -298,6 +299,13 @@ int	CDBTable::Delete(const IDBRecord& rec)
 		// data non exist
 		return 0;
 	}
+
+	// notify
+	DMLEvent e;
+	e.Command = EnumDMLCommand::Delete;
+	e.Database = GetDBModule();
+	e.FlagCancel = false;
+	e.TableID = GetDBModule()->Tables().IndexOf()
 
 	// update to database
 	IDBCommand* cmd;

@@ -8,6 +8,7 @@
 #include "DwarfViewInfo.h"
 #include "DwarfViewProvider.h"
 #include "DwarfSideTab.h"
+#include <Helper.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -136,10 +137,14 @@ void CSideWnd::ShowRelatedTabsForView(int viewID)
 
 	if(!pEnumView.get()) return;
 
+	TTRACE(TEXT("初始化附加视图列表 ================\n"));
+
 	while(pEnumView->MoveNext())
 	{
 		CDwarfSideTab* tab = GetDwarfSideTab(pEnumView->Current()->GetViewID(), true);
-		
+
+		TTRACE(TEXT("\t%d - 0X%08X\n"), tab->GetViewID(), tab->GetSafeHwnd());
+
 		if(tab && -1 == m_wndTabs.GetTabFromHwnd(tab->GetSafeHwnd()))
 		{
 			m_wndTabs.AddTab(tab, pEnumView->Current()->ToString().c_str());
@@ -169,6 +174,10 @@ int CSideWnd::GetCurrentSideViewID()
 
 void CSideWnd::ClearTabs()
 {
+	/*for (int i = m_wndTabs.GetTabsNum() - 1; i >= 0; --i)
+	{
+		m_wndTabs.DetachTab(AFX_DOCK_METHOD::DM_STANDARD, i, TRUE);
+	}*/
 	m_wndTabs.RemoveAllTabs();
 }
 

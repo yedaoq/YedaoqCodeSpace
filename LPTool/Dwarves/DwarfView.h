@@ -34,10 +34,16 @@ public:
 	int			Initialize();
 	int			ShowRecords();
 
+	int			RemoveRecordUpdated();
+	int			RemoveRecordFocused();
+	int			RemoveRecordSelected();
+	
+	int			AddRecord(const IDBRecord& rec);
+
 	IDBRecord*				GetFocusedRecord();
 	IEnumerator<IDBRecord>*	GetSelectedRecords();
 
-	void					GetUpdatedRecord(IDBRecord* cur, IDBRecord* ori);
+	int					GetUpdatedRecord(IDBRecord* cur, IDBRecord* ori);
 
 	void CreateButton(CButton& btn, UINT id, CWnd* pParent, LPCTSTR lpTitle = NULL, UINT width = 75, UINT height = 23, DWORD dwStyle = WS_CHILD | BS_CENTER | BS_VCENTER | BS_TEXT | BS_PUSHBUTTON, CFont* font = NULL);
 
@@ -82,6 +88,7 @@ protected:
 	int							RecordIdxFocused;
 
 	CDBRecordAuto				RecordUpdated;
+	int							RecordIdxUpdated;
 
 	CGridSelectedRecordsEnumerator SelectedRecords;
 

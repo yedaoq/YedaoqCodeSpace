@@ -295,6 +295,18 @@
 				Name="Store"
 				>
 			</Filter>
+			<Filter
+				Name="Notifier"
+				>
+				<File
+					RelativePath=".\DMLNotifier.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\DMLNotifier.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Util"

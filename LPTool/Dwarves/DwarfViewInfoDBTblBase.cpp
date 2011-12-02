@@ -204,16 +204,63 @@ void CDwarfViewInfoDBTblBase::OnRecordModify(DwarfViewOperationContext* pCtx)
 
 	CDBRecordBase recOri = DBModule->Tables()[pMainView->GetViewID()]->RecordTemplate();
 	CDBRecordBase recCur = recOri;
-	pMainView->GetUpdatedRecord(&recCur, &recOri);
-	DBModule->Tables()[pMainView->GetViewID()]->Update(recCur, recOri);
+
+	if(pMainView->GetUpdatedRecord(&recCur, &recOri) <= 0)
+	{
+		return;
+	}
+
+	if(DBModule->Tables()[pMainView->GetViewID()]->Update(recCur, recOri) > 0)
+	{
+		pMainView->RemoveRecordUpdated();
+		pMainView->AddRecord(recCur);
+	}
+	else
+	{
+		ASSERT(false);
+	}
 }
 
 void CDwarfViewInfoDBTblBase::OnRecordDelete(DwarfViewOperationContext* pCtx)
 {
+	CDwarfView* pMainView = CGlobalData::GetViewByID(pCtx->MainViewID);
+	if(!pMainView) return;
 
+	CDBRecordBase recOri = DBModule->Tables()[pMainView->GetViewID()]->RecordTemplate();
+
+	if(pMainView->GetUpdatedRecord(0, &recOri) <= 0)
+	{
+		return;
+	}
+
+	if(DBModule->Tables()[pMainView->GetViewID()]->Delete(recOri) > 0)
+	{
+		pMainView->RemoveRecordUpdated();
+	}
+	else
+	{
+		ASSERT(false);
+	}
 }
 
 void CDwarfViewInfoDBTblBase::OnRecordInsert(DwarfViewOperationContext* pCtx)
 {
+	CDwarfView* pMainView = CGlobalData::GetViewByID(pCtx->MainViewID);
+	if(!pMainView) return;
 
+	CDBRecordBase recCur = DBModule->Tables()[pMainView->GetViewID()]->RecordTemplate();
+
+	if(pMainView->GetUpdatedRecord(&recCur, 0) <= 0)
+	{
+		return;
+	}
+
+	if(DBModule->Tables()[pMainView->GetViewID()]->Insert(recCur) > 0)
+	{
+		pMainView->AddRecord(recCur);
+	}
+	else
+	{
+		ASSERT(false);
+	}
 }
