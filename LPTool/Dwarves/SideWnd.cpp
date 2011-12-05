@@ -53,22 +53,20 @@ int CSideWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	m_wndTabs.AutoDestroyWindow(FALSE);
 
-	// 创建输出窗格:
+	// 创建日志窗格:
 	const DWORD dwStyle = LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL;
 
-	if (!m_wndOutputBuild.Create(dwStyle, rectDummy, &m_wndTabs, 2))
+	if (!m_wndLogTab.Create(dwStyle, rectDummy, &m_wndTabs, 2))
 	{
 		TRACE0("未能创建输出窗口\n");
 		return -1;      // 未能创建
 	}
 
-	m_wndOutputBuild.SetFont(&m_Font);
-
-	CString strTabName;
-
-	// 将列表窗口附加到选项卡:
-	strTabName.LoadString(IDS_BUILD_TAB);
-	m_wndTabs.AddTab(&m_wndOutputBuild, strTabName, (UINT)0);
+	// 将日志窗口附加到选项卡:
+	CGlobalData::SetLogTab(&m_wndLogTab);
+	m_wndLogTab.BeginMonit(&g_DBModule);
+	m_wndLogTab.SetFont(&m_Font);
+	m_wndTabs.AddTab(&m_wndLogTab, TEXT("日志"), (UINT)0);
 
 	return 0;
 }
@@ -125,7 +123,7 @@ void CSideWnd::IncreaseValidityCounter()
 void CSideWnd::ShowRelatedTabsForView(int viewID)
 {
 	ClearTabs();
-	m_wndTabs.AddTab(&m_wndOutputBuild, TEXT("输出"));
+	m_wndTabs.AddTab(&m_wndLogTab, TEXT("日志"));
 
 	IDwarfViewInfo* pView = CDwarfViewProvider::GetInstance()[viewID];
 

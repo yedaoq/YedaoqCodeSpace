@@ -5,11 +5,12 @@
 #include "..\DBInterface\DBDataAdapter.h"
 #include "..\DBInterface\DBFactory.h"
 #include "Schema\DBTableSchema.h"
+#include ".\DMLNotifier\DMLNotifier.h"
 #include <vector>
 #include <crtdbg.h>
 #include "DBRecord.h"
 #include "DBRecordFunction.h"
-#include <DMLNotifier.h>
+
 
 using namespace NSDBModule;
 
@@ -245,6 +246,12 @@ int	CDBTable::Update(const IDBRecord& cur, const IDBRecord& ori)
 		}
 	}
 
+	// notify
+	if(!CallNotify(EnumDMLCommand::DMLUpdate, &cur, &ori))
+	{
+		return 0;
+	}
+
 	// update to database
 	IDBCommand* cmd;
 	CommandBuilder_->GetCmdUpdate(ori, cur, Comparison_, &cmd);
@@ -270,6 +277,12 @@ int	CDBTable::Insert(const IDBRecord& rec)
 	if(iOri != Records_.end())
 	{
 		// data exist
+		return 0;
+	}
+
+	// notify
+	if(!CallNotify(EnumDMLCommand::DMLInsert, &rec, 0))
+	{
 		return 0;
 	}
 
@@ -301,12 +314,11 @@ int	CDBTable::Delete(const IDBRecord& rec)
 	}
 
 	// notify
-	DMLEvent e;
-	e.Command = EnumDMLCommand::Delete;
-	e.Database = GetDBModule();
-	e.FlagCancel = false;
-	e.TableID = GetDBModule()->Tables().IndexOf()
-
+	if(!CallNotify(EnumDMLCommand::DMLDelete, 0, &rec))
+	{
+		return 0;
+	}
+	
 	// update to database
 	IDBCommand* cmd;
 	CommandBuilder_->GetCmdDelete(rec, Comparison_, &cmd);
@@ -321,4 +333,19 @@ int	CDBTable::Delete(const IDBRecord& rec)
 	Records_.erase(iOri);
 
 	return 1;
+}
+
+bool NSDBModule::CDBTable::CallNotify( EnumDMLCommand cmd, const IDBRecord* cur, const IDBRecord* ori )
+{
+	// notify
+	static DMLEvent e( GetDBModule(), Schema_.Index );
+	e.Database = GetDBModule();
+	e.TableID = Schema_.Index;
+	e.Command = cmd;
+	e.RecordOrigin = ori;
+	e.RecordFresh = cur;
+	e.FlagCancel = false;
+
+	e.Database->DMLNotifier().Dispatch(&e);
+	return !e.FlagCancel;
 }

@@ -2,11 +2,10 @@
 #include "vector"
 #include "Enumerator.h"
 #include ".\Schema\DBSchemaLoader.h"
-#include ".\Schema\DBSchemaLoader.h"
+#include ".\DMLNotifier\DMLNotifier.h"
 #include <atlcomcli.h>
 #include <memory>
 #include "DBTableCollection.h"
-#include <DMLNotifier.h>
 
 #ifndef interface
 #define interface struct

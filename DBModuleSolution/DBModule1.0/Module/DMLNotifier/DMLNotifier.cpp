@@ -1,9 +1,12 @@
 #include "DMLNotifier.h"
+#include <Module\DBModule.h>
+
+using namespace NSDBModule;
 
 void CDMLMonitor::Ring(DMLEvent* e)
 {
-	ASSERT(e && e->TableID && (e->RecordFresh || e->RecordOrigin));
-	if(e && (e->Command & Command2Monit) && (Table2Monit < 0 || Table2Monit = e->TableID))
+	//ASSERT(e && e->TableID && (e->RecordFresh || e->RecordOrigin));
+	if(e && (e->Command & Command2Monit) && (Table2Monit < 0 || Table2Monit == e->TableID))
 	{
 		Delegate(e);
 	}
@@ -11,7 +14,7 @@ void CDMLMonitor::Ring(DMLEvent* e)
 
 void CDMLNotifier::Dispatch(DMLEvent* e)
 {
-	for (MonitorMap::iterator iter = Monitors.begin(); iter != Monitors.end(); ++iter)
+	for (MonitorMap::iterator iter = Monitors.begin(); iter != Monitors.end() && !e->FlagCancel; ++iter)
 	{
 		iter->second.Ring(e);
 	}
@@ -33,7 +36,8 @@ void CDMLNotifier::RemoveMonitor(int id)
 	MonitorMap::iterator iter = Monitors.find(id);
 	if(iter == Monitors.end())
 	{
-		ASSERT(false);
+		throw std::exception("指定ID的监视器不存在！");
+		//ASSERT(false);
 	}
 	else
 	{

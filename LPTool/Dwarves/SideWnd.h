@@ -3,6 +3,7 @@
 #include <map>
 #include "DwarfViewInfo.h"
 #include "SideTab.h"
+#include "DwarfLogTab.h"
 
 interface IDwarfViewInfo;
 class	  CDwarfSideTab;
@@ -65,6 +66,7 @@ protected:
 	DwarfSideTabMap				m_SideTabCache;
 
 	COutputList					m_wndOutputBuild;
+	CDwarfLogTab				m_wndLogTab;
 
 protected:
 	void IncreaseValidityCounter();
