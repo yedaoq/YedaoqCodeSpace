@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="LocalPlayerDB"
-	ProjectGUID="{AD46613E-8712-4401-BC76-FF80409BB21C}"
-	RootNamespace="LocalPlayerDB"
+	Name="SqliteInterface"
+	ProjectGUID="{BA7F721D-EAFE-43B9-BA32-67793FB27503}"
+	RootNamespace="Sqlite"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="..\..\Lib\$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
@@ -42,11 +42,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="D:\YedaoqCodeSpace\DBModuleSolution\DBModule1.0;D:\YedaoqCodeSpace\Include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LOCALPLAYERDB_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -82,7 +83,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -105,7 +106,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LOCALPLAYERDB_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -124,7 +125,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				ModuleDefinitionFile="LocalPlayerDB.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -163,11 +163,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\DBModuleLP.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DBNameMappingLP.cpp"
+				RelativePath=".\CppSQLite3U.cpp"
 				>
 			</File>
 			<File
@@ -175,19 +171,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LocalPlayerDB.cpp"
+				RelativePath=".\SqliteDataAdapter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\LocalPlayerDB.def"
+				RelativePath=".\SqliteDataTypeProvider.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SqliteFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SqliteNameMapping.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\SqliteSource.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\stdafx.cpp"
 				>
 			</File>
 		</Filter>
@@ -197,11 +197,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\DBModuleLP.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DBNameMappingLP.h"
+				RelativePath=".\CppSQLite3U.h"
 				>
 			</File>
 			<File
@@ -209,11 +205,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LocalPlayerDB.h"
+				RelativePath=".\I_DBControl.h"
 				>
 			</File>
 			<File
-				RelativePath=".\LocalPlayerObjEnum.h"
+				RelativePath=".\sqlite3.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SqliteDataAdapter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SqliteDataTypeProvider.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SqliteFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SqliteNameMapping.h"
 				>
 			</File>
 			<File

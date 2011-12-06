@@ -3,7 +3,7 @@
 #include "DBInterface/DBNameMapping.h"
 #include "Singlton.h"
 
-class CDBNameMappingLP : public NSDBModule::IDBNameMapping, public CSingleton<CDBNameMappingLP>
+class CSqliteNameMapping : public NSDBModule::IDBNameMapping, public CSingleton<CSqliteNameMapping>
 {
 public:
 	virtual tstring FromDBName(const tstring& dbName, const NSDBModule::ContextDBNameMapping& context);

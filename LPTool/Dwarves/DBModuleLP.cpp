@@ -3,11 +3,12 @@
 #include "Module/Schema/DBSchemaCppMicro.h"
 #include "Module/Schema/BuildInSchemaSerializer.h"
 #include <memory>
-#include "DBNameMappingLP.h"
+//#include "DBNameMappingLP.h"
+#include "SqliteNameMapping.h"
 #include "DBInterface/DBSourcePath.h"
 #include "DBInterface/DBDataAdapter.h"
 #include "DBInterface/DBFactory.h"
-#include "Sqlite/SqliteSource.h"
+#include "SqliteSource.h"
 #include "mytype.h"
 #include <fstream>
 #include <iosfwd>
@@ -37,21 +38,21 @@ int	CDBModuleLP::InitializeBuildinSchema()
 	return 1;
 }
 
-CDBModuleLP g_DBModule;
+//CDBModuleLP g_DBModule;
 
-bool DBInitialize()
-{
-	CSqliteSourceManager smr;
-	std::auto_ptr<IDBConnection> pConn(smr.PromptSelectDBSource(0));
-	IDBDataAdapter* PAdapter;
-	IDBFactory*		pFactory;
-	IDBNameMapping* pMapping = new CDBNameMappingLP();
-
-	if(pConn.get() && smr.OpenDBConnection(pConn.get(), &PAdapter, &pFactory))
-	{
-		g_DBModule.AttachToDatabase(PAdapter, pFactory, pMapping);
-		return true;
-	}
-
-	return false;
-}
+//bool DBInitialize()
+//{
+//	CSqliteSourceManager smr;
+//	std::auto_ptr<IDBConnection> pConn(smr.PromptSelectDBSource(0));
+//	IDBDataAdapter* PAdapter;
+//	IDBFactory*		pFactory;
+//	IDBNameMapping* pMapping = new CSqliteNameMapping();
+//
+//	if(pConn.get() && smr.OpenDBConnection(pConn.get(), &PAdapter, &pFactory))
+//	{
+//		CDBModuleLP::GetInstance().AttachToDatabase(PAdapter, pFactory, pMapping);
+//		return true;
+//	}
+//
+//	return false;
+//}

@@ -2,9 +2,9 @@
 
 #include "I_DBControl.h"
 #include "CppSQLite3U.h"
-#include "..\DBInterface\DBDataAdapter.h"
-#include "..\Module\DBRecord.h"
-#include "..\DBInterface\DBSourcePath.h"
+#include "DBInterface\DBDataAdapter.h"
+#include "Module\DBRecord.h"
+#include "DBInterface\DBSourcePath.h"
 
 namespace NSDBModule
 {

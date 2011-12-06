@@ -12,7 +12,6 @@ enum EnumLocalPlayerTables
 	TBL_CodecType,
 	TBL_Links,
 	TBL_PackageLua,
-	TBL_LinkLink,
 	TBL_ParserCondition,
 	TBL_LinkRules,
 	TBL_Rules,
@@ -22,12 +21,15 @@ enum EnumLocalPlayerTables
 	TBL_ParserResult,
 	TBL_SourceLink,
 	TBL_MediaExtension,
-	TBL_MediaType,
 	TBL_SourceConfig,
 	TBL_LinkInput,
 	TBL_Codecs,
 	TBL_PackageIndex,
 	TBL_PackageInfo,
+	TBL_Option,
+	TBL_LinkLink,
+	TBL_MediaType,
+	TBL_DmlLog,
 };
 
 enum EnumFileInfoColumns
@@ -106,14 +108,6 @@ enum EnumPackageLuaColumns
 	COL_PackageLua_LuaUninstall,
 };
 
-enum EnumLinkLinkColumns
-{
-	COL_LinkLink_LinkId,
-	COL_LinkLink_StreamId,
-	COL_LinkLink_NextLinkId,
-	COL_LinkLink_RuleId,
-};
-
 enum EnumParserConditionColumns
 {
 	COL_ParserCondition_ConditionId,
@@ -190,12 +184,6 @@ enum EnumMediaExtensionColumns
 	COL_MediaExtension_FileExtension,
 };
 
-enum EnumMediaTypeColumns
-{
-	COL_MediaType_MediaTypeId,
-	COL_MediaType_MediaTypeName,
-};
-
 enum EnumSourceConfigColumns
 {
 	COL_SourceConfig_ConfigId,
@@ -233,5 +221,39 @@ enum EnumPackageInfoColumns
 	COL_PackageInfo_PckId,
 	COL_PackageInfo_PckName,
 	COL_PackageInfo_Url,
+};
+
+enum EnumOptionColumns
+{
+	COL_Option_Id,
+	COL_Option_Name,
+	COL_Option_Value,
+	COL_Option_Param1,
+	COL_Option_Param2,
+};
+
+enum EnumLinkLinkColumns
+{
+	COL_LinkLink_LinkId,
+	COL_LinkLink_StreamId,
+	COL_LinkLink_NextLinkId,
+	COL_LinkLink_RuleId,
+	COL_LinkLink_Priority,
+};
+
+enum EnumMediaTypeColumns
+{
+	COL_MediaType_MediaTypeId,
+	COL_MediaType_MediaTypeName,
+	COL_MediaType_Priority,
+};
+
+enum EnumDmlLogColumns
+{
+	COL_DmlLog_Dbver,
+	COL_DmlLog_Command,
+	COL_DmlLog_TableName,
+	COL_DmlLog_RecordOrigin,
+	COL_DmlLog_RecordFresh,
 };
 

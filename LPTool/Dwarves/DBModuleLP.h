@@ -3,8 +3,9 @@
 #include "mytype.h"
 #include "Module\DBModule.h"
 #include "Module\Schema\DBSchemaHeaderMicro.h"
+#include "Singlton.h"
 
-class CDBModuleLP : public NSDBModule::CDBModule
+class CDBModuleLP : public NSDBModule::CDBModule, public CSingleton<CDBModuleLP>
 {
 public:
 	class CDBModuleLP()
@@ -17,4 +18,4 @@ public:
 
 bool DBInitialize();
 
-extern CDBModuleLP g_DBModule;
+//extern CDBModuleLP g_DBModule;

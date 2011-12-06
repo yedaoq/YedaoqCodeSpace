@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "DBNameMappingLP.h"
+#include "SqliteNameMapping.h"
 #include "mytype.h"
 #include "boost\xpressive\xpressive.hpp"
 #include <boost\algorithm\string\case_conv.hpp>
@@ -22,14 +22,14 @@ struct ReplaceToLower
 	}
 };
 
-tstring CDBNameMappingLP::FromDBName(const tstring& dbName, const ContextDBNameMapping& context)
+tstring CSqliteNameMapping::FromDBName(const tstring& dbName, const ContextDBNameMapping& context)
 {
 	static boost::xpressive::wsregex reg = boost::xpressive::wsregex_compiler().compile(TEXT("(?:^|_)([A-Za-z0-9])"));
 	//static boost::xpressive::wsregex reg(TEXT("(?:^|_)([A-Za-z0-9])"));
 	return boost::xpressive::regex_replace(dbName, reg, ReplaceToUpper());
 }
 
-tstring CDBNameMappingLP::ToDBName(const tstring& name, const ContextDBNameMapping& context)
+tstring CSqliteNameMapping::ToDBName(const tstring& name, const ContextDBNameMapping& context)
 {
 	static boost::xpressive::wsregex reg = boost::xpressive::wsregex_compiler().compile(TEXT("([A-Z]+)"));
 	//static boost::xpressive::wsregex reg(TEXT("([A-Z]+)"));

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\DBInterface\DBFactory.h"
+#include "DBInterface\DBFactory.h"
 
 namespace NSDBModule
 {

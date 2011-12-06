@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "SqliteSource.h"
-#include "Sqlite\SqliteDataAdapter.h"
-#include "Sqlite\SqliteFactory.h"
+#include "SqliteDataAdapter.h"
+#include "SqliteFactory.h"
 #include "FileDialogST.h"
+#include "SqliteNameMapping.h"
 
 using namespace NSDBModule;
 
@@ -131,4 +132,14 @@ bool CSqliteSourceManager::OpenDBConnection(IDBConnection* pConn, IDBDataAdapter
 	*ppFactory = new CSqliteFactory();
 
 	return true;
+}
+
+extern "C" __declspec(dllexport) IDBSourceManager* GetDBSourceManager()
+{
+	return new CSqliteSourceManager();
+}
+
+extern "C" __declspec(dllexport) IDBNameMapping* GetDBNameMapping()
+{
+	return new CSqliteNameMapping();
 }
