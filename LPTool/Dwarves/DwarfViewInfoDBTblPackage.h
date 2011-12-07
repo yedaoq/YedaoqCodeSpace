@@ -7,7 +7,7 @@ class CDwarfViewInfoDBTable<TBL_PackageInfo> : public CDwarfViewInfoDBTblBase
 {
 public:
 	CDwarfViewInfoDBTable()
-		: CDwarfViewInfoDBTblBase(&g_DBModule, TBL_PackageInfo)
+		: CDwarfViewInfoDBTblBase(&CDBModuleLP::GetInstance(), TBL_PackageInfo)
 	{}
 
 	void MakePackage( const tstring& pckID , const tstring& pckFileName) ;

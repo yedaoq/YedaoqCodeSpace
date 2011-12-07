@@ -15,12 +15,12 @@ using namespace NSDBModule;
 
 bool CDwarfViewInfoDBTblBase::IsDBTableRelated(int tblCur, int tblTar, int* colCur, int* colTar)
 {
-	if(tblCur < 0 || tblCur >= g_DBModule.Tables().Count() || tblTar < 0 || tblTar >= g_DBModule.Tables().Count())
+	if(tblCur < 0 || tblCur >= CDBModuleLP::GetInstance().Tables().Count() || tblTar < 0 || tblTar >= CDBModuleLP::GetInstance().Tables().Count())
 	{
 		return false;
 	}
 
-	std::auto_ptr<DBColumnEnumerator> pEnumCol(g_DBModule.Tables()[tblCur]->EnumColumn());
+	std::auto_ptr<DBColumnEnumerator> pEnumCol(CDBModuleLP::GetInstance().Tables()[tblCur]->EnumColumn());
 	while(pEnumCol->MoveNext())
 	{
 		if(pEnumCol->Current().RelyTblID == tblTar)

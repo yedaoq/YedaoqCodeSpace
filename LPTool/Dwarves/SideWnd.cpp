@@ -64,7 +64,7 @@ int CSideWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// 将日志窗口附加到选项卡:
 	CGlobalData::SetLogTab(&m_wndLogTab);
-	m_wndLogTab.BeginMonit(&g_DBModule);
+	//m_wndLogTab.BeginMonit(&CDBModuleLP::GetInstance());
 	m_wndLogTab.SetFont(&m_Font);
 	m_wndTabs.AddTab(&m_wndLogTab, TEXT("日志"), (UINT)0);
 

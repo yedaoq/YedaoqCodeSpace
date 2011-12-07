@@ -16,6 +16,7 @@
 #include <GridCtrl.h>
 #include <GridCellBase.h>
 #include <EditStyle.h>
+#include "ToolBarMaintianer.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -34,6 +35,10 @@ BEGIN_MESSAGE_MAP(CDwarfView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CDwarfView::OnFilePrintPreview)
+	ON_COMMAND(ToolBarCmbSearchID, &CDwarfView::OnToolBarCmbSearch)
+	ON_CBN_EDITCHANGE(ToolBarCmbSearchID, &CDwarfView::OnToolBarCmbSearchTxtChanged)
+	ON_CBN_EDITUPDATE(ToolBarCmbSearchID, &CDwarfView::OnToolBarCmbSearchTxtChanged)
+	ON_CBN_SELCHANGE(ToolBarCmbSearchID, &CDwarfView::OnToolBarCmbSearchTxtChanged)
 	ON_NOTIFY(GVN_SELCHANGED, EIDC_GRID, &CDwarfView::OnGridSelChanged)
 	ON_NOTIFY(NM_DBLCLK, EIDC_GRID, &CDwarfView::OnGridSelDBClick)
 	ON_WM_CREATE()
@@ -89,9 +94,9 @@ int CDwarfView::OnCreate(LPCREATESTRUCT lpcs)
 
 	RECT rect = {0, 0, lpcs->cx, GridEdit.GetDefCellHeight() + 5};
 
-	GridEdit.Create(rect, this, EIDC_GRID, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
+	GridEdit.Create(rect, this, EIDC_GRIDEDIT, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
 	GridEdit.SetBkColor((COLORREF)::GetSysColor(COLOR_BTNFACE));
-	GridEdit.GetDefaultCell(FALSE, FALSE)->SetBackClr((COLORREF)0xAAE0E0);
+	GridEdit.GetDefaultCell(FALSE, FALSE)->SetBackClr((COLORREF)0xE0E0E0);
 
 	Grid.Create(rect, this, EIDC_GRID, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
 	Grid.SetBkColor((COLORREF)::GetSysColor(COLOR_BTNFACE));
@@ -192,6 +197,41 @@ void CDwarfView::OnGridSelDBClick( NMHDR *pNotifyStruct, LRESULT* pResult )
 		GridEdit.Invalidate();
 	}
 }
+
+void CDwarfView::OnToolBarCmbSearch()
+{	
+	bool	bOk = false;
+	CString strCell;
+	CString strKey = CToolBarMaintianer::GetInstance().m_ToolCmbSearch.GetText();
+	if(strKey.IsEmpty()) return;	
+
+	for (int i = GridViewer.HeadRowCount(); i < Grid.GetRowCount() && !bOk; ++i)
+	{
+		for (int j = 1; j < Grid.GetColumnCount(); ++j)
+		{
+			strCell = Grid.GetCell(i,j)->GetText();
+			if (strCell.Find(strKey) >= 0)
+			{
+				Grid.SetFocusCell(i,j);
+				Grid.ScrollToRow(i);
+				Grid.Invalidate(TRUE);
+				bOk = true;
+				break;
+			}
+			/*if(ExistSubString(Grid.GetCell(i,j)->GetText(), strKey))
+			{
+
+			}*/
+		}
+	}
+}
+
+void CDwarfView::OnToolBarCmbSearchTxtChanged()
+{	
+	//TTRACE(TEXT("ËÑË÷¿ò±ä¸ü£º%s\n"), CToolBarMaintianer::GetInstance().m_ToolCmbSearch.GetText());
+	TTRACE(TEXT("ËÑË÷¿ò±ä¸ü£º%s\n"), CToolBarMaintianer::GetInstance().m_ToolCmbSearch.GetText());
+}
+
 
 // CDwarfView Õï¶Ï
 

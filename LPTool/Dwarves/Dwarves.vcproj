@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\LocalPlayerDB"
+				AdditionalIncludeDirectories="..\..\DBModuleSolution\DBModule1.0;..\..\DBModuleSolution\SqliteInterface;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -68,9 +68,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="DBModule1.0.lib GridCtrl.lib sqlite3.lib YedaoqLayout.lib Advapi32.lib LocalPlayerDB.lib"
+				AdditionalDependencies="DBModule1.0.lib SqliteInterface.lib GridCtrl.lib YedaoqLayout.lib sqlite3.lib Advapi32.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="D:\YedaoqCodeSpace\Lib\$(ConfigurationName),$(OutDir)"
+				IgnoreDefaultLibraryNames="libcmtd.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -183,6 +184,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{5163FC8C-8B79-4B9C-A7EF-A6D5650601CC}"
+			RelativePathToProject="..\DBModuleSolution\DBModule1.0\DBModule1.0.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -196,6 +201,10 @@
 			</File>
 			<File
 				RelativePath=".\ClassView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DBModuleLP.cpp"
 				>
 			</File>
 			<File
@@ -259,6 +268,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\ToolBarMaintianer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ViewTree.cpp"
 				>
 			</File>
@@ -274,6 +287,10 @@
 			</File>
 			<File
 				RelativePath=".\ClassView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBModuleLP.h"
 				>
 			</File>
 			<File
@@ -305,6 +322,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LocalPlayerObjEnum.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.h"
 				>
 			</File>
@@ -326,6 +347,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ToolBarMaintianer.h"
 				>
 			</File>
 			<File
@@ -475,6 +500,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DwarfViewInfoDBTblDmlLog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DwarfViewInfoDBTblDmlLog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DwarfViewInfoDBTblFileInfo.cpp"
 				>
 			</File>
@@ -504,6 +537,10 @@
 			>
 			<File
 				RelativePath=".\CommandIDAlloter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DBEnumeratorProvider.cpp"
 				>
 			</File>
 			<File
@@ -540,6 +577,10 @@
 			</File>
 			<File
 				RelativePath="..\..\Include\Helper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TextFormater4DBMap.h"
 				>
 			</File>
 		</Filter>

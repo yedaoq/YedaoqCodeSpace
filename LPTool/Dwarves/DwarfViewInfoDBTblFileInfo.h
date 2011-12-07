@@ -8,7 +8,7 @@ class CDwarfViewInfoDBTable<TBL_FileInfo> : public CDwarfViewInfoDBTblBase
 {
 public:
 	CDwarfViewInfoDBTable()
-		: CDwarfViewInfoDBTblBase(&g_DBModule, TBL_FileInfo)
+		: CDwarfViewInfoDBTblBase(&CDBModuleLP::GetInstance(), TBL_FileInfo)
 	{}
 
 	void UpdateFileInfo(const IDBRecord& recFile);

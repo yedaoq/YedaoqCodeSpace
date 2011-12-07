@@ -3166,6 +3166,25 @@ void CGridCtrl::ResetSelectedRange()
     SetFocusCell(-1,-1);
 }
 
+void CGridCtrl::ScrollToRow(int row)
+{
+	if(row < 0 || row > GetRowCount())
+	{
+		row = GetRowCount();
+	}
+
+	/*if(row > GetFixedRowCount())
+	{
+		row -= GetFixedRowCount();
+	}*/
+
+	long lRowsHeight = 0;
+	for (int i = 0; i < row; i++)
+		lRowsHeight += m_arRowHeights[i];
+
+	SetScrollPos32(SB_VERT, lRowsHeight, TRUE);
+}
+
 // Get/Set scroll position using 32 bit functions
 int CGridCtrl::GetScrollPos32(int nBar, BOOL bGetTrackPos /* = FALSE */)
 {
@@ -3941,8 +3960,8 @@ int CGridCtrl::InsertRow(LPCTSTR strHeading, int nRow /* = -1 */)
     }
 
     // If the insertion is for a specific row, check it's within range.
-    if (nRow >= 0 && nRow >= GetRowCount())
-        return -1;
+    if (nRow >= GetRowCount())
+        nRow = -1;
 
     // Force recalculation
     m_idTopLeftCell.col = -1;
@@ -4931,6 +4950,8 @@ long CGridCtrl::GetVirtualWidth() const
 
     return lVirtualWidth;
 }
+
+
 
 long CGridCtrl::GetVirtualHeight() const
 {

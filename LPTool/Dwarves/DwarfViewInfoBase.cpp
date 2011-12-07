@@ -36,7 +36,7 @@ CDBColumnViewInfo& GetGridCol4Select()
 		selcol.SetTextFormat(&CTextFormatSwitcherNone::GetInstance());
 		selcol.SetDefaultWidth(20);
 		selcol.SetReadOnly(false);
-		selcol.SetTitle(TEXT(""));
+		selcol.SetTitle(TEXT("   "));
 	}
 	return selcol;
 }

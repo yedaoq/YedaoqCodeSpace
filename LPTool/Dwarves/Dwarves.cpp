@@ -11,8 +11,9 @@
 #include "DwarfView.h"
 #include "DBInterface\DBSourcePath.h"
 #include "DBInterface\DBDataAdapter.h"
-#include "DBNameMappingLP.h"
-#include "Sqlite\SqliteSource.h"
+//#include "DBNameMappingLP.h"
+#include "SqliteNameMapping.h"
+#include "SqliteSource.h"
 #include "LocalPlayerObjEnum.h"
 #include "CommandIDAlloter.h"
 #include <Helper.h>
@@ -141,7 +142,7 @@ BOOL CDwarvesApp::InitInstance()
 	CDwarfDoc* pDoc = CGlobalData::GetCurrentDoc();
 	pDoc->m_bAutoDelete = FALSE;
 	pDoc->SetTitle(TEXT("ÇëÑ¡ÔñÊý¾Ý¿â"));
-	pDoc->SetDBModule(&g_DBModule);
+	pDoc->SetDBModule(&CDBModuleLP::GetInstance());
 	pDocTemplate->AddDocument(pDoc);
 
 	return TRUE;
@@ -235,15 +236,15 @@ void CDwarvesApp::OnFileOpen()
 	std::auto_ptr<IDBConnection> pConn(smr.PromptSelectDBSource(0));
 	IDBDataAdapter* PAdapter;
 	IDBFactory*		pFactory;
-	IDBNameMapping* pMapping = new CDBNameMappingLP();
+	IDBNameMapping* pMapping = new CSqliteNameMapping();
 
 	if(!pConn.get() || !smr.OpenDBConnection(pConn.get(), &PAdapter, &pFactory))
 	{
 		return;
 	}
 
-	g_DBModule.AttachToDatabase(PAdapter, pFactory, pMapping);
-	g_DBModule.RefreshData();
+	CDBModuleLP::GetInstance().AttachToDatabase(PAdapter, pFactory, pMapping);
+	CDBModuleLP::GetInstance().RefreshData();
 
 	CGlobalData::GetCurrentDoc()->SetTitle(pConn->ToString().c_str());
 

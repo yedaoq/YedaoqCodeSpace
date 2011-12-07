@@ -40,12 +40,14 @@ void CDBEnumeratorProvider::DmlRing( DMLEvent* e )
 {
 	if(e && e->TableID >= 0)
 	{
-		SuitMap::iterator iter = Suits_.find(e->TableID);
+		/*SuitMap::iterator iter = Suits_.find(e->TableID);
 		if(iter != Suits_.end())
 		{
 			std::auto_ptr<DBRecordEnumerator> pEnumRec(Module_->Tables()[e->TableID]->EnumRecord());
 			iter->second = *pEnumRec;
-		}		
+		}*/
+
+		Suits_.erase(e->TableID);
 	}
 }
 

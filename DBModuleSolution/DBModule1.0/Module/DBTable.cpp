@@ -157,7 +157,7 @@ int	CDBTable::Find(IDBRecord& rec) /*const*/
 	DBRecordIterator iter = Records_.find(rec);
 	if(iter != Records_.end())
 	{
-		DBRecordAssign(rec, *iter);
+		DBRecordAssign(rec, *iter, iter->GetFieldCount());
 		return 1;
 	}
 
@@ -172,7 +172,7 @@ int	CDBTable::Find(IDBRecord& rec, const CDBRecordComparison& cmp)
 	{
 		if(0 == cmp(rec, *iter))
 		{
-			DBRecordAssign(rec, *iter);
+			DBRecordAssign(rec, *iter, iter->GetFieldCount());
 			return 1;
 		}
 	}
@@ -194,7 +194,7 @@ int	CDBTable::Find(int col, const tstring& val, IDBRecord& recDst)
 	int iRet = Find(rec, cmp);
 	if(iRet > 0)
 	{
-		DBRecordAssign(recDst, rec);
+		DBRecordAssign(recDst, rec, rec.GetFieldCount());
 	}
 
 	return iRet;

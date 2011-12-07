@@ -255,5 +255,7 @@ enum EnumDmlLogColumns
 	COL_DmlLog_TableName,
 	COL_DmlLog_RecordOrigin,
 	COL_DmlLog_RecordFresh,
+	COL_DmlLog_Datetime,
+	COL_DmlLog_User,
 };
 

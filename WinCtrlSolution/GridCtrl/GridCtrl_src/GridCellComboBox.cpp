@@ -266,7 +266,7 @@ void CInPlaceList::EndEdit()
     // Send Notification to parent
     GV_DISPINFO dispinfo;
 
-    dispinfo.hdr.hwndFrom = GetSafeHwnd();
+    dispinfo.hdr.hwndFrom = m_hWnd;
     dispinfo.hdr.idFrom   = GetDlgCtrlID();
     dispinfo.hdr.code     = GVN_ENDLABELEDIT;
  

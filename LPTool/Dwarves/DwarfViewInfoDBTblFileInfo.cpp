@@ -108,15 +108,7 @@ void InputBuffer(LPBYTE lpBuffer,ULONG len,LPTSTR lpOutBuf)
 	MD5_CTX _MD5CTX;
 	MD5Init(&_MD5CTX);
 	ZeroMemory(lpOutBuf,sizeof(TCHAR) * 33);
-	//	int nCount = len / 64 + (len%64?1:0);
-	//	int LastLeft = len % 64;
-	//	int i =0;
-	//	for(;i<nCount-1;i++)
-	//	{
-	//		MD5Update(&_MD5CTX,(LPBYTE)lpBuffer+i*64,64);
-	//	}
 
-	//	MD5Update(&_MD5CTX,(LPBYTE)lpBuffer+i*64,LastLeft);
 	MD5Update(&_MD5CTX,lpBuffer,len);
 
 	MD5Final(&_MD5CTX);

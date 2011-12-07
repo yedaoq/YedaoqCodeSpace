@@ -17,12 +17,14 @@ public:
 	virtual int  SetValidityCounter(int) {return 1;};
 	virtual int  ContentUpdate(DwarfViewOperationContext* pCtx) {return 1;}
 
-	int BeginMonit(NSDBModule::CDBModule* db);
-	int StopMonit();
-	void DMLRing(NSDBModule::DMLEvent* e);
+	//int BeginMonit(NSDBModule::CDBModule* db);
+	//int StopMonit();
+	//void DMLRing(NSDBModule::DMLEvent* e);
 
-	tstring GetLogString(NSDBModule::DMLEvent* e);
-	tstring GetLogRecordStr(const NSDBModule::IDBRecord* rec);
+	int Append(const IDBRecord& recLog);
+
+	//tstring GetLogString(NSDBModule::DMLEvent* e);
+	//tstring GetLogRecordStr(const NSDBModule::IDBRecord* rec);
 
 protected:
 	NSDBModule::CDBModule*	DataBase;

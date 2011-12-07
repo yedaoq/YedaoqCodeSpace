@@ -48,6 +48,7 @@ public:
 // Operations
 	virtual void SetText(LPCTSTR szVal);
 	virtual LPCTSTR GetText() const;
+	LPCTSTR GetText(bool checkstate) const;
 	virtual CSize GetCellExtent(CDC* pDC);
     virtual void OnClick(int nRow, int nCol, CPoint PointCellRelative);
     virtual BOOL GetTextRect( LPRECT pRect);

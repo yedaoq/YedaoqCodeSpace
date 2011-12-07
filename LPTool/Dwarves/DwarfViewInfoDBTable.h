@@ -8,7 +8,7 @@ class CDwarfViewInfoDBTable : public CDwarfViewInfoDBTblBase
 {
 public:
 	CDwarfViewInfoDBTable()
-		: CDwarfViewInfoDBTblBase(&g_DBModule, TblID)
+		: CDwarfViewInfoDBTblBase(&CDBModuleLP::GetInstance(), TblID)
 	{}
 
 };

@@ -67,7 +67,7 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-	enum {EIDC_GRID = 0, EIDC_BTNSEARCH, EIDC_UNUSED };
+	enum {EIDC_GRID = 0, EIDC_GRIDEDIT, EIDC_BTNSEARCH, EIDC_UNUSED };
 
 protected:
 	int	ViewID;
@@ -103,6 +103,8 @@ protected:
 	afx_msg void OnViewOperation(UINT id);
 	afx_msg int OnCreate(LPCREATESTRUCT lpcs);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnToolBarCmbSearch();
+	afx_msg void OnToolBarCmbSearchTxtChanged();
 	afx_msg void OnGridSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult);
 	afx_msg void OnGridSelDBClick(NMHDR *pNotifyStruct, LRESULT* pResult);
 	
