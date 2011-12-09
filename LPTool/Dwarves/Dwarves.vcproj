@@ -68,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="DBModule1.0.lib SqliteInterface.lib GridCtrl.lib YedaoqLayout.lib sqlite3.lib Advapi32.lib"
+				AdditionalDependencies="DBModule1.0.lib SqliteInterface.lib GridCtrl.lib YedaoqLayout.lib sqlite3.lib Advapi32.lib LocalPlayer.lib MediaParser.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="D:\YedaoqCodeSpace\Lib\$(ConfigurationName),$(OutDir)"
 				IgnoreDefaultLibraryNames="libcmtd.lib"
@@ -232,6 +232,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Include\FileDialogST.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FileView.cpp"
 				>
 			</File>
@@ -315,6 +319,10 @@
 			</File>
 			<File
 				RelativePath=".\Dwarves.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\FileDialogST.h"
 				>
 			</File>
 			<File

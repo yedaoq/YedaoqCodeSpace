@@ -14,7 +14,7 @@ CToolBarMaintianer::CToolBarMaintianer(void)
 	//m_ToolCmbSearch.SetDropDownHeight(100);
 	//m_ToolCmbSearch.SetFlatMode();
 	//m_ToolCmbSearch.SetStyle();
-	//m_ToolCmbSearch.SetText(TEXT("Find..."));
+	m_ToolCmbSearch.SetText(TEXT("Find..."));
 	//m_ToolCmbSearch.m_nID = ToolBarCmbSearchID;
 
 	//m_ToolBtnFindNext.EnableWindow(TRUE);

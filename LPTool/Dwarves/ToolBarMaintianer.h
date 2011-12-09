@@ -17,6 +17,6 @@ public:
 	CMFCToolBarComboBoxButton	m_ToolCmbSearch;
 	CMFCToolBarButton			m_ToolBtnFindNext;
 
-protected:
+public:
 	CMFCToolBar* m_Bar;
 };

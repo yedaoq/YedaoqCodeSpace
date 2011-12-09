@@ -3179,7 +3179,7 @@ void CGridCtrl::ScrollToRow(int row)
 	}*/
 
 	long lRowsHeight = 0;
-	for (int i = 0; i < row; i++)
+	for (int i = GetFixedRowCount(); i < row; i++)
 		lRowsHeight += m_arRowHeights[i];
 
 	SetScrollPos32(SB_VERT, lRowsHeight, TRUE);

@@ -197,3 +197,11 @@ DBCOLUMN(DmlLog                        , Datetime                      , CppStri
 DBCOLUMN(DmlLog                        , User                          , CppString , 0x00000000, BuildIn, -1, -1, -1)
 END_DBTABLE
 
+BEGIN_DBTABLE(MediaFile)
+DBCOLUMN(MediaFile                     , FileId                        , CppInt32  , 0x00000000, BuildIn|KeyColumn, -1, -1, -1)
+DBCOLUMN(MediaFile                     , FileName                      , CppString , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(MediaFile                     , FilePath                      , CppString , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(MediaFile                     , FileMd5                       , CppString , 0x00000000, BuildIn, -1, -1, -1)
+DBCOLUMN(MediaFile                     , FileSize                      , CppDouble , 0x00000000, BuildIn, -1, -1, -1)
+END_DBTABLE
+

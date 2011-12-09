@@ -30,6 +30,7 @@ enum EnumLocalPlayerTables
 	TBL_LinkLink,
 	TBL_MediaType,
 	TBL_DmlLog,
+	TBL_MediaFile,
 };
 
 enum EnumFileInfoColumns
@@ -257,5 +258,14 @@ enum EnumDmlLogColumns
 	COL_DmlLog_RecordFresh,
 	COL_DmlLog_Datetime,
 	COL_DmlLog_User,
+};
+
+enum EnumMediaFileColumns
+{
+	COL_MediaFile_FileId,
+	COL_MediaFile_FileName,
+	COL_MediaFile_FilePath,
+	COL_MediaFile_FileMd5,
+	COL_MediaFile_FileSize,
 };
 

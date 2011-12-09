@@ -17,6 +17,8 @@
 #include <GridCellBase.h>
 #include <EditStyle.h>
 #include "ToolBarMaintianer.h"
+#include <boost\algorithm\string\find.hpp>
+//#include <xutility>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -92,11 +94,11 @@ int CDwarfView::OnCreate(LPCREATESTRUCT lpcs)
 		::SetClassLong(this->GetSafeHwnd(), GCL_HBRBACKGROUND, (LONG)::GetSysColorBrush(COLOR_BTNFACE));
 	}
 
-	RECT rect = {0, 0, lpcs->cx, GridEdit.GetDefCellHeight() + 5};
+	RECT rect = {0, 0, lpcs->cx, GridEdit.GetDefCellHeight() + 5 + 18};
 
 	GridEdit.Create(rect, this, EIDC_GRIDEDIT, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
 	GridEdit.SetBkColor((COLORREF)::GetSysColor(COLOR_BTNFACE));
-	GridEdit.GetDefaultCell(FALSE, FALSE)->SetBackClr((COLORREF)0xE0E0E0);
+	GridEdit.GetDefaultCell(FALSE, FALSE)->SetBackClr((COLORREF)0xFFFFE0);
 
 	Grid.Create(rect, this, EIDC_GRID, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
 	Grid.SetBkColor((COLORREF)::GetSysColor(COLOR_BTNFACE));
@@ -201,16 +203,24 @@ void CDwarfView::OnGridSelDBClick( NMHDR *pNotifyStruct, LRESULT* pResult )
 void CDwarfView::OnToolBarCmbSearch()
 {	
 	bool	bOk = false;
-	CString strCell;
-	CString strKey = CToolBarMaintianer::GetInstance().m_ToolCmbSearch.GetText();
-	if(strKey.IsEmpty()) return;	
+	LPCTSTR strCell;
 
-	for (int i = GridViewer.HeadRowCount(); i < Grid.GetRowCount() && !bOk; ++i)
+	// 获取搜索框内容
+	int idx = CToolBarMaintianer::GetInstance().m_Bar->CommandToIndex(ToolBarCmbSearchID);
+	LPCTSTR strKey = static_cast<CMFCToolBarComboBoxButton*>(CToolBarMaintianer::GetInstance().m_Bar->GetButton(idx))->GetText();
+	
+	if(!strKey || !*strKey) return;				// 搜索框为空时不查找
+
+	CCellID cellFocused = Grid.GetFocusCell();	// 获取当前处于焦点状态的单元格
+
+	if(cellFocused.row >= 0) ++cellFocused.row;	// 从焦点单元格的下一行开始搜索
+
+	for (int i = max(cellFocused.row, GridViewer.HeadRowCount()); i < Grid.GetRowCount() && !bOk; ++i)
 	{
 		for (int j = 1; j < Grid.GetColumnCount(); ++j)
 		{
-			strCell = Grid.GetCell(i,j)->GetText();
-			if (strCell.Find(strKey) >= 0)
+			LPCTSTR strCell = Grid.GetCell(i,j)->GetText();
+			if(boost::ifind_first(strCell, strKey))
 			{
 				Grid.SetFocusCell(i,j);
 				Grid.ScrollToRow(i);
@@ -218,18 +228,16 @@ void CDwarfView::OnToolBarCmbSearch()
 				bOk = true;
 				break;
 			}
-			/*if(ExistSubString(Grid.GetCell(i,j)->GetText(), strKey))
-			{
-
-			}*/
 		}
 	}
 }
 
 void CDwarfView::OnToolBarCmbSearchTxtChanged()
 {	
+	int idx = CToolBarMaintianer::GetInstance().m_Bar->CommandToIndex(ToolBarCmbSearchID);
+	//static_cast<CMFCToolBarComboBoxButton*>(CToolBarMaintianer::GetInstance().m_Bar->GetButton(idx))->GetText();
+	TTRACE(TEXT("搜索框变更：%s\n"), static_cast<CMFCToolBarComboBoxButton*>(CToolBarMaintianer::GetInstance().m_Bar->GetButton(idx))->GetText());
 	//TTRACE(TEXT("搜索框变更：%s\n"), CToolBarMaintianer::GetInstance().m_ToolCmbSearch.GetText());
-	TTRACE(TEXT("搜索框变更：%s\n"), CToolBarMaintianer::GetInstance().m_ToolCmbSearch.GetText());
 }
 
 
@@ -412,6 +420,8 @@ int CDwarfView::ShowRecords()
 		GridEdit.SetColumnWidth(iCol, Grid.GetColumnWidth(iCol));
 	}
 	GridEdit.Invalidate();
+
+	return 1;
 }
 
 IDBRecord* CDwarfView::GetFocusedRecord()
