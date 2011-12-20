@@ -8,6 +8,27 @@
 
 CTwainSourceManager::CTwainSourceManager(void)
 {
+	AppID.Id = 0;
+	AppID.Id = 0; 				// init to 0, but Source Manager will assign real value
+	AppID.Version.MajorNum = 1;
+	AppID.Version.MinorNum = 703;
+	AppID.Version.Language = TWLG_USA;
+	AppID.Version.Country  = TWCY_USA;
+#ifdef WIN32
+	lstrcpyA (AppID.Version.Info,  "TWAIN_32 Twacker 1.7.0.3  01/18/1999");
+	lstrcpyA (AppID.ProductName,   "TWACKER_32");
+#else
+	lstrcpyA (AppID.Version.Info,  "TWAIN Twacker 1.7.0.3  01/18/1999");
+	lstrcpyA (AppID.ProductName,   "TWACKER_16");
+#endif
+
+	AppID.ProtocolMajor = 1;//TWON_PROTOCOLMAJOR;
+	AppID.ProtocolMinor = 7;//TWON_PROTOCOLMINOR;
+	AppID.SupportedGroups =  DG_IMAGE | DG_CONTROL;
+	lstrcpyA (AppID.Manufacturer,  "TWAIN Working Group");
+	lstrcpyA (AppID.ProductFamily, "TWAIN Toolkit");
+
+	MessageLevelVAR = ERROR;
 }
 
 
@@ -21,7 +42,7 @@ CTwainSourceManager::~CTwainSourceManager(void)
 
 int CTwainSourceManager::PromptSelectSource( CTwainScanistor** ppScanistor )
 {
-	if(!TWDSMOpen || Load() != 1)
+	if(!TWDSMOpen || Load() != 1 || !ppScanistor)
 	{
 		return -1;
 	}
@@ -31,81 +52,50 @@ int CTwainSourceManager::PromptSelectSource( CTwainScanistor** ppScanistor )
 
 	memset(&NewDSIdentity, 0, sizeof(TW_IDENTITY));
 
-	//if (TWDSOpen)
-	//{
-	//	LogMessage("TWSelectDS -- source already open\r\n");
+	twRC = CallDSMEntry(&AppID,
+		NULL,
+		DG_CONTROL,
+		DAT_IDENTITY,
+		MSG_GETDEFAULT,
+		(TW_MEMREF)&NewDSIdentity);
 
-	//	//A Source is already open
-	//	if (MessageLevel() >= ML_ERROR)
-	//	{
-	//		ShowRC_CC(hWnd, 0, 0, 0,
-	//			"A Source is already open\nClose Source before Selecting a New Source",
-	//			"DG_CONTROL/DAT_IDENTITY/MSG_USERSELECT");
-	//	}
-	//	twRC = TWRC_FAILURE;
-	//}
-	//else
-	//{
-		// I will settle for the system default.  Shouldn't I get a highlight
-		// on system default without this call?
+	twRC = CallDSMEntry(&AppID,
+		NULL,
+		DG_CONTROL,
+		DAT_IDENTITY,
+		MSG_USERSELECT,
+		(TW_MEMREF)&NewDSIdentity);
 
-		twRC = CallDSMEntry(&appID,
-			NULL,
-			DG_CONTROL,
-			DAT_IDENTITY,
-			MSG_GETDEFAULT,
-			(TW_MEMREF)&NewDSIdentity);
-
-		// This call performs one important function:
-		// - should cause SM to put up dialog box of available Source's
-		// - tells the SM which application, appID.id, is requesting, REQUIRED
-		// - returns the SM assigned NewDSIdentity.id field, you check if changed
-		//  (needed to talk to a particular Data Source)
-		// - be sure to test return code, failure indicates SM did not close !!
-		//
-		twRC = CallDSMEntry(&appID,
-			NULL,
-			DG_CONTROL,
-			DAT_IDENTITY,
-			MSG_USERSELECT,
-			(TW_MEMREF)&NewDSIdentity);
-
-		// Check if the user changed the Source and react as apporpriate.
-		// - TWRC_SUCCESS, log in new Source
-		// - TWRC_CANCEL,  keep the current Source
-		// - default,      check down the codes in a status message, display result
-		//
-
-		switch (twRC)
+	switch (twRC)
+	{
+	case TWRC_SUCCESS:
+		*ppScanistor = new CTwainScanistor(this, NewDSIdentity);
+		/*if (MessageLevel() >= ML_INFO)
 		{
-		case TWRC_SUCCESS:
-			dsID = NewDSIdentity; 
-			if (MessageLevel() >= ML_INFO)
-			{
-				ShowTW_ID(hWnd, dsID,
-					"DG_CONTROL/DAT_IDENTITY/MSG_USERSELECT");
-			}
-			break;
-		case TWRC_CANCEL:
-			if (MessageLevel() >= ML_INFO)
-			{
-				ShowRC_CC(hWnd, 1, twRC, 0,
-					"",
-					"DG_CONTROL/DAT_IDENTITY/MSG_USERSELECT");
-			}
-			break;
-		case TWRC_FAILURE:	        
-		default:
-			if (MessageLevel() >= ML_ERROR)
-			{
-				ShowRC_CC(hWnd, 1, twRC, 0,
-					"",
-					"DG_CONTROL/DAT_IDENTITY/MSG_USERSELECT");
-			}
-			break;
-		}
+			ShowTW_ID(hWnd, dsID,
+				"DG_CONTROL/DAT_IDENTITY/MSG_USERSELECT");
+		}*/
+		break;
+	case TWRC_CANCEL:
+		/*if (MessageLevel() >= ML_INFO)
+		{
+			ShowRC_CC(hWnd, 1, twRC, 0,
+				"",
+				"DG_CONTROL/DAT_IDENTITY/MSG_USERSELECT");
+		}*/
+		break;
+	case TWRC_FAILURE:	        
+	default:
+		/*if (MessageLevel() >= ML_ERROR)
+		{
+			ShowRC_CC(hWnd, 1, twRC, 0,
+				"",
+				"DG_CONTROL/DAT_IDENTITY/MSG_USERSELECT");
+		}*/
+		break;
 	}
-	return (twRC);
+	
+	return (twRC == TWRC_SUCCESS) ? 1 : -1;
 }
 
 int CTwainSourceManager::OpenSource( LPCTSTR lpScanistorId )
@@ -114,6 +104,8 @@ int CTwainSourceManager::OpenSource( LPCTSTR lpScanistorId )
 	{
 		return -1;
 	}
+
+
 }
 
 IEnumerator<LPCTSTR>* CTwainSourceManager::EnumSource()
@@ -122,6 +114,8 @@ IEnumerator<LPCTSTR>* CTwainSourceManager::EnumSource()
 	{
 		return 0;
 	}
+
+	return 0;
 }
 
 int CTwainSourceManager::Load()
@@ -186,4 +180,131 @@ TW_UINT16 CTwainSourceManager::CallDSMEntry(pTW_IDENTITY pApp, pTW_IDENTITY pSrc
 		TRACE("CallDSMEntry function: call failed with RC = %d, CC = %d.\n", twRC, gGlobalStatus.ConditionCode);
 	}
 	return twRC;
+}
+
+int CTwainSourceManager::OpenDSM()
+{
+	if(!DSMEntry && Load() != 1)
+	{
+		return -1;
+	}
+
+	TW_UINT16 twRC = CallDSMEntry(&AppID,
+		NULL,
+		DG_CONTROL,
+		DAT_PARENT,
+		MSG_OPENDSM,
+		(TW_MEMREF)&WndNotify);
+
+	switch (twRC)
+	{
+	case TWRC_SUCCESS:
+		// Needed for house keeping.  Do single open and do not
+		// close SM which is not already open ....
+		TWDSMOpen = true;
+		if (MessageLevel() >= ML_FULL)
+		{
+			ShowRC_CC(hWnd, 0, 0, 0, 
+				"Source Manager was Opened successfully", 
+				"TWAIN Information");
+		}
+		break;
+
+	case TWRC_FAILURE:
+		LogMessage("OpenDSM failure\r\n");
+	default:
+		// Trouble opening the SM, inform the user
+		TWDSMOpen = FALSE;
+		if (MessageLevel() >= ML_ERROR)                
+		{
+			ShowRC_CC(hWnd, 1, twRC, 0,	//Source Manager
+				"",
+				"DG_CONTROL/DAT_PARENT/MSG_OPENDSM");
+		}
+		break;
+	}
+
+
+}
+
+int CTwainSourceManager::CloseDSM()
+{
+	TW_UINT16 twRC = TWRC_FAILURE;
+	char buffer[80];
+
+	memset(buffer, 0, sizeof(char[80]));
+
+	if (!TWDSMOpen)
+	{
+		if (MessageLevel()  >= ML_ERROR)
+		{
+			ShowRC_CC(hWnd, 0, 0, 0,
+				"Cannot Close Source Manager\nSource Manager Not Open", 
+				"Sequence Error");
+		}
+	}
+	else
+	{
+		if (TWDSOpen==TRUE)
+		{
+			if (MessageLevel()  >= ML_ERROR)
+			{
+				ShowRC_CC(hWnd, 0, 0, 0,
+					"A Source is Currently Open", "Cannot Close Source Manager");
+			}
+		}
+		else
+		{
+			// Only close something which is already open
+			if (TWDSMOpen==TRUE)
+			{
+				// This call performs one important function:
+				// - tells the SM which application, appID.id, is requesting SM to close
+				// - be sure to test return code, failure indicates SM did not close !!
+
+				twRC = CallDSMEntry(&appID,
+					NULL,
+					DG_CONTROL,
+					DAT_PARENT,
+					MSG_CLOSEDSM,
+					&hWnd);
+
+				if (twRC != TWRC_SUCCESS)
+				{
+					// Trouble closing the SM, inform the user
+					if (MessageLevel() >= ML_ERROR)
+					{
+						ShowRC_CC(hWnd, 1, twRC, 0,
+							"",
+							"DG_CONTROL/DAT_PARENT/MSG_CLOSEDSM");
+					}
+
+					wsprintf(buffer,"CloseDSM failure -- twRC = %d\r\n",twRC);
+					LogMessage(buffer);
+				}
+				else
+				{
+					TWDSMOpen = FALSE;
+					// Explicitly free the SM library
+					if (hDSMDLL)
+					{        
+						FreeLibrary (hDSMDLL);
+						hDSMDLL=NULL;
+						// the data source id will no longer be valid after
+						// twain is killed.  If the id is left around the
+						// data source can not be found or opened
+						dsID.Id = 0;  
+					}
+					if (MessageLevel() >= ML_FULL)
+					{
+						ShowRC_CC(hWnd, 0, 0, 0,
+							"Source Manager was Closed successfully", 
+							"TWAIN Information");
+					}
+				}
+			}
+		}
+	}
+	// Let the caller know what happened
+	return (twRC==TWRC_SUCCESS);
 }

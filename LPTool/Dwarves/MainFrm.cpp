@@ -15,6 +15,7 @@
 #include <Enumerator.h>
 #include <memory>
 #include "DwarfViewProvider.h"
+#include "ToolBarMaintianer.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -90,11 +91,28 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// 防止菜单栏在激活时获得焦点
 	CMFCPopupMenu::SetForceMenuFocus(FALSE);
 
-	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-		!m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME))
+	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC)
+		/*|| !m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME)*/)
 	{
 		TRACE0("未能创建工具栏\n");
 		return -1;      // 未能创建
+	}
+	else
+	{
+		CToolBarMaintianer::GetInstance().SetToolBar(&m_wndToolBar);
+		CToolBarMaintianer::GetInstance().InitBasicItems();
+
+		/*m_ToolCmbTest.EnableWindow(true);
+		m_ToolCmbTest.SetCenterVert();
+		m_ToolCmbTest.SetDropDownHeight(25);
+		m_ToolCmbTest.SetFlatMode();
+
+		m_ToolCmbTest.AddItem(_T("1"));
+		m_ToolCmbTest.AddItem(_T("3"));
+		m_ToolCmbTest.AddItem(_T("2"));
+		m_ToolCmbTest.SelectItem(0);
+
+		m_wndToolBar.InsertButton(m_ToolCmbTest);*/
 	}
 
 	CString strToolBarName;

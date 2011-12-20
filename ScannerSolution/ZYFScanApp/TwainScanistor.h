@@ -3,11 +3,15 @@
 class CTwainScanistor
 {
 public:
-	CTwainScanistor(void);
+	CTwainScanistor(CTwainSourceManager* pMgr, TW_IDENTITY id)
+		: ManagerPtr(pMgr), ID(id)
+	{}
+
 	~CTwainScanistor(void);
 
 
 protected:
-
+	CTwainSourceManager*	ManagerPtr;
+	TW_IDENTITY				ID;
 };
 

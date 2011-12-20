@@ -240,6 +240,8 @@ public:
     long GetVirtualWidth() const;
     long GetVirtualHeight() const;
 
+	void ScrollToRow(int row);
+
     CSize GetTextExtent(int nRow, int nCol, LPCTSTR str);
     // EFW - Get extent of current text in cell
     inline CSize GetCellTextExtent(int nRow, int nCol)  { return GetTextExtent(nRow, nCol, GetItemText(nRow,nCol)); }

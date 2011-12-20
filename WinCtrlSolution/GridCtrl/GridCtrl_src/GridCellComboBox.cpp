@@ -184,7 +184,7 @@ CInPlaceList::CInPlaceList(CWnd* pParent, CRect& rect, DWORD dwStyle, UINT nID,
     m_crForeClr = crFore;
     m_crBackClr = crBack;
 
-	m_nNumLines = 4;
+	m_nNumLines = 20;
 	m_sInitText = sInitText;
  	m_nRow		= nRow;
  	m_nCol      = nColumn;
@@ -266,7 +266,7 @@ void CInPlaceList::EndEdit()
     // Send Notification to parent
     GV_DISPINFO dispinfo;
 
-    dispinfo.hdr.hwndFrom = GetSafeHwnd();
+    dispinfo.hdr.hwndFrom = m_hWnd;
     dispinfo.hdr.idFrom   = GetDlgCtrlID();
     dispinfo.hdr.code     = GVN_ENDLABELEDIT;
  

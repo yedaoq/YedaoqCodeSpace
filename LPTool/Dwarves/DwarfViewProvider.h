@@ -6,6 +6,9 @@
 #include "LocalPlayerObjEnum.h"
 #include <Enumerator.h>
 #include "DwarfViewInfoDBTblPackage.h"
+#include "DwarfViewInfoDBTblDmlLog.h"
+#include "DwarfViewInfoDBTblFileInfo.h"
+#include "DwarfViewInfoDBTblMediaFile.h"
 
 class CDwarfViewProvider : public CSingleton<CDwarfViewProvider>
 {
@@ -72,6 +75,9 @@ public:
 		Append(new CDwarfViewInfoDBTable<EnumLocalPlayerTables::TBL_SourceConfig>());
 		Append(new CDwarfViewInfoDBTable<EnumLocalPlayerTables::TBL_SourceLink>());
 		Append(new CDwarfViewInfoDBTable<EnumLocalPlayerTables::TBL_Stream>());
+		Append(new CDwarfViewInfoDBTable<EnumLocalPlayerTables::TBL_Option>());
+		Append(new CDwarfViewInfoDBTable<EnumLocalPlayerTables::TBL_DmlLog>());
+		Append(new CDwarfViewInfoDBTable<EnumLocalPlayerTables::TBL_MediaFile>());
 	}
 
 	void Append(IDwarfViewInfo* view)

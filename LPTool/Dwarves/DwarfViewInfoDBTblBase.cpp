@@ -15,12 +15,12 @@ using namespace NSDBModule;
 
 bool CDwarfViewInfoDBTblBase::IsDBTableRelated(int tblCur, int tblTar, int* colCur, int* colTar)
 {
-	if(tblCur < 0 || tblCur >= g_DBModule.Tables().Count() || tblTar < 0 || tblTar >= g_DBModule.Tables().Count())
+	if(tblCur < 0 || tblCur >= CDBModuleLP::GetInstance().Tables().Count() || tblTar < 0 || tblTar >= CDBModuleLP::GetInstance().Tables().Count())
 	{
 		return false;
 	}
 
-	std::auto_ptr<DBColumnEnumerator> pEnumCol(g_DBModule.Tables()[tblCur]->EnumColumn());
+	std::auto_ptr<DBColumnEnumerator> pEnumCol(CDBModuleLP::GetInstance().Tables()[tblCur]->EnumColumn());
 	while(pEnumCol->MoveNext())
 	{
 		if(pEnumCol->Current().RelyTblID == tblTar)
@@ -77,7 +77,7 @@ int CDwarfViewInfoDBTblBase::InitializeReleatedViews()
 
 int CDwarfViewInfoDBTblBase::InitializeOperations()
 {
-	this->Operations.Append(TEXT("修改"), static_cast<DelegateOperation>(&CDwarfViewInfoDBTblBase::OnRecordModify));
+	this->Operations.Append(TEXT("更新"), static_cast<DelegateOperation>(&CDwarfViewInfoDBTblBase::OnRecordModify));
 	this->Operations.Append(TEXT("添加"), static_cast<DelegateOperation>(&CDwarfViewInfoDBTblBase::OnRecordInsert));
 	this->Operations.Append(TEXT("删除"), static_cast<DelegateOperation>(&CDwarfViewInfoDBTblBase::OnRecordDelete));
 	
@@ -123,7 +123,15 @@ CDBColumnViewInfo CDwarfViewInfoDBTblBase::GenerateColumnViewFromSchema(const DB
 	}
 	else if(col.RelyTblID >= 0 && col.RelyColID >= 0)
 	{
-		view.SetEditStyle(&CDBOptionalEditStyleProvider::GetInstance().Get(col.RelyTblID, col.RelyColID));
+		if(col.VisiColID >= 0)
+		{
+			view.SetEditStyle(&CDBOptionalEditStyleProvider::GetInstance().Get(col.RelyTblID, col.VisiColID));
+		}
+		else
+		{
+			view.SetEditStyle(&CDBOptionalEditStyleProvider::GetInstance().Get(col.RelyTblID, col.RelyColID));
+		}
+
 		if(col.VisiColID >= 0 && col.VisiColID != col.RelyColID)
 		{
 			view.SetTextFormat(&CDBMapFormatProvider::GetInstance().Get(col.RelyTblID, col.RelyColID, col.VisiColID));
@@ -191,15 +199,68 @@ IEnumerator<IDBRecord>*	CDwarfViewInfoDBTblBase::EnumRecord()
 
 void CDwarfViewInfoDBTblBase::OnRecordModify(DwarfViewOperationContext* pCtx)
 {
+	CDwarfView* pMainView = CGlobalData::GetViewByID(pCtx->MainViewID);
+	if(!pMainView) return;
 
+	CDBRecordBase recOri = DBModule->Tables()[pMainView->GetViewID()]->RecordTemplate();
+	CDBRecordBase recCur = recOri;
+
+	if(pMainView->GetUpdatedRecord(&recCur, &recOri) <= 0)
+	{
+		return;
+	}
+
+	if(DBModule->Tables()[pMainView->GetViewID()]->Update(recCur, recOri) > 0)
+	{
+		pMainView->RemoveRecordUpdated();
+		pMainView->AddRecord(recCur);
+	}
+	else
+	{
+		ASSERT(false);
+	}
 }
 
 void CDwarfViewInfoDBTblBase::OnRecordDelete(DwarfViewOperationContext* pCtx)
 {
+	CDwarfView* pMainView = CGlobalData::GetViewByID(pCtx->MainViewID);
+	if(!pMainView) return;
 
+	CDBRecordBase recOri = DBModule->Tables()[pMainView->GetViewID()]->RecordTemplate();
+
+	if(pMainView->GetUpdatedRecord(0, &recOri) <= 0)
+	{
+		return;
+	}
+
+	if(DBModule->Tables()[pMainView->GetViewID()]->Delete(recOri) > 0)
+	{
+		pMainView->RemoveRecordUpdated();
+	}
+	else
+	{
+		ASSERT(false);
+	}
 }
 
 void CDwarfViewInfoDBTblBase::OnRecordInsert(DwarfViewOperationContext* pCtx)
 {
+	CDwarfView* pMainView = CGlobalData::GetViewByID(pCtx->MainViewID);
+	if(!pMainView) return;
 
+	CDBRecordBase recCur = DBModule->Tables()[pMainView->GetViewID()]->RecordTemplate();
+
+	if(pMainView->GetUpdatedRecord(&recCur, 0) <= 0)
+	{
+		return;
+	}
+
+	if(DBModule->Tables()[pMainView->GetViewID()]->Insert(recCur) > 0)
+	{
+		pMainView->AddRecord(recCur);
+	}
+	else
+	{
+		ASSERT(false);
+	}
 }

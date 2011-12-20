@@ -34,8 +34,16 @@ public:
 	int			Initialize();
 	int			ShowRecords();
 
+	int			RemoveRecordUpdated();
+	int			RemoveRecordFocused();
+	int			RemoveRecordSelected();
+	
+	int			AddRecord(const IDBRecord& rec);
+
 	IDBRecord*				GetFocusedRecord();
 	IEnumerator<IDBRecord>*	GetSelectedRecords();
+
+	int					GetUpdatedRecord(IDBRecord* cur, IDBRecord* ori);
 
 	void CreateButton(CButton& btn, UINT id, CWnd* pParent, LPCTSTR lpTitle = NULL, UINT width = 75, UINT height = 23, DWORD dwStyle = WS_CHILD | BS_CENTER | BS_VCENTER | BS_TEXT | BS_PUSHBUTTON, CFont* font = NULL);
 
@@ -59,7 +67,7 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-	enum {EIDC_GRID = 0, EIDC_BTNSEARCH, EIDC_UNUSED };
+	enum {EIDC_GRID = 0, EIDC_GRIDEDIT, EIDC_BTNSEARCH, EIDC_UNUSED };
 
 protected:
 	int	ViewID;
@@ -67,14 +75,21 @@ protected:
 	NSYedaoqLayout::CFlowLayout FlowLayoutMain;
 
 	CGridCtrl					Grid;
+	CGridCtrl					GridEdit;
 	OpBtnCollection				BtnOps;
 	CButton						BtnSearch;
 
 	CDBTableViewer4GridCtrl		GridViewer;
+	CDBTableViewer4GridCtrl		GridEditViewer;
 
 	DwarfViewOperationContext	Context;
-	CDBRecordAuto				FocusedRecord;
-	int							FocusedRecordIdx;
+
+	CDBRecordAuto				RecordFocused;
+	int							RecordIdxFocused;
+
+	CDBRecordAuto				RecordUpdated;
+	int							RecordIdxUpdated;
+
 	CGridSelectedRecordsEnumerator SelectedRecords;
 
 	static bool					BkColorInitFlag;
@@ -88,7 +103,11 @@ protected:
 	afx_msg void OnViewOperation(UINT id);
 	afx_msg int OnCreate(LPCREATESTRUCT lpcs);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnToolBarCmbSearch();
+	afx_msg void OnToolBarCmbSearchTxtChanged();
 	afx_msg void OnGridSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult);
+	afx_msg void OnGridSelDBClick(NMHDR *pNotifyStruct, LRESULT* pResult);
+	
 	DECLARE_MESSAGE_MAP()
 };
 

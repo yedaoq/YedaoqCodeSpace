@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBModule1.0", "..\DBModuleS
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GridCtrl", "..\WinCtrlSolution\GridCtrl\GridCtrl.vcproj", "{E024DD40-C04B-498F-8222-9DD2F5611113}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LocalPlayerDB", "LocalPlayerDB\LocalPlayerDB.vcproj", "{AD46613E-8712-4401-BC76-FF80409BB21C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -34,12 +32,6 @@ Global
 		{E024DD40-C04B-498F-8222-9DD2F5611113}.DebugDLL|Win32.Build.0 = Debug|Win32
 		{E024DD40-C04B-498F-8222-9DD2F5611113}.Release|Win32.ActiveCfg = Release|Win32
 		{E024DD40-C04B-498F-8222-9DD2F5611113}.Release|Win32.Build.0 = Release|Win32
-		{AD46613E-8712-4401-BC76-FF80409BB21C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{AD46613E-8712-4401-BC76-FF80409BB21C}.Debug|Win32.Build.0 = Debug|Win32
-		{AD46613E-8712-4401-BC76-FF80409BB21C}.DebugDLL|Win32.ActiveCfg = Debug|Win32
-		{AD46613E-8712-4401-BC76-FF80409BB21C}.DebugDLL|Win32.Build.0 = Debug|Win32
-		{AD46613E-8712-4401-BC76-FF80409BB21C}.Release|Win32.ActiveCfg = Release|Win32
-		{AD46613E-8712-4401-BC76-FF80409BB21C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

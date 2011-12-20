@@ -8,23 +8,34 @@ class CDwarfViewOperationCollection
 public:
 	int Count() const {return Items.size(); }
 
+	DwarfViewOperationItem& operator[](int id)
+	{
+		std::vector<DwarfViewOperationItem>::iterator iter = Find(id);
+		if(iter == Items.end())
+		{
+			throw std::exception();
+		}
+
+		return *iter;
+	}
+
 	int GetMaxOperationID() const
 	{
 		int iRet = -1;
 		for (int i = 0; i < Items.size(); ++i)
 		{
-			if(Items[i].ID > iRet) iRet = Items[i].ID;
+			if((int)Items[i].ID > iRet) iRet = Items[i].ID;
 		}
 		return iRet;
 	}
 
-	int Exist(int id) const
+	std::vector<DwarfViewOperationItem>::/*const_*/iterator Find(int id) /*const*/
 	{
-		for (int i = 0; i < Items.size(); ++i)
+		for (std::vector<DwarfViewOperationItem>::/*const_*/iterator iter = Items.begin(); iter != Items.end(); ++iter)
 		{
-			if(Items[i].ID == id) return true;
+			if(iter->ID == id) return iter;
 		}
-		return false;
+		return Items.end();
 	}
 
 	int Append(tstring name, DelegateOperation op)
@@ -35,7 +46,7 @@ public:
 
 	int Append(int id, tstring name, DelegateOperation op)
 	{
-		if(!Exist(id))
+		if(Find(id) == Items.end())
 		{
 			Items.push_back(DwarfViewOperationItem(id, name, op));
 		}

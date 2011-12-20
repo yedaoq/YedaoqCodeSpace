@@ -66,10 +66,15 @@ void CGridCellCheck::SetText(LPCTSTR szVal)
 
 LPCTSTR CGridCellCheck::GetText() const
 {
+	return GetText(GetCheck());
+}
+
+LPCTSTR CGridCellCheck::GetText(bool checkstate) const
+{
 	ASSERT(m_Template && dynamic_cast<CEditStyleBool*>(m_Template->GetEditStyle()));
 
 	CEditStyleBool *style = static_cast<CEditStyleBool*>(this->m_Template->GetEditStyle());
-	return (GetCheck() ? style->strTrue.c_str() : style->strFalse.c_str());
+	return (checkstate ? style->strTrue.c_str() : style->strFalse.c_str());
 }
 
 CSize CGridCellCheck::GetCellExtent(CDC* pDC)
@@ -146,7 +151,26 @@ void CGridCellCheck::OnClick(int nRow, int nCol, CPoint PointCellRelative)
 	if (GetCheckPlacement().PtInRect(PointCellRelative))
 	{
 		//TRACE("Check Changed!\n");
-		m_bChecked = !m_bChecked;
+		//m_bChecked = !m_bChecked; // 通过向Grid发送消息来改变内容
+
+		// 为了发送WM_NOTIFY消息，必须创建一个ID为IDC_INPLACE_CONTROL的Grid子窗口
+		CWnd wnd; RECT r={1,1,1,1};
+		wnd.Create(NULL, TEXT("temp"), SW_HIDE, r, GetGrid(), IDC_INPLACE_CONTROL, NULL);
+
+		// Send Notification to parent
+		GV_DISPINFO dispinfo;
+
+		dispinfo.hdr.hwndFrom = wnd.GetSafeHwnd();
+		dispinfo.hdr.idFrom   = IDC_INPLACE_CONTROL;
+		dispinfo.hdr.code     = GVN_ENDLABELEDIT;
+
+		dispinfo.item.mask    = LVIF_TEXT|LVIF_PARAM;
+		dispinfo.item.row     = nRow;
+		dispinfo.item.col     = nCol;
+		dispinfo.item.strText  = GetText(!m_bChecked);
+		dispinfo.item.lParam  = (LPARAM) 0;
+
+		GetGrid()->SendMessage(WM_NOTIFY, IDC_INPLACE_CONTROL, (LPARAM)&dispinfo );
 		GetGrid()->InvalidateRect(m_Rect);
 	}
 }
