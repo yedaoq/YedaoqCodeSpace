@@ -8,6 +8,7 @@
 #include "DwarfViewInfo.h"
 #include "DwarfViewProvider.h"
 #include "DwarfSideTab.h"
+#include <Helper.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -52,6 +53,21 @@ int CSideWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	m_wndTabs.AutoDestroyWindow(FALSE);
 
+	// 创建日志窗格:
+	const DWORD dwStyle = LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL;
+
+	if (!m_wndLogTab.Create(dwStyle, rectDummy, &m_wndTabs, 2))
+	{
+		TRACE0("未能创建输出窗口\n");
+		return -1;      // 未能创建
+	}
+
+	// 将日志窗口附加到选项卡:
+	CGlobalData::SetLogTab(&m_wndLogTab);
+	//m_wndLogTab.BeginMonit(&CDBModuleLP::GetInstance());
+	m_wndLogTab.SetFont(&m_Font);
+	m_wndTabs.AddTab(&m_wndLogTab, TEXT("日志"), (UINT)0);
+
 	return 0;
 }
 
@@ -71,7 +87,7 @@ LRESULT CSideWnd::OnTabActivate(WPARAM wParam, LPARAM lParam)
 	CWnd* pWndActive = m_wndTabs.GetActiveWnd();
 	if(!pWndActive) return 0;
 
-	ISideTab* pSideTab = static_cast<ISideTab*>(static_cast<CDwarfSideTab*>(pWndActive));
+	ISideTab* pSideTab = dynamic_cast<ISideTab*>(pWndActive);
 	
 	if(pSideTab->GetValidityCounter() != m_ValidityCounter && m_Context.MainViewID != CDwarfViewProvider::InvalidViewID)
 	{
@@ -107,6 +123,7 @@ void CSideWnd::IncreaseValidityCounter()
 void CSideWnd::ShowRelatedTabsForView(int viewID)
 {
 	ClearTabs();
+	m_wndTabs.AddTab(&m_wndLogTab, TEXT("日志"));
 
 	IDwarfViewInfo* pView = CDwarfViewProvider::GetInstance()[viewID];
 
@@ -118,10 +135,14 @@ void CSideWnd::ShowRelatedTabsForView(int viewID)
 
 	if(!pEnumView.get()) return;
 
+	TTRACE(TEXT("初始化附加视图列表 ================\n"));
+
 	while(pEnumView->MoveNext())
 	{
 		CDwarfSideTab* tab = GetDwarfSideTab(pEnumView->Current()->GetViewID(), true);
-		
+
+		TTRACE(TEXT("\t%d - 0X%08X\n"), tab->GetViewID(), tab->GetSafeHwnd());
+
 		if(tab && -1 == m_wndTabs.GetTabFromHwnd(tab->GetSafeHwnd()))
 		{
 			m_wndTabs.AddTab(tab, pEnumView->Current()->ToString().c_str());
@@ -135,8 +156,26 @@ void CSideWnd::RefreshSideView()
 	OnTabActivate(m_wndTabs.GetActiveTab(), 0);	
 }
 
+int CSideWnd::GetCurrentSideViewID()
+{
+	CWnd* pWndActive = m_wndTabs.GetActiveWnd();
+	if(!pWndActive) return -1;
+
+	ISideTab* pSideTab = dynamic_cast<ISideTab*>(pWndActive);
+	if(pSideTab && pSideTab->IsRelatedToMainView())
+	{
+		return pSideTab->GetViewID();
+	}
+
+	return -1;
+}
+
 void CSideWnd::ClearTabs()
 {
+	/*for (int i = m_wndTabs.GetTabsNum() - 1; i >= 0; --i)
+	{
+		m_wndTabs.DetachTab(AFX_DOCK_METHOD::DM_STANDARD, i, TRUE);
+	}*/
 	m_wndTabs.RemoveAllTabs();
 }
 
@@ -148,7 +187,7 @@ CDwarfSideTab* CSideWnd::GetDwarfSideTab(int view, bool autoCreate)
 		if(!autoCreate) return 0;
 
 		iter = m_SideTabCache.insert(std::make_pair(view, new CDwarfSideTab())).first;
-		iter->second->Initialize(this, CDwarfViewProvider::GetInstance()[view]);
+		iter->second->Initialize(&m_wndTabs, CDwarfViewProvider::GetInstance()[view]);
 	}
 	return iter->second;
 }

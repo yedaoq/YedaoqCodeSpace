@@ -2,7 +2,7 @@
 #include "vector"
 #include "Enumerator.h"
 #include ".\Schema\DBSchemaLoader.h"
-#include ".\Schema\DBSchemaLoader.h"
+#include ".\DMLNotifier\DMLNotifier.h"
 #include <atlcomcli.h>
 #include <memory>
 #include "DBTableCollection.h"
@@ -63,6 +63,8 @@ public:
 
 	CDBTableCollection&		Tables() { return Tables_; }
 	const CDBTableCollection& Tables() const { return Tables_; }
+
+	CDMLNotifier&			DMLNotifier() { return DMLNotifier_; }
 	
 protected:
 	IDBDataAdapter*			DBAdapter_;
@@ -73,6 +75,7 @@ protected:
 	bool					SchemaValidity_;
 
 	CDBTableCollection		Tables_;
+	CDMLNotifier			DMLNotifier_;
 };
 
 }

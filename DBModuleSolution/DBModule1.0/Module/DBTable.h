@@ -1,13 +1,14 @@
 #pragma once
 
+#include "mytype.h"
 #include <set>
 #include <memory>
 #include "Enumerator.h"
 #include "DBRecord.h"
 #include "Comaprison.h"
-#include "mytype.h"
-#include ".\Schema\DBTableSchema.h"
 #include "DBRecordComparison.h"
+#include ".\Schema\DBTableSchema.h"
+#include ".\DMLNotifier\DMLNotifier.h"
 
 namespace NSDBModule
 {
@@ -61,12 +62,16 @@ namespace NSDBModule
 		bool							Invalidate() { FlagDirty_ = true; }
 
 		int								Find(IDBRecord& rec);
+		int								Find(int col, const tstring& val, IDBRecord& recDst);
 		int								Find(IDBRecord& rec, const CDBRecordComparison& cmp);
 		IEnumerator<IDBRecord>*			FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp);
+		IEnumerator<IDBRecord>*			FindAll(int col, const tstring& val);
 	
 		int								Update(const IDBRecord& cur, const IDBRecord& ori);
 		int								Insert(const IDBRecord& rec);
 		int								Delete(const IDBRecord& rec);
+
+		bool							CallNotify(EnumDMLCommand cmd, const IDBRecord* cur, const IDBRecord* ori);
 
 	protected:
 		CDBTable& operator=(const CDBTable&);

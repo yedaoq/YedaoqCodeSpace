@@ -39,7 +39,10 @@ int	CDBTableViewer4GridCtrl::Initialize(const CDBTableViewColumnCollection& colu
 			DT_CENTER|DT_VCENTER|DT_SINGLELINE, 
 			vCol.IdxView);
 
-		Grid_->SetItemText(0, vCol.IdxView, vCol.ViewInfo->GetTitle().c_str());
+		if(HeadRowCount_ > 0)
+		{
+			Grid_->SetItemText(0, vCol.IdxView, vCol.ViewInfo->GetTitle().c_str());
+		}
 	}
 
 	return 1;
@@ -149,15 +152,14 @@ int CDBTableViewer4GridCtrl::GetRecordAt(int row, IDBRecord* rec)
 
 int CDBTableViewer4GridCtrl::DelRecordAt(int row, IDBRecord* rec)
 {
-	if(row < 0 || row >= GetRecordCount() || !rec)
+	if(row < 0 || row >= GetRecordCount())
 	{
 		_ASSERT(false);
 		return -1;
 	}
-	else
+	if(rec)
 	{
-		GetRecordAt(row, rec);
-		row += HeadRowCount_;
+		GetRecordAt(row, rec);		
 	}
 
 	return Grid_->DeleteRow(row + HeadRowCount_) ? 1 : -1;

@@ -12,6 +12,13 @@
 #include "DwarfViewInfo.h"
 #include "DwarfViewProvider.h"
 #include "SideWnd.h"
+#include <Helper.h>
+#include <GridCtrl.h>
+#include <GridCellBase.h>
+#include <EditStyle.h>
+#include "ToolBarMaintianer.h"
+#include <boost\algorithm\string\find.hpp>
+//#include <xutility>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,7 +37,12 @@ BEGIN_MESSAGE_MAP(CDwarfView, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CDwarfView::OnFilePrintPreview)
+	ON_COMMAND(ToolBarCmbSearchID, &CDwarfView::OnToolBarCmbSearch)
+	ON_CBN_EDITCHANGE(ToolBarCmbSearchID, &CDwarfView::OnToolBarCmbSearchTxtChanged)
+	ON_CBN_EDITUPDATE(ToolBarCmbSearchID, &CDwarfView::OnToolBarCmbSearchTxtChanged)
+	ON_CBN_SELCHANGE(ToolBarCmbSearchID, &CDwarfView::OnToolBarCmbSearchTxtChanged)
 	ON_NOTIFY(GVN_SELCHANGED, EIDC_GRID, &CDwarfView::OnGridSelChanged)
+	ON_NOTIFY(NM_DBLCLK, EIDC_GRID, &CDwarfView::OnGridSelDBClick)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_CONTROL_RANGE(BN_CLICKED, MinViewOpID, MaxViewOpID, &CDwarfView::OnViewOperation)
@@ -39,9 +51,9 @@ END_MESSAGE_MAP()
 // CDwarfView 构造/析构
 
 CDwarfView::CDwarfView()
-	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1), ViewID(-1),
+	: FlowLayoutMain(EnumLayoutDirection::Vertical), GridViewer(&Grid, 1), GridEditViewer(&GridEdit, 0), ViewID(-1),
 	SelectedRecords(&Grid, &GridViewer),
-	FocusedRecordIdx(-1)
+	RecordIdxFocused(-1), RecordIdxUpdated(-1)
 {
 	// TODO: 在此处添加构造代码
 	
@@ -82,7 +94,12 @@ int CDwarfView::OnCreate(LPCREATESTRUCT lpcs)
 		::SetClassLong(this->GetSafeHwnd(), GCL_HBRBACKGROUND, (LONG)::GetSysColorBrush(COLOR_BTNFACE));
 	}
 
-	RECT rect = {0, 0, lpcs->cx, lpcs->cy};
+	RECT rect = {0, 0, lpcs->cx, GridEdit.GetDefCellHeight() + 5 + 18};
+
+	GridEdit.Create(rect, this, EIDC_GRIDEDIT, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
+	GridEdit.SetBkColor((COLORREF)::GetSysColor(COLOR_BTNFACE));
+	GridEdit.GetDefaultCell(FALSE, FALSE)->SetBackClr((COLORREF)0xFFFFE0);
+
 	Grid.Create(rect, this, EIDC_GRID, WS_CHILD | WS_TABSTOP | WS_VISIBLE);
 	Grid.SetBkColor((COLORREF)::GetSysColor(COLOR_BTNFACE));
 	Grid.GetDefaultCell(FALSE, FALSE)->SetBackClr((COLORREF)0xAAFFE0);
@@ -92,6 +109,7 @@ int CDwarfView::OnCreate(LPCREATESTRUCT lpcs)
 	CFlowLayout* pFlow = FlowLayoutMain.AddFlow(EnumLayoutDirection::Horizon);
 	pFlow->AddCtrl(BtnSearch.GetSafeHwnd());
 
+	FlowLayoutMain.AddCtrl(GridEdit.GetSafeHwnd(), ResizeInfo::FillInfo, ResizeInfo::FixedInfo);
 	FlowLayoutMain.AddCtrl(Grid.GetSafeHwnd(), ResizeInfo::FillInfo, ResizeInfo::FillInfo);
 
 	return 0;
@@ -151,18 +169,77 @@ void CDwarfView::OnContextMenu(CWnd* pWnd, CPoint point)
 void CDwarfView::OnViewOperation(UINT id)
 {
 	int opID = id - MinViewOpID;
-	
+	IDwarfViewInfo* pViewInfo = CDwarfViewProvider::GetInstance()[GetViewID()];
+	if(pViewInfo)
+	{
+		Context.SideViewID = CGlobalData::GetSideWnd()->GetCurrentSideViewID();
+		pViewInfo->ExecuteOperation(opID, &Context);
+	}
 }
 
 void CDwarfView::OnGridSelChanged(NMHDR *pNotifyStruct, LRESULT* pResult)
 {
 	int idx = GridViewer.GetCurRecord(0); 
-	if(idx != FocusedRecordIdx)
+	if(idx != RecordIdxFocused)
 	{
-		FocusedRecordIdx = idx;
+		RecordIdxFocused = idx;
 		CGlobalData::GetSideWnd()->RefreshSideView();
 	}
 }
+
+void CDwarfView::OnGridSelDBClick( NMHDR *pNotifyStruct, LRESULT* pResult )
+{
+	NM_GRIDVIEW* pNm = (NM_GRIDVIEW*)pNotifyStruct;
+
+	if(pNm->iRow > 0 && pNm->iRow < Grid.GetRowCount())
+	{
+		RecordIdxUpdated = GridViewer.GetCurRecord(&RecordUpdated);
+		GridEditViewer.SetRecordAt(0, RecordUpdated);
+
+		GridEdit.Invalidate();
+	}
+}
+
+void CDwarfView::OnToolBarCmbSearch()
+{	
+	bool	bOk = false;
+	LPCTSTR strCell;
+
+	// 获取搜索框内容
+	int idx = CToolBarMaintianer::GetInstance().m_Bar->CommandToIndex(ToolBarCmbSearchID);
+	LPCTSTR strKey = static_cast<CMFCToolBarComboBoxButton*>(CToolBarMaintianer::GetInstance().m_Bar->GetButton(idx))->GetText();
+	
+	if(!strKey || !*strKey) return;				// 搜索框为空时不查找
+
+	CCellID cellFocused = Grid.GetFocusCell();	// 获取当前处于焦点状态的单元格
+
+	if(cellFocused.row >= 0) ++cellFocused.row;	// 从焦点单元格的下一行开始搜索
+
+	for (int i = max(cellFocused.row, GridViewer.HeadRowCount()); i < Grid.GetRowCount() && !bOk; ++i)
+	{
+		for (int j = 1; j < Grid.GetColumnCount(); ++j)
+		{
+			LPCTSTR strCell = Grid.GetCell(i,j)->GetText();
+			if(boost::ifind_first(strCell, strKey))
+			{
+				Grid.SetFocusCell(i,j);
+				Grid.ScrollToRow(i);
+				Grid.Invalidate(TRUE);
+				bOk = true;
+				break;
+			}
+		}
+	}
+}
+
+void CDwarfView::OnToolBarCmbSearchTxtChanged()
+{	
+	int idx = CToolBarMaintianer::GetInstance().m_Bar->CommandToIndex(ToolBarCmbSearchID);
+	//static_cast<CMFCToolBarComboBoxButton*>(CToolBarMaintianer::GetInstance().m_Bar->GetButton(idx))->GetText();
+	TTRACE(TEXT("搜索框变更：%s\n"), static_cast<CMFCToolBarComboBoxButton*>(CToolBarMaintianer::GetInstance().m_Bar->GetButton(idx))->GetText());
+	//TTRACE(TEXT("搜索框变更：%s\n"), CToolBarMaintianer::GetInstance().m_ToolCmbSearch.GetText());
+}
+
 
 // CDwarfView 诊断
 
@@ -193,6 +270,7 @@ void CDwarfView::SetViewID(int id)
 	}
 
 	ViewID = id; 
+	Context.MainViewID = id;
 
 	ResetTitle();
 	Initialize();
@@ -245,19 +323,80 @@ int CDwarfView::Initialize()
 		while(pEnumOp->MoveNext())
 		{
 			BtnOps.push_back(new CButton());
-			CreateButton(**BtnOps.rbegin(), EIDC_UNUSED + pEnumOp->Current().ID, this, pEnumOp->Current().Name.c_str());
+			CreateButton(**BtnOps.rbegin(), MinViewOpID + pEnumOp->Current().ID, this, pEnumOp->Current().Name.c_str());
 			pFlowOps->AddCtrl((*BtnOps.rbegin())->GetSafeHwnd());
 		}
 	}
 	
+	//初始化展示框
 	GridViewer.Clear();
 	GridViewer.Initialize(pView->GetViewColumnCollection());
+
+	//初始化编辑框
+	GridEditViewer.Initialize(pView->GetViewColumnCollection());
+	GridEdit.SetRowCount(1);
+	GridEdit.GetCell(0,0)->SetState(GVIS_READONLY);
+	for (int iCol = 1; iCol < GridEdit.GetColumnCount(); ++iCol)
+	{
+		GridEdit.GetCell(0, iCol)->SetState(GridEdit.GetCell(0, iCol)->GetState() & ~GVIS_READONLY);
+	}	
 
 	RECT rect;
 	this->GetClientRect(&rect);
 	OnSize(0, rect.right, rect.bottom);
 
 	return 0;
+}
+
+int	CDwarfView::RemoveRecordUpdated()
+{
+	if(RecordIdxUpdated < 0 || RecordIdxUpdated >= GridViewer.GetRecordCount())
+	{
+		return 0;
+	}
+
+	GridViewer.DelRecordAt(RecordIdxUpdated, 0);
+	RecordIdxUpdated = -1;
+
+	Grid.Invalidate();
+	return 1;
+}
+
+int	CDwarfView::RemoveRecordFocused()
+{
+	if(RecordIdxFocused < 0 || RecordIdxFocused >= GridViewer.GetRecordCount())
+	{
+		return 0;
+	}
+
+	GridViewer.DelRecordAt(RecordIdxFocused, 0);
+	RecordIdxFocused = -1;
+
+	Grid.Invalidate();
+	return 1;
+}
+
+int	CDwarfView::RemoveRecordSelected()
+{
+	for (int i = GridViewer.GetRecordCount() + GridViewer.HeadRowCount() - 1; i >= GridViewer.HeadRowCount(); --i)
+	{
+		if(CEditStyleBool::GetInstance().strTrue == Grid.GetCell(0, i)->GetText())
+		{
+			Grid.DeleteRow(i);
+		}
+	}
+
+	Grid.Invalidate();
+	
+	return 1;
+}
+
+int	CDwarfView::AddRecord(const IDBRecord& rec)
+{
+	GridViewer.NewRecordAt(0, rec);
+
+	Grid.Invalidate();
+	return 1;
 }
 
 int CDwarfView::ShowRecords()
@@ -274,12 +413,21 @@ int CDwarfView::ShowRecords()
 	GridViewer.Fill(*pEnumRec);
 	
 	Grid.AutoSizeColumns();
+
+	//使两个Grid的单元格宽度保持一致
+	for (int iCol = 0; iCol < Grid.GetColumnCount(); ++iCol)
+	{
+		GridEdit.SetColumnWidth(iCol, Grid.GetColumnWidth(iCol));
+	}
+	GridEdit.Invalidate();
+
+	return 1;
 }
 
 IDBRecord* CDwarfView::GetFocusedRecord()
 {
-	int idx = GridViewer.GetCurRecord(&FocusedRecord);
-	return (idx >= 0) ? &FocusedRecord : 0;
+	int idx = GridViewer.GetCurRecord(&RecordFocused);
+	return (idx >= 0) ? &RecordFocused : 0;
 }
 
 IEnumerator<IDBRecord>*	CDwarfView::GetSelectedRecords()
@@ -287,6 +435,25 @@ IEnumerator<IDBRecord>*	CDwarfView::GetSelectedRecords()
 	return &SelectedRecords;
 }
 
+int CDwarfView::GetUpdatedRecord( IDBRecord* cur, IDBRecord* ori )
+{
+	if(cur)
+	{
+		GridEditViewer.GetRecordAt(0, cur);
+	}
+
+	if(ori)
+	{
+		if(RecordIdxUpdated < 0 || RecordIdxUpdated >= GridViewer.GetRecordCount())
+		{
+			MsgboxPrompt(TEXT("请选双击纪录并进行编辑！"));
+			return -1;
+		}
+		DBRecordAssign(*ori, RecordUpdated);
+	}
+
+	return 1;
+}
 
 // CDwarfView 消息处理程序
 
@@ -319,3 +486,4 @@ void CDwarfView::CreateButton(CButton& btn, UINT id, CWnd* pParent, LPCTSTR lpTi
 	btn.SetFont(pFont);
 	btn.ShowWindow(SW_SHOW);
 }
+

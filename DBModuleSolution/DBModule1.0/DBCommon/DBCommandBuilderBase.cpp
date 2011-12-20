@@ -269,7 +269,7 @@ void CDBCommandBuilderBase::GenerateConditionStr(const IDBRecord& rec, const CDB
 			buffer.append(TEXT(" AND "));
 		}
 
-		*(buffer.end() - 4) = '0';
+		*(buffer.end() - 4) = '\0';
 	}
 }
 

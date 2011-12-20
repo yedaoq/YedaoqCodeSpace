@@ -27,7 +27,7 @@ namespace NSDBModule
 			DBExist,					// indicate a table exist in database
 		};
 
-		//index_t					Index;	// index of table in memory module
+		index_t					Index;	// index of table in memory module
 		tstring					DBName;	// name of table in database
 		tstring					Name;	// name of table in memory module
 		flag_t					Flag;	
@@ -41,19 +41,20 @@ namespace NSDBModule
 		DBColumnSchema& operator[](index_t col) { return const_cast<DBColumnSchema&>(const_cast<const CDBTableSchema&>(*this)[col]);	}
 
 		CDBTableSchema()
-			: Columns(0), Flag(None)
+			: Index(0xFFFFFFFFF), Columns(0), Flag(None)
 		{}
 
 		CDBTableSchema(const tstring& dbName, const tstring& name)
-			: DBName(dbName), Name(name), Columns(0), Flag(None)
+			: Index(0xFFFFFFFFF), DBName(dbName), Name(name), Columns(0), Flag(None)
 		{}
 
 		CDBTableSchema(const CDBTableSchema& other)
-			: DBName(other.DBName), Name(other.Name), Columns(other.Columns), Flag(other.Flag)
+			: Index(0xFFFFFFFFF), DBName(other.DBName), Name(other.Name), Columns(other.Columns), Flag(other.Flag)
 		{}
 
 		CDBTableSchema& operator=(const CDBTableSchema& other)
 		{
+			Index = other.Index;
 			DBName = other.DBName;
 			Name = other.Name;
 			Flag = other.Flag;

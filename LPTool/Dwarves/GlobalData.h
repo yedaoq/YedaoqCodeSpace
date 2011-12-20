@@ -24,6 +24,9 @@ public:
 	static CSideWnd*		GetSideWnd()			{ return m_SideWnd; }
 	static void				SetSideWnd(CSideWnd* w)	{ m_SideWnd = w; }
 
+	static CDwarfLogTab*	GetLogTab()				{ return m_LogTab; }
+	static void				SetLogTab(CDwarfLogTab* w){ m_LogTab = w; }
+
 	//获取当前信息
 	static CDwarfDoc*		GetCurrentDoc()			{ return &m_Doc; }
 	static CDwarfView*		GetCurrentView()		{ return static_cast<CDwarfView*>(static_cast<CMainFrame*>(AfxGetMainWnd())->GetActiveView()); }
@@ -36,4 +39,5 @@ public:
 protected:
 	static CDwarfDoc		m_Doc;
 	static CSideWnd*		m_SideWnd;
+	static CDwarfLogTab*	m_LogTab;
 };

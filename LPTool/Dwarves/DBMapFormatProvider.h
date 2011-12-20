@@ -1,9 +1,9 @@
 #pragma once
 #include <Singlton.h>
 #include <map>
-#include <View\TextConverter4DBMap.h>
 #include "DBEnumeratorProvider.h"
 #include <Util\DBEnumeratorSuit.h>
+#include "TextFormater4DBMap.h"
 
 class CDBMapFormatProvider : public CSingleton<CDBMapFormatProvider>
 {
@@ -37,7 +37,7 @@ public:
 			iter = Items.insert(
 				std::make_pair(
 					item, 
-					CTextConverter4DBMap(&CDBEnumeratorProvider::GetInstance()[tbl].GetFilterEnumerator(), fieldView, fieidValue))
+					CTextConverter4DBMap(tbl, fieldView, fieidValue))
 				).first;
 		}
 		return iter->second;

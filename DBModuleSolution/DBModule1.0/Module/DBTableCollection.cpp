@@ -64,7 +64,7 @@ CDBTable* CDBTableCollection::Append(const tstring& name, CDBModule* module, boo
 	CDBTable* pTbl = new CDBTable(module);
 	CDBTableSchema& schema = pTbl->GetSchema();
 	schema.Name = name;
-	//schema.Index = Tables.size();
+	schema.Index = Tables.size();
 	schema.SetFlag(CDBTableSchema::BuildIn, bBuildIn);
 
 	Tables.push_back(DBTablePtr(pTbl));
@@ -84,8 +84,9 @@ CDBTable* CDBTableCollection::Append(const CDBTableSchema& schema, CDBModule* mo
 
 	CDBTable* pTbl = new CDBTable(module, schema);
 	pTbl->GetSchema().SetFlag(CDBTableSchema::BuildIn, bBuildIn);
-	//schema.Index = Tables.size();
+	pTbl->GetSchema().Index = Tables.size();
 	Tables.push_back(DBTablePtr(pTbl));
+
 	ptrRet = Tables[Tables.size() - 1];
 	return ptrRet;
 }
@@ -110,7 +111,8 @@ int CDBTableCollection::Remove(const tstring& name)
 	if(iter != Tables.end())
 	{
 		ReleaseTables(iter, Tables.end());
-		Tables.erase(iter,iter);
+		iter = Tables.erase(iter,iter);
+		ResetTableID(iter, Tables.end(), (*iter)->GetSchema().Index - 1);
 		return 1;
 	}
 
@@ -127,7 +129,9 @@ int CDBTableCollection::Remove(index_t tbl)
 
 	DBTableCollection::iterator iter = Tables.begin() + tbl;
 	ReleaseTables(iter, iter + 1);
-	Tables.erase(iter,iter);
+	iter = Tables.erase(iter,iter);
+	ResetTableID(iter, Tables.end(), (*iter)->GetSchema().Index - 1);
+
 	return 1;
 }
 
@@ -190,5 +194,13 @@ void CDBTableCollection::ReleaseTables(DBTableCollection::iterator begin, DBTabl
 	{
 		delete *iter;
 		*iter = 0;
+	}
+}
+
+void NSDBModule::CDBTableCollection::ResetTableID( DBTableCollection::iterator begin, DBTableCollection::iterator end, index_t idFirst )
+{
+	while(begin != end)
+	{
+		(*begin++)->GetSchema().Index = idFirst++;
 	}
 }

@@ -48,7 +48,7 @@ namespace NSDBModule
 		}
 
 	protected:
-		
+		void ResetTableID(DBTableCollection::iterator begin, DBTableCollection::iterator end, index_t idFirst);
 		void ReleaseTables(DBTableCollection::iterator begin, DBTableCollection::iterator end);
 
 	protected:

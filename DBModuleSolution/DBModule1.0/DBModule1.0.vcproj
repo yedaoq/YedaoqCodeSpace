@@ -295,6 +295,26 @@
 				Name="Store"
 				>
 			</Filter>
+			<Filter
+				Name="Notifier"
+				>
+				<File
+					RelativePath=".\Module\DMLNotifier\DMLEvent.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Module\DMLNotifier\DMLNotifier.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Module\DMLNotifier\DMLNotifier.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Module\DMLNotifier\EnumDMLCommand.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Util"
@@ -305,46 +325,6 @@
 			</File>
 			<File
 				RelativePath=".\Util\DBRecordBaseEnumerator.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Sqlite"
-			>
-			<File
-				RelativePath=".\Sqlite\CppSQLite3U.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sqlite\CppSQLite3U.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sqlite\I_DBControl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sqlite\SqliteDataAdapter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sqlite\SqliteDataAdapter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sqlite\SqliteDataTypeProvider.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sqlite\SqliteDataTypeProvider.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sqlite\SqliteFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sqlite\SqliteFactory.h"
 				>
 			</File>
 		</Filter>

@@ -5,10 +5,12 @@
 #include "..\DBInterface\DBDataAdapter.h"
 #include "..\DBInterface\DBFactory.h"
 #include "Schema\DBTableSchema.h"
+#include ".\DMLNotifier\DMLNotifier.h"
 #include <vector>
 #include <crtdbg.h>
 #include "DBRecord.h"
 #include "DBRecordFunction.h"
+
 
 using namespace NSDBModule;
 
@@ -155,7 +157,7 @@ int	CDBTable::Find(IDBRecord& rec) /*const*/
 	DBRecordIterator iter = Records_.find(rec);
 	if(iter != Records_.end())
 	{
-		rec = *iter;
+		DBRecordAssign(rec, *iter, iter->GetFieldCount());
 		return 1;
 	}
 
@@ -170,11 +172,32 @@ int	CDBTable::Find(IDBRecord& rec, const CDBRecordComparison& cmp)
 	{
 		if(0 == cmp(rec, *iter))
 		{
-			rec = *iter;
+			DBRecordAssign(rec, *iter, iter->GetFieldCount());
 			return 1;
 		}
 	}
 	return 0;
+}
+
+int	CDBTable::Find(int col, const tstring& val, IDBRecord& recDst)
+{
+	if(col < 0 || col >= RecordTemplate().GetFieldCount())
+	{
+		//ASSERT(false);
+		return 0;
+	}
+
+	CDBRecordComparison cmp(1, col);
+	CDBRecordBase rec = RecordTemplate();
+	rec.SetField(col, val);
+
+	int iRet = Find(rec, cmp);
+	if(iRet > 0)
+	{
+		DBRecordAssign(recDst, rec, rec.GetFieldCount());
+	}
+
+	return iRet;
 }
 
 IEnumerator<IDBRecord>* CDBTable::FindAll(const IDBRecord& rec, const CDBRecordComparison& cmp) /*const*/
@@ -184,6 +207,23 @@ IEnumerator<IDBRecord>* CDBTable::FindAll(const IDBRecord& rec, const CDBRecordC
 	return new_filter_enumerator(
 		make_iterator_enumerator_ex<IDBRecord>(Records_.begin(), Records_.end()),
 		CDBRecordFilter(rec, cmp));
+}
+
+IEnumerator<IDBRecord>*	CDBTable::FindAll(int col, const tstring& val)
+{
+	LoadData();
+
+	if(col < 0 || col >= RecordTemplate().GetFieldCount())
+	{
+		//ASSERT(false);
+		return 0;
+	}
+
+	CDBRecordComparison cmp(1, col);
+	CDBRecordBase rec = RecordTemplate();
+	rec.SetField(col, val);
+
+	return FindAll(rec, cmp);
 }
 
 int	CDBTable::Update(const IDBRecord& cur, const IDBRecord& ori)
@@ -206,9 +246,15 @@ int	CDBTable::Update(const IDBRecord& cur, const IDBRecord& ori)
 		}
 	}
 
+	// notify
+	if(!CallNotify(EnumDMLCommand::DMLUpdate, &cur, &ori))
+	{
+		return 0;
+	}
+
 	// update to database
 	IDBCommand* cmd;
-	CommandBuilder_->GetCmdUpdate(cur, ori, Comparison_, &cmd);
+	CommandBuilder_->GetCmdUpdate(ori, cur, Comparison_, &cmd);
 
 	if(DBModule_->DBAdapter()->Execute(*cmd))
 	{
@@ -231,6 +277,12 @@ int	CDBTable::Insert(const IDBRecord& rec)
 	if(iOri != Records_.end())
 	{
 		// data exist
+		return 0;
+	}
+
+	// notify
+	if(!CallNotify(EnumDMLCommand::DMLInsert, &rec, 0))
+	{
 		return 0;
 	}
 
@@ -261,6 +313,12 @@ int	CDBTable::Delete(const IDBRecord& rec)
 		return 0;
 	}
 
+	// notify
+	if(!CallNotify(EnumDMLCommand::DMLDelete, 0, &rec))
+	{
+		return 0;
+	}
+	
 	// update to database
 	IDBCommand* cmd;
 	CommandBuilder_->GetCmdDelete(rec, Comparison_, &cmd);
@@ -275,4 +333,19 @@ int	CDBTable::Delete(const IDBRecord& rec)
 	Records_.erase(iOri);
 
 	return 1;
+}
+
+bool NSDBModule::CDBTable::CallNotify( EnumDMLCommand cmd, const IDBRecord* cur, const IDBRecord* ori )
+{
+	// notify
+	static DMLEvent e( GetDBModule(), Schema_.Index );
+	e.Database = GetDBModule();
+	e.TableID = Schema_.Index;
+	e.Command = cmd;
+	e.RecordOrigin = ori;
+	e.RecordFresh = cur;
+	e.FlagCancel = false;
+
+	e.Database->DMLNotifier().Dispatch(&e);
+	return !e.FlagCancel;
 }
