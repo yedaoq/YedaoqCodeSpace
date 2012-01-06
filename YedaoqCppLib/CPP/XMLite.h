@@ -30,8 +30,8 @@
 
 #include <vector>
 #include <deque>
-#include "mytype.h"
-#include <boost\algorithm\string\trim.hpp>
+#include <string>
+#include "tstring.h"
 #include <tchar.h>
 
 struct _tagXMLAttr;
@@ -56,12 +56,17 @@ typedef struct _tagXmlEntity
 typedef struct _tagXMLEntitys : public std::vector<XENTITY>
 {
 	LPXENTITY	GetEntity( int entity );
-	LPXENTITY	GetEntity( tchar* entity );	
+	LPXENTITY	GetEntity( const tchar* entity );	
 	int			GetEntityCount( const tchar* str );
+
 	int			Ref2Entity( const tchar* estr, tchar* str, int strlen );
 	int			Entity2Ref( const tchar* str, tchar* estr, int estrlen );
+
 	tstring		Ref2Entity( const tchar* estr );
 	tstring		Entity2Ref( const tchar* str );	
+
+	bool		Entity2Ref(tstring& tar, const tstring& val);
+	bool		Ref2Entity(tstring& tar, const tstring& val);
 
 	_tagXMLEntitys(){};
 	_tagXMLEntitys( LPXENTITY entities, int count );
@@ -117,12 +122,12 @@ extern DISP_OPT optDefault;
 // XAttr : Attribute Implementation
 typedef struct _tagXMLAttr
 {
-	tstring name;
-	tstring	value;
-	
+	tstring			name;
+	tstring			value;
 	_tagXMLNode*	parent;
 
-	tstring GetXML( LPDISP_OPT opt = &optDefault );
+	bool GetXML(tstring& tar, LPDISP_OPT opt /*= &optDefault*/ );
+
 }XAttr, *LPXAttr;
 
 typedef enum
@@ -150,6 +155,10 @@ typedef struct _tagXMLNode
 
 	// Load/Save XML
 	tchar*	Load( const tchar* pszXml, LPPARSEINFO pi = &piDefault );
+
+	bool GetXML(tstring& tar, LPDISP_OPT opt = &optDefault );
+	bool GetText(tstring& tar, LPDISP_OPT opt = &optDefault );
+
 	tstring GetXML( LPDISP_OPT opt = &optDefault );
 	tstring GetText( LPDISP_OPT opt = &optDefault );
 
@@ -226,16 +235,7 @@ typedef struct _tagXMLDocument : public XNode
 }XDoc, *LPXDoc;
 
 // Helper Funtion
-inline long XStr2Int( const tchar* str, long default_value = 0 )
-{
-	return ( str && *str ) ? _ttol(str) : default_value;
-}
-
-inline bool XIsEmptyString( const tchar* str )
-{
-	tstring s(str);
-	boost::trim(s);
-	return ( s.empty() || s == TEXT("") );
-}
+long XStr2Int( const tchar* str, long default_value = 0 );
+bool XIsEmptyString( const tchar* str );
 
 #endif // !defined(AFX_XMLITE_H__786258A5_8360_4AE4_BDAF_2A52F8E1B877__INCLUDED_)

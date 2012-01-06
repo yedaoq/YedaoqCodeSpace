@@ -2,10 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 #include "XMLite.h"
-//#include <iostream>
-#include <sstream>
-#include <string>
-#include <iosfwd>
+#include <boost\algorithm\string\trim.hpp>
 #include "boost\format.hpp"
 
 #ifdef _DEBUG
@@ -402,7 +399,7 @@ tchar* _tagXMLNode::LoadAttributes( const tchar* pszAttrs , LPPARSEINFO pi /*= &
 					pi->erorr_occur = true;
 					pi->error_pointer = xml;
 					pi->error_code = PIE_ATTR_NO_VALUE;
-					pi->error_string = (tformat(TEXT("<%s> attribute has error "))%name).str();
+					pi->error_string = (tboostformat(TEXT("<%s> attribute has error "))%name).str();
 					//pi->error_string.append()
 				}
 				return NULL;
@@ -496,7 +493,7 @@ tchar* _tagXMLNode::LoadAttributes( const tchar* pszAttrs, const tchar* pszEnd, 
 					pi->erorr_occur = true;
 					pi->error_pointer = xml;
 					pi->error_code = PIE_ATTR_NO_VALUE;
-					pi->error_string = (tformat(TEXT("<%s> attribute has error "))%name).str();
+					pi->error_string = (tboostformat(TEXT("<%s> attribute has error "))%name).str();
 					//pi->error_string.Format( TEXT("<%s> attribute has error "), name );
 				}
 				return NULL;
@@ -850,7 +847,7 @@ tchar* _tagXMLNode::Load( const tchar* pszXml, LPPARSEINFO pi /*= &piDefault*/ )
 						pi->erorr_occur = true;
 						pi->error_pointer = xml;
 						pi->error_code = PIE_NOT_CLOSED;
-						pi->error_string = (tformat(TEXT("%s must be closed with </%s>"))%name%name).str();
+						pi->error_string = (tboostformat(TEXT("%s must be closed with </%s>"))%name%name).str();
 					}
 					// error cos not exist CloseTag </TAG>
 					return NULL;
@@ -905,7 +902,7 @@ tchar* _tagXMLNode::Load( const tchar* pszXml, LPPARSEINFO pi /*= &piDefault*/ )
 								pi->erorr_occur = true;
 								pi->error_pointer = xml;
 								pi->error_code = PIE_NOT_CLOSED;
-								pi->error_string = (tformat(TEXT("it must be closed with </%s>"))%name).str();
+								pi->error_string = (tboostformat(TEXT("it must be closed with </%s>"))%name).str();
 							}
 							// error
 							return NULL;
@@ -931,7 +928,7 @@ tchar* _tagXMLNode::Load( const tchar* pszXml, LPPARSEINFO pi /*= &piDefault*/ )
 									pi->erorr_occur = true;
 									pi->error_pointer = xml;
 									pi->error_code = PIE_NOT_NESTED;
-									pi->error_string = (tformat(TEXT("'<%s> ... </%s>' is not wel-formed."))%name%closename).str();
+									pi->error_string = (tboostformat(TEXT("'<%s> ... </%s>' is not wel-formed."))%name%closename).str();
 								}
 								return NULL;
 							}
@@ -955,7 +952,7 @@ tchar* _tagXMLNode::Load( const tchar* pszXml, LPPARSEINFO pi /*= &piDefault*/ )
 								pi->erorr_occur = true;
 								pi->error_pointer = xml;
 								pi->error_code = PIE_NOT_CLOSED;
-								pi->error_string = (tformat(TEXT("it must be closed with </%s>"))%name).str();
+								pi->error_string = (tboostformat(TEXT("it must be closed with </%s>"))%name).str();
 							}
 							return NULL;
 						}
@@ -1044,18 +1041,24 @@ LPXNode	_tagXMLDocument::GetRoot()
 // Coder    Date                      Desc
 // bro      2002-10-29
 //========================================================
-tstring _tagXMLAttr::GetXML( LPDISP_OPT opt /*= &optDefault*/ )
+bool _tagXMLAttr::GetXML(tstring& tar, LPDISP_OPT opt /*= &optDefault*/ )
 {
-	std::tostringstream os;
-	//os << (const tchar*)name << "='" << (const tchar*)value << "' ";
-	os<<name;
-	os<<'=';
-	os<<opt->value_quotation_mark;
-	os<<(opt->reference_value&&opt->entitys) ? opt->entitys->Entity2Ref(value.c_str()) : value;
-	os<<opt->value_quotation_mark;
-	os<<' ';
+	tar.append(name).push_back('=');
+	tar.push_back(opt->value_quotation_mark);
+
+	if(opt->reference_value&&opt->entitys)
+	{
+		opt->entitys->Entity2Ref(tar, value);
+	}
+	else
+	{
+		tar.append(value);
+	}
+
+	tar.push_back(opt->value_quotation_mark);
+	tar.push_back(' ');
 	
-	return os.str();
+	return true;
 }
 
 //========================================================
@@ -1067,116 +1070,116 @@ tstring _tagXMLAttr::GetXML( LPDISP_OPT opt /*= &optDefault*/ )
 // Coder    Date                      Desc
 // bro      2002-10-29
 //========================================================
-tstring _tagXMLNode::GetXML( LPDISP_OPT opt /*= &optDefault*/ )
+bool _tagXMLNode::GetXML(tstring& tar, LPDISP_OPT opt /*= &optDefault*/ )
 {
-	std::tostringstream os;
-
 	// tab
 	if( opt && opt->newline )
 	{
-		if( opt && opt->newline )
-			os << "\r\n";
-		for( int i = 0 ; i < opt->tab_base ; i++)
-			os << '\t';
+		tar.append(TEXT("\r\n"));
+		tar.append(opt->tab_base, '\t');
 	}
 
-	if( type == XNODE_DOC )
+	if(type == XNODE_ELEMENT)
 	{
-		for( int i = 0 ; i < childs.size(); i++ )
-			os << childs[i]->GetXML( opt ).c_str();
-		return os.str();
-	}
-	else
-	if( type == XNODE_PI )
-	{
-		// <?TAG
-		os << szXMLPIOpen << name.c_str();
-		// <?TAG Attr1="Val1" 
-		if( attrs.empty() == false ) os << ' ';
-		for( int i = 0 ; i < attrs.size(); i++ )
+		// <TAG
+		tar.push_back('<');
+		tar.append(name);
+
+		// <TAG Attr1="Val1" 
+		if(!attrs.empty())
 		{
-			os << attrs[i]->GetXML(opt).c_str();
-		}
-		//?>
-		os << szXMLPIClose;	
-		return os.str();
-	}
-	else
-	if( type == XNODE_COMMENT )
-	{
-		// <--comment
-		os << szXMLCommentOpen << value.c_str();
-		//-->
-		os << szXMLCommentClose;	
-		return os.str();
-	}
-	else
-	if( type == XNODE_CDATA )
-	{
-		// <--comment
-		os << szXMLCDATAOpen << value.c_str();
-		//-->
-		os << szXMLCDATAClose;	
-		return os.str();
-	}
-
-	// <TAG
-	os << '<' << name;
-
-	// <TAG Attr1="Val1" 
-	if( attrs.empty() == false ) os << ' ';
-	for( int i = 0 ; i < attrs.size(); i++ )
-	{
-		os << attrs[i]->GetXML(opt);
-	}
-	
-	if( childs.empty() && value.empty() )
-	{
-		// <TAG Attr1="Val1"/> alone tag 
-		os << "/>";	
-	}
-	else
-	{
-		// <TAG Attr1="Val1"> and get child
-		os << '>';
-		if( opt && opt->newline && !childs.empty() )
-		{
-			opt->tab_base++;
+			tar.push_back(' ');
+			for( int i = 0 ; i < attrs.size(); i++ )
+			{
+				attrs[i]->GetXML(tar, opt);
+			}
 		}
 
-		for( int i = 0 ; i < childs.size(); i++ )
-			os << childs[i]->GetXML( opt );
-		
-		// Text Value
-		if( value != TEXT("") )
+		if( childs.empty() && value.empty())
 		{
+			// <TAG Attr1="Val1"/> alone tag 
+			tar.append(TEXT("/>"));	
+		}
+		else
+		{
+			// <TAG Attr1="Val1"> and get child
+			tar.push_back('>');
+			if(!childs.empty() )
+			{
+				++opt->tab_base;
+				for( int i = 0 ; i < childs.size(); i++ )
+					childs[i]->GetXML(tar, opt);
+				--opt->tab_base;
+			}			
+
+			// Text Value
+			if(!value.empty())
+			{
+				if(opt && opt->newline && !childs.empty())
+				{
+					tar.append(TEXT("\r\n"));
+					tar.append(opt->tab_base + 1, '\t');
+				}
+				if(opt->reference_value&&opt->entitys)
+				{
+					opt->entitys->Entity2Ref(tar, value);
+				}
+				else
+				{
+					tar.append(value);
+				}
+			}
+
+			// </TAG> CloseTag
 			if( opt && opt->newline && !childs.empty() )
 			{
-				if( opt && opt->newline )
-					os << "\r\n";
-				for( int i = 0 ; i < opt->tab_base ; i++)
-					os << '\t';
+				tar.append(TEXT("\r\n")).append(opt->tab_base, '\t');
 			}
-			os << (opt->reference_value&&opt->entitys?opt->entitys->Entity2Ref(value.c_str()):value);
-		}
-
-		// </TAG> CloseTag
-		if( opt && opt->newline && !childs.empty() )
-		{
-			os << "\r\n";
-			for( int i = 0 ; i < opt->tab_base-1 ; i++)
-				os << '\t';
-		}
-		os << "</" << name << '>';
-
-		if( opt && opt->newline )
-		{
-			if( !childs.empty() )
-				opt->tab_base--;
+			tar.append(TEXT("</")).append(name).push_back('>');
 		}
 	}
-	
-	return os.str();
+	else if( type == XNODE_DOC )
+	{
+		for( int i = 0 ; i < childs.size(); i++ )
+			childs[i]->GetXML(tar, opt );
+		return true;
+	}
+	else if( type == XNODE_PI )
+	{
+		// <?TAG
+		tar.append(szXMLPIOpen).append(name);
+		// <?TAG Attr1="Val1" 
+		if(!attrs.empty())
+		{
+			tar.append(1, ' ');
+			for( int i = 0 ; i < attrs.size(); ++i )
+			{
+				attrs[i]->GetXML(tar, opt);
+			}
+		}
+		//?>
+		tar.append(szXMLPIClose);	
+		return true;
+	}
+	else if( type == XNODE_COMMENT )
+	{
+		tar.append(szXMLCommentOpen).append(value).append(szXMLCommentClose);
+		return true;
+	}
+	else if( type == XNODE_CDATA )
+	{
+		tar.append(szXMLCDATAOpen).append(value).append(szXMLCDATAClose);
+		return true;
+	}
+
+	return true;
+}
+
+tstring _tagXMLNode::GetXML( LPDISP_OPT opt /*= &optDefault*/ )
+{
+	tstring ret;
+	GetXML(ret, opt);
+	return ret;
 }
 
 //========================================================
@@ -1188,49 +1191,53 @@ tstring _tagXMLNode::GetXML( LPDISP_OPT opt /*= &optDefault*/ )
 // 작성자   작성일                 작성이유
 // 조경민   2004-06-15
 //========================================================
-tstring _tagXMLNode::GetText( LPDISP_OPT opt /*= &optDefault*/ )
+bool _tagXMLNode::GetText(tstring& tar, LPDISP_OPT opt /*= &optDefault*/ )
 {
-	std::wostringstream os;
-
-	if( type == XNODE_DOC )
-	{
-		for( int i = 0 ; i < childs.size(); i++ )
-			os << childs[i]->GetText( opt );
-	}
-	else
-	if( type == XNODE_PI )
-	{
-		// no text
-	}
-	else
-	if( type == XNODE_COMMENT )
-	{
-		// no text
-	}
-	else
-	if( type == XNODE_CDATA )
-	{
-		os << value;
-	}
-	else
 	if( type == XNODE_ELEMENT )
 	{
-		if( childs.empty() && value.empty() )
+		// childs text
+		for( int i = 0 ; i < childs.size(); i++ )
+			childs[i]->GetText(tar, opt);
+
+		// Text Value
+		if(!value.empty())
 		{
-			// no text
-		}
-		else
-		{
-			// childs text
-			for( int i = 0 ; i < childs.size(); i++ )
-				os << childs[i]->GetText();
-			
-			// Text Value
-			os << (opt->reference_value&&opt->entitys) ? opt->entitys->Entity2Ref(value.c_str()) : value;
+			if(opt->reference_value&&opt->entitys)
+			{
+				opt->entitys->Entity2Ref(tar, value);
+			}
+			else
+			{
+				tar.append(value);
+			}
 		}
 	}
-	
-	return os.str();
+	else if( type == XNODE_DOC )
+	{
+		for( int i = 0 ; i < childs.size(); i++ )
+			childs[i]->GetText(tar, opt );
+	}
+	else if( type == XNODE_PI )
+	{
+		// no text
+	}
+	else if( type == XNODE_COMMENT )
+	{
+		// no text
+	}
+	else if( type == XNODE_CDATA )
+	{
+		tar.append(value);
+	}
+
+	return true;
+}
+
+tstring _tagXMLNode::GetText( LPDISP_OPT opt /*= &optDefault*/ )
+{
+	tstring ret;
+	GetText(ret, opt);
+	return ret;
 }
 
 //========================================================
@@ -1394,8 +1401,10 @@ const tchar*	_tagXMLNode::GetChildValue( const tchar* name )
 
 tstring	_tagXMLNode::GetChildText( const tchar* name, LPDISP_OPT opt /*= &optDefault*/ )
 {
-	LPXNode node = GetChild( name );
-	return (node != NULL)? node->GetText(opt) : TEXT("");
+	tstring ret;
+	LPXNode node = GetChild(name);
+	if(node) node->GetText(ret, opt);
+	return ret;
 }
 
 LPXAttr _tagXMLNode::GetChildAttr( const tchar* name, const tchar* attrname )
@@ -1784,12 +1793,12 @@ LPXENTITY _tagXMLEntitys::GetEntity( int entity )
 	return NULL;
 }
 
-LPXENTITY _tagXMLEntitys::GetEntity( tchar* entity )
+LPXENTITY _tagXMLEntitys::GetEntity(const tchar* entity )
 {
 	for( int i = 0 ; i < size(); i ++ )
 	{
-		tchar* ref = (tchar*)at(i).ref;
-		tchar* ps = entity;
+		const tchar* ref = at(i).ref;
+		const tchar* ps = entity;
 		while( ref && *ref )
 			if( *ref++ != *ps++ )
 				break;
@@ -1832,6 +1841,46 @@ int _tagXMLEntitys::Ref2Entity( const tchar* estr, tchar* str, int strlen )
 	return ps-str;	
 }
 
+bool _tagXMLEntitys::Ref2Entity( tstring& tar, const tstring& val )
+{
+	const tchar* ps = val.c_str();
+	const tchar* ps_end = ps+val.length();
+	while(ps < ps_end )
+	{
+		LPXENTITY ent = GetEntity(ps);
+		if(ent)
+		{
+			tar.push_back(ent->entity);
+			ps += ent->ref_len;
+		}
+		else
+			tar.push_back(*ps++);
+	}
+
+	// total copied characters
+	return true;	
+}
+
+bool _tagXMLEntitys::Entity2Ref( tstring& tar, const tstring& val )
+{
+	const tchar* pszVal = val.c_str();
+	const tchar* pszTmp = pszVal;
+	while(*pszTmp)
+	{
+		LPXENTITY ent = GetEntity(pszTmp);
+		if(ent)
+		{
+			tar.append(ent->ref);
+		}
+		else
+		{
+			tar.push_back(*pszTmp);
+		}
+	}
+	return true;
+}
+
+
 int _tagXMLEntitys::Entity2Ref( const tchar* str, tchar* estr, int estrlen )
 {
 	tchar* ps = (tchar*)str;
@@ -1859,34 +1908,36 @@ int _tagXMLEntitys::Entity2Ref( const tchar* str, tchar* estr, int estrlen )
 
 tstring _tagXMLEntitys::Ref2Entity( const tchar* estr )
 {
-	tstring es;
-	tchar*	buf;
+	tstring ret;
 	if( estr )
 	{
-		int len = _tcslen(estr);
-		buf = new tchar[len+1];
+		int		len = _tcslen(estr);
+		tchar*	buf = new tchar[len+1];
 		Ref2Entity( estr, buf, len );
+		ret.assign(buf);
+		delete[] buf;
 	}
-	tstring ret(buf);
-	delete[] buf;
 	return ret;
 }
 
 tstring _tagXMLEntitys::Entity2Ref( const tchar* str )
 {	
 	tstring ret;
-	tchar*	buf;
 	if(str)
 	{
 		int nEntityCount = GetEntityCount(str);
 		if( nEntityCount > 0 )
 		{
 			int len = _tcslen(str) + nEntityCount*10 ;
-			buf = new tchar[len];
+			tchar* buf = new tchar[len];
 			Entity2Ref( str, buf, len );
 			ret.assign(buf);
 			delete[] buf;
-		}		
+		}	
+		else
+		{
+			ret.assign(str);
+		}
 	}
 	return ret;
 }
@@ -1899,4 +1950,17 @@ tstring XRef2Entity( const tchar* estr )
 tstring XEntity2Ref( const tchar* str )
 {
 	return entityDefault.Entity2Ref( str );
+}
+
+// Helper Funtion
+long XStr2Int( const tchar* str, long default_value)
+{
+	return ( str && *str ) ? _ttol(str) : default_value;
+}
+
+bool XIsEmptyString( const tchar* str )
+{
+	tstring s(str);
+	boost::trim(s);
+	return ( s.empty() || s == TEXT("") );
 }
