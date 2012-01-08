@@ -87,6 +87,7 @@ class CZYFScanOptions : public CSingleton<CZYFScanOptions>
 public:
 	std::vector<CScanBatch> ScanBatchs;
 	CSize					DocSize;
+	tstring					ProductName;
 
 public:
 	void Save()
@@ -131,9 +132,19 @@ public:
 	{
 		XNode* item;
 		node.name = TEXT("ZYFScanAppSetting");
+
+		item = new XNode();
+		item->name = TEXT("Scanistor");
+		item->AppendAttr(TEXT("ProductName"), ProductName.c_str());
+		node.AppendChild(item);
+
+		item = new XNode();
+		item->name = TEXT("Document");
+		item->AppendAttr(TEXT("Size"), ToStr(DocSize).c_str());
+
 		for (int i = 0; i < ScanBatchs.size(); ++i)
 		{
-			item = new XNode;
+			item = new XNode();
 			ScanBatchs[i].Serialize(*item);
 			node.AppendChild(item);
 		}
@@ -153,10 +164,20 @@ public:
 		ScanBatchs.clear();
 		for (int i = 0; i < node.GetChildCount(); ++i)
 		{
-			if(node.GetChild(i)->name == TEXT("ScanBatch"))
+			LPXNode pChild = node.GetChild(i);
+
+			if(pChild->name == TEXT("ScanBatch"))
 			{
-				item.Unserialize(*node.GetChild(i));
+				item.Unserialize(*pChild);
 				ScanBatchs.push_back(item);
+			}
+			else if( pChild->name == TEXT("Scanistor"))
+			{
+				ProductName = pChild->GetAttrValue(TEXT("ProductName"));
+			}
+			else if(pChild->name == TEXT("Document"))
+			{
+				DocSize = FromStr<CSize>(pChild->GetAttrValue(TEXT("Size")));
 			}
 		}
 

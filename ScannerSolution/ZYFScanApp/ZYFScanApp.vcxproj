@@ -127,6 +127,7 @@
     <None Include="ZYFScanApp.reg" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\twcommon\Captest.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="CZYFSCanOptions.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="ZYFScanView.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\twcommon\Captest.c" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="DlgZYFScanSetting.cpp" />
