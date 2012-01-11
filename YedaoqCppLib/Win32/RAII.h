@@ -64,3 +64,29 @@ public:
 protected:
 	HMODULE Module_;
 };
+
+#include <comutil.h>
+class CRAII_CoInit
+{
+public:
+	CRAII_CoInit(void)
+	{
+		hr = CoInitialize(NULL);
+	}
+
+	CRAII_CoInit(DWORD flag)
+	{
+		hr = CoInitializeEx(NULL, flag);
+	}
+
+	~CRAII_CoInit(void)
+	{
+		if(SUCCEEDED(hr))
+		{
+			CoUninitialize();
+		};
+	}
+
+protected:
+	HRESULT	hr;
+};

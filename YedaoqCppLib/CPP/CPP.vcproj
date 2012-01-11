@@ -205,6 +205,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\functor_cmp.h"
+				>
+			</File>
+			<File
 				RelativePath=".\IRefObject.h"
 				>
 			</File>
