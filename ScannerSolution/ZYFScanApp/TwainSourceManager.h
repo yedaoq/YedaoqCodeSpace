@@ -5,11 +5,11 @@
 #include "..\twcommon\Twain.h"
 #include "TwainScanistor.h"
 #include <exception>
-
-
+#include <list>
 
 class CTwainSourceManager : public CSingleton<CTwainSourceManager>
 {
+	typedef std::list<CTwainScanistor*>	ScanistorList;
 	friend class CSingleton<CTwainSourceManager>;
 public:
 	enum EnumState
@@ -21,6 +21,12 @@ public:
 
 protected:
 	CTwainSourceManager(void);
+
+	int							CreateNotifyWindow();
+	int							DestroyNotifyWindow();
+
+	static LRESULT CALLBACK		WndNotifyProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 	
 public:
 	~CTwainSourceManager(void);
@@ -42,6 +48,9 @@ public:
 	CTwainScanistor*			OpenSource(LPCTSTR lpProductName);
 	CTwainScanistor*			OpenSource(const TW_IDENTITY& sourceID);
 
+	void						OnScanistorCreate(CTwainScanistor *source);
+	void						OnScanistorDestroy(CTwainScanistor *source);
+
 	TW_UINT16 CallDSMEntry(pTW_IDENTITY pSrc, TW_UINT32 DG, TW_UINT16 DAT, TW_UINT16 MSG, TW_MEMREF pData);
 
 protected:
@@ -50,6 +59,8 @@ protected:
 	DSMENTRYPROC	DSMEntry;		// entry point to the SM
 	TW_IDENTITY		AppID;			// twain application identify
 	HWND			WndNotify;		// 
+
+	ScanistorList	OpenScanistors;	// the
 
 	int				MessageLevelVAR;
 };

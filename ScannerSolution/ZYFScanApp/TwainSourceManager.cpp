@@ -6,10 +6,12 @@
 #include <string>
 #include "..\twcommon\Captest.h"
 #include "..\twcommon\twndebug.h"
+#include <winerror.h>
 
 #define DSMDLLFILE		TEXT("TWAIN_32.DLL")
 #define DSMENTRYNAME	("DSM_Entry")
-#define VALID_HANDLE    32      // valid windows handle SB >= 32
+#define VALID_HANDLE    (HANDLE)32      // valid windows handle SB >= 32
+#define NOTIFYWNDCLASSNAME TEXT("TWAIN_WndNotify")
 
 CTwainSourceManager::CTwainSourceManager(void)
 	: State(EnumState::Prepare)
@@ -18,6 +20,7 @@ CTwainSourceManager::CTwainSourceManager(void)
 	, WndNotify(0)
 	, MessageLevelVAR(ERROR)
 {
+	// 初始化AppID
 	AppID.Id = 0; 				// init to 0, but Source Manager will assign real value
 	AppID.Version.MajorNum = 1;
 	AppID.Version.MinorNum = 703;
@@ -36,6 +39,19 @@ CTwainSourceManager::CTwainSourceManager(void)
 	AppID.SupportedGroups =  DG_IMAGE | DG_CONTROL;
 	lstrcpyA (AppID.Manufacturer,  "TWAIN Working Group");
 	lstrcpyA (AppID.ProductFamily, "TWAIN Toolkit");
+
+	// 注册响应窗口类
+	WNDCLASS wc;
+	memset(&wc, 0, sizeof(wc));
+
+	wc.hInstance = ::GetModuleHandleA(NULL);
+	wc.lpfnWndProc = WndNotifyProc;
+	wc.lpszClassName = NOTIFYWNDCLASSNAME;
+
+	if(RegisterClass(&wc))
+	{
+		throw E_FAIL;
+	}
 }
 
 
@@ -116,6 +132,14 @@ CTwainScanistor* CTwainSourceManager::OpenSource( const TW_IDENTITY& sourceID )
 	if(State != DSMOpen || OpenDSM() != 1)
 	{
 		return 0;
+	}
+
+	for (ScanistorList::iterator iter = OpenScanistors.begin(); iter != OpenScanistors.end(); ++iter)
+	{
+		if(sourceID.Id == (*iter)->ID().Id)
+		{
+			return *iter;
+		}
 	}
 
 	return new CTwainScanistor(this, sourceID, true);
@@ -282,6 +306,99 @@ int CTwainSourceManager::CloseDSM()
 
 	// Let the caller know what happened
 	return (twRC==TWRC_SUCCESS) ? 1 : -1;
+}
+
+int CTwainSourceManager::CreateNotifyWindow()
+{
+	if(WndNotify != 0)
+	{
+		throw E_FAIL;
+	}
+
+	WndNotify = CreateWindow(NOTIFYWNDCLASSNAME, NULL, NULL, 0, 0, 0, 0, NULL, NULL, ::GetModuleHandle(NULL), NULL);
+	if(WndNotify < VALID_HANDLE)
+	{
+		throw E_FAIL;
+	}
+
+	return 1;
+}
+
+int CTwainSourceManager::DestroyNotifyWindow()
+{
+	if(0 == WndNotify)
+	{
+		throw E_FAIL;
+	}
+
+	DestroyWindow(WndNotify);
+	WndNotify = 0;
+}
+
+LRESULT CALLBACK CTwainSourceManager::WndNotifyProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+{
+	MSG			msg = {hwnd, uMsg, wParam, lParam};
+	TW_UINT16	twRC = TWRC_NOTDSEVENT;
+	TW_EVENT	twEvent;
+	CTwainSourceManager& twMgr = CTwainSourceManager::GetInstance();
+
+	memset(&twEvent, 0, sizeof(TW_EVENT));
+	twEvent.pEvent = (TW_MEMREF)&msg;
+
+	for (ScanistorList::iterator iter = twMgr.OpenScanistors.begin(); iter != twMgr.OpenScanistors.end(); ++iter)
+	{
+		twRC = twMgr.CallDSMEntry((pTW_IDENTITY)&((*iter)->ID()),
+			DG_CONTROL, 
+			DAT_EVENT,
+			MSG_PROCESSEVENT, 
+			(TW_MEMREF)&twEvent);
+
+		if(TWRC_DSEVENT == twRC)
+		{
+			CTwainScanistor* pSrc = twMgr.OpenSource((*iter)->ID());
+			if(pSrc)
+			{
+				pSrc->OnEvent(twEvent.TWMessage);
+			}
+		}
+	}
+
+	twRC = CallDSMEntry(&dsID, 
+					DG_CONTROL, 
+					DAT_EVENT,
+					MSG_PROCESSEVENT, 
+					(TW_MEMREF)&twEvent);
+
+	
+	// tell the caller what happened
+	return (twRC==TWRC_DSEVENT);           // returns TRUE or FALSE
+
+}
+
+void CTwainSourceManager::OnScanistorCreate(CTwainScanistor *source)
+{
+	for (ScanistorList::iterator iter = OpenScanistors.begin(); iter != OpenScanistors.end(); ++iter)
+	{
+		if(source->ID().Id == (*iter)->ID().Id)
+		{
+			throw E_FAIL;
+			return;
+		}
+	}
+
+	OpenScanistors.push_back(source);
+}
+
+void CTwainSourceManager::OnScanistorDestroy(CTwainScanistor *source)
+{
+	for (ScanistorList::iterator iter = OpenScanistors.begin(); iter != OpenScanistors.end(); ++iter)
+	{
+		if(source->ID().Id == (*iter)->ID().Id)
+		{
+			iter = OpenScanistors.erase(iter);
+			break;
+		}
+	}
 }
 
 bool CTwainSourceEnumerator::MoveNext()
