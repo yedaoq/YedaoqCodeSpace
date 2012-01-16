@@ -21,6 +21,7 @@ public:
 
 	CTwainSourceManager*	Manager() const { return ManagerPtr_; }
 	const TW_IDENTITY&		ID() const { return ID_; }
+	EnumState				State() const { return State_; }
 
 	TW_UINT16				Call(TW_UINT32 DG, TW_UINT16 DAT, TW_UINT16 MSG, TW_MEMREF pData);
 
@@ -32,6 +33,6 @@ public:
 protected:
 	CTwainSourceManager*	ManagerPtr_;
 	TW_IDENTITY				ID_;
-	
+	EnumState				State_;
 };
 

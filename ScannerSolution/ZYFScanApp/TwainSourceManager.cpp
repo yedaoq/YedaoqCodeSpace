@@ -342,37 +342,28 @@ LRESULT CALLBACK CTwainSourceManager::WndNotifyProc( HWND hwnd, UINT uMsg, WPARA
 	TW_EVENT	twEvent;
 	CTwainSourceManager& twMgr = CTwainSourceManager::GetInstance();
 
-	memset(&twEvent, 0, sizeof(TW_EVENT));
+	twEvent.TWMessage = MSG_NULL;
 	twEvent.pEvent = (TW_MEMREF)&msg;
 
 	for (ScanistorList::iterator iter = twMgr.OpenScanistors.begin(); iter != twMgr.OpenScanistors.end(); ++iter)
 	{
-		twRC = twMgr.CallDSMEntry((pTW_IDENTITY)&((*iter)->ID()),
-			DG_CONTROL, 
-			DAT_EVENT,
-			MSG_PROCESSEVENT, 
-			(TW_MEMREF)&twEvent);
-
-		if(TWRC_DSEVENT == twRC)
+		if((*iter)->State() != CTwainScanistor::EnumState::Closed)
 		{
-			CTwainScanistor* pSrc = twMgr.OpenSource((*iter)->ID());
-			if(pSrc)
+			twRC = twMgr.CallDSMEntry((pTW_IDENTITY)&((*iter)->ID()),
+				DG_CONTROL, 
+				DAT_EVENT,
+				MSG_PROCESSEVENT, 
+				(TW_MEMREF)&twEvent);
+
+			if(TWRC_DSEVENT == twRC)
 			{
-				pSrc->OnEvent(twEvent.TWMessage);
+				(*iter)->OnEvent(twEvent.TWMessage);
+				return TRUE;
 			}
-		}
+		}		
 	}
-
-	twRC = CallDSMEntry(&dsID, 
-					DG_CONTROL, 
-					DAT_EVENT,
-					MSG_PROCESSEVENT, 
-					(TW_MEMREF)&twEvent);
-
 	
-	// tell the caller what happened
-	return (twRC==TWRC_DSEVENT);           // returns TRUE or FALSE
-
+	return ::DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
 void CTwainSourceManager::OnScanistorCreate(CTwainScanistor *source)
