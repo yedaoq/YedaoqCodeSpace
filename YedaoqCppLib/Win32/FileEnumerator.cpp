@@ -1,25 +1,26 @@
 #include "StdAfx.h"
 #include "FileEnumerator.h"
+#include <stdexcept>
 
-bool CFileEnumerator::SetDir(LPCTSTR dir)
+bool CFileEnumerator::SetDir(const tchar* dir)
 {
-	CString dirNew = dir;
-	if(!PathIsDirectory(dirNew))
+	if(!dir) { return false; }
+
+	tchar buf[MAX_PATH];
+	StrCpyN(buf, dir, MAX_PATH);
+
+	if(!PathIsDirectory(buf))
 	{
-		LPTSTR buf = dirNew.GetBuffer();
 		PathRemoveFileSpec(buf);
-		dirNew.ReleaseBuffer();
-	}
+		if(!PathIsDirectory(buf)) 
+		{	
+			return false; 
+		}
+	}	
 
-	if(dirNew != m_Dir.c_str())
-	{
-		Close();
-		m_Dir = dirNew;
-
-		return true;
-	}
-
-	return false;
+	Close();
+	m_Dir = buf;
+	return true;
 }
 
 bool CFileEnumerator::Open()
@@ -57,4 +58,14 @@ bool CFileEnumerator::MoveNext()
 	}
 
 	return m_FileDataValidaty;
+}
+
+const WIN32_FIND_DATA& CFileEnumerator::Current()
+{
+	if(!m_FileDataValidaty)
+	{
+		_ASSERT(false);
+		throw std::out_of_range("Ã¶¾ÙÆ÷³¬³ö·¶Î§£¡");
+	}
+	return m_FileData;
 }

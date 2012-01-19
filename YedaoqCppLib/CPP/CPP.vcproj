@@ -163,6 +163,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						GeneratePreprocessedFile="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\XMLite.cpp"
 				>
 			</File>
@@ -174,6 +186,10 @@
 			>
 			<File
 				RelativePath=".\BaseXXCoder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumContainerDeclaration.cpp"
 				>
 			</File>
 			<File

@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFC", "MFC\MFC.vcproj", "{7
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32", "Win32\Win32.vcproj", "{C370B600-71FE-40DD-ADC3-8208ED6B6D70}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Twain", "Twain\Twain.vcproj", "{AF55EAE4-C9D3-47AA-9218-993EC97A4828}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{C370B600-71FE-40DD-ADC3-8208ED6B6D70}.Debug|Win32.Build.0 = Debug|Win32
 		{C370B600-71FE-40DD-ADC3-8208ED6B6D70}.Release|Win32.ActiveCfg = Release|Win32
 		{C370B600-71FE-40DD-ADC3-8208ED6B6D70}.Release|Win32.Build.0 = Release|Win32
+		{AF55EAE4-C9D3-47AA-9218-993EC97A4828}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AF55EAE4-C9D3-47AA-9218-993EC97A4828}.Debug|Win32.Build.0 = Debug|Win32
+		{AF55EAE4-C9D3-47AA-9218-993EC97A4828}.Release|Win32.ActiveCfg = Release|Win32
+		{AF55EAE4-C9D3-47AA-9218-993EC97A4828}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
