@@ -15,3 +15,5 @@
 
 typedef unsigned int index_t;
 typedef unsigned int flag_t;
+
+#define STDENUM(containertype, container, iter) for ( containertype::iterator iter = container.begin(); iter != container.end(); ++iter )

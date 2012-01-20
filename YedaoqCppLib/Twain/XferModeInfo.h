@@ -75,7 +75,7 @@ struct EnumTWValueType
 };
 
 // 定义性能协商时，使用的数据容器类型
-struct EnumCapDataContainer
+struct EnumCapDataContainerType
 {
 	enum _Type : TW_UINT16
 	{
@@ -86,10 +86,40 @@ struct EnumCapDataContainer
 	};
 };
 
-struct ICapDataContainer
+struct CapDataContainerBase
 {
-	EnumCapDataContainer 
+	EnumCapDataContainerType	ConTypeID;
+	CRAII_GlobalMemoryHandle	Handle;	
+	EnumTWValueType				EleTypeID;
+
+protected:
+	CapDataContainerBase(EnumCapDataContainerType t)
+		: Type(t)
+	{}
+
+public:
+	template<typename TWType> TW_UINT16 TWTypeIDof() const	{ throw TWType;	}
+	template<> TW_UINT16 TWTypeIDof<TW_INT8>() const { return TWTY_INT8; }
+	template<> TW_UINT16 TWTypeIDof<TW_INT16>() const { return TWTY_INT16; }
+	template<> TW_UINT16 TWTypeIDof<TW_INT32>() const { return TWTY_INT32; }
+	template<> TW_UINT16 TWTypeIDof<TW_UINT8>() const { return TWTY_UINT8; }
+	template<> TW_UINT16 TWTypeIDof<TW_UINT16>() const { return TWTY_UINT16; }
+	template<> TW_UINT16 TWTypeIDof<TW_UINT32>() const { return TWTY_UINT32; }
+	template<> TW_UINT16 TWTypeIDof<TW_BOOL>() const { return TWTY_BOOL; }
+	template<> TW_UINT16 TWTypeIDof<TW_FRAME>() const { return TWTY_FRAME; }
+	template<> TW_UINT16 TWTypeIDof<TW_FIX32>() const { return TWTY_FIX32; }
+	template<> TW_UINT16 TWTypeIDof<TW_STR32>() const { return TWTY_STR32; }
+	template<> TW_UINT16 TWTypeIDof<TW_STR64>() const { return TWTY_STR64; }
+	template<> TW_UINT16 TWTypeIDof<TW_STR128>() const { return TWTY_STR128; }
+	template<> TW_UINT16 TWTypeIDof<TW_STR255>() const { return TWTY_STR255; }
 };
+
+template<typename eletype>
+struct CapDataContainerOneValue : public CapDataContainerBase
+{
+	
+};
+
 
 HGLOBAL twmake_global_onevalue(EnumTWValueType type, TW_UINT32 val)
 {

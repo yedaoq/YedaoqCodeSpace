@@ -1,5 +1,4 @@
 #pragma once
-#include <atlsync.h>
 
 #ifndef interface
 #define interface struct
@@ -322,7 +321,8 @@ public:
 
 	virtual const T& Current()
 	{
-		_ASSERT(!beforefirst_ && current_ != last_);
+		throw ERROR_INVALID_ACCESS;
+		//_ASSERT(!beforefirst_ && current_ != last_);
 		return current_ ;
 	}
 

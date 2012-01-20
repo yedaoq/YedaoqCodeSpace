@@ -189,22 +189,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\EnumContainerDeclaration.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\EnumEntityCppMicro.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EnumEntityDeclaration.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EnumEntityHeaderMicro.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Enumerator.h"
 				>
 			</File>
@@ -229,7 +213,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\mytype.h"
+				RelativePath=".\microtype.h"
 				>
 			</File>
 			<File
@@ -250,6 +234,50 @@
 			</File>
 			<File
 				RelativePath=".\XMLite.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="EnumDeclaration2x"
+			>
+			<File
+				RelativePath=".\EnumDeclaration2x\EnumContainerDeclaration.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumDeclaration2x\EnumCppMicro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumDeclaration2x\EnumHeaderMicro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumDeclaration2x\EnumSampleEntry.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumDeclaration2x\EnumSampleText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumDeclaration2x\EnumSampleUser.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="EnumDeclaration1x"
+			>
+			<File
+				RelativePath=".\EnumDeclaration1x\EnumEntityCppMicro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumDeclaration1x\EnumEntityDeclaration.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumDeclaration1x\EnumEntityHeaderMicro.h"
 				>
 			</File>
 		</Filter>

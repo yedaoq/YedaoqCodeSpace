@@ -26,7 +26,8 @@ public:
 	{
 		if(i < 0 || i >= Count_)
 		{
-			_ASSERT(false);
+			throw ERROR_INVALID_ACCESS;
+			//_ASSERT(false);
 			throw std::exception();
 		}
 		return Items_[i];

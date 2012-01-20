@@ -45,9 +45,7 @@ int CTwainScanistor::Open()
 		return twRC;
 	}
 	
-	State_ = EnumState::Opened;
-
-	
+	State_ = EnumState::Opened;	
 }
 
 int CTwainScanistor::Close()

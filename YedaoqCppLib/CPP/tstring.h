@@ -7,6 +7,8 @@
  **************************************/
 #pragma once
 
+#include <string>
+
 #ifdef UNICODE
 
 	#define TEXT(x)			L##x
