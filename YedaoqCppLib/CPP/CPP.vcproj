@@ -159,6 +159,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CTiffWriter.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\StringHelper.cpp"
 				>
 			</File>
@@ -175,6 +179,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TwainString.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\XMLite.cpp"
 				>
 			</File>
@@ -186,6 +194,10 @@
 			>
 			<File
 				RelativePath=".\BaseXXCoder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CTiffWriter.h"
 				>
 			</File>
 			<File

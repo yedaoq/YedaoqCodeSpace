@@ -338,3 +338,10 @@ bool CTwainScanistor::SetXferMode( EnumXferMode mode )
 	return status;
 }
 
+TW_UINT16 CTwainScanistor::SetCapbility( TW_UINT16 id, const CCapDataContainerBase& data )
+{
+	TW_CAPABILITY cap = { id, data.ConTypeID(),	data.MakeGlobalMemory() };
+	_ASSERT(cap.hContainer);
+	Call(DG_CONTROL, DAT_CAPABILITY, MSG_SET, &cap);
+}
+
