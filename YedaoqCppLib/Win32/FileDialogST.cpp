@@ -2,6 +2,7 @@
 #include "FileDialogST.h"
 #include <windows.h>
 #include <shlobj.h>
+#include <tchar.h>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -58,7 +59,7 @@ CFileDialogST::CFileDialogST(BOOL bOpenFileDialog, LPCTSTR lpszDefExt, LPCTSTR l
 
 	if (lpszFilter != NULL)
 	{
-		_tcscpy(m_szFilter, lpszFilter);
+		_tcscpy_s(m_szFilter, sizeof(m_szFilter)/sizeof(TCHAR), lpszFilter);
 		TCHAR* pChar = m_szFilter;
 		while ((pChar = _tcschr(pChar, '|')) != NULL)
 			*pChar++ = '\0';
@@ -136,67 +137,6 @@ LPCTSTR CFileDialogST::GetFileName() const
 	return m_ofn.lpstrFileTitle;
 } // End of GetFileName
 
-// This function returns the title of the selected file.
-//
-// Return value:
-//			A LPCTSTR object containing the title of the file.
-//
-LPCTSTR CFileDialogST::GetFileTitle() const
-{
-	TCHAR szTitle[MAX_PATH];
-
-	// Split path into components
-	_tsplitpath(m_ofn.lpstrFile, NULL, NULL, szTitle, NULL);
-
-	return szTitle;
-} // End of GeFileTitle
-
-// This function returns the extension of the selected file.
-//
-// Return value:
-//			A LPCTSTR object containing the extension of the file.
-//
-LPCTSTR CFileDialogST::GetFileExt() const
-{
-	TCHAR szExt[MAX_PATH];
-
-	// Split path into components
-	_tsplitpath(m_ofn.lpstrFile, NULL, NULL, NULL, szExt);
-
-	return szExt;
-} // End of GeFileExt
-
-// This function returns the directory (without drive) of the selected file.
-//
-// Return value:
-//			A LPCTSTR object containing the directory (without drive) of the file.
-//
-LPCTSTR CFileDialogST::GetFileDir() const
-{
-	TCHAR szDrive[MAX_PATH];
-	TCHAR szDir[MAX_PATH];
-
-	// Split path into components
-	_tsplitpath(m_ofn.lpstrFile, szDrive, szDir, NULL, NULL);
-	::lstrcat(szDrive, szDir);
-
-	return szDrive;
-} // End of GeFileDir
-
-// This function returns the drive of the selected file.
-//
-// Return value:
-//			A LPCTSTR object containing the drive of the file.
-//
-LPCTSTR CFileDialogST::GetFileDrive() const
-{
-	TCHAR szDrive[MAX_PATH];
-
-	// Split path into components
-	_tsplitpath(m_ofn.lpstrFile, szDrive, NULL, NULL, NULL);
-
-	return szDrive;
-} // End of GeFileDrive
 
 // This function returns the full path of the next selected file.
 //

@@ -27,7 +27,7 @@ HRESULT CComFile::CreateInstance( REFIID iid, void** ppv, LPUNKNOWN pUnkOuter )
 {
 	HRESULT hr = E_FAIL;
 
-	if(GUID == GUID_NULL)
+	if(iid == GUID_NULL)
 	{
 		return hr;
 	}
@@ -38,7 +38,7 @@ HRESULT CComFile::CreateInstance( REFIID iid, void** ppv, LPUNKNOWN pUnkOuter )
 	}
 	else
 	{
-		if(!ModuleHandle_.GetModule())
+		if(!ModuleHandle_)
 		{
 			ModuleHandle_ = CoLoadLibrary(CComBSTR( FileName_.c_str() ), FALSE);
 			if(!ModuleHandle_)
@@ -47,7 +47,7 @@ HRESULT CComFile::CreateInstance( REFIID iid, void** ppv, LPUNKNOWN pUnkOuter )
 			}
 		}
 
-		FunGetClassObject pGetClassObject = ModuleHandle_.GetProcAddress("DllGetClassObject");
+		FunGetClassObject pGetClassObject = (FunGetClassObject)GetProcAddress(ModuleHandle_, "DllGetClassObject");
 
 		if(!pGetClassObject)
 		{

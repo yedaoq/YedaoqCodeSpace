@@ -8,6 +8,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+#include "..\CPP\tstring.h"
 
 
 
@@ -35,7 +36,7 @@ public:
 	BOOL		GetStruct(LPCTSTR key, LPVOID lpStruct, UINT uSize, LPCTSTR section = NULL);
 	DWORD		GetSectionNames(LPTSTR lpReturnedString, DWORD nSize);
 	DWORD		GetSection(LPTSTR lpReturnedString, DWORD nSize, LPCTSTR section = NULL);
-	CString		GetString(LPCTSTR key, LPCTSTR lpDefault = NULL, LPCTSTR section = NULL);
+	tstring		GetString(LPCTSTR key, LPCTSTR lpDefault = NULL, LPCTSTR section = NULL);
 	INT			GetString(LPCTSTR key, LPTSTR Buffer, UINT iBufLen, LPCTSTR lpDefault = NULL, LPCTSTR section = NULL);
 	INT			GetInt(LPCTSTR key, INT nDefault = 0, LPCTSTR section = NULL);
 	

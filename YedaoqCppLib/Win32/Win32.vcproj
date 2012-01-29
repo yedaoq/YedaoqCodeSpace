@@ -153,11 +153,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\FileDialogST.cpp"
+				RelativePath=".\DirectoryEnumerator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\FileEnumerator.cpp"
+				RelativePath=".\FileDialogST.cpp"
 				>
 			</File>
 			<File
@@ -195,7 +195,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\CNetworkAdapterEnumerator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ComFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DirectoryEnumerator.h"
 				>
 			</File>
 			<File
@@ -203,7 +211,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\FileEnumerator.h"
+				RelativePath=".\FileName.h"
 				>
 			</File>
 			<File

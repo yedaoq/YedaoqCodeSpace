@@ -1,10 +1,11 @@
 #pragma once
 
+#include <Iphlpapi.h>
+#include "..\CPP\Enumerator.h"
+
 class CNetworkAdapterManager
 {
 public:
-	CNetworkAdapterManager(void);
-	~CNetworkAdapterManager(void);
 
-public:
+	static IEnumerator<IP_ADAPTER_INFO>* Enum();
 };

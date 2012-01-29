@@ -1,8 +1,9 @@
 #include "StdAfx.h"
-#include "FileEnumerator.h"
+#include "DirectoryEnumerator.h"
 #include <stdexcept>
+#include "shlwapi.h"
 
-bool CFileEnumerator::SetDir(const tchar* dir)
+bool CDirectoryEnumerator::SetDir(const tchar* dir)
 {
 	if(!dir) { return false; }
 
@@ -23,7 +24,7 @@ bool CFileEnumerator::SetDir(const tchar* dir)
 	return true;
 }
 
-bool CFileEnumerator::Open()
+bool CDirectoryEnumerator::Open()
 {
 	TCHAR buf[MAX_PATH];
 	PathCombine(buf, m_Dir.c_str(), m_NamePattern.c_str());
@@ -31,7 +32,7 @@ bool CFileEnumerator::Open()
 	return m_FileDataValidaty = (m_FindHandle != INVALID_HANDLE_VALUE);
 }
 
-void CFileEnumerator::Close()
+void CDirectoryEnumerator::Close()
 {
 	if(m_FindHandle != INVALID_HANDLE_VALUE)
 	{
@@ -41,7 +42,7 @@ void CFileEnumerator::Close()
 	}
 }
 
-bool CFileEnumerator::MoveNext()
+bool CDirectoryEnumerator::MoveNext()
 {
 	if(INVALID_HANDLE_VALUE == m_FindHandle)
 	{
@@ -60,7 +61,7 @@ bool CFileEnumerator::MoveNext()
 	return m_FileDataValidaty;
 }
 
-const WIN32_FIND_DATA& CFileEnumerator::Current()
+const WIN32_FIND_DATA& CDirectoryEnumerator::Current()
 {
 	if(!m_FileDataValidaty)
 	{
