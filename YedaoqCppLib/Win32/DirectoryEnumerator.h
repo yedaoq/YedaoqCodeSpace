@@ -11,9 +11,9 @@
 #pragma once
 
 #include <winbase.h>
-#include "..\CPP\Enumerator.h"
+#include "Enumerator.h"
 #include <string>
-#include "..\cpp\tstring.h"
+#include "tstring.h"
 
 class CDirectoryEnumerator : CEnumeratorBase<WIN32_FIND_DATA>
 {

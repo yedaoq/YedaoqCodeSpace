@@ -9,7 +9,7 @@
 /* ___________________________________________________________________________*/
 
 #include <Iphlpapi.h>
-#include "..\cpp\Enumerator.h"
+#include "Enumerator.h"
 
 #pragma comment(lib,"Iphlpapi.lib")
 

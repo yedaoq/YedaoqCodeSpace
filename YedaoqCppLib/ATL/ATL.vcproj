@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Win32"
-	ProjectGUID="{C370B600-71FE-40DD-ADC3-8208ED6B6D70}"
-	RootNamespace="Win32"
+	Name="ATL"
+	ProjectGUID="{B1B29F24-779A-46EF-98DF-B45974E54933}"
+	RootNamespace="ATL"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\CPP\"
+				AdditionalIncludeDirectories="..\CPP\,..\MFC\,..\Win32\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -150,23 +150,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\ComFile.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DirectoryEnumerator.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\FileDialogST.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\NetworkAdapterManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Profile.cpp"
+				RelativePath=".\OcxFile.cpp"
 				>
 			</File>
 			<File
@@ -196,35 +180,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\CNetworkAdapterEnumerator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ComFile.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DirectoryEnumerator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\FileDialogST.h"
-				>
-			</File>
-			<File
-				RelativePath=".\FileName.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NetworkAdapterManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Profile.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RAII.h"
+				RelativePath=".\OcxFile.h"
 				>
 			</File>
 			<File
@@ -235,6 +191,12 @@
 				RelativePath=".\targetver.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="资源文件"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

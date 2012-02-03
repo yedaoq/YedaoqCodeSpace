@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Iphlpapi.h>
-#include "..\CPP\Enumerator.h"
+#include "Enumerator.h"
 
 class CNetworkAdapterManager
 {
