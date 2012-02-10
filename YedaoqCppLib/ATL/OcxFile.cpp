@@ -57,36 +57,7 @@ HRESULT COcxFile::CreateRegisteredControl( ATL::CAxWindow& target, HWND hParent,
 		? S_OK : E_FAIL;
 }
 
-
 //////////////////////////////////////////////////////////////////////////
-// AtlAxWinInitScope
+// CAtlComModuleScope
 //////////////////////////////////////////////////////////////////////////
 
-unsigned int CAtlAxWinInitScope::RefCount = 0;
-
-CAtlAxWinInitScope::CAtlAxWinInitScope()
-{
-	if(0 == RefCount)
-	{
-		AtlAxWinInit();
-	}
-	else if(RefCount == UINT_MAX)
-	{
-		return;		
-	}	
-	++RefCount; //InterlockedIncrement(RefCount);
-}
-
-CAtlAxWinInitScope::~CAtlAxWinInitScope()
-{
-	if(1 == RefCount)
-	{
-		AtlAxWinTerm();
-	}
-	else if(0 == RefCount)
-	{
-		return;
-	}
-
-	--RefCount; //InterlockedDecrement(RefCount);
-}

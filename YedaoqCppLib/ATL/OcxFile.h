@@ -1,16 +1,18 @@
+/* ___________________________________________________________________________
+@ 
+@ file - OcxFile.h
+@ 
+@ auth - yedaoq@gmail.com          http://blog.yedaoq.info
+@ date - 2012-2-7
+@ info -
+@     用于辅助创建ActiveX控件，可创建未注册组件
+@	  指定路径时，作为未注册组件来创建组件，否则作为已注册组件创建
+@	  CAxWindow可根据ProgID，CLSID和Name来创建组件，但本类仅支持CISID
+/* ___________________________________________________________________________*/
+
 #pragma once
 #include "ComFile.h"
-#include <atlwin.h>
-
-class CAtlAxWinInitScope
-{
-protected:
-	static unsigned int RefCount;
-
-public:
-	CAtlAxWinInitScope();
-	~CAtlAxWinInitScope();
-};
+#include "CAtlComModuleScope.h"
 
 class COcxFile : public CComFile
 {
@@ -34,5 +36,5 @@ public:
 		, DWORD dwStyle = 0, DWORD dwExStyle = 0, ATL::_U_MENUorID MenuOrID = 0U, LPVOID lpCreateParam = NULL);
 
 protected:
-	CAtlAxWinInitScope AtlAxWinInitScope;
+	CAtlComModuleScope AtlAxWinInitScope;
 };
