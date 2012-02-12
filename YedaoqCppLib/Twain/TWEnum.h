@@ -8,6 +8,7 @@
 @     
 /* ___________________________________________________________________________*/
 #pragma once
+#include "Twain.h"
 
 // TWAIN中使用的值类型
 struct EnumValueType

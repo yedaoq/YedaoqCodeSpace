@@ -10,6 +10,7 @@
 #pragma once
 
 #include "Twain.h"
+#include "..\CPP\microtype.h"
 
 struct XferModeHeaderInfo
 {
