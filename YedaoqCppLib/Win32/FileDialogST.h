@@ -63,10 +63,6 @@ public:
 
 	LPCTSTR GetPathName() const;
 	LPCTSTR GetFileName() const;
-	LPCTSTR GetFileTitle() const;
-	LPCTSTR GetFileExt() const;
-	LPCTSTR GetFileDir() const;
-	LPCTSTR GetFileDrive() const;
 
 	/*POSITION GetStartPosition() const;
 	LPCTSTR GetNextPathName(POSITION& pos) const;*/
@@ -75,7 +71,7 @@ public:
 	LPCTSTR GetSelectedFolder() const;
 
 	static short GetVersionI()		{return 10;}
-	static LPCTSTR GetVersionC()	{return (LPCTSTR)_T("1.0");}
+	static LPCTSTR GetVersionC()	{return (LPCTSTR)TEXT("1.0");}
 
 private:
 	struct OPENFILENAMEEX : public OPENFILENAME 

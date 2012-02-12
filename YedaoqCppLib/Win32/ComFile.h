@@ -6,29 +6,42 @@
 	purpose:	COM文件加载类
 *********************************************************************/
 #pragma once
-#include <atlstr.h>
 #include "..\CPP\tstring.h"
 #include "RAII.h"
 
 class CComFile
 {
-public:
 	typedef HRESULT (__stdcall * FunGetClassObject)(REFCLSID rclsid, REFIID riid, LPVOID* ppv);
 
-	CComFile(const tchar* lpFileName, REFCLSID clsid);
-	CComFile(REFCLSID clsid); 	
+public:
+	CComFile(REFCLSID clsid, LPCTSTR lpComPath = 0, LPCTSTR lpLicence = 0);
 
-	virtual ~CComFile(void);    
+	CComFile(const CComFile& other)
+		: Clsid_(other.Clsid_)
+		, FileName_(other.FileName_)
+		, License(other.License)
+		, ModuleHandle_(0)
+	{}
+
+	virtual ~CComFile(void);  
+
+protected:
+	CComFile& operator=(const CComFile&);
+
 public:
 
-	virtual const tstring&	GetFileName() const { return FileName_; };
 	virtual const GUID&		GetCLSID() const { return Clsid_; };
-
+	virtual const tstring&	GetFileName() const { return FileName_; };
+	
 	virtual HRESULT			CreateInstance( REFIID iid, void** ppv, LPUNKNOWN pUnkOuter = NULL );
 	virtual void			ReleaseFile();
     
-private:
-	HMODULE				ModuleHandle_;
+public:
+	tstring				License;
+
+protected:
+	GUID				Clsid_;
 	tstring				FileName_;
-    GUID				Clsid_;
+    
+	HMODULE				ModuleHandle_;
 };

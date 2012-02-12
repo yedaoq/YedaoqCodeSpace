@@ -1,13 +1,14 @@
 #include "StdAfx.h"
 #include "ComFile.h"
-#include "atlbase.h"
+#include <atlcomcli.h>
 
-CComFile::CComFile( const tchar* strFileName, REFCLSID clsid  )
-	: FileName_(strFileName), ModuleHandle_(0), Clsid_(clsid)
-{}
-
-CComFile::CComFile(REFCLSID clsid ): ModuleHandle_(0), Clsid_(clsid)
-{}
+CComFile::CComFile( REFCLSID clsid, LPCTSTR lpComPath /*= 0*/, LPCTSTR lpLicence /*= 0*/ )
+	: ModuleHandle_(0)
+	, Clsid_(clsid)
+{
+	if(lpComPath) FileName_ = lpComPath;
+	if(lpLicence) License = lpLicence;
+}
 
 CComFile::~CComFile(void)
 {
@@ -27,18 +28,30 @@ HRESULT CComFile::CreateInstance( REFIID iid, void** ppv, LPUNKNOWN pUnkOuter )
 {
 	HRESULT hr = E_FAIL;
 
-	if(GUID == GUID_NULL)
+	if(iid == GUID_NULL)
 	{
 		return hr;
 	}
 
 	if(FileName_.empty())
 	{
-		hr = CoCreateInstance( Clsid_, pUnkOuter, CLSCTX_INPROC_SERVER, iid, (void**) ppv);
+		if(License.empty())
+		{
+			hr = CoCreateInstance( Clsid_, pUnkOuter, CLSCTX_INPROC_SERVER, iid, (void**) ppv);
+		}
+		else
+		{
+			CComPtr<IClassFactory2> spClassFactory;
+			hr = CoGetClassObject(Clsid_, CLSCTX_INPROC_SERVER, NULL, __uuidof(IClassFactory2), (void**)&spClassFactory);
+			if (SUCCEEDED(hr))
+			{
+				hr = spClassFactory->CreateInstanceLic(pUnkOuter, NULL, iid, CT2W(License.c_str()), ppv);
+			}
+		}
 	}
 	else
 	{
-		if(!ModuleHandle_.GetModule())
+		if(!ModuleHandle_)
 		{
 			ModuleHandle_ = CoLoadLibrary(CComBSTR( FileName_.c_str() ), FALSE);
 			if(!ModuleHandle_)
@@ -47,23 +60,41 @@ HRESULT CComFile::CreateInstance( REFIID iid, void** ppv, LPUNKNOWN pUnkOuter )
 			}
 		}
 
-		FunGetClassObject pGetClassObject = ModuleHandle_.GetProcAddress("DllGetClassObject");
+		FunGetClassObject pGetClassObject = (FunGetClassObject)GetProcAddress(ModuleHandle_, "DllGetClassObject");
 
 		if(!pGetClassObject)
 		{
 			return E_FAIL;
 		}
 
-		CComPtr<IClassFactory> pCF;
-		if(SUCCEEDED(hr = pGetClassObject(Clsid_, __uuidof(IClassFactory), (void**)&pCF)))
+		if(License.empty())
 		{
-			try
+			CComPtr<IClassFactory> pCF;
+			if(SUCCEEDED(hr = pGetClassObject(Clsid_, __uuidof(IClassFactory), (void**)&pCF)))
 			{
-				hr = pCF->CreateInstance( pUnkOuter, iid, ppv );
+				try
+				{
+					hr = pCF->CreateInstance( pUnkOuter, iid, ppv );
+				}
+				catch(...)
+				{
+					hr = E_FAIL;
+				}
 			}
-			catch(...)
+		}
+		else
+		{
+			CComPtr<IClassFactory2> pCF;
+			if(SUCCEEDED(hr = pGetClassObject(Clsid_, __uuidof(IClassFactory2), (void**)&pCF)))
 			{
-				hr = E_FAIL;
+				try
+				{
+					hr = pCF->CreateInstanceLic(pUnkOuter, NULL, iid, CT2W(License.c_str()), ppv );
+				}
+				catch(...)
+				{
+					hr = E_FAIL;
+				}
 			}
 		}
 	}

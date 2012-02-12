@@ -1,10 +1,8 @@
 #include "StdAfx.h"
 #include "NetworkAdapterManager.h"
+#include "CNetworkAdapterEnumerator.h"
 
-CNetworkAdapterManager::CNetworkAdapterManager(void)
+IEnumerator<IP_ADAPTER_INFO>* CNetworkAdapterManager::Enum()
 {
-}
-
-CNetworkAdapterManager::~CNetworkAdapterManager(void)
-{
+	return new CNetworkAdapterEnumerator();
 }

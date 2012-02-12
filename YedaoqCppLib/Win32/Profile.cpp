@@ -15,8 +15,8 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 #define CProfile_PrepareSection \
-	if(NULL == section) section = Section_; \
-	ASSERT(NULL != section)
+	if(NULL == section) section = Section_.c_str(); \
+	_ASSERT(NULL != section)
 
 HANDLE hModule;
 //////////////////////////////////////////////////////////////////////
@@ -25,7 +25,6 @@ HANDLE hModule;
 
 CProfile::CProfile()
 {
-	memset(Section_, 0, sizeof(Section_));
 	memset(File_, 0, sizeof(File_));
 }
 
@@ -39,8 +38,6 @@ CProfile::CProfile(LPCTSTR lpFile)
 	{
 		memset(File_, 0, sizeof(File_));
 	}
-	
-	memset(Section_, 0, sizeof(Section_));
 }
 
 CProfile::~CProfile()
@@ -54,7 +51,7 @@ INT CProfile::GetInt(LPCTSTR key, INT nDefault, LPCTSTR section)
 	return ::GetPrivateProfileInt(section, key, nDefault, File_);
 }
 
-CString CProfile::GetString(LPCTSTR key, LPCTSTR lpDefault, LPCTSTR section)
+tstring CProfile::GetString(LPCTSTR key, LPCTSTR lpDefault, LPCTSTR section)
 {
 	static TCHAR Buffer[MAX_PROFILESTRING_SIZE];
 	
@@ -64,7 +61,7 @@ CString CProfile::GetString(LPCTSTR key, LPCTSTR lpDefault, LPCTSTR section)
 	
 	::GetPrivateProfileString(section, key, lpDefault, Buffer, MAX_PROFILESTRING_SIZE, File_);
 	
-	return CString(Buffer);
+	return tstring(Buffer);
 }
 
 INT CProfile::GetString(LPCTSTR key, LPTSTR Buffer, UINT iBufLen, LPCTSTR lpDefault, LPCTSTR section)
@@ -113,9 +110,8 @@ BOOL CProfile::WriteInt(LPCTSTR key, INT iValue, LPCTSTR section)
 
 	TCHAR BUFFER[8];
 	
-	memset(BUFFER, 0, sizeof(BUFFER));
-	
-	wsprintf(BUFFER, "%i", iValue);
+	memset(BUFFER, 0, sizeof(BUFFER));	
+	_tprintf(BUFFER, TEXT("%i"), iValue);
 	
 	return ::WritePrivateProfileString(section, key, BUFFER, File_);
 }

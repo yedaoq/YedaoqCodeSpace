@@ -1,14 +1,24 @@
+/* ___________________________________________________________________________
+@ 
+@ file - DirectoryEnumerator.h
+@ 
+@ auth - yedaoq@gmail.com          http://blog.yedaoq.info
+@ date - 2012-1-29
+@ info -
+@     文件目录枚举器
+/* ___________________________________________________________________________*/
+
 #pragma once
 
-#include "..\CPP\Enumerator.h"
 #include <winbase.h>
+#include "Enumerator.h"
 #include <string>
-#include "..\cpp\tstring.h"
+#include "tstring.h"
 
-class CFileEnumerator : CEnumeratorBase<WIN32_FIND_DATA>
+class CDirectoryEnumerator : CEnumeratorBase<WIN32_FIND_DATA>
 {
 public:
-	~CFileEnumerator()
+	~CDirectoryEnumerator()
 	{
 		if (INVALID_HANDLE_VALUE != m_FindHandle)
 		{
@@ -16,14 +26,14 @@ public:
 		}
 	}
 
-	CFileEnumerator()
+	CDirectoryEnumerator()
 		: m_Dir(TEXT(""))
 		, m_NamePattern(TEXT("*"))
 		, m_FileDataValidaty(false)
 		, m_FindHandle(INVALID_HANDLE_VALUE)
 	{}
 
-	CFileEnumerator(LPCTSTR lpDir, LPCTSTR lpNamePattern = TEXT("*"))
+	CDirectoryEnumerator(LPCTSTR lpDir, LPCTSTR lpNamePattern = TEXT("*"))
 		: m_NamePattern(lpNamePattern)
 		, m_FileDataValidaty(false)
 		, m_FindHandle(INVALID_HANDLE_VALUE)
@@ -31,14 +41,14 @@ public:
 		SetDir(lpDir);
 	}
 
-	CFileEnumerator(const CFileEnumerator& other)
+	CDirectoryEnumerator(const CDirectoryEnumerator& other)
 		: m_Dir(other.m_Dir)
 		, m_NamePattern(other.m_NamePattern)
 		, m_FileDataValidaty(false)
 		, m_FindHandle(INVALID_HANDLE_VALUE)
 	{}
 
-	CFileEnumerator& operator=(const CFileEnumerator& other)
+	CDirectoryEnumerator& operator=(const CDirectoryEnumerator& other)
 	{
 		if(this != &other)
 		{
@@ -62,7 +72,7 @@ public:
 	virtual const WIN32_FIND_DATA& Current();
 	
 	virtual void			Reset() { Close(); }
-	virtual ICloneable*		Clone() const {	return new CFileEnumerator(*this); }
+	virtual ICloneable*		Clone() const {	return new CDirectoryEnumerator(*this); }
 
 protected:
 
