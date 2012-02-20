@@ -162,6 +162,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Log.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\NetworkAdapterManager.cpp"
 				>
 			</File>
@@ -189,6 +193,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\WMI_MACAddress.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -212,7 +220,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\FileName.h"
+				RelativePath=".\FileNameInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Log.h"
 				>
 			</File>
 			<File
@@ -233,6 +245,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WMI_MACAddress.h"
 				>
 			</File>
 		</Filter>

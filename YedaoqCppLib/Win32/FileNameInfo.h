@@ -11,10 +11,10 @@
 #pragma once
 #include <tchar.h>
 
-CFileName
+class CFileNameInfo
 {
 public:
-	CFileName(LPCTSTR path)
+	CFileNameInfo(LPCTSTR path)
 		: Drive_(_MAX_DRIVE, '\0')
 		, Dir_(_MAX_DIR, '\0')
 		, Title_(_MAX_FNAME, '\0')
@@ -35,7 +35,7 @@ public:
 		}
 	}
 
-	CFileName(LPCTSTR drive, LPCTSTR dir, LPCTSTR title, LPCTSTR ext)
+	CFileNameInfo(LPCTSTR drive, LPCTSTR dir, LPCTSTR title, LPCTSTR ext)
 	{
 		SetDrive(drive);
 		SetDir(dir);

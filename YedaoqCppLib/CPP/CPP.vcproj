@@ -159,6 +159,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CharTree.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CTiffWriter.cpp"
 				>
 			</File>
@@ -179,6 +183,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Tree.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TwainString.cpp"
 				>
 			</File>
@@ -194,6 +202,10 @@
 			>
 			<File
 				RelativePath=".\BaseXXCoder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CharTree.h"
 				>
 			</File>
 			<File
@@ -238,6 +250,10 @@
 			</File>
 			<File
 				RelativePath=".\StringHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Tree.h"
 				>
 			</File>
 			<File

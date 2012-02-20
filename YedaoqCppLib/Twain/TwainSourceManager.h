@@ -2,7 +2,7 @@
 
 #include "Singlton.h"
 #include "Enumerator.h"
-#include "..\twcommon\Twain.h"
+#include "Twain.h"
 #include "TwainScanistor.h"
 #include <exception>
 #include <list>

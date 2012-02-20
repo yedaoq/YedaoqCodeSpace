@@ -1,5 +1,5 @@
 #pragma once
-#include "..\twcommon\Twain.h"
+#include "Twain.h"
 
 class CTwainSourceManager;
 
