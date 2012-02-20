@@ -13,6 +13,8 @@
 #define interface struct
 #endif
 
+typedef unsigned char byte;
+
 typedef unsigned int index_t;
 typedef unsigned int flag_t;
 

@@ -4,8 +4,8 @@
 #include <memory>
 #include <atlconv.h>
 #include <string>
-#include "..\twcommon\Captest.h"
-#include "..\twcommon\twndebug.h"
+#include "Captest.h"
+#include "twndebug.h"
 #include <winerror.h>
 
 #define DSMDLLFILE		TEXT("TWAIN_32.DLL")

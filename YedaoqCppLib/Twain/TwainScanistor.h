@@ -42,7 +42,7 @@ public:
 	TW_UINT16				XferMode() const { return XferMode_; }
 	bool					SetXferMode(EnumXferMode mode);
 
-	TW_UINT16				GetCapbility();
+	TW_UINT16				GetCapbility(TW_UINT16 id, TW_CAPABILITY& cap);
 	TW_UINT16				SetCapbility(TW_UINT16 id, const CCapDataContainerBase& data);
 	TW_UINT16				ResetCapbility();
 

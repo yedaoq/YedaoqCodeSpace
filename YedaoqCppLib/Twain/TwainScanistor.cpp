@@ -29,7 +29,7 @@ CTwainScanistor::~CTwainScanistor(void)
 
 }
 
-int CTwainScanistor::Open()
+TW_INT16 CTwainScanistor::Open()
 {
 	TW_UINT16 twRC = TWRC_SUCCESS;
 
@@ -48,7 +48,7 @@ int CTwainScanistor::Open()
 	State_ = EnumState::Opened;	
 }
 
-int CTwainScanistor::Close()
+TW_INT16 CTwainScanistor::Close()
 {
 	TW_UINT16 twRC = TWRC_SUCCESS;
 
@@ -345,3 +345,14 @@ TW_UINT16 CTwainScanistor::SetCapbility( TW_UINT16 id, const CCapDataContainerBa
 	Call(DG_CONTROL, DAT_CAPABILITY, MSG_SET, &cap);
 }
 
+TW_UINT16 CTwainScanistor::GetCapbility( TW_UINT16 id, TW_CAPABILITY& cap )
+{
+	if(cap.hContainer)
+	{
+		::GlobalFree(cap.hContainer);
+	}
+	cap.Cap = id;
+	cap.ConType = TWON_DONTCARE16;
+	cap.hContainer = NULL;
+	return Call(DG_CONTROL, DAT_CAPABILITY, MSG_GET, &cap);
+}
