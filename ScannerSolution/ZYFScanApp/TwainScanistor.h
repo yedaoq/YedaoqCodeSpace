@@ -8,10 +8,18 @@ class CTwainScanistor
 public:
 	enum EnumState
 	{
-		Closed,			// 关闭
-		Open,			// 打开
-		Enable,			// 启用
-		Transfer,		// 传输
+		Closed = 3,		
+		Opened,			
+		Enabled,		
+		Transferring,	
+	};
+
+	enum EnumXferMode
+	{
+		Native = TWSX_NATIVE,
+		Memory = TWSX_MEMORY,
+		File = TWSX_FILE,	
+		Unknow,		
 	};
 
 public:
@@ -25,14 +33,25 @@ public:
 
 	TW_UINT16				Call(TW_UINT32 DG, TW_UINT16 DAT, TW_UINT16 MSG, TW_MEMREF pData);
 
-	int						Open();
-	int						Close();
+	TW_UINT16				Open();
+	TW_UINT16				Close();
+
+	TW_UINT16				Enable();
+	TW_UINT16				Disable();
+
+	TW_UINT16				XferMode() const { return XferMode_; }
+	bool					SetXferMode(EnumXferMode mode);
 
 	void					OnEvent( TW_UINT16 msg );
+
+protected:
+	TW_UINT16				GetImage();
 
 protected:
 	CTwainSourceManager*	ManagerPtr_;
 	TW_IDENTITY				ID_;
 	EnumState				State_;
+	TW_USERINTERFACE		Interface_;
+	EnumXferMode			XferMode_;
 };
 

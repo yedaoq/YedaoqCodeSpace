@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="TestXMLite"
 	ProjectGUID="{7505AA42-FC6E-4B83-B873-17A0ABBB18DD}"
+	RootNamespace="TestXMLite"
 	Keyword="MFCProj"
 	TargetFrameworkVersion="0"
 	>
@@ -360,5 +361,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="TestXMLite.rc"
+		/>
 	</Globals>
 </VisualStudioProject>

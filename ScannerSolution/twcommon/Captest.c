@@ -1399,77 +1399,51 @@ BOOL MsgGetCapability(TW_UINT16 cap,TW_UINT16 type, pTW_CAPABILITY ptwCapability
 //
 BOOL MsgSetCapability(TW_UINT16 cap,TW_UINT16 type, pTW_CAPABILITY ptwCapability)
 {
-	//TW_INT16 rc = TWRC_FAILURE;
-	//char string[50];
+	TW_INT16 rc = TWRC_FAILURE;
+	char string[50];
 
-	//memset(string, 0, sizeof(char[50]));
+	memset(string, 0, sizeof(char[50]));
 
-	//ASSERT(ptwCapability);
+	ASSERT(ptwCapability);
 
-	////	Setup dsID for default Source                             
-	//if (!TWIsDSOpen())
-	//{
-	//	dsID.Id = 0;
-	//	dsID.ProductName[0] = 0;
-	//	appID.Id = 0;	//Why do this?
-	//}
-	////	Open DSM
-	//if (TWOpenDSM() != TRUE)
-	//	{
-	//	if (MessageLevel() >= ML_ERROR)
-	//	{
-	//		ShowRC_CC(NULL, 0, 0, 0,"Failed to Open DSM","Capabilities");
-	//	}
-	//	return(FALSE);
-	//}
-	////	Open DS
-	//if (TWOpenDS() != TRUE)
-	//{
-	//	if (MessageLevel() >= ML_ERROR)
-	//	{
-	//		ShowRC_CC(NULL,0,0,0,"Failed to open DS","Capabilities");
-	//	}
-	//	return(FALSE);
-	//}
+	if (type == MSG_RESET)
+	{
+		ptwCapability->Cap = cap;
+		ptwCapability->ConType = TWON_DONTCARE16;
+		ptwCapability->hContainer = NULL;
+	}
 
-	//if (type == MSG_RESET)
-	//{
-	//	ptwCapability->Cap = cap;
-	//	ptwCapability->ConType = TWON_DONTCARE16;
-	//	ptwCapability->hContainer = NULL;
-	//}
+	rc = CallDSMEntry(&appID,
+				&dsID,
+				DG_CONTROL,
+				DAT_CAPABILITY,
+				type,
+				(TW_MEMREF)ptwCapability);
 
-	//rc = CallDSMEntry(&appID,
-	//			&dsID,
-	//			DG_CONTROL,
-	//			DAT_CAPABILITY,
-	//			type,
-	//			(TW_MEMREF)ptwCapability);
+	if (rc == TWRC_SUCCESS)
+	{
+		return(TRUE);    
+	}
+	else
+	{      
+		memset(string,'\0',sizeof(string));
+		lstrcat(string,"DG_CONTROL/DAT_CAPABILITY/");
+		switch(type)
+		{
+			case MSG_SET:
+				lstrcat(string,"MSG_SET");
+				break;
+			case MSG_RESET:
+				lstrcat(string,"MSG_RESET");
+				break;
+			default:
+				break;
+		}    
 
-	//if (rc == TWRC_SUCCESS)
-	//{
-	//	return(TRUE);    
-	//}
-	//else
-	//{      
-	//	memset(string,'\0',sizeof(string));
-	//	lstrcat(string,"DG_CONTROL/DAT_CAPABILITY/");
-	//	switch(type)
-	//	{
-	//		case MSG_SET:
-	//			lstrcat(string,"MSG_SET");
-	//			break;
-	//		case MSG_RESET:
-	//			lstrcat(string,"MSG_RESET");
-	//			break;
-	//		default:
-	//			break;
-	//	}    
-
-	//	// Error message using condition state of the Source
-	//	ShowRC_CC(g_hMainDlg,1,rc,1,"",string);
-	//	return(FALSE);
-	//}
+		// Error message using condition state of the Source
+		ShowRC_CC(g_hMainDlg,1,rc,1,"",string);
+		return(FALSE);
+	}
 
 	return true;
 }

@@ -18,16 +18,6 @@ interface IBoolComparison
 	virtual ~IBoolComparison(){}
 };
 
-static enum EnumBoolComparison
-{ 
-	BOOLCMP_LESS, 
-	BOOLCMP_GREATER, 
-	BOOLCMP_EQUAL, 
-	BOOLCMP_UNEQUAL, 
-	BOOLCMP_LESSEQUAL, 
-	BOOLCMP_GREATEREQUAL 
-};
-
 class CINTCompareResultToBool
 {
 public:
@@ -41,11 +31,24 @@ public:
 	static bool ToGreaterEqual(int val)		{ return val >= 0; }
 };
 
-template<typename T, CINTCompareResultToBool::ConvertBoolFromInt ADAPTER>
+static enum EnumBoolComparison : unsigned int
+{ 
+	BOOLCMP_LESS = (unsigned int)&CINTCompareResultToBool::ToLessEqual, 
+	BOOLCMP_GREATER = (unsigned int)&CINTCompareResultToBool::ToGreaterThan, 
+	BOOLCMP_EQUAL = (unsigned int)&CINTCompareResultToBool::ToEqual, 
+	BOOLCMP_UNEQUAL = (unsigned int)&CINTCompareResultToBool::ToUnequal, 
+	BOOLCMP_LESSEQUAL = (unsigned int)&CINTCompareResultToBool::ToLessEqual, 
+	BOOLCMP_GREATEREQUAL = (unsigned int)&CINTCompareResultToBool::ToGreaterEqual, 
+};
+
+template<typename T, EnumBoolComparison ADAPTER>
 class CBoolComparisonAdapter4Int : public IBoolComparison<T>
 {
 public:
-	virtual bool operator()(const T& lhs, const T&rhs) const { return ADAPTER(Comparison_(lhs, rhs)); }
+	virtual bool operator()(const T& lhs, const T&rhs) const 
+	{ 
+		return static_cast<CINTCompareResultToBool::ConvertBoolFromInt>(ADAPTER)(Comparison_(lhs, rhs)); 
+	}
 
 	CBoolComparisonAdapter4Int(IComparison& cmp)
 		: Comparison_(cmp)
@@ -61,69 +64,69 @@ protected:
 	IComparison& Comparison_;
 };
 
-template<typename T>
-class CComparisonToLessThen : public IBoolComparison<T>
-{
-public:
-	CComparisonToLessThen(IComparison<T>& comparison)
-		: Comaprison_(comparison)
-	{}
-
-	CComparisonToLessThen(const CComparisonToLessThen& other)
-		: Comaprison_(other.Comaprison_)
-	{}
-
-	virtual bool operator()(const T& lhs, const T&rhs) const
-	{
-		return Comaprison_(lhs, rhs) < 0;
-	}
-
-protected:
-	IComparison<T>& Comaprison_;
-
-	CComparisonToLessThen& operator =(const CComparisonToLessThen&);
-};
-
-template<typename T>
-class CComparisonToGreaterThen : public IBoolComparison<T>
-{
-public:
-	CComparisonToGreaterThen(IComparison<T>& comparison)
-		: Comaprison_(comparison)
-	{}
-
-	CComparisonToGreaterThen(const CComparisonToGreaterThen& other)
-		: Comaprison_(other.Comaprison_)
-	{}
-
-	virtual bool operator()(const T& lhs, const T&rhs) const
-	{
-		return Comaprison_(lhs, rhs) > 0;
-	}
-
-protected:
-	IComparison<T>& Comaprison_;
-	CComparisonToGreaterThen& operator =(const CComparisonToGreaterThen&);
-};
-
-template<typename T>
-class CComparisonToEqual : public IBoolComparison<T>
-{
-public:
-	CComparisonToEqual(IComparison<T>& comparison)
-		: Comaprison_(comparison)
-	{}
-
-	CComparisonToEqual(const CComparisonToEqual& other)
-		: Comaprison_(other.Comaprison_)
-	{}
-
-	virtual bool operator()(const T& lhs, const T&rhs) const
-	{
-		return Comaprison_(lhs, rhs) > 0;
-	}
-
-protected:
-	IComparison<T>& Comaprison_;
-	CComparisonToEqual& operator =(const CComparisonToEqual&);
-};
+//template<typename T>
+//class CComparisonToLessThen : public IBoolComparison<T>
+//{
+//public:
+//	CComparisonToLessThen(IComparison<T>& comparison)
+//		: Comaprison_(comparison)
+//	{}
+//
+//	CComparisonToLessThen(const CComparisonToLessThen& other)
+//		: Comaprison_(other.Comaprison_)
+//	{}
+//
+//	virtual bool operator()(const T& lhs, const T&rhs) const
+//	{
+//		return Comaprison_(lhs, rhs) < 0;
+//	}
+//
+//protected:
+//	IComparison<T>& Comaprison_;
+//
+//	CComparisonToLessThen& operator =(const CComparisonToLessThen&);
+//};
+//
+//template<typename T>
+//class CComparisonToGreaterThen : public IBoolComparison<T>
+//{
+//public:
+//	CComparisonToGreaterThen(IComparison<T>& comparison)
+//		: Comaprison_(comparison)
+//	{}
+//
+//	CComparisonToGreaterThen(const CComparisonToGreaterThen& other)
+//		: Comaprison_(other.Comaprison_)
+//	{}
+//
+//	virtual bool operator()(const T& lhs, const T&rhs) const
+//	{
+//		return Comaprison_(lhs, rhs) > 0;
+//	}
+//
+//protected:
+//	IComparison<T>& Comaprison_;
+//	CComparisonToGreaterThen& operator =(const CComparisonToGreaterThen&);
+//};
+//
+//template<typename T>
+//class CComparisonToEqual : public IBoolComparison<T>
+//{
+//public:
+//	CComparisonToEqual(IComparison<T>& comparison)
+//		: Comaprison_(comparison)
+//	{}
+//
+//	CComparisonToEqual(const CComparisonToEqual& other)
+//		: Comaprison_(other.Comaprison_)
+//	{}
+//
+//	virtual bool operator()(const T& lhs, const T&rhs) const
+//	{
+//		return Comaprison_(lhs, rhs) > 0;
+//	}
+//
+//protected:
+//	IComparison<T>& Comaprison_;
+//	CComparisonToEqual& operator =(const CComparisonToEqual&);
+//};

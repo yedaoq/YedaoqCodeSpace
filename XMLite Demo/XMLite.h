@@ -30,6 +30,9 @@
 
 #include <vector>
 #include <deque>
+#include <string>
+#include "tstring.h"
+#include <tchar.h>
 
 struct _tagXMLAttr;
 typedef _tagXMLAttr XAttr, *LPXAttr;
@@ -45,27 +48,34 @@ typedef struct _tagXMLDocument XDoc, *LPXDoc;
 // Entity Encode/Decode Support
 typedef struct _tagXmlEntity
 {
-	TCHAR entity;					// entity ( & " ' < > )
-	TCHAR ref[10];					// entity reference ( &amp; &quot; etc )
-	int ref_len;					// entity reference length
+	tchar	entity;					// entity ( & " ' < > )
+	tchar	ref[10];					// entity reference ( &amp; &quot; etc )
+	int		ref_len;					// entity reference length
 }XENTITY,*LPXENTITY;
 
 typedef struct _tagXMLEntitys : public std::vector<XENTITY>
 {
-	LPXENTITY GetEntity( int entity );
-	LPXENTITY GetEntity( LPTSTR entity );	
-	int GetEntityCount( LPCTSTR str );
-	int Ref2Entity( LPCTSTR estr, LPTSTR str, int strlen );
-	int Entity2Ref( LPCTSTR str, LPTSTR estr, int estrlen );
-	CString Ref2Entity( LPCTSTR estr );
-	CString Entity2Ref( LPCTSTR str );	
+	LPXENTITY	GetEntity( int entity );
+	LPXENTITY	GetEntity( const tchar* entity );	
+	int			GetEntityCount( const tchar* str );
+
+	int			Ref2Entity( const tchar* estr, tchar* str, int strlen );
+	int			Entity2Ref( const tchar* str, tchar* estr, int estrlen );
+
+	tstring		Ref2Entity( const tchar* estr );
+	tstring		Entity2Ref( const tchar* str );	
+
+	bool		Entity2Ref(tstring& tar, const tstring& val);
+	bool		Ref2Entity(tstring& tar, const tstring& val);
 
 	_tagXMLEntitys(){};
 	_tagXMLEntitys( LPXENTITY entities, int count );
 }XENTITYS,*LPXENTITYS;
+
 extern XENTITYS entityDefault;
-CString XRef2Entity( LPCTSTR estr );
-CString XEntity2Ref( LPCTSTR str );	
+
+tstring XRef2Entity( const tchar* estr );
+tstring XEntity2Ref( const tchar* str );	
 
 typedef enum 
 {
@@ -82,17 +92,17 @@ typedef struct _tagParseInfo
 	bool		trim_value;			// [set] do trim when parse?
 	bool		entity_value;		// [set] do convert from reference to entity? ( &lt; -> < )
 	LPXENTITYS	entitys;			// [set] entity table for entity decode
-	TCHAR		escape_value;		// [set] escape value (default '\\')
+	tchar		escape_value;		// [set] escape value (default '\\')
 	bool		force_parse;		// [set] force parse even if xml is not welformed
 
-	LPTSTR		xml;				// [get] xml source
+	tchar*		xml;				// [get] xml source
 	bool		erorr_occur;		// [get] is occurance of error?
-	LPTSTR		error_pointer;		// [get] error position of xml source
+	tchar*		error_pointer;		// [get] error position of xml source
 	PCODE		error_code;			// [get] error code
-	CString		error_string;		// [get] error string
+	tstring		error_string;		// [get] error string
 
 	LPXDoc		doc;
-	_tagParseInfo() { trim_value = false; entity_value = true; force_parse = false; entitys = &entityDefault; xml = NULL; erorr_occur = false; error_pointer = NULL; error_code = PIE_PARSE_WELFORMED; escape_value = '\\'; }
+	_tagParseInfo() { trim_value = false; entity_value = true; force_parse = false; entitys = &entityDefault; xml = 0; erorr_occur = false; error_pointer = 0; error_code = PIE_PARSE_WELFORMED; escape_value = '\\'; }
 }PARSEINFO,*LPPARSEINFO;
 extern PARSEINFO piDefault;
 
@@ -112,12 +122,12 @@ extern DISP_OPT optDefault;
 // XAttr : Attribute Implementation
 typedef struct _tagXMLAttr
 {
-	CString name;
-	CString	value;
-	
+	tstring			name;
+	tstring			value;
 	_tagXMLNode*	parent;
 
-	CString GetXML( LPDISP_OPT opt = &optDefault );
+	bool GetXML(tstring& tar, LPDISP_OPT opt /*= &optDefault*/ );
+
 }XAttr, *LPXAttr;
 
 typedef enum
@@ -127,58 +137,62 @@ typedef enum
 	XNODE_COMMENT,				// <!-- comment -->
 	XNODE_CDATA,				// <![CDATA[ cdata ]]>
 	XNODE_DOC,					// internal virtual root
-}NODE_TYPE;
+}NODETEXTYPE;
 
 // XMLNode structure
 typedef struct _tagXMLNode
 {
 	// name and value
-	CString name;
-	CString	value;
+	tstring name;
+	tstring	value;
 
 	// internal variables
 	LPXNode	parent;		// parent node
 	XNodes	childs;		// child node
 	XAttrs	attrs;		// attributes
-	NODE_TYPE type;		// node type 
+	NODETEXTYPE type;		// node type 
 	LPXDoc	doc;		// document
 
 	// Load/Save XML
-	LPTSTR	Load( LPCTSTR pszXml, LPPARSEINFO pi = &piDefault );
-	CString GetXML( LPDISP_OPT opt = &optDefault );
-	CString GetText( LPDISP_OPT opt = &optDefault );
+	tchar*	Load( const tchar* pszXml, LPPARSEINFO pi = &piDefault );
+
+	bool GetXML(tstring& tar, LPDISP_OPT opt = &optDefault );
+	bool GetText(tstring& tar, LPDISP_OPT opt = &optDefault );
+
+	tstring GetXML( LPDISP_OPT opt = &optDefault );
+	tstring GetText( LPDISP_OPT opt = &optDefault );
 
 	// internal load functions
-	LPTSTR	LoadAttributes( LPCTSTR pszAttrs, LPPARSEINFO pi = &piDefault );
-	LPTSTR	LoadAttributes( LPCTSTR pszAttrs, LPCTSTR pszEnd, LPPARSEINFO pi = &piDefault );
-	LPTSTR	LoadProcessingInstrunction( LPCTSTR pszXml, LPPARSEINFO pi = &piDefault );
-	LPTSTR	LoadComment( LPCTSTR pszXml, LPPARSEINFO pi = &piDefault ); 
-	LPTSTR	LoadCDATA( LPCTSTR pszXml, LPPARSEINFO pi = &piDefault ); 
+	tchar*	LoadAttributes( const tchar* pszAttrs, LPPARSEINFO pi = &piDefault );
+	tchar*	LoadAttributes( const tchar* pszAttrs, const tchar* pszEnd, LPPARSEINFO pi = &piDefault );
+	tchar*	LoadProcessingInstrunction( const tchar* pszXml, LPPARSEINFO pi = &piDefault );
+	tchar*	LoadComment( const tchar* pszXml, LPPARSEINFO pi = &piDefault ); 
+	tchar*	LoadCDATA( const tchar* pszXml, LPPARSEINFO pi = &piDefault ); 
 
 	// in own attribute list
-	LPXAttr	GetAttr( LPCTSTR attrname ); 
-	LPCTSTR	GetAttrValue( LPCTSTR attrname ); 
-	XAttrs	GetAttrs( LPCTSTR name ); 
+	LPXAttr	GetAttr( const tchar* attrname ); 
+	const tchar*	GetAttrValue( const tchar* attrname ); 
+	XAttrs	GetAttrs( const tchar* name ); 
 
 	// in one level child nodes
-	LPXNode	GetChild( LPCTSTR name ); 
-	LPCTSTR	GetChildValue( LPCTSTR name ); 
-	CString	GetChildText( LPCTSTR name, LPDISP_OPT opt = &optDefault );
-	XNodes	GetChilds( LPCTSTR name ); 
+	LPXNode	GetChild( const tchar* name ); 
+	const tchar*	GetChildValue( const tchar* name ); 
+	tstring	GetChildText( const tchar* name, LPDISP_OPT opt = &optDefault );
+	XNodes	GetChilds( const tchar* name ); 
 	XNodes	GetChilds(); 
 
-	LPXAttr GetChildAttr( LPCTSTR name, LPCTSTR attrname );
-	LPCTSTR GetChildAttrValue( LPCTSTR name, LPCTSTR attrname );
+	LPXAttr GetChildAttr( const tchar* name, const tchar* attrname );
+	const tchar* GetChildAttrValue( const tchar* name, const tchar* attrname );
 	
 	// search node
-	LPXNode	Find( LPCTSTR name );
+	LPXNode	Find( const tchar* name );
 
 	// modify DOM 
 	int		GetChildCount();
 	LPXNode GetChild( int i );
 	XNodes::iterator GetChildIterator( LPXNode node );
-	LPXNode CreateNode( LPCTSTR name = NULL, LPCTSTR value = NULL );
-	LPXNode	AppendChild( LPCTSTR name = NULL, LPCTSTR value = NULL );
+	LPXNode CreateNode( const tchar* name = 0, const tchar* value = 0 );
+	LPXNode	AppendChild( const tchar* name = 0, const tchar* value = 0 );
 	LPXNode	AppendChild( LPXNode node );
 	bool	RemoveChild( LPXNode node );
 	LPXNode DetachChild( LPXNode node );
@@ -192,8 +206,8 @@ typedef struct _tagXMLNode
 	// modify attribute
 	LPXAttr GetAttr( int i );
 	XAttrs::iterator GetAttrIterator( LPXAttr node );
-	LPXAttr CreateAttr( LPCTSTR anem = NULL, LPCTSTR value = NULL );
-	LPXAttr AppendAttr( LPCTSTR name = NULL, LPCTSTR value = NULL );
+	LPXAttr CreateAttr( const tchar* anem = 0, const tchar* value = 0 );
+	LPXAttr AppendAttr( const tchar* name = 0, const tchar* value = 0 );
 	LPXAttr	AppendAttr( LPXAttr attr );
 	bool	RemoveAttr( LPXAttr attr );
 	LPXAttr DetachAttr( LPXAttr attr );
@@ -202,7 +216,7 @@ typedef struct _tagXMLNode
 	LPXNode operator [] ( int i ) { return GetChild(i); }
 	XNode& operator = ( XNode& node ) { CopyBranch(&node); return *this; }
 
-	_tagXMLNode() { parent = NULL; doc = NULL; type = XNODE_ELEMENT; }
+	_tagXMLNode() { parent = 0; doc = 0; type = XNODE_ELEMENT; }
 	~_tagXMLNode();
 
 	void Close();
@@ -213,26 +227,15 @@ typedef struct _tagXMLDocument : public XNode
 {
 	PARSEINFO	parse_info;
 
-	_tagXMLDocument() { parent = NULL; doc = this; type = XNODE_DOC; }
+	_tagXMLDocument() { parent = 0; doc = this; type = XNODE_DOC; }
 	
-	LPTSTR	Load( LPCTSTR pszXml, LPPARSEINFO pi = NULL );
+	tchar*	Load( const tchar* pszXml, LPPARSEINFO pi = 0 );
 	LPXNode	GetRoot();
 
 }XDoc, *LPXDoc;
 
 // Helper Funtion
-inline long XStr2Int( LPCTSTR str, long default_value = 0 )
-{
-	return ( str && *str ) ? _ttol(str) : default_value;
-}
-
-inline bool XIsEmptyString( LPCTSTR str )
-{
-	CString s(str);
-	s.TrimLeft();
-	s.TrimRight();
-
-	return ( s.IsEmpty() || s == _T("") );
-}
+long XStr2Int( const tchar* str, long default_value = 0 );
+bool XIsEmptyString( const tchar* str );
 
 #endif // !defined(AFX_XMLITE_H__786258A5_8360_4AE4_BDAF_2A52F8E1B877__INCLUDED_)

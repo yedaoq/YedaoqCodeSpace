@@ -196,7 +196,7 @@ void CTestXMLiteDlg::OnButton1()
 	
 	XNode xml;
 	if( xml.Load( sxml ) )
-		AfxMessageBox(xml.GetXML());
+		AfxMessageBox(xml.GetXML().c_str());
 	else
 		AfxMessageBox(_T("error"));
 }
@@ -230,21 +230,21 @@ void CTestXMLiteDlg::OnButton2()
 	for( i = 0 ; i < xml.GetChildCount(); i++)
 	{
 		child = xml.GetChild(i);
-		AfxMessageBox( child->GetXML() );
+		AfxMessageBox( child->GetXML().c_str() );
 	}
 
 	// method 2: LPXNodes and GetChilds() ( same result with method 1 )
 	// Result: Person, Person, Person, Information
 	childs = xml.GetChilds();
 	for( i = 0 ; i < childs.size(); i++)
-		AfxMessageBox( childs[i]->GetXML() );
+		AfxMessageBox( childs[i]->GetXML().c_str() );
 
 	// method 3: Selected Childs with GetChilds()
 	// Result: Person, Person, Person
 	childs = xml.GetChilds(_T("Person") );
 	for( i = 0 ; i < childs.size(); i++)
 	{
-		AfxMessageBox( childs[i]->GetXML() );
+		AfxMessageBox( childs[i]->GetXML().c_str() );
 	}
 
 	// method 4: Get Attribute Vaule of Child
@@ -273,7 +273,7 @@ void CTestXMLiteDlg::OnButton3()
 	LPXNode child_bro = xml.GetChild(0);
 	xml.RemoveChild( child_bro );
 
-	AfxMessageBox(xml.GetXML());
+	AfxMessageBox(xml.GetXML().c_str());
 }
 
 //Test. 4: Error Handling
@@ -293,8 +293,8 @@ void CTestXMLiteDlg::OnButton4()
 	if( pi.erorr_occur ) // is error_occur?
 	{
 		//result: '<NoCloseTag> ... </XML>' is not wel-formed.
-		AfxMessageBox( pi.error_string );
-		AfxMessageBox( xml.GetXML()  );
+		AfxMessageBox( pi.error_string.c_str());
+		AfxMessageBox( xml.GetXML().c_str());
 	}
 	else
 		ASSERT(FALSE);
@@ -314,7 +314,7 @@ void CTestXMLiteDlg::OnButton5()
 	pi.escape_value = '\\';
 	xml.Load( sxml, &pi );
 
-	AfxMessageBox( xml.GetXML()  );
+	AfxMessageBox( xml.GetXML().c_str());
 }
 
 //Test. 6: Configurate Parse and Display
@@ -329,17 +329,17 @@ void CTestXMLiteDlg::OnButton6()
 	XNode xml;
 	
 	xml.Load( sxml );
-	AfxMessageBox( xml.GetXML()  );
+	AfxMessageBox( xml.GetXML().c_str());
 
 	PARSEINFO pi;
 	pi.trim_value = true; // trim value
 	xml.Load( sxml, &pi );
-	AfxMessageBox( xml.GetXML()  );
+	AfxMessageBox( xml.GetXML().c_str());
 
 	DISP_OPT opt;
 	opt.newline = false; // no new line
 	
-	AfxMessageBox( xml.GetXML( &opt )  );	
+	AfxMessageBox( xml.GetXML( &opt ).c_str());	
 }
 
 //Test. 6: Using Custom Entity Table
@@ -363,13 +363,13 @@ static const XENTITY entity_table[] = {
 	pi.entity_value = true; // force to use custom entitys
 	pi.entitys = &entitys;
 	xml.Load( sxml, &pi );
-	AfxMessageBox( xml.GetXML()  );
+	AfxMessageBox( xml.GetXML().c_str());
 
 	DISP_OPT opt;
 	opt.entitys = &entitys;
 	opt.reference_value = true; // force to use custom entitys
 	
-	AfxMessageBox( xml.GetXML( &opt )  );	
+	AfxMessageBox( xml.GetXML( &opt ).c_str());	
 }
 
 void CTestXMLiteDlg::OnButton8() 
@@ -385,7 +385,7 @@ void CTestXMLiteDlg::OnButton8()
 	pi.escape_value = '\\';
 	xml.Load( sxml, &pi );
 
-	AfxMessageBox( xml.GetXML()  );
+	AfxMessageBox( xml.GetXML().c_str()  );
 	
 	AfxMessageBox( xml.GetChildAttrValue("TAG", "attr")  );
 	
@@ -404,21 +404,21 @@ void CTestXMLiteDlg::OnButton9()
 
 	XNode xml;
 	xml.Load( sxml );
-	AfxMessageBox( xml.GetXML()  );
+	AfxMessageBox( xml.GetXML().c_str()  );
 
 	XNode xml2;
 	xml2.CopyNode( &xml );
-	AfxMessageBox( xml2.GetXML()  );
+	AfxMessageBox( xml2.GetXML().c_str()  );
 
 	XNode xml3;
 	//same with xml3 = xml;
 	xml3.CopyBranch( &xml );
-	AfxMessageBox( xml3.GetXML()  );
+	AfxMessageBox( xml3.GetXML().c_str()  );
 
 	XNode xml4;
 	//same with xml3.CopyBranch( &xml );
 	xml4.AppendChildBranch( &xml );
-	AfxMessageBox( xml4.GetXML()  );
+	AfxMessageBox( xml4.GetXML().c_str()  );
 }
 
 void CTestXMLiteDlg::OnButton10() 
@@ -437,7 +437,7 @@ void CTestXMLiteDlg::OnButton10()
 	XNode xml;
 	xml.Load( sxml );
 
-	AfxMessageBox( xml.GetXML()  );
+	AfxMessageBox( xml.GetXML().c_str()  );
 }
 
 void CTestXMLiteDlg::OnButton11() 
@@ -462,14 +462,14 @@ void CTestXMLiteDlg::OnButton11()
 	{
 		LPXNode root = xml.GetRoot();
 		//root->AppendChild( _T("child"), _T("value") );
-		AfxMessageBox( xml.GetXML() );
+		AfxMessageBox( xml.GetXML().c_str() );
 	}
 
 	// you can't not parse without force_parse on un-welformed xml!
 	XNode node;
 	if( node.Load( sXML ) )
 	{
-		AfxMessageBox( node.GetXML() );
+		AfxMessageBox( node.GetXML().c_str() );
 	}	
 }
 
@@ -487,13 +487,13 @@ void CTestXMLiteDlg::OnButton12()
 	XNode node;
 	if( node.Load( sXML ) )
 	{
-		AfxMessageBox( node.GetXML() );
+		AfxMessageBox( node.GetXML().c_str() );
 
 		LPXNode found = NULL;
 		found = node.Find( _T("D") );
 		if( found )
 		{
-			AfxMessageBox( found->GetXML() );
+			AfxMessageBox( found->GetXML().c_str() );
 		}
 	}	
 }

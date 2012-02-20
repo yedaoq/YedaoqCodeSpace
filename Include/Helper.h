@@ -35,4 +35,5 @@ GUID StrToGUID(tstring str);
 
 tstring StringSplice(IEnumerator<tstring>& source, tstring connecter);
 
+
 enum EnumTraversalControl{Normal = 0, Stop, IgnoreChild };
