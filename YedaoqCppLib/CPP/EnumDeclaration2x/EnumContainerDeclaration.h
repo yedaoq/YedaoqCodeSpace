@@ -86,8 +86,11 @@ public:
 
 public:
 
-	const tstring&				str() const				{return Items_.Format(Value_);}
-	const tstring&				desc() const			{return Items_.GetDescription(Value_);}
+	CEnumContainer(){}
+	CEnumContainer(base v) : Value_(v) {}
+
+	const tstring				str() const				{return Items_.Format(Value_);}
+	const tstring				desc() const			{return Items_.GetDescription(Value_);}
 
 	static enumerator*			items()					{return Items_.Enum();}
 	static const item*			get(base			val){return Items_[val];}
@@ -99,6 +102,9 @@ protected:
 	static collection			Items_;
 };
 
+template<typename T, typename enumbase /*= int*/, bool flag /*= false*/>
+typename CEnumContainer<T,enumbase,flag>::collection CEnumContainer<T,enumbase,flag>::Items_(flag);
+
 template<typename enumbase>
 tstring CEnumItemCollection<enumbase>::Format( enumbase val, const tstring& separator /*= TEXT("|")*/ ) const
 {
@@ -108,7 +114,7 @@ tstring CEnumItemCollection<enumbase>::Format( enumbase val, const tstring& sepa
 	}
 	else
 	{
-		return FormatNormalEnum(val, separator);
+		return FormatNormalEnum(val/*, separator*/);
 	}
 }
 
@@ -117,11 +123,11 @@ enumbase CEnumItemCollection<enumbase>::Parse( const tstring& val, const tstring
 {
 	if(Flag_)
 	{
-		return ParseFlagsEnum(val, separator);
+		return ParseFlagsEnum(val/*, separator*/);
 	}
 	else
 	{
-		return ParseNormalEnum(val, separator);
+		return ParseNormalEnum(val/*, separator*/);
 	}
 }
 
@@ -143,7 +149,7 @@ template<typename enumbase>
 tstring CEnumItemCollection<enumbase>::FormatNormalEnum( enumbase val ) const
 {
 	tstring strRet;
-	STDENUM(ItemVct, Items_, iter)
+	STDCENUM(ItemVct, Items_, iter)
 	{
 		if(iter->Val == val)
 		{
@@ -158,7 +164,7 @@ template<typename enumbase>
 enumbase CEnumItemCollection<enumbase>::ParseNormalEnum( const tstring& val ) const
 {
 	enumbase eRet;
-	STDENUM(ItemVct, Items_, iter)
+	STDCENUM(ItemVct, Items_, iter)
 	{
 		if(iter->ValStr == val)
 		{
@@ -174,7 +180,7 @@ tstring CEnumItemCollection<enumbase>::FormatFlagsEnum( enumbase val, const tstr
 {
 	tstring tRet;
 	bool	bFirst = true;
-	STDENUM(ItemVct, Items_, iter)
+	STDCENUM(ItemVct, Items_, iter)
 	{
 		if(iter->Val & val)
 		{
@@ -223,7 +229,7 @@ tstring CEnumItemCollection<enumbase>::GetFlagsEnumDescription( enumbase val, co
 {
 	tstring tRet;
 	bool	bFirst = true;
-	STDENUM(ItemVct, Items_, iter)
+	STDCENUM(ItemVct, Items_, iter)
 	{
 		if(iter->Val & val)
 		{
@@ -246,7 +252,7 @@ template<typename enumbase>
 tstring CEnumItemCollection<enumbase>::GetNormalEnumDescription( enumbase val ) const
 {
 	tstring strRet;
-	STDENUM(ItemVct, Items_, iter)
+	STDCENUM(ItemVct, Items_, iter)
 	{
 		if(iter->Val == val)
 		{
@@ -260,7 +266,7 @@ tstring CEnumItemCollection<enumbase>::GetNormalEnumDescription( enumbase val ) 
 template<typename enumbase>
 const tagEnumItem<enumbase>& CEnumItemCollection<enumbase>::operator[]( const tchar* valstr ) const
 {
-	STDENUM(ItemVct, Items_, iter)
+	STDCENUM(ItemVct, Items_, iter)
 	{
 		if(iter->ValStr == valstr)
 		{
@@ -273,7 +279,7 @@ const tagEnumItem<enumbase>& CEnumItemCollection<enumbase>::operator[]( const tc
 template<typename enumbase>
 const tagEnumItem<enumbase>& CEnumItemCollection<enumbase>::operator[]( enumbase val ) const
 {
-	STDENUM(ItemVct, Items_, iter)
+	STDCENUM(ItemVct, Items_, iter)
 	{
 		if(iter->Val == val)
 		{

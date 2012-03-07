@@ -9,6 +9,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32", "Win32\Win32.vcproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Twain", "Twain\Twain.vcproj", "{AF55EAE4-C9D3-47AA-9218-993EC97A4828}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ATL", "ATL\ATL.vcproj", "{B1B29F24-779A-46EF-98DF-B45974E54933}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{44256307-B9CA-4449-9A21-97357A92C060}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppTest", "Test\CppTest\CppTest.vcproj", "{837375F1-7767-43BC-A9FF-43CADF3D38A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,8 +37,19 @@ Global
 		{AF55EAE4-C9D3-47AA-9218-993EC97A4828}.Debug|Win32.Build.0 = Debug|Win32
 		{AF55EAE4-C9D3-47AA-9218-993EC97A4828}.Release|Win32.ActiveCfg = Release|Win32
 		{AF55EAE4-C9D3-47AA-9218-993EC97A4828}.Release|Win32.Build.0 = Release|Win32
+		{B1B29F24-779A-46EF-98DF-B45974E54933}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B1B29F24-779A-46EF-98DF-B45974E54933}.Debug|Win32.Build.0 = Debug|Win32
+		{B1B29F24-779A-46EF-98DF-B45974E54933}.Release|Win32.ActiveCfg = Release|Win32
+		{B1B29F24-779A-46EF-98DF-B45974E54933}.Release|Win32.Build.0 = Release|Win32
+		{837375F1-7767-43BC-A9FF-43CADF3D38A4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{837375F1-7767-43BC-A9FF-43CADF3D38A4}.Debug|Win32.Build.0 = Debug|Win32
+		{837375F1-7767-43BC-A9FF-43CADF3D38A4}.Release|Win32.ActiveCfg = Release|Win32
+		{837375F1-7767-43BC-A9FF-43CADF3D38A4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{837375F1-7767-43BC-A9FF-43CADF3D38A4} = {44256307-B9CA-4449-9A21-97357A92C060}
 	EndGlobalSection
 EndGlobal

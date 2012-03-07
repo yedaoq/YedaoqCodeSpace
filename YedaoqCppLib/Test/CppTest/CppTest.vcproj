@@ -2,9 +2,10 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="CPP"
-	ProjectGUID="{1B6E1DCA-123A-4403-AB4C-6B6EA70854B6}"
-	RootNamespace="CPP"
+	Name="CppTest"
+	ProjectGUID="{837375F1-7767-43BC-A9FF-43CADF3D38A4}"
+	RootNamespace="CppTest"
+	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -19,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -40,9 +41,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="$(SolutionDir)gtest,$(SolutionDir)CPP"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -56,11 +60,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\Yedaoq$(ProjectName).lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="gtestd.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(SolutionDir)\Lib"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -72,6 +84,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -80,7 +95,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="2"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -102,8 +117,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -118,7 +135,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				LinkIncremental="1"
 				GenerateDebugInformation="true"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -155,36 +174,40 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\BaseXXCoder.cpp"
+				RelativePath=".\EnumEntry.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CharTree.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CTiffWriter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\test.cpp"
+				RelativePath=".\EnumTest.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						GeneratePreprocessedFile="1"
+						GeneratePreprocessedFile="0"
 					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Tree.cpp"
+				RelativePath=".\stdafx.cpp"
 				>
-			</File>
-			<File
-				RelativePath=".\XMLite.cpp"
-				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -193,98 +216,28 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\BaseXXCoder.h"
+				RelativePath=".\EnumTest.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CharTree.h"
+				RelativePath=".\stdafx.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CTiffWriter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Enumerator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\FastDelegate.h"
-				>
-			</File>
-			<File
-				RelativePath=".\FastDelegateBind.h"
-				>
-			</File>
-			<File
-				RelativePath=".\functor_cast.h"
-				>
-			</File>
-			<File
-				RelativePath=".\functor_cmp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IRefObject.h"
-				>
-			</File>
-			<File
-				RelativePath=".\microtype.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RefObjectImpl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Singlton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Tree.h"
-				>
-			</File>
-			<File
-				RelativePath=".\tstring.h"
-				>
-			</File>
-			<File
-				RelativePath=".\XMLite.h"
+				RelativePath=".\targetver.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="EnumDeclaration2x"
+			Name="资源文件"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-			<File
-				RelativePath=".\EnumDeclaration2x\EnumContainerDeclaration.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EnumDeclaration2x\EnumCppMicro.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EnumDeclaration2x\EnumHeaderMicro.h"
-				>
-			</File>
 		</Filter>
-		<Filter
-			Name="EnumDeclaration1x"
+		<File
+			RelativePath=".\ReadMe.txt"
 			>
-			<File
-				RelativePath=".\EnumDeclaration1x\EnumEntityCppMicro.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EnumDeclaration1x\EnumEntityDeclaration.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EnumDeclaration1x\EnumEntityHeaderMicro.h"
-				>
-			</File>
-		</Filter>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

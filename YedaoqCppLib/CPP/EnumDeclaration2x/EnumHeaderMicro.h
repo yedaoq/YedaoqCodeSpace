@@ -1,10 +1,16 @@
-#ifndef BEGINENUM	
-#define BEGINENUM enum _Type : base {	
+#include "EnumContainerDeclaration.h"
+
+#ifndef BEGINENUM
+#define BEGINENUM(name,base,flag) struct Enum##name : public CEnumContainer<Enum##name, base, flag>{	\
+	static struct constructor {constructor(collection&);} constructor_;	\
+	Enum##name(base v = 0) : CEnumContainer(v){}	\
+	enum _Type : base {	
 #endif
 
 #ifndef ENDENUM
 #define ENDENUM };									\
-	static void Initialize(); operator base() const { return Value_; } bool operator==(base val) const { return Value_ == val;} void operator=(base val) { Value_ = val; }
+	operator _Type() const { return (_Type)Value_; } bool operator==(_Type val) const { return Value_ == val;} void operator=(_Type val) { Value_ = val; }	\
+	};
 #endif
 
 #ifndef ENUMITEM0
