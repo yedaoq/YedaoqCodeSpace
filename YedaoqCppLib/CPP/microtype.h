@@ -18,7 +18,7 @@ typedef unsigned char byte;
 typedef unsigned int index_t;
 typedef unsigned int flag_t;
 
-#define SINGLELOOP for(int __anonym = 0; 0 == __anonym; ++__anonym)
+#define SINGLELOOP for(bool __anonym = true;  __anonym; __anonym = false)
 
 #define STDENUM(containertype, container, iter) for ( containertype::iterator iter = container.begin(); iter != container.end(); ++iter )
 #define STDCENUM(containertype, container, iter) for ( containertype::const_iterator iter = container.begin(); iter != container.end(); ++iter )
