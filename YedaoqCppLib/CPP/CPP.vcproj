@@ -285,6 +285,22 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="EnumDeclaration3x"
+			>
+			<File
+				RelativePath=".\EnumDeclaration3x\EnumContainerDeclaration.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumDeclaration3x\EnumCppMicro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumDeclaration3x\EnumHeaderMicro.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

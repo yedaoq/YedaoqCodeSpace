@@ -86,7 +86,7 @@ public:
 
 public:
 
-	CEnumContainer(){}
+
 	CEnumContainer(base v) : Value_(v) {}
 
 	const tstring				str() const				{return Items_.Format(Value_);}

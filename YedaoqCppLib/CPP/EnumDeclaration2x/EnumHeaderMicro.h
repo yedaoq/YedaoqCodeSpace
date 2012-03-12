@@ -28,5 +28,3 @@
 #ifndef ENUMITEM3
 #define ENUMITEM3(name, val, desc) name = val,
 #endif
-
-#define endenum ;operator base() const { return Value_; } bool operator==(base val) const { return Value_ == val;} void operator=(base val) { Value_ = val; }

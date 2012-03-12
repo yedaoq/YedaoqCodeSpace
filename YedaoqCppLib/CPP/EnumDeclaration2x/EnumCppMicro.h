@@ -4,6 +4,7 @@
 #undef ENUMITEM1
 #undef ENUMITEM2
 #undef ENUMITEM3
+#undef ENUMTEMPLATENAME
 
 #define ENUMTEMPLATENAME(name,base,flag) CEnumContainer<Enum##name,base,flag>
 
