@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C370B600-71FE-40DD-ADC3-8208ED6B6D70}</ProjectGuid>
-    <RootNamespace>Win32</RootNamespace>
+    <ProjectGuid>{B1B29F24-779A-46EF-98DF-B45974E54933}</ProjectGuid>
+    <RootNamespace>ATL</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\CPP\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\CPP\;..\MFC\;..\Win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -74,31 +74,17 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ComFile.cpp" />
-    <ClCompile Include="DirectoryEnumerator.cpp" />
-    <ClCompile Include="FileDialogST.cpp" />
-    <ClCompile Include="Log.cpp" />
-    <ClCompile Include="NetworkAdapterManager.cpp" />
-    <ClCompile Include="Profile.cpp" />
+    <ClCompile Include="OcxFile.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="WMI_MACAddress.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CNetworkAdapterEnumerator.h" />
-    <ClInclude Include="ComFile.h" />
-    <ClInclude Include="DirectoryEnumerator.h" />
-    <ClInclude Include="FileDialogST.h" />
-    <ClInclude Include="FileNameInfo.h" />
-    <ClInclude Include="Log.h" />
-    <ClInclude Include="NetworkAdapterManager.h" />
-    <ClInclude Include="Profile.h" />
-    <ClInclude Include="RAII.h" />
+    <ClInclude Include="CAtlComModuleScope.h" />
+    <ClInclude Include="OcxFile.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="WMI_MACAddress.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
