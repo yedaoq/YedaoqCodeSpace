@@ -91,11 +91,10 @@ protected:
 		{
 			T::Initialize();
 		}
-		//inline void do_nothing() const {}
+		inline void do_nothing() const {}
 	};
-	static items_creator items_creator_;
-
-	CEnumContainer(){ /*items_creator_::do_nothing();*/ }
+	
+	CEnumContainer(){ }
 
 public:
 
@@ -112,13 +111,14 @@ public:
 protected:
 	base						Value_; 
 	static collection			Items_;
+	static items_creator		items_creator_;
 };
 
 template<typename T, typename enumbase /*= int*/, bool flag /*= false*/>
-typename CEnumContainer<T,enumbase,flag>::items_creator CEnumContainer<T,enumbase,flag>::items_creator_;
+typename CEnumContainer<T,enumbase,flag>::collection CEnumContainer<T,enumbase,flag>::Items_(flag);
 
 template<typename T, typename enumbase /*= int*/, bool flag /*= false*/>
-typename CEnumContainer<T,enumbase,flag>::collection CEnumContainer<T,enumbase,flag>::Items_(flag);
+typename CEnumContainer<T,enumbase,flag>::items_creator CEnumContainer<T,enumbase,flag>::items_creator_;
 
 template<typename enumbase>
 tstring CEnumItemCollection<enumbase>::Format( enumbase val, const tstring& separator /*= TEXT("|")*/ ) const

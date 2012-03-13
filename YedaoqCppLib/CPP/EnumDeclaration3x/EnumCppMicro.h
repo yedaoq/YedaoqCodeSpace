@@ -8,7 +8,7 @@
 
 #define ENUMTEMPLATENAME(name,base,flag) CEnumContainer<Enum##name,base,flag>
 
-#define BEGINENUM(name,base,flag) void Enum##name::Initialize(){	base idx = 0;
+#define BEGINENUM(name,base,flag) void Enum##name::Initialize(){ items_creator_.do_nothing();	base idx = 0;
 
 #define ENUMITEM0(name)				Items_.Add(make_enumitem(idx++, TEXT(#name), TEXT("")));
 #define ENUMITEM1(name, desc)		Items_.Add(make_enumitem(idx++, TEXT(#name), TEXT(#desc)));
