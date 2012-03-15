@@ -1,27 +1,15 @@
+/* ___________________________________________________________________________
+@ 
+@ file - Enumerator.h
+@ 
+@ auth - yedaoq@gmail.com          http://blog.yedaoq.info
+@ date - 2012-3-15
+@ info -
+@     
+/* ___________________________________________________________________________*/
 #pragma once
 
-#ifndef interface
-#define interface struct
-#endif
-
-//#define REFCOUNTCLONEABLE
-
-#ifdef REFCOUNTCLONEABLE
-	#define DERIVEFROMIREFOBJECT : public IRefObject
-#else
-	#define DERIVEFROMIREFOBJECT
-#endif
-
-#ifdef REFCOUNTCLONEABLE
-	#define IMPIREFOBJECT(x) CRefObjectImpl<x>
-#else
-	#define IMPIREFOBJECT(x) x
-#endif
-
-interface ICloneable DERIVEFROMIREFOBJECT
-{
-	virtual ICloneable* Clone() const = 0;
-};
+#include "Cloneable.h"
 
 template<typename T>
 interface IEnumerator : public ICloneable
@@ -35,7 +23,7 @@ interface IEnumerator : public ICloneable
 };
 
 template<typename T>
-class CEnumeratorBase : public IMPIREFOBJECT(IEnumerator<T>)
+class CEnumeratorBase : public IEnumerator<T>
 {
 public:
 	virtual ~CEnumeratorBase() = 0 {}
@@ -55,14 +43,14 @@ public:
 };
 
 template<typename T>
-class CEmptyEnumerator : public IMPIREFOBJECT(IEnumerator<T>)
+class CEmptyEnumerator : public CCloneable<CEmptyEnumerator<T>, IEnumerator<T>>
 {
 public:
 	virtual ~CEmptyEnumerator()		{}
 	virtual bool		MoveNext()	{ return false; };
 	virtual const T&	Current()	{ throw std::exception(); };
 	virtual void		Reset()		{};
-	virtual ICloneable* Clone() const{ return new CEmptyEnumerator(*this); }
+	//virtual ICloneable* Clone() const{ return new CEmptyEnumerator(*this); }
 
 	virtual bool MoveNext(T& obj)	{ return false; }
 };
@@ -112,7 +100,7 @@ protected:
 };
 
 template<typename Tt, typename Ts, typename Fc>
-class CConvertEnumeratorEx : public CEnumeratorBase<Tt>
+class CConvertEnumeratorEx : public CCloneable<CConvertEnumeratorEx<Tt, Ts, Fc>, CEnumeratorBase<Tt> >
 {
 public:
 
@@ -140,18 +128,13 @@ public:
 		m_Source->Reset();
 	}
 
-	virtual ICloneable* Clone() const
-	{
-		return new CConvertEnumeratorEx(*this);
-	}
-
 	ArthropodEnumeratorSourceHolder<Ts>	m_Source;	
 	Fc									m_Converter;
 	Tt									m_InterMediate;
 };
 
 template<typename Tt, typename Ts, typename Fc>
-class CConvertEnumerator : public CEnumeratorBase<Tt>
+class CConvertEnumerator : public CCloneable< CConvertEnumerator<Tt,Ts,Fc>, CEnumeratorBase<Tt> >
 {
 public:
 
@@ -178,17 +161,12 @@ public:
 		m_Source->Reset();
 	}
 
-	virtual ICloneable* Clone() const
-	{
-		return new CConvertEnumerator(*this);
-	}
-
 	ArthropodEnumeratorSourceHolder<Ts>	m_Source;	
 	Fc									m_Converter;
 };
 
 template<typename T, typename Ff>
-class CFilterEnumerator : public CEnumeratorBase<T>
+class CFilterEnumerator : public CCloneable<CFilterEnumerator<T,Ff>, CEnumeratorBase<T> >
 {
 public:
 
@@ -233,7 +211,7 @@ public:
 };
 
 template<typename T>
-class CRangeEnumerator : public CEnumeratorBase<T>
+class CRangeEnumerator : public CCloneable<CRangeEnumerator<T>, CEnumeratorBase<T> >
 {
 public:
 	CRangeEnumerator()
@@ -297,7 +275,7 @@ protected:
 };
 
 template<typename iter_t, typename value_t = typename iter_t::value_type>
-class CIteratorEnumerator : public CEnumeratorBase<value_t>
+class CIteratorEnumerator : public CCloneable<CIteratorEnumerator<iter_t, value_t>, CEnumeratorBase<value_t> >
 {
 public:
 	CIteratorEnumerator(){}
