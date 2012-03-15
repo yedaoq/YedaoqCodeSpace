@@ -67,45 +67,62 @@ public:
 	virtual bool MoveNext(T& obj)	{ return false; }
 };
 
-template<typename Tt, typename Ts, typename Fc>
-class CConvertEnumeratorEx : public CEnumeratorBase<Tt>
+template<typename Ts>
+class ArthropodEnumeratorSourceHolder
 {
+	typedef IEnumerator<Ts>* SourcePtr;
 public:
-	~CConvertEnumeratorEx()
+	ArthropodEnumeratorSourceHolder()
+		: m_SourceOwned(false), m_Source(0)
+	{}
+	
+	ArthropodEnumeratorSourceHolder(const IEnumerator<Ts>& source)
+		: m_SourceOwned(true), m_Source(static_cast<SourcePtr>(source.Clone()))
+	{}
+	
+	ArthropodEnumeratorSourceHolder(IEnumerator<Ts>* source)
+		: m_SourceOwned(false), m_Source(source)
+	{}
+	
+	ArthropodEnumeratorSourceHolder(const ArthropodEnumeratorSourceHolder& other)
+		: m_SourceOwned(other.m_SourceOwned)
 	{
-		if(m_SourceOwned && m_Source) delete m_Source;
-		m_Source = 0;
+		m_Source = m_SourceOwned ? static_cast<SourcePtr>(other.m_Source->Clone()) : other.m_Source;
 	}
-
-	CConvertEnumeratorEx()
-		: m_SourceOwned(0), m_Source(0)
-	{}
-
-	CConvertEnumeratorEx(IEnumerator<Ts>* source, Fc convert)
-		: m_SourceOwned(false), m_Source(source), m_Converter(convert)
-	{}
-
-	CConvertEnumeratorEx(IEnumerator<Ts>& source, Fc convert)
-		: m_SourceOwned(true), m_Source(static_cast<IEnumerator<Ts>*>(source.Clone())), m_Converter(convert)
-	{}
-
-	CConvertEnumeratorEx(const CConvertEnumeratorEx& other)
-		: m_SourceOwned(other.m_SourceOwned), m_Converter(other.m_Converter)
-	{
-		m_Source = m_SourceOwned ? static_cast<IEnumerator<Ts>*>(other.m_Source->Clone()) : other.m_Source;
-	}
-
-	CConvertEnumeratorEx& operator=(const CConvertEnumeratorEx& other)
-	{
-		IEnumerator<Ts>* tmp = m_SourceOwned ? m_Source : 0;
-
+	
+	ArthropodEnumeratorSourceHolder& operator=(const ArthropodEnumeratorSourceHolder& other)
+	{		
+		SourcePtr tmp = m_SourceOwned ? m_Source : 0;
 		m_SourceOwned = other.m_SourceOwned;
-		m_Source = m_SourceOwned ? static_cast<IEnumerator<Ts>*>(other.m_Source->Clone()) : other.m_Source;
-		m_Converter = other.m_Converter;
+		m_Source = m_SourceOwned ? static_cast<SourcePtr>(other.m_Source->Clone()) : other.m_Source;
 
 		if(tmp) delete tmp;
 		return *this;
 	}
+	
+	SourcePtr operator->() const
+	{
+		return m_Source;
+	}
+
+protected:
+	int x;
+	SourcePtr			m_Source;	
+	bool				m_SourceOwned;	
+};
+
+template<typename Tt, typename Ts, typename Fc>
+class CConvertEnumeratorEx : public CEnumeratorBase<Tt>
+{
+public:
+
+	CConvertEnumeratorEx(IEnumerator<Ts>* source, Fc convert)
+		: m_Source(source), m_Converter(convert)
+	{}
+
+	CConvertEnumeratorEx(IEnumerator<Ts>& source, Fc convert)
+		: m_Source(source), m_Converter(convert)
+	{}
 
 	virtual bool MoveNext()
 	{
@@ -128,10 +145,9 @@ public:
 		return new CConvertEnumeratorEx(*this);
 	}
 
-	bool				m_SourceOwned;
-	IEnumerator<Ts>*	m_Source;	
-	Fc					m_Converter;
-	Tt					m_InterMediate;
+	ArthropodEnumeratorSourceHolder<Ts>	m_Source;	
+	Fc									m_Converter;
+	Tt									m_InterMediate;
 };
 
 template<typename Tt, typename Ts, typename Fc>
@@ -139,41 +155,13 @@ class CConvertEnumerator : public CEnumeratorBase<Tt>
 {
 public:
 
-	~CConvertEnumerator()
-	{
-		if(m_SourceOwned && m_Source) delete m_Source;
-		m_Source = 0;
-	}
-
-	CConvertEnumerator()
-		: m_SourceOwned(0), m_Source(0)
-	{}
-
 	CConvertEnumerator(IEnumerator<Ts>* source, Fc convert)
-		: m_SourceOwned(false), m_Source(source), m_Converter(convert)
+		: m_Source(source), m_Converter(convert)
 	{}
 
 	CConvertEnumerator(IEnumerator<Ts>& source, Fc convert)
-		: m_SourceOwned(true), m_Source(static_cast<IEnumerator<Ts>*>(source.Clone())), m_Converter(convert)
+		: m_Source(source), m_Converter(convert)
 	{}
-
-	CConvertEnumerator(const CConvertEnumerator& other)
-		: m_SourceOwned(other.m_SourceOwned), m_Converter(other.m_Converter)
-	{
-		m_Source = m_SourceOwned ? static_cast<IEnumerator<Ts>*>(other.m_Source->Clone()) : other.m_Source;
-	}
-
-	CConvertEnumerator& operator=(const CConvertEnumerator& other)
-	{
-		IEnumerator<Ts>* tmp = m_SourceOwned ? m_Source : 0;
-
-		m_SourceOwned = other.m_SourceOwned;
-		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
-		m_Converter = other.m_Converter;
-
-		if(tmp) delete tmp;
-		return *this;
-	}
 
 	virtual bool MoveNext()
 	{
@@ -195,9 +183,8 @@ public:
 		return new CConvertEnumerator(*this);
 	}
 
-	bool				m_SourceOwned;
-	IEnumerator<Ts>*	m_Source;	
-	Fc					m_Converter;
+	ArthropodEnumeratorSourceHolder<Ts>	m_Source;	
+	Fc									m_Converter;
 };
 
 template<typename T, typename Ff>
@@ -205,45 +192,13 @@ class CFilterEnumerator : public CEnumeratorBase<T>
 {
 public:
 
-	~CFilterEnumerator()
-	{
-		if(m_SourceOwned && m_Source)
-		{
-			delete m_Source;			
-		}
-		m_Source = 0;
-	}
-
-	CFilterEnumerator()
-		: m_SourceOwned(false), m_Source(0)
-	{}
-
 	CFilterEnumerator(IEnumerator<T>* source, Ff filter)
-		: m_SourceOwned(false), m_Source(source), m_Filter(filter)
+		: m_Source(source), m_Filter(filter)
 	{}
 
 	CFilterEnumerator(IEnumerator<T>& source, Ff filter)
-		: m_SourceOwned(true), m_Source(static_cast<IEnumerator<T>*>(source.Clone())), m_Filter(filter)
+		: m_Source(source), m_Filter(filter)
 	{}
-
-	CFilterEnumerator(const CFilterEnumerator& other)
-		: m_SourceOwned(other.m_SourceOwned), m_Filter(other.m_Filter)
-	{
-		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
-	}
-
-	CFilterEnumerator& operator=(const CFilterEnumerator& other)
-	{
-		IEnumerator<T>* tmp = m_SourceOwned ? m_InnerSource : 0;
-
-		m_SourceOwned = other.m_SourceOwned;
-		m_Source = m_SourceOwned ? static_cast<IEnumerator<T>*>(other.m_Source->Clone()) : other.m_Source;
-		m_Filter = other.m_Filter;
-
-		if(tmp)	delete tmp;
-
-		return *this;
-	}
 
 	virtual bool MoveNext()
 	{
@@ -273,9 +228,8 @@ public:
 		return new CFilterEnumerator(*this);
 	}
 
-	bool			m_SourceOwned;
-	IEnumerator<T>* m_Source;	
-	Ff				m_Filter;
+	ArthropodEnumeratorSourceHolder<T>	m_Source;	
+	Ff									m_Filter;
 };
 
 template<typename T>
@@ -320,9 +274,8 @@ public:
 	}
 
 	virtual const T& Current()
-	{
-		throw ERROR_INVALID_ACCESS;
-		//_ASSERT(!beforefirst_ && current_ != last_);
+	{		
+		if(beforefirst_ || current_ == last_) throw ERROR_INVALID_ACCESS;
 		return current_ ;
 	}
 
@@ -360,7 +313,7 @@ public:
 
 	virtual const value_t& Current()
 	{
-		return *inner_.Current();
+		return static_cast<value_t&>(*inner_.Current());
 	}
 
 	virtual void Reset()
