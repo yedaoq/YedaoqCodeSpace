@@ -313,7 +313,7 @@ public:
 
 	virtual const value_t& Current()
 	{
-		return static_cast<value_t&>(*inner_.Current());
+		return static_cast<const value_t&>(*inner_.Current());
 	}
 
 	virtual void Reset()
