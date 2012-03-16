@@ -126,3 +126,64 @@ public:
 		px = tmp;
 	}
 };
+
+enum EnumStdContainer
+{
+	Vector,
+	List,
+	Set,
+};
+
+namespace __nsanonymous
+{
+	template<typename T, EnumStdContainer>
+	struct stdcontainer_traits
+	{};
+
+	template<typename T>
+	struct stdcontainer_traits<Vector>
+	{
+		typedef std::vector<T> type;
+	};
+
+	template<typename T>
+	struct stdcontainer_traits<Set>
+	{
+		typedef std::set<T> type;
+	};
+
+	template<typename T>
+	struct stdcontainer_traits<List>
+	{
+		typedef std::list<T> type;
+	};
+}
+
+template<typename T, EnumStdContainer c>
+class cloned_container : public typename __nsanonymous::stdcontainer_traits<cloned_ptr<T>, c>::type
+{
+public:
+	void push_back(T* obj)
+	{
+		push_back(cloned_ptr<T>());
+		*rbegin() = obj;
+	}
+
+	void push_back(T const& obj)
+	{
+		push_back(cloned_ptr<T>());
+		*rbegin() = obj;
+	}
+
+	void push_front(T* obj)
+	{
+		push_front(cloned_ptr<T>());
+		*begin() = obj;
+	}
+
+	void push_front(T const& obj)
+	{
+		push_front(cloned_ptr<T>());
+		*begin() = obj;
+	}
+};
