@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Cloneable.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CTiffWriter.h"
 				>
 			</File>
@@ -234,6 +238,10 @@
 			</File>
 			<File
 				RelativePath=".\RefObjectImpl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Singleton.h"
 				>
 			</File>
 			<File

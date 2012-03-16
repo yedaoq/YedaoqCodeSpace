@@ -8,7 +8,7 @@
 @     
 /* ___________________________________________________________________________*/
 #pragma once
-#include "\boost\assert.hpp"
+#include "boost\assert.hpp"
 
 #ifndef interface
 #define interface struct
@@ -38,7 +38,10 @@ template<typename T, typename I>
 struct CCloneable : public I
 {
 	virtual ICloneable* Clone() const { return new T(static_cast<const T&>(*this)); }
-	virtual void		Delete() { delete static_cast<T*>this; }
+	virtual void		Delete() { delete static_cast<T*>(this); }
+
+protected:
+	CCloneable() {};
 };
 
 template<typename T>
@@ -57,10 +60,12 @@ public:
 	typedef T element_type;
 	typedef cloned_ptr<T> this_type;
 
-	explicit cloned_ptr( T * p = 0 ): px( p ) {} // never throws
-	explicit cloned_ptr(const T& obj) : px(clone(obj))	{}
+	/*explicit*/ cloned_ptr( T * p = 0 ): px( p ) {} // never throws
+	/*explicit*/ cloned_ptr(const T& obj) : px(clone(obj))	{}
 
-	cloned_ptr(cloned_ptr const & other) : px(clone(*other)) {}
+	cloned_ptr(cloned_ptr const & other)
+		: px(other.px ? clone(*other) : 0)
+	{}
 
 	~cloned_ptr() // never throws
 	{
