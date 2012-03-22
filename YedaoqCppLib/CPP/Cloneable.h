@@ -136,29 +136,49 @@ enum EnumStdContainer
 
 namespace __nsanonymous
 {
+	/*
+	 a std container instantiation need two twice type-appointment in different dimensionality. one is the element type(int, float etc.), and another is the container type(set, list, vector etc.) 
+	 if you want to instantiating a template with a certain element type and a uncertain container type, this may be helpful.
+	*/
 	template<typename T, EnumStdContainer>
 	struct stdcontainer_traits
 	{};
 
+	/*
+	  the following micros, _VECTOR_, _SET_, _LIST_, all defined in the MSVC std implementation file 'vector', but not necessarily for other implementation
+	*/
+#ifdef _VECTOR_
 	template<typename T>
 	struct stdcontainer_traits<Vector>
 	{
 		typedef std::vector<T> type;
 	};
+#endif
 
+#ifdef _SET_
 	template<typename T>
 	struct stdcontainer_traits<Set>
 	{
 		typedef std::set<T> type;
 	};
+#endif
 
+#ifdef _LIST_
 	template<typename T>
 	struct stdcontainer_traits<List>
 	{
 		typedef std::list<T> type;
 	};
+#endif
 }
 
+/*
+  this template extent the std container when them used for keep cloned_ptr objects
+  the reason is: 
+     as a result of cloned_ptr's character, when you call the push interface with a T object or a T pointer,
+	 a temporary cloned_ptr<T> will be constructed, and then it be duplicateded into the container. that is,
+	 the object may be copyed multi-times exceed you expectation.
+*/
 template<typename T, EnumStdContainer c>
 class cloned_container : public typename __nsanonymous::stdcontainer_traits<cloned_ptr<T>, c>::type
 {
