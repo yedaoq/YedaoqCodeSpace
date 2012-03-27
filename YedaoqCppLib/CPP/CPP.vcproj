@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\basictypes.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CharTree.h"
 				>
 			</File>
@@ -229,15 +233,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\IRefObject.h"
-				>
-			</File>
-			<File
 				RelativePath=".\microtype.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RefObjectImpl.h"
 				>
 			</File>
 			<File
@@ -249,11 +245,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\task.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Tree.h"
 				>
 			</File>
 			<File
 				RelativePath=".\tstring.h"
+				>
+			</File>
+			<File
+				RelativePath=".\tuple.h"
 				>
 			</File>
 			<File

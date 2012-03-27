@@ -14,21 +14,7 @@
 #define interface struct
 #endif
 
-//#define REFCOUNTCLONEABLE
-
-#ifdef REFCOUNTCLONEABLE
-	#define DERIVEFROMIREFOBJECT : public IRefObject
-#else
-	#define DERIVEFROMIREFOBJECT
-#endif
-
-#ifdef REFCOUNTCLONEABLE
-	#define IMPIREFOBJECT(x) CRefObjectImpl<x>
-#else
-	#define IMPIREFOBJECT(x) x
-#endif
-
-interface ICloneable DERIVEFROMIREFOBJECT
+interface ICloneable
 {
 	virtual ICloneable* Clone() const = 0;
 	virtual void		Delete() = 0;
