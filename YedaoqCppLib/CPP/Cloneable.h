@@ -135,7 +135,7 @@ namespace __nsanonymous
 	*/
 #ifdef _VECTOR_
 	template<typename T>
-	struct stdcontainer_traits<Vector>
+	struct stdcontainer_traits<T, Vector>
 	{
 		typedef std::vector<T> type;
 	};
@@ -143,7 +143,7 @@ namespace __nsanonymous
 
 #ifdef _SET_
 	template<typename T>
-	struct stdcontainer_traits<Set>
+	struct stdcontainer_traits<T, Set>
 	{
 		typedef std::set<T> type;
 	};
@@ -151,7 +151,7 @@ namespace __nsanonymous
 
 #ifdef _LIST_
 	template<typename T>
-	struct stdcontainer_traits<List>
+	struct stdcontainer_traits<T, List>
 	{
 		typedef std::list<T> type;
 	};
@@ -166,7 +166,7 @@ namespace __nsanonymous
 	 the object may be copyed multi-times exceed you expectation.
 */
 template<typename T, EnumStdContainer c>
-class cloned_container : public typename __nsanonymous::stdcontainer_traits<cloned_ptr<T>, c>::type
+class cloned_container : public __nsanonymous::stdcontainer_traits<cloned_ptr<T>, c>::type
 {
 public:
 	void push_back(T* obj)

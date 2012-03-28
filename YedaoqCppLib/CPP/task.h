@@ -292,12 +292,10 @@ public:
         : function_(function), params_(params)
     {
 #ifdef BOOST_STATIC_ASSERT
-		BOOST_STATIC_ASSERT(base::internal::ParamsUseScopedRefptrCorrectly<Params>::value);
+		//BOOST_STATIC_ASSERT(base::internal::ParamsUseScopedRefptrCorrectly<Params>::value);
 #endif
 #ifdef COMPILE_ASSERT
-		COMPILE_ASSERT(
-			(base::internal::ParamsUseScopedRefptrCorrectly<Params>::value),
-			badrunnablefunctionparams);
+		//COMPILE_ASSERT((base::internal::ParamsUseScopedRefptrCorrectly<Params>::value), badrunnablefunctionparams);
 #endif
     }
 
@@ -392,7 +390,7 @@ class F, class G, class H>
         function, MakeTuple(a, b, c, d, e, f, g, h));
 }
 
-class CRAII_PreposeTaskRunner
+struct CRAII_PreposeTaskRunner
 {
 	CRAII_PreposeTaskRunner(Task* task)
 	{
@@ -404,7 +402,7 @@ class CRAII_PreposeTaskRunner
 	}
 };
 
-class CRAII_ClosureTaskRunner
+struct CRAII_ClosureTaskRunner
 {
 	CRAII_ClosureTaskRunner(Task* task)
 		: task_(task)
