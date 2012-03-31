@@ -99,6 +99,18 @@ protected:
 public:
 
 	CEnumContainer(base v) : Value_(v) {}
+	CEnumContainer(CEnumContainer const& v) : Value_(v.Value_) {}
+
+	CEnumContainer& operator=(base v) { Value_ = v; return *this; }
+	CEnumContainer& operator=(CEnumContainer const& v) { Value_ = v.Value_; return *this; }
+
+	operator base() const { return Value_; }
+	bool operator==(base v) const { return v == Value_; }
+	bool operator!=(base v) const { return v != Value_; }
+	
+	void operator&=(base v) { Value_ &= v; }
+	void operator|=(base v) { Value_ |= v; }
+	void operator^=(base v) { Value_ ^= v; }
 
 	const tstring				str() const				{return Items_.Format(Value_);}
 	const tstring				desc() const			{return Items_.GetDescription(Value_);}
