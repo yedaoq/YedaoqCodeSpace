@@ -253,7 +253,7 @@ public:
 
 	virtual const T& Current()
 	{		
-		if(beforefirst_ || current_ == last_) throw ERROR_INVALID_ACCESS;
+		BOOST_ASSERT(!beforefirst_ && current_ != last_);
 		return current_ ;
 	}
 

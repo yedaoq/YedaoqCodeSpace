@@ -9,6 +9,7 @@
 /* ___________________________________________________________________________*/
 #pragma once
 #include "boost\assert.hpp"
+#include <vector>
 
 #ifndef interface
 #define interface struct
@@ -136,31 +137,31 @@ enum EnumStdContainer
 
 namespace __nsanonymous
 {
-	template<typename T, EnumStdContainer>
+	template<typename T, EnumStdContainer c>
 	struct stdcontainer_traits
 	{};
 
 	template<typename T>
-	struct stdcontainer_traits<Vector>
+	struct stdcontainer_traits<T, Vector>
 	{
 		typedef std::vector<T> type;
 	};
 
-	template<typename T>
-	struct stdcontainer_traits<Set>
-	{
-		typedef std::set<T> type;
-	};
-
-	template<typename T>
-	struct stdcontainer_traits<List>
-	{
-		typedef std::list<T> type;
-	};
+// 	template<typename T>
+// 	struct stdcontainer_traits<T, Set>
+// 	{
+// 		typedef std::set<T> type;
+// 	};
+// 
+// 	template<typename T>
+// 	struct stdcontainer_traits<T, List>
+// 	{
+// 		typedef std::list<T> type;
+// 	};
 }
 
 template<typename T, EnumStdContainer c>
-class cloned_container : public typename __nsanonymous::stdcontainer_traits<cloned_ptr<T>, c>::type
+class cloned_container : public __nsanonymous::stdcontainer_traits<cloned_ptr<T>, c>::type
 {
 public:
 	void push_back(T* obj)
