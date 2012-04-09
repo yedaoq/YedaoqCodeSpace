@@ -10,6 +10,7 @@
 #pragma once
 
 #include "Cloneable.h"
+#include <exception>
 
 template<typename T>
 interface IEnumerator : public ICloneable
@@ -50,7 +51,6 @@ public:
 	virtual bool		MoveNext()	{ return false; };
 	virtual const T&	Current()	{ throw std::exception(); };
 	virtual void		Reset()		{};
-	//virtual ICloneable* Clone() const{ return new CEmptyEnumerator(*this); }
 
 	virtual bool MoveNext(T& obj)	{ return false; }
 };
@@ -253,7 +253,7 @@ public:
 
 	virtual const T& Current()
 	{		
-		BOOST_ASSERT(!beforefirst_ && current_ != last_);
+		if(beforefirst_ || current_ == last_) throw std::exception("enumerator on invalid position!");
 		return current_ ;
 	}
 

@@ -23,6 +23,10 @@ typedef unsigned int flag_t;
 #define STDENUM(containertype, container, iter) for ( containertype::iterator iter = container.begin(); iter != container.end(); ++iter )
 #define STDCENUM(containertype, container, iter) for ( containertype::const_iterator iter = container.begin(); iter != container.end(); ++iter )
 
+#ifndef UNALIGNED
+#define UNALIGNED
+#endif
+
 template <typename _CountofType, size_t _SizeOfArray>
 char (*__countof_helper(UNALIGNED _CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
 #define count_of(_Array) sizeof(*__countof_helper(_Array))

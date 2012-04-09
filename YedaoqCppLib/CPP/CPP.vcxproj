@@ -91,6 +91,9 @@
     <ClInclude Include="BaseXXCoder.h" />
     <ClInclude Include="CharTree.h" />
     <ClInclude Include="CTiffWriter.h" />
+    <ClInclude Include="EnumDeclaration3x\EnumContainerDeclaration.h" />
+    <ClInclude Include="EnumDeclaration3x\EnumCppMicro.h" />
+    <ClInclude Include="EnumDeclaration3x\EnumHeaderMicro.h" />
     <ClInclude Include="Enumerator.h" />
     <ClInclude Include="FastDelegate.h" />
     <ClInclude Include="FastDelegateBind.h" />

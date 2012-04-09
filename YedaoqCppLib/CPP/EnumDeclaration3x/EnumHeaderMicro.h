@@ -8,9 +8,7 @@
 #endif
 
 #ifndef ENDENUM
-#define ENDENUM };									\
-	operator _Type() const { return (_Type)Value_; } bool operator==(_Type val) const { return Value_ == val;} void operator=(_Type val) { Value_ = val; }	\
-	};
+#define ENDENUM };};
 #endif
 
 #ifndef ENUMITEM0
