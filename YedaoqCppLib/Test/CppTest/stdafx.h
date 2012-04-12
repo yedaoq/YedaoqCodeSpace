@@ -14,4 +14,4 @@
 
 // TODO: 在此处引用程序需要的其他头文件
 
-#define TestCloneMain _tmain
+#define EnumTestMain _tmain
