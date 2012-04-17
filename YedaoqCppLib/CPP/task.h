@@ -16,8 +16,7 @@ namespace base
 class Task
 {
 public:
-    Task();
-    virtual ~Task();
+	virtual ~Task(){};
 
     // Tasks在Run()函数调用完毕自动删除.
     virtual void Run() = 0;
@@ -26,8 +25,7 @@ public:
 class CancelableTask : public Task
 {
 public:
-    CancelableTask();
-    virtual ~CancelableTask();
+	virtual ~CancelableTask(){};
 
     // 不是所有的任务都支持取消操作.
     virtual void Cancel() = 0;

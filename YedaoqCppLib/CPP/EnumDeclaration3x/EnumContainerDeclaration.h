@@ -45,8 +45,8 @@ public:
 		: Flag_(flags)
 	{}
 
-	const Item& operator[](const tchar* valstr) const;
-	const Item& operator[](enumbase val) const;
+	const Item* operator[](const tchar* valstr) const;
+	const Item* operator[](enumbase val) const;
 
 	index_t		Count() const { return Items_.size(); }
 	const Item& ItemAt(index_t idx) const { return Items_[idx]; }
@@ -291,30 +291,30 @@ tstring CEnumItemCollection<enumbase>::GetNormalEnumDescription( enumbase val ) 
 }
 
 template<typename enumbase>
-const tagEnumItem<enumbase>& CEnumItemCollection<enumbase>::operator[]( const tchar* valstr ) const
+const tagEnumItem<enumbase>* CEnumItemCollection<enumbase>::operator[]( const tchar* valstr ) const
 {
 	STDCENUM(ItemVct, Items_, iter)
 	{
 		if(iter->ValStr == valstr)
 		{
-			return *iter;
+			return &(*iter);
 		}
 	}
-	throw std::exception();
+	return 0;
 }
 
 template<typename enumbase>
-const tagEnumItem<enumbase>& CEnumItemCollection<enumbase>::operator[]( enumbase val ) const
+const tagEnumItem<enumbase>* CEnumItemCollection<enumbase>::operator[]( enumbase val ) const
 {
 	STDCENUM(ItemVct, Items_, iter)
 	{
 		if(iter->Val == val)
 		{
-			return *iter;
+			return &(*iter);
 		}
 	}
 
-	throw std::exception();
+	return 0;
 }
 
 
