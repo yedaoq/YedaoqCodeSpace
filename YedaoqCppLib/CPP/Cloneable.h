@@ -171,25 +171,25 @@ class cloned_container : public __nsanonymous::stdcontainer_traits<cloned_ptr<T>
 public:
 	void push_back(T* obj)
 	{
-		push_back(cloned_ptr<T>());
+		__super::push_back(cloned_ptr<T>());
 		*rbegin() = obj;
 	}
 
 	void push_back(T const& obj)
 	{
-		push_back(cloned_ptr<T>());
+		__super::push_back(cloned_ptr<T>());
 		*rbegin() = obj;
 	}
 
 	void push_front(T* obj)
 	{
-		push_front(cloned_ptr<T>());
+		__super::push_front(cloned_ptr<T>());
 		*begin() = obj;
 	}
 
 	void push_front(T const& obj)
 	{
-		push_front(cloned_ptr<T>());
+		__super::push_front(cloned_ptr<T>());
 		*begin() = obj;
 	}
 };
