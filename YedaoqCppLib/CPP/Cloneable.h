@@ -158,6 +158,8 @@ namespace __nsanonymous
 #endif
 }
 
+template<typename T> struct IEnumerator;
+
 /*
   this template extent the std container when them used for keep cloned_ptr objects
   the reason is: 
@@ -168,6 +170,14 @@ namespace __nsanonymous
 template<typename T, EnumStdContainer c>
 class cloned_container : public __nsanonymous::stdcontainer_traits<cloned_ptr<T>, c>::type
 {
+	struct ClonedPtr2RawPtr
+	{
+		T* operator()(const cloned_ptr<T>& ptr) const
+		{
+			return ptr.get();
+		}
+	};
+
 public:
 	void push_back(T* obj)
 	{
@@ -191,5 +201,13 @@ public:
 	{
 		__super::push_front(cloned_ptr<T>());
 		*begin() = obj;
+	}
+
+	IEnumerator<T*>* Enum() const
+	{
+		return new_convert_enumerator<T*>(
+			make_iterator_enumerator(begin(), end()),
+			ClonedPtr2RawPtr()
+		);
 	}
 };
