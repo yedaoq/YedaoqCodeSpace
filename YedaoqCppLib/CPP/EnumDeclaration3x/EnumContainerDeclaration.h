@@ -32,7 +32,7 @@ tagEnumItem<T> make_enumitem(T val, const tchar* str, const tchar* desc)
 	return tagEnumItem<T>(val, str, desc);
 }
 
-template<typename enumbase>
+template<typename enumbase, bool flag>
 class CEnumItemCollection
 {
 public:
@@ -41,10 +41,6 @@ public:
 	typedef IEnumerator<Item>		enumerator;
 
 public:
-	CEnumItemCollection(bool flags)
-		: Flag_(flags)
-	{}
-
 	const Item* operator[](const tchar* valstr) const;
 	const Item* operator[](enumbase val) const;
 
@@ -60,19 +56,7 @@ public:
 	tstring		GetDescription(enumbase val, const tstring& separator = TEXT("|")) const;
 
 protected:
-
-	enumbase	ParseNormalEnum(const tstring& val) const;
-	tstring		FormatNormalEnum(enumbase val) const;
-
-	enumbase	ParseFlagsEnum(const tstring& val, const tstring& separator) const;
-	tstring		FormatFlagsEnum(enumbase val, const tstring& separator) const;
-
-	tstring		GetNormalEnumDescription(enumbase val) const;
-	tstring		GetFlagsEnumDescription(enumbase val, const tstring& separator) const;
-
-protected:
 	ItemVct		Items_;		// list of tagEnumItem
-	bool		Flag_;		// identify that whether the enum is a flags enum or not
 };
 
 template<typename T, typename enumbase = int, bool flag = false>
@@ -82,7 +66,7 @@ public:
 	typedef enumbase			base;
 	typedef	tagEnumItem<base>	item;
 	typedef IEnumerator<item>	enumerator;
-	typedef CEnumItemCollection<base> collection;
+	typedef CEnumItemCollection<base, flag> collection;
 
 protected:
 	struct items_creator 
@@ -113,8 +97,9 @@ public:
 	void operator^=(base v) { Value_ ^= v; }
 
 	const tstring				str() const				{return Items_.Format(Value_);}
-	const tstring				desc() const			{return Items_.GetDescription(Value_);}
+	const tstring				desc(tchar const* separater = TEXT("|")) const {return Items_.GetDescription(Value_, separater);}
 
+	static base					parse(const tstring& val, tchar const* separater = TEXT("|")){ return Items_.Parse(val, separater); }
 	static enumerator*			items()					{return Items_.Enum();}
 	static const item*			get(base			val){return Items_[val];}
 	static const item*			get(const tstring&	val){return Items_[val.c_str()];}
@@ -126,84 +111,14 @@ protected:
 	static items_creator		items_creator_;
 };
 
-template<typename T, typename enumbase /*= int*/, bool flag /*= false*/>
+template<typename T, typename enumbase, bool flag>
 typename CEnumContainer<T,enumbase,flag>::collection CEnumContainer<T,enumbase,flag>::Items_(flag);
 
-template<typename T, typename enumbase /*= int*/, bool flag /*= false*/>
+template<typename T, typename enumbase, bool flag>
 typename CEnumContainer<T,enumbase,flag>::items_creator CEnumContainer<T,enumbase,flag>::items_creator_;
 
 template<typename enumbase>
-tstring CEnumItemCollection<enumbase>::Format( enumbase val, const tstring& separator /*= TEXT("|")*/ ) const
-{
-	if(Flag_)
-	{
-		return FormatFlagsEnum(val, separator);
-	}
-	else
-	{
-		return FormatNormalEnum(val/*, separator*/);
-	}
-}
-
-template<typename enumbase>
-enumbase CEnumItemCollection<enumbase>::Parse( const tstring& val, const tstring& separator /*= TEXT("|")*/ ) const
-{
-	if(Flag_)
-	{
-		return ParseFlagsEnum(val/*, separator*/);
-	}
-	else
-	{
-		return ParseNormalEnum(val/*, separator*/);
-	}
-}
-
-
-template<typename enumbase>
-tstring CEnumItemCollection<enumbase>::GetDescription( enumbase val, const tstring& separator /*= TEXT("|")*/ ) const
-{
-	if(Flag_)
-	{
-		return GetFlagsEnumDescription(val, separator);
-	}
-	else
-	{
-		return GetNormalEnumDescription(val);
-	}
-}
-
-template<typename enumbase>
-tstring CEnumItemCollection<enumbase>::FormatNormalEnum( enumbase val ) const
-{
-	tstring strRet;
-	STDCENUM(ItemVct, Items_, iter)
-	{
-		if(iter->Val == val)
-		{
-			strRet = iter->ValStr;
-			break;
-		}
-	}
-	return strRet;
-}
-
-template<typename enumbase>
-enumbase CEnumItemCollection<enumbase>::ParseNormalEnum( const tstring& val ) const
-{
-	enumbase eRet;
-	STDCENUM(ItemVct, Items_, iter)
-	{
-		if(iter->ValStr == val)
-		{
-			eRet = iter->Val;
-			break;
-		}
-	}
-	return eRet;
-}
-
-template<typename enumbase>
-tstring CEnumItemCollection<enumbase>::FormatFlagsEnum( enumbase val, const tstring& separator /*= TEXT("|")*/ ) const
+tstring CEnumItemCollection<enumbase, true>::Format( enumbase val, const tstring& separator ) const
 {
 	tstring tRet;
 	bool	bFirst = true;
@@ -227,7 +142,22 @@ tstring CEnumItemCollection<enumbase>::FormatFlagsEnum( enumbase val, const tstr
 }
 
 template<typename enumbase>
-enumbase CEnumItemCollection<enumbase>::ParseFlagsEnum( const tstring& val, const tstring& separator /*= TEXT("|")*/ ) const
+tstring CEnumItemCollection<enumbase, false>::Format( enumbase val, const tstring& separator ) const
+{
+	tstring strRet;
+	STDCENUM(ItemVct, Items_, iter)
+	{
+		if(iter->Val == val)
+		{
+			strRet = iter->ValStr;
+			break;
+		}
+	}
+	return strRet;
+}
+
+template<typename enumbase>
+enumbase CEnumItemCollection<enumbase, true>::Parse( const tstring& val, const tstring& separator ) const
 {
 	enumbase			tRet = 0;
 	tstring::size_type	posPre = 0;
@@ -252,7 +182,22 @@ enumbase CEnumItemCollection<enumbase>::ParseFlagsEnum( const tstring& val, cons
 }
 
 template<typename enumbase>
-tstring CEnumItemCollection<enumbase>::GetFlagsEnumDescription( enumbase val, const tstring& separator ) const
+enumbase CEnumItemCollection<enumbase, false>::Parse( const tstring& val, const tstring& separator ) const
+{
+	enumbase eRet;
+	STDCENUM(ItemVct, Items_, iter)
+	{
+		if(iter->ValStr == val)
+		{
+			eRet = iter->Val;
+			break;
+		}
+	}
+	return eRet;
+}
+
+template<typename enumbase>
+tstring CEnumItemCollection<enumbase, true>::GetDescription( enumbase val, const tstring& separator ) const
 {
 	tstring tRet;
 	bool	bFirst = true;
@@ -276,7 +221,7 @@ tstring CEnumItemCollection<enumbase>::GetFlagsEnumDescription( enumbase val, co
 }
 
 template<typename enumbase>
-tstring CEnumItemCollection<enumbase>::GetNormalEnumDescription( enumbase val ) const
+tstring CEnumItemCollection<enumbase, false>::GetDescription( enumbase val ) const
 {
 	tstring strRet;
 	STDCENUM(ItemVct, Items_, iter)
@@ -290,8 +235,8 @@ tstring CEnumItemCollection<enumbase>::GetNormalEnumDescription( enumbase val ) 
 	return strRet;	
 }
 
-template<typename enumbase>
-const tagEnumItem<enumbase>* CEnumItemCollection<enumbase>::operator[]( const tchar* valstr ) const
+template<typename enumbase, bool flag>
+const tagEnumItem<enumbase>* CEnumItemCollection<enumbase, flag>::operator[]( const tchar* valstr ) const
 {
 	STDCENUM(ItemVct, Items_, iter)
 	{
@@ -303,8 +248,8 @@ const tagEnumItem<enumbase>* CEnumItemCollection<enumbase>::operator[]( const tc
 	return 0;
 }
 
-template<typename enumbase>
-const tagEnumItem<enumbase>* CEnumItemCollection<enumbase>::operator[]( enumbase val ) const
+template<typename enumbase, bool flag>
+const tagEnumItem<enumbase>* CEnumItemCollection<enumbase, flag>::operator[]( enumbase val ) const
 {
 	STDCENUM(ItemVct, Items_, iter)
 	{
@@ -318,8 +263,8 @@ const tagEnumItem<enumbase>* CEnumItemCollection<enumbase>::operator[]( enumbase
 }
 
 
-template<typename enumbase>
-IEnumerator<tagEnumItem<enumbase>>* CEnumItemCollection<enumbase>::Enum() const
+template<typename enumbase, bool flag>
+IEnumerator<tagEnumItem<enumbase>>* CEnumItemCollection<enumbase, flag>::Enum() const
 {
 	return new_iterator_enumerator(Items_.begin(), Items_.end());
 }
