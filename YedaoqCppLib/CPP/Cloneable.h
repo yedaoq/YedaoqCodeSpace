@@ -205,7 +205,7 @@ public:
 
 	IEnumerator<T*>* Enum() const
 	{
-		return new_convert_enumerator<T*>(
+		return new_convert_enumerator_ex<T*>(
 			make_iterator_enumerator(begin(), end()),
 			ClonedPtr2RawPtr()
 		);
