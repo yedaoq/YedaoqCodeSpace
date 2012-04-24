@@ -313,6 +313,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="XmlMapping"
+			>
+			<File
+				RelativePath=".\XmlMapping\Common.h"
+				>
+			</File>
+			<File
+				RelativePath=".\XmlMapping\HeaderMicro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\XmlMapping\ParserMicro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\XmlMapping\SerialMicro.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
