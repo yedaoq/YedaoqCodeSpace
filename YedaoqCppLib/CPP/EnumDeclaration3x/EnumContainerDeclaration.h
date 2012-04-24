@@ -8,263 +8,248 @@
 @     
 /* ___________________________________________________________________________*/
 #pragma once
-#include "EnumHeaderMicro.h"
 #include "..\tstring.h"
 #include "..\Enumerator.h"
+#include "..\Singlton.h"
 #include "..\microtype.h"
 #include <vector>
 
-template<typename enumbase>
-struct tagEnumItem
+
+namespace nsYedaoqEnum
 {
-	enumbase	Val;
-	tstring		ValStr;
-	tstring		Description;
-
-	tagEnumItem(enumbase val, const tchar* valstr, const tchar* desc)
-		: Val(val), ValStr(valstr), Description(desc)
-	{}
-};
-
-template<typename T>
-tagEnumItem<T> make_enumitem(T val, const tchar* str, const tchar* desc)
-{
-	return tagEnumItem<T>(val, str, desc);
-}
-
-template<typename enumbase, bool flag>
-class CEnumItemCollection
-{
-public:
-	typedef tagEnumItem<enumbase>	Item;
-	typedef std::vector<Item>		ItemVct;
-	typedef IEnumerator<Item>		enumerator;
-
-public:
-	const Item* operator[](const tchar* valstr) const;
-	const Item* operator[](enumbase val) const;
-
-	index_t		Count() const { return Items_.size(); }
-	const Item& ItemAt(index_t idx) const { return Items_[idx]; }
-	void		Add(const Item& item) { Items_.push_back(item); }
-
-	enumerator*	Enum() const;
-
-	enumbase	Parse(const tstring& val, const tstring& separator = TEXT("|")) const;
-	tstring		Format(enumbase val, const tstring& separator = TEXT("|")) const;
-
-	tstring		GetDescription(enumbase val, const tstring& separator = TEXT("|")) const;
-
-protected:
-	ItemVct		Items_;		// list of tagEnumItem
-};
-
-template<typename T, typename enumbase = int, bool flag = false>
-class CEnumContainer
-{
-public:
-	typedef enumbase			base;
-	typedef	tagEnumItem<base>	item;
-	typedef IEnumerator<item>	enumerator;
-	typedef CEnumItemCollection<base, flag> collection;
-
-protected:
-	struct items_creator 
+	template<typename enumbase>
+	struct tagEnumItem
 	{
-		items_creator()
-		{
-			T::Initialize();
-		}
-		inline void do_nothing() const {}
+		enumbase	Val;
+		tstring		ValStr;
+		tstring		Desc;
+
+		tagEnumItem(enumbase val, const tchar* valstr, const tchar* desc)
+			: Val(val), ValStr(valstr), Desc(desc)
+		{}
+
+		tagEnumItem(){}
 	};
-	
-	CEnumContainer(){ }
 
-public:
-
-	CEnumContainer(base v) : Value_(v) {}
-	CEnumContainer(CEnumContainer const& v) : Value_(v.Value_) {}
-
-	CEnumContainer& operator=(base v) { Value_ = v; return *this; }
-	CEnumContainer& operator=(CEnumContainer const& v) { Value_ = v.Value_; return *this; }
-
-	operator base() const { return Value_; }
-	bool operator==(base v) const { return v == Value_; }
-	bool operator!=(base v) const { return v != Value_; }
-	
-	void operator&=(base v) { Value_ &= v; }
-	void operator|=(base v) { Value_ |= v; }
-	void operator^=(base v) { Value_ ^= v; }
-
-	const tstring				str() const				{return Items_.Format(Value_);}
-	const tstring				desc(tchar const* separater = TEXT("|")) const {return Items_.GetDescription(Value_, separater);}
-
-	static base					parse(const tstring& val, tchar const* separater = TEXT("|")){ return Items_.Parse(val, separater); }
-	static enumerator*			items()					{return Items_.Enum();}
-	static const item*			get(base			val){return Items_[val];}
-	static const item*			get(const tstring&	val){return Items_[val.c_str()];}
-	static const item*			get(const tchar*	val){return Items_[val];}
-
-protected:
-	base						Value_; 
-	static collection			Items_;
-	static items_creator		items_creator_;
-};
-
-template<typename T, typename enumbase, bool flag>
-typename CEnumContainer<T,enumbase,flag>::collection CEnumContainer<T,enumbase,flag>::Items_(flag);
-
-template<typename T, typename enumbase, bool flag>
-typename CEnumContainer<T,enumbase,flag>::items_creator CEnumContainer<T,enumbase,flag>::items_creator_;
-
-template<typename enumbase>
-tstring CEnumItemCollection<enumbase, true>::Format( enumbase val, const tstring& separator ) const
-{
-	tstring tRet;
-	bool	bFirst = true;
-	STDCENUM(ItemVct, Items_, iter)
+	template<typename enumbase>
+	struct enum_collectiontraits
 	{
-		if(iter->Val & val)
+		typedef std::vector<tagEnumItem<enumbase> > collection_t;
+	};
+
+	template<typename T>
+	tagEnumItem<T> make_enumitem(T val, const tchar* str, const tchar* desc)
+	{
+		return tagEnumItem<T>(val, str, desc);
+	};
+
+	template<typename T>
+	tagEnumItem<T> const* find_enumitem(T val, typename enum_collectiontraits<T>::collection_t const& items)
+	{
+		tagEnumItem<T> const* pRet = 0;
+		STDCENUM(typename enum_collectiontraits<T>::collection_t, items, iter)
 		{
-			if(bFirst)
+			if(iter->Val == val)
 			{
-				bFirst = false;
+				pRet = &(*iter);
 			}
-			else
+		}
+		return pRet;
+	}
+
+	template<typename T>
+	tagEnumItem<T> const* find_enumitem(tchar const* str, typename enum_collectiontraits<T>::collection_t const& items)
+	{
+		tagEnumItem<T> const* pRet = 0;
+		STDCENUM(typename enum_collectiontraits<T>::collection_t, items, iter)
+		{
+			if(iter->ValStr == str)
 			{
-				tRet.append(separator);					
+				pRet = &(*iter);
 			}
-			tRet.append(iter->ValStr);
 		}
+		return pRet;
 	}
 
-	return tRet;
-}
-
-template<typename enumbase>
-tstring CEnumItemCollection<enumbase, false>::Format( enumbase val, const tstring& separator ) const
-{
-	tstring strRet;
-	STDCENUM(ItemVct, Items_, iter)
+	template<typename T>
+	tagEnumItem<T> const* find_enumitem(tstring const& str, typename enum_collectiontraits<T>::collection_t const& items)
 	{
-		if(iter->Val == val)
+		tagEnumItem<T> const* pRet = 0;
+		STDCENUM(std::vector<tagEnumItem<T>>, items, iter)
 		{
-			strRet = iter->ValStr;
-			break;
-		}
-	}
-	return strRet;
-}
-
-template<typename enumbase>
-enumbase CEnumItemCollection<enumbase, true>::Parse( const tstring& val, const tstring& separator ) const
-{
-	enumbase			tRet = 0;
-	tstring::size_type	posPre = 0;
-	tstring::size_type	posCur = 0;
-	do 
-	{
-		posCur = val.find(separator, posPre);
-		if(posCur == tstring::npos)	posCur = val.length();				
-		tRet |= (*this)[val.substr(posPre, posCur - posPre)].Val;
-		if(posCur >= val.length())
-		{
-			break;
-		}
-		else
-		{
-			posPre = posCur + separator.size();
-		}
-
-	} while (true);
-
-	return tRet;
-}
-
-template<typename enumbase>
-enumbase CEnumItemCollection<enumbase, false>::Parse( const tstring& val, const tstring& separator ) const
-{
-	enumbase eRet;
-	STDCENUM(ItemVct, Items_, iter)
-	{
-		if(iter->ValStr == val)
-		{
-			eRet = iter->Val;
-			break;
-		}
-	}
-	return eRet;
-}
-
-template<typename enumbase>
-tstring CEnumItemCollection<enumbase, true>::GetDescription( enumbase val, const tstring& separator ) const
-{
-	tstring tRet;
-	bool	bFirst = true;
-	STDCENUM(ItemVct, Items_, iter)
-	{
-		if(iter->Val & val)
-		{
-			if(bFirst)
+			if(iter->ValStr == str)
 			{
-				bFirst = false;
+				pRet = &(*iter);
 			}
-			else
+		}
+		return pRet;
+	}
+
+	template<typename enumbase, bool Flag>
+	struct enum_flagtraits{};
+
+	template<typename enumbase>
+	struct enum_flagtraits<enumbase, true>
+	{
+		typedef tstring str_t;
+
+		static str_t Format(enumbase v, typename enum_collectiontraits<enumbase>::collection_t const& items, tchar const* separater = TEXT(" | "))
+		{
+			tstring tRet;
+			bool	bFirst = true;
+			STDCENUM(enum_collectiontraits<enumbase>::collection_t, items, iter)
 			{
-				tRet.append(separator);					
+				if(iter->Val & v)
+				{
+					if(bFirst)
+					{
+						bFirst = false;
+					}
+					else
+					{
+						tRet.append(separater);					
+					}
+					tRet.append(iter->ValStr);
+				}
 			}
-			tRet.append(iter->Description);
+
+			return tRet;
 		}
-	}
 
-	return tRet;
-}
-
-template<typename enumbase>
-tstring CEnumItemCollection<enumbase, false>::GetDescription( enumbase val ) const
-{
-	tstring strRet;
-	STDCENUM(ItemVct, Items_, iter)
-	{
-		if(iter->Val == val)
+		static str_t GetDesc(enumbase v, typename enum_collectiontraits<enumbase>::collection_t const& items, tchar const* separater = TEXT(" | "))
 		{
-			strRet = iter->Description;
-			break;
-		}
-	}
-	return strRet;	
-}
+			tstring tRet;
+			bool	bFirst = true;
+			STDCENUM(enum_collectiontraits<enumbase>::collection_t, items, iter)
+			{
+				if(iter->Val & v)
+				{
+					if(bFirst)
+					{
+						bFirst = false;
+					}
+					else
+					{
+						tRet.append(separater);					
+					}
+					tRet.append(iter->Desc);
+				}
+			}
 
-template<typename enumbase, bool flag>
-const tagEnumItem<enumbase>* CEnumItemCollection<enumbase, flag>::operator[]( const tchar* valstr ) const
-{
-	STDCENUM(ItemVct, Items_, iter)
-	{
-		if(iter->ValStr == valstr)
+			return tRet;
+		}
+
+		static enumbase Parse( const tstring& valstr, typename enum_collectiontraits<enumbase>::collection_t const& items, tstring const& separater = TEXT("|") )
 		{
-			return &(*iter);
-		}
-	}
-	return 0;
-}
+			enumbase			tRet = 0;
+			tstring::size_type	posPre = 0;
+			tstring::size_type	posCur = 0;
+			do 
+			{
+				posCur = valstr.find(separater, posPre);
+				if(posCur == tstring::npos)	posCur = valstr.length();
 
-template<typename enumbase, bool flag>
-const tagEnumItem<enumbase>* CEnumItemCollection<enumbase, flag>::operator[]( enumbase val ) const
-{
-	STDCENUM(ItemVct, Items_, iter)
+				tagEnumItem<enumbase>* item = find_enumitem(valstr.substr(posPre, posCur - posPre), items);
+				if(item)
+				{
+					tRet |= item->Val;
+				}
+
+				if(posCur >= valstr.length())
+				{
+					break;
+				}
+				else
+				{
+					posPre = posCur + separater.length();
+				}
+
+			} while (true);
+
+			return tRet;
+		}
+	};
+
+	template<typename enumbase>
+	struct enum_flagtraits<enumbase, false>
 	{
-		if(iter->Val == val)
+		typedef tstring const& str_t;
+
+		static str_t Format(enumbase v, typename enum_collectiontraits<enumbase>::collection_t const& items, tchar const* separater = 0)
 		{
-			return &(*iter);
+			tagEnumItem<enumbase> const* item = find_enumitem(v, items);
+			return item ? item->ValStr : CSingleton<const tstring>::GetInstance();
 		}
-	}
 
-	return 0;
-}
+		static str_t GetDesc(enumbase v, typename enum_collectiontraits<enumbase>::collection_t const& items, tchar const* separater = 0)
+		{
+			tagEnumItem<enumbase> const* item = find_enumitem(v, items);
+			return item ? item->Desc : CSingleton<const tstring>::GetInstance();
+		}
 
+		static enumbase Parse(const tstring& valstr, typename enum_collectiontraits<enumbase>::collection_t const& items, tchar const* separater = 0 )
+		{
+			tagEnumItem<enumbase> const* item = find_enumitem(valstr, items);
+			return item ? item->Val : 0;
+		}
+	};
 
-template<typename enumbase, bool flag>
-IEnumerator<tagEnumItem<enumbase>>* CEnumItemCollection<enumbase, flag>::Enum() const
-{
-	return new_iterator_enumerator(Items_.begin(), Items_.end());
+	template<typename T, typename enumbase = int, bool flag = false>
+	class CEnumContainer
+	{
+	public:
+		typedef enumbase			base;
+		typedef	tagEnumItem<base>	item;
+		typedef IEnumerator<item>	enumerator;
+		typedef typename enum_collectiontraits<base>::collection_t collection;
+
+	protected:
+		struct items_creator 
+		{
+			items_creator()
+			{
+				T::Initialize();
+			}
+			inline void do_nothing() const {}
+		};
+
+		CEnumContainer(){ }
+
+	public:
+
+		CEnumContainer(base v) : Value_(v) {}
+		CEnumContainer(CEnumContainer const& v) : Value_(v.Value_) {}
+
+		CEnumContainer& operator=(base v) { Value_ = v; return *this; }
+		CEnumContainer& operator=(CEnumContainer const& v) { Value_ = v.Value_; return *this; }
+
+		operator base() const { return Value_; }
+		bool operator==(base v) const { return v == Value_; }
+		bool operator!=(base v) const { return v != Value_; }
+
+		void operator&=(base v) { Value_ &= v; }
+		void operator|=(base v) { Value_ |= v; }
+		void operator^=(base v) { Value_ ^= v; }
+
+		typename enum_flagtraits<enumbase, flag>::str_t	str(tchar const* separater = TEXT("|")) const {return enum_flagtraits<enumbase, flag>::Format(Value_, Items_, separater);}
+		typename enum_flagtraits<enumbase, flag>::str_t	desc(tchar const* separater = TEXT("|")) const {return enum_flagtraits<enumbase, flag>::GetDesc(Value_, Items_, separater);}
+
+		static base					parse(const tstring& val, tchar const* separater = TEXT("|")){ return enum_flagtraits<enumbase, flag>::Parse(val, Items_, separater); }
+		
+		static collection&			items()					{return Items_;}
+		static const item*			get(base			val){return find_enumitem<base>(val, Items_);}
+		static const item*			get(const tstring&	val){return find_enumitem<base>(val, Items_);}
+		static const item*			get(const tchar*	val){return find_enumitem<base>(val, Items_);}
+
+	protected:
+		base						Value_; 
+		static collection			Items_;
+		static items_creator		items_creator_;
+	};
+
+	template<typename T, typename enumbase, bool flag>
+	typename CEnumContainer<T,enumbase,flag>::collection CEnumContainer<T,enumbase,flag>::Items_(0);
+
+	template<typename T, typename enumbase, bool flag>
+	typename CEnumContainer<T,enumbase,flag>::items_creator CEnumContainer<T,enumbase,flag>::items_creator_;
 }

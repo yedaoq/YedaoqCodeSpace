@@ -1,7 +1,7 @@
 #include "EnumContainerDeclaration.h"
 
 #ifndef BEGINENUM
-#define BEGINENUM(name,base,flag) struct Enum##name : public CEnumContainer<Enum##name, base, flag>{	\
+#define BEGINENUM(name,base,flag) struct Enum##name : public nsYedaoqEnum::CEnumContainer<Enum##name, base, flag>{	\
 	Enum##name(base v = 0) : CEnumContainer(v){}	\
 	static void Initialize();						\
 	enum _Type : base {	

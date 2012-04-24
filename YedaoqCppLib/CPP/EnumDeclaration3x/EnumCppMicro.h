@@ -10,9 +10,9 @@
 
 #define BEGINENUM(name,base,flag) void Enum##name::Initialize(){ items_creator_.do_nothing();	base idx = 0;
 
-#define ENUMITEM0(name)				Items_.Add(make_enumitem(idx++, TEXT(#name), TEXT("")));
-#define ENUMITEM1(name, desc)		Items_.Add(make_enumitem(idx++, TEXT(#name), TEXT(#desc)));
-#define ENUMITEM2(name, val)		idx = val; Items_.Add(make_enumitem(idx++, TEXT(#name), TEXT("")));
-#define ENUMITEM3(name, val, desc)	idx = val; Items_.Add(make_enumitem(idx++, TEXT(#name), TEXT(#desc)));
+#define ENUMITEM0(name)				Items_.push_back(nsYedaoqEnum::make_enumitem(idx++, TEXT(#name), TEXT("")));
+#define ENUMITEM1(name, desc)		Items_.push_back(nsYedaoqEnum::make_enumitem(idx++, TEXT(#name), TEXT(#desc)));
+#define ENUMITEM2(name, val)		idx = val; Items_.push_back(nsYedaoqEnum::make_enumitem(idx++, TEXT(#name), TEXT("")));
+#define ENUMITEM3(name, val, desc)	idx = val; Items_.push_back(nsYedaoqEnum::make_enumitem(idx++, TEXT(#name), TEXT(#desc)));
 
 #define ENDENUM						}
