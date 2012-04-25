@@ -12,6 +12,10 @@ namespace nsYedaoqXmlMapping
 	typedef rapidxml::xml_document<tchar>	xdoc_t;
 
 	template<typename T>
+	struct CXsList : public std::vector<T>
+	{};
+
+	template<typename T>
 	struct CXmlValueSerializer
 	{
 		tstring Serialize(const T& val) const
@@ -42,30 +46,35 @@ namespace nsYedaoqXmlMapping
 	template<>
 	struct CXmlValueSerializer<tchar*>
 	{
-		tstring Serialize(tchar const* val) const
-		{
-			return val;
-		}
-
-		tchar const* Parse(tstring& val) const
-		{
-			return val.c_str();
-		}
+		// your should not use raw char ptr to storage a xml string
 	};
 
-	template<>
-	struct CXmlValueSerializer<tchar*>
+	template<typename T>
+	struct functor_XmlValue2Str
 	{
-		tstring Serialize(tchar const* val) const
+		tstring operator()(const T& val) const
 		{
-			return val;
+			CXmlValueSerializer<T>().Serialize(val);
+		}
+	};
+
+	template<typename T>
+	struct CXmlValueSerializer<CXsList<T> >
+	{
+		tstring Serialize(const CXsList& val) const
+		{
+			return StringSplice(make_convert_enumerator(
+				make_iterator_enumerator(val.begin(), val.end())
+				,functor_XmlValue2Str<T>())
+				, TEXT(" "));
 		}
 
 		tchar const* Parse(tstring& val) const
 		{
-			return val.c_str();
+			return boost::split(*this, val, std::isspace);
 		}
 	};
+
 
 	template<typename T>
 	struct CXmlFile
@@ -115,4 +124,6 @@ namespace nsYedaoqXmlMapping
 
 		return true;
 	}
+
+
 }

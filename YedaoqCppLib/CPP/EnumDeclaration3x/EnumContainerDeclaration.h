@@ -149,11 +149,14 @@ namespace nsYedaoqEnum
 				posCur = valstr.find(separater, posPre);
 				if(posCur == tstring::npos)	posCur = valstr.length();
 
-				tagEnumItem<enumbase>* item = find_enumitem(valstr.substr(posPre, posCur - posPre), items);
-				if(item)
+				if(posCur != posPre)
 				{
-					tRet |= item->Val;
-				}
+					tagEnumItem<enumbase>* item = find_enumitem(valstr.substr(posPre, posCur - posPre), items);
+					if(item)
+					{
+						tRet |= item->Val;
+					}
+				}				
 
 				if(posCur >= valstr.length())
 				{

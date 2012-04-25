@@ -30,3 +30,6 @@ typedef unsigned int flag_t;
 template <typename _CountofType, size_t _SizeOfArray>
 char (*__countof_helper(UNALIGNED _CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
 #define count_of(_Array) sizeof(*__countof_helper(_Array))
+
+#define RETatFAIL(expr) if(!(expr)) return;
+#define RETatFAILr(expr, ret) if(!(expr)) return ret;
