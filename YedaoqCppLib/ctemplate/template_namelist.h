@@ -40,13 +40,18 @@
 #define TEMPLATE_TEMPLATE_NAMELIST_H_
 
 #include <time.h>    // for time_t
-#include <tr1/unordered_set>
+#include <hash_set>
 #include <string>
 #include <vector>
 #include <ctemplate/template_enums.h>    // for Strip
 #include <ctemplate/template_string.h>   // for StringHash
 
-
+// NOTE: if you are statically linking the template library into your binary
+// (rather than using the template .dll), set '/D CTEMPLATE_DLL_DECL='
+// as a compiler flag in your project file to turn off the dllimports.
+#ifndef CTEMPLATE_DLL_DECL
+# define CTEMPLATE_DLL_DECL  __declspec(dllimport)
+#endif
 
 namespace ctemplate {
 
@@ -64,7 +69,7 @@ namespace ctemplate {
 // TODO (we wish): Make this macro produce the #include for the auto-generated
 // header files, when and if the macro pre-processor supports that
 #define RegisterTemplateFilename(var, name)         \
-  const char* const var = ::ctemplate::TemplateNamelist::RegisterTemplate(name);
+  const char* const var = ctemplate::TemplateNamelist::RegisterTemplate(name);
 
 // Class: TemplateNamelist
 //   Each time this class is instantiated, the name passed to
@@ -75,14 +80,14 @@ namespace ctemplate {
 //   sanity-checking code to make sure all the templates used by a program
 //   exist and are syntactically correct.
 
-class  TemplateNamelist {
+class CTEMPLATE_DLL_DECL TemplateNamelist {
   friend class TemporaryRegisterTemplate;
  public:
   // These types should be taken as 'generic' containers.  The only
   // thing you should do with them is call size() and/or iterate
   // between begin() and end(), and the only operations we promise
   // the iterators will support are operator* and operator++.
-  typedef std::tr1::unordered_set<std::string, StringHash> NameListType;
+  typedef stdext::hash_set<std::string, StringHash> NameListType;
   typedef std::vector<std::string> MissingListType;
   typedef std::vector<std::string> SyntaxListType;
 
