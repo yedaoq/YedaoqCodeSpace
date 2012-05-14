@@ -1,5 +1,5 @@
 #include "DMLNotifier.h"
-#include <Module\DBModule.h>
+#include "..\DBModule.h"
 
 using namespace NSDBModule;
 
