@@ -154,24 +154,16 @@ protected:
 			return 0;
 		}
 
-		CPoint ptScroll;
-		m_grid.GetScrollOffset(ptScroll);
-		pt += ptScroll;
-
-		if(pt.y - ptScroll.y<GetHeaderHeight()) {
-			long x = 0;
-			if(ShowLineNumbers()) x += COL_NUMWIDTH;
-			for(long i=0;i<GetColumnCount();i++) {
-				if(m_grid.m_columns[i]->OnEdge(x,pt.x)) {
-					SetCursor(LoadCursor(NULL,IDC_SIZEWE));
-					return 0;
-				}
-				x += m_grid.m_columns[i]->m_nWidth;
-			}
+		// show resize arrow when cursor at the edge of grid header cell
+		SetCursor(LoadCursor(NULL, (TestMouseInColumnResizeArea(pt) != -1) ? IDC_SIZEWE : IDC_ARROW));
+		if(TestMouseInColumnResizeArea(pt) != -1)
+		{
+			SetCursor(LoadCursor(NULL,IDC_SIZEWE));
 		}
-
-		SetCursor(LoadCursor(NULL,IDC_ARROW));
-
+		else
+		{
+			SetCursor(LoadCursor(NULL,IDC_ARROW));
+		}
 		return 0;
 	}
 
@@ -340,6 +332,26 @@ protected:
 		if(ptScroll.y + rcClient.Height() >= sz.cy && sz.cy>rcClient.Height())
 			ptScroll.y = sz.cy - rcClient.Height();
 		m_grid.SetScrollOffset(ptScroll);
+	}
+
+	long TestMouseInColumnResizeArea(const CPoint& pt)
+	{
+		CPoint ptWithScroll;
+		m_grid.GetScrollOffset(ptWithScroll);
+		ptWithScroll.x += pt.x;	// title cell is fixed, so do not need to cal offset
+
+		if(ptWithScroll.y < GetHeaderHeight()) 
+		{
+			long x = -2;
+			if(ShowLineNumbers()) x += COL_NUMWIDTH;
+			for(long i=0; x < ptWithScroll.x && i < GetColumnCount(); ++i) 
+			{
+				x += m_grid.m_columns[i]->m_nWidth;
+				if(ptWithScroll.x - x < 4) 
+					return i;				
+			}
+		}
+		return -1;
 	}
 
 	long GetRowHeight() const {
@@ -1849,13 +1861,24 @@ protected:
 			return true;
 		}
 
-		void SizeControls(DWORD dwSWPFlags=0) {
+		void SizeControls(DWORD dwSWPFlags, int row, int col)
+		{
 			dwSWPFlags |= SWP_NOZORDER;
-			long count = m_columns.GetSize();
-			for(long i=0;i<count;i++) {
-				CRect rc;
-				GetCellRect(rc,m_nSelectedRow,i,true);
-				m_columns[i]->SetWindowPos(rc,dwSWPFlags);
+			CRect rc;
+			GetCellRect(rc,row,col,true);
+			m_columns[col]->SetWindowPos(rc,dwSWPFlags);
+		}
+
+		void SizeControls(DWORD dwSWPFlags=0) 
+		{		
+			if(m_nSelectedCol != -1)
+			{
+				long count = m_columns.GetSize();
+				for(long i=0;i<count;i++) SizeControls(dwSWPFlags, m_nSelectedRow, i);
+			}
+			else
+			{
+				SizeControls(dwSWPFlags, m_nSelectedRow, m_nSelectedCol);
 			}
 		}
 
@@ -1865,10 +1888,8 @@ protected:
 			if(row<0) row = m_nSelectedRow;
 			if(row < 0 || col < 0) return;
 
-			if(m_pListener) m_pListener->OnCellActivate(m_wrapper.GetWindowLong(GWL_ID),row, col);
-			if(m_dwStyle & GS_EX_READONLY) return;
+			SizeControls(SWP_SHOWWINDOW, row, col);
 
-			SizeControls(SWP_SHOWWINDOW);
 			for(long i=0;i<m_wrapper.GetColumnCount();i++) {
 				CGridCtrl::CColumn* pCol = m_columns[i];
 				if(!pCol->GetReadOnly()) {
@@ -1881,8 +1902,7 @@ protected:
 			}
 
 			m_bEditing = true;
-			if(m_pListener)
-				m_pListener->OnEdit(m_wrapper.GetWindowLong(GWL_ID),m_nSelectedRow);
+			if(m_pListener)	m_pListener->OnEdit(m_wrapper.GetWindowLong(GWL_ID),m_nSelectedRow);
 		}
 
 		void EditRow(long row=-1,long col=-1) {
