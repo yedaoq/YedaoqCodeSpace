@@ -31,38 +31,38 @@ public:
 	static bool ToGreaterEqual(int val)		{ return val >= 0; }
 };
 
-static enum EnumBoolComparison : unsigned int
-{ 
-	BOOLCMP_LESS = (unsigned int)&CINTCompareResultToBool::ToLessEqual, 
-	BOOLCMP_GREATER = (unsigned int)&CINTCompareResultToBool::ToGreaterThan, 
-	BOOLCMP_EQUAL = (unsigned int)&CINTCompareResultToBool::ToEqual, 
-	BOOLCMP_UNEQUAL = (unsigned int)&CINTCompareResultToBool::ToUnequal, 
-	BOOLCMP_LESSEQUAL = (unsigned int)&CINTCompareResultToBool::ToLessEqual, 
-	BOOLCMP_GREATEREQUAL = (unsigned int)&CINTCompareResultToBool::ToGreaterEqual, 
-};
+// static enum EnumBoolComparison : unsigned int
+// { 
+// 	BOOLCMP_LESS = (unsigned int)&CINTCompareResultToBool::ToLessEqual, 
+// 	BOOLCMP_GREATER = (unsigned int)&CINTCompareResultToBool::ToGreaterThan, 
+// 	BOOLCMP_EQUAL = (unsigned int)&CINTCompareResultToBool::ToEqual, 
+// 	BOOLCMP_UNEQUAL = (unsigned int)&CINTCompareResultToBool::ToUnequal, 
+// 	BOOLCMP_LESSEQUAL = (unsigned int)&CINTCompareResultToBool::ToLessEqual, 
+// 	BOOLCMP_GREATEREQUAL = (unsigned int)&CINTCompareResultToBool::ToGreaterEqual, 
+// };
 
-template<typename T, EnumBoolComparison ADAPTER>
-class CBoolComparisonAdapter4Int : public IBoolComparison<T>
-{
-public:
-	virtual bool operator()(const T& lhs, const T&rhs) const 
-	{ 
-		return static_cast<CINTCompareResultToBool::ConvertBoolFromInt>(ADAPTER)(Comparison_(lhs, rhs)); 
-	}
-
-	CBoolComparisonAdapter4Int(IComparison& cmp)
-		: Comparison_(cmp)
-	{}
-
-	CBoolComparisonAdapter4Int(const CBoolComparisonAdapter4Int& other)
-		: Comparison_(other.Comparison_)
-	{}
-
-protected:
-	CBoolComparisonAdapter4Int& operator=(const CBoolComparisonAdapter4Int&);
-
-	IComparison& Comparison_;
-};
+// template<typename T, EnumBoolComparison ADAPTER>
+// class CBoolComparisonAdapter4Int : public IBoolComparison<T>
+// {
+// public:
+// 	virtual bool operator()(const T& lhs, const T&rhs) const 
+// 	{ 
+// 		return static_cast<CINTCompareResultToBool::ConvertBoolFromInt>(ADAPTER)(Comparison_(lhs, rhs)); 
+// 	}
+// 
+// 	CBoolComparisonAdapter4Int(IComparison& cmp)
+// 		: Comparison_(cmp)
+// 	{}
+// 
+// 	CBoolComparisonAdapter4Int(const CBoolComparisonAdapter4Int& other)
+// 		: Comparison_(other.Comparison_)
+// 	{}
+// 
+// protected:
+// 	CBoolComparisonAdapter4Int& operator=(const CBoolComparisonAdapter4Int&);
+// 
+// 	IComparison& Comparison_;
+// };
 
 //template<typename T>
 //class CComparisonToLessThen : public IBoolComparison<T>
