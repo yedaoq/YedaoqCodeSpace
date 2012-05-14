@@ -55,161 +55,161 @@ namespace WTL
 /////////////////////////////////////////////////////////////////////////////
 // CIcon
 
-template< bool t_bManaged >
-class CIconT
-{
-public:
-   HICON m_hIcon;
-
-   // Constructor/destructor/operators
-
-   CIconT(HICON hIcon = NULL) : m_hIcon(hIcon)
-   { }
-
-   ~CIconT()
-   {
-      if( t_bManaged && m_hIcon != NULL ) ::DestroyIcon(m_hIcon);
-   }
-
-   CIconT<t_bManaged>& operator=(HICON hIcon)
-   {
-      m_hIcon = hIcon;
-      return *this;
-   }
-
-   void Attach(HICON hIcon)
-   {
-      if( t_bManaged && m_hIcon != NULL ) ::DestroyIcon(m_hIcon);
-      m_hIcon = hIcon;
-   }  
-   HICON Detach()
-   {
-      HICON hIcon = m_hIcon;
-      m_hIcon = NULL;
-      return hIcon;
-   }
-
-   operator HICON() const { return m_hIcon; }
-
-   bool IsNull() const { return m_hIcon == NULL; }
-
-   // Create methods
-
-   HICON LoadIcon(_U_STRINGorID icon)
-   {
-      ATLASSERT(m_hIcon==NULL);
-      m_hIcon = ::LoadIcon(_Module.GetResourceInstance(), icon.m_lpstr);
-      return m_hIcon;
-   }
-   HICON LoadIcon(_U_STRINGorID icon, int cxDesired, int cyDesired, UINT fuLoad = 0)
-   {
-      ATLASSERT(m_hIcon==NULL);
-      m_hIcon = (HICON) ::LoadImage(_Module.GetResourceInstance(), icon.m_lpstr, IMAGE_ICON, cxDesired, cyDesired, fuLoad);
-      return m_hIcon;
-   }
-   HICON LoadOEMIcon(UINT nIDIcon) // for IDI_ types
-   {
-      ATLASSERT(m_hIcon==NULL);
-      m_hIcon = ::LoadIcon(NULL, MAKEINTRESOURCE(nIDIcon));
-      return m_hIcon;
-   }
-   HICON CreateIcon(int nWidth, int nHeight, BYTE cPlanes, BYTE cBitsPixel, CONST BYTE* lpbANDButs, CONST BYTE *lpbXORbits)
-   {
-      ATLASSERT(m_hIcon==NULL);
-      ATLASSERT(lpbANDbits);
-      ATLASSERT(lpbXORbits);
-      m_hIcon = ::CreateIcon(_Module.GetResourceInstance(), nWidth, nHeight, cPlanes, cBitsPixel, lpbANDbits, lpbXORbits);
-      return m_hIcon;
-   }
-   HICON CreateIconFromResource(PBYTE pBits, DWORD dwResSize, DWORD dwVersion = 0x00030000)
-   {
-      ATLASSERT(m_hIcon==NULL);
-      ATLASSERT(pBits);
-      m_hIcon = ::CreateIconFromResource(pBits, dwResSize, TRUE, dwVersion);
-      return m_hIcon;
-   }
-   HICON CreateIconFromResourceEx(PBYTE pbBits, DWORD cbBits, DWORD dwVersion = 0x00030000, int cxDesired = 0, int cyDesired = 0, UINT uFlags = LR_DEFAULTCOLOR)
-   {
-      ATLASSERT(m_hIcon==NULL);
-      ATLASSERT(pbBits);
-      ATLASSERT(cbBits>0);
-      m_hIcon = ::CreateIconFromResourceEx(pbBits, cbBits, TRUE, dwVersion, cxDesired,  cyDesired, uFlags);
-      return m_hIcon;
-   }
-   HICON CreateIconIndirect(PICONINFO pIconInfo)
-   {
-      ATLASSERT(m_hIcon==NULL);
-      ATLASSERT(pIconInfo);
-      m_hIcon = ::CreateIconIndirect(pIconInfo);
-      return m_hIcon;
-   }
-   HICON ExtractIcon(LPCTSTR lpszExeFileName, UINT nIconIndex)
-   {
-      ATLASSERT(m_hIcon==NULL);
-      ATLASSERT(!::IsBadStringPtr(lpszExeFileName,-1));
-      m_hIcon = ::ExtractIcon(_Module.GetModuleInstance(), lpszExeFileName, nIconIndex);
-      return m_hIcon;
-   }
-   HICON ExtractAssociatedIcon(HINSTANCE hInst, LPCTSTR lpIconPath, LPWORD lpiIcon)
-   {
-      ATLASSERT(m_hIcon==NULL);
-      ATLASSERT(!::IsBadStringPtr(lpIconPath,-1));
-      ATLASSERT(lpiIcon);
-      m_hIcon = ::ExtractAssociatedIcon(hInst, lpIconPath, lpiIcon);
-      return m_hIcon;
-   }
-
-   // Operations
-
-   BOOL DestroyIcon()
-   {
-      ATLASSERT(m_hIcon!=NULL);
-      BOOL bRet = ::DestroyIcon(m_hIcon);
-      if( bRet ) m_hIcon = NULL;
-      return bRet;
-   }
-   HICON CopyIcon()
-   {
-      ATLASSERT(m_hIcon!=NULL);
-      return ::CopyIcon(m_hIcon);
-   }
-   HICON DuplicateIcon()
-   {
-      ATLASSERT(m_hIcon!=NULL);
-      return ::DuplicateIcon(NULL, m_hIcon);
-   }
-
-   BOOL DrawIcon(HDC hDC, int x, int y)
-   {
-      ATLASSERT(m_hIcon!=NULL);
-      return ::DrawIcon(hDC, x, y, m_hIcon);
-   }
-   BOOL DrawIcon(HDC hDC, POINT pt)
-   {
-      ATLASSERT(m_hIcon!=NULL);
-      return ::DrawIcon(hDC, pt.x, pt.y, m_hIcon);
-   }
-   BOOL DrawIconEx(HDC hDC, int x, int y, int cxWidth, int cyWidth, UINT uStepIfAniCur = 0, HBRUSH hbrFlickerFreeDraw = NULL, UINT uFlags = DI_NORMAL)
-   {
-      ATLASSERT(m_hIcon!=NULL);
-      return ::DrawIconEx(hDC, x, y, m_hIcon, cxWidth, cyWidth, uStepIfAniCur, hbrFlickerFreeDraw, uFlags);
-   }
-   BOOL DrawIconEx(HDC hDC, POINT pt, SIZE size, UINT uStepIfAniCur = 0, HBRUSH hbrFlickerFreeDraw = NULL, UINT uFlags = DI_NORMAL)
-   {
-      ATLASSERT(m_hIcon!=NULL);
-      return ::DrawIconEx(hDC, pt.x, pt.y, m_hIcon, size.cx, size.cy, uStepIfAniCur, hbrFlickerFreeDraw, uFlags);
-   }
-
-   BOOL GetIconInfo(PICONINFO pIconInfo)
-   {
-      ATLASSERT(m_hIcon!=NULL);
-      ATLASSERT(pIconInfo);
-      return ::GetIconInfo(m_hIcon, pIconInfo);
-   }
-};
-
-typedef CIconT<true> CIcon;
-typedef CIconT<false> CIconHandle;
+// template< bool t_bManaged >
+// class CIconT
+// {
+// public:
+//    HICON m_hIcon;
+// 
+//    // Constructor/destructor/operators
+// 
+//    CIconT(HICON hIcon = NULL) : m_hIcon(hIcon)
+//    { }
+// 
+//    ~CIconT()
+//    {
+//       if( t_bManaged && m_hIcon != NULL ) ::DestroyIcon(m_hIcon);
+//    }
+// 
+//    CIconT<t_bManaged>& operator=(HICON hIcon)
+//    {
+//       m_hIcon = hIcon;
+//       return *this;
+//    }
+// 
+//    void Attach(HICON hIcon)
+//    {
+//       if( t_bManaged && m_hIcon != NULL ) ::DestroyIcon(m_hIcon);
+//       m_hIcon = hIcon;
+//    }  
+//    HICON Detach()
+//    {
+//       HICON hIcon = m_hIcon;
+//       m_hIcon = NULL;
+//       return hIcon;
+//    }
+// 
+//    operator HICON() const { return m_hIcon; }
+// 
+//    bool IsNull() const { return m_hIcon == NULL; }
+// 
+//    // Create methods
+// 
+//    HICON LoadIcon(_U_STRINGorID icon)
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       m_hIcon = ::LoadIcon(_Module.GetResourceInstance(), icon.m_lpstr);
+//       return m_hIcon;
+//    }
+//    HICON LoadIcon(_U_STRINGorID icon, int cxDesired, int cyDesired, UINT fuLoad = 0)
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       m_hIcon = (HICON) ::LoadImage(_Module.GetResourceInstance(), icon.m_lpstr, IMAGE_ICON, cxDesired, cyDesired, fuLoad);
+//       return m_hIcon;
+//    }
+//    HICON LoadOEMIcon(UINT nIDIcon) // for IDI_ types
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       m_hIcon = ::LoadIcon(NULL, MAKEINTRESOURCE(nIDIcon));
+//       return m_hIcon;
+//    }
+//    HICON CreateIcon(int nWidth, int nHeight, BYTE cPlanes, BYTE cBitsPixel, CONST BYTE* lpbANDButs, CONST BYTE *lpbXORbits)
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       ATLASSERT(lpbANDbits);
+//       ATLASSERT(lpbXORbits);
+//       m_hIcon = ::CreateIcon(_Module.GetResourceInstance(), nWidth, nHeight, cPlanes, cBitsPixel, lpbANDbits, lpbXORbits);
+//       return m_hIcon;
+//    }
+//    HICON CreateIconFromResource(PBYTE pBits, DWORD dwResSize, DWORD dwVersion = 0x00030000)
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       ATLASSERT(pBits);
+//       m_hIcon = ::CreateIconFromResource(pBits, dwResSize, TRUE, dwVersion);
+//       return m_hIcon;
+//    }
+//    HICON CreateIconFromResourceEx(PBYTE pbBits, DWORD cbBits, DWORD dwVersion = 0x00030000, int cxDesired = 0, int cyDesired = 0, UINT uFlags = LR_DEFAULTCOLOR)
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       ATLASSERT(pbBits);
+//       ATLASSERT(cbBits>0);
+//       m_hIcon = ::CreateIconFromResourceEx(pbBits, cbBits, TRUE, dwVersion, cxDesired,  cyDesired, uFlags);
+//       return m_hIcon;
+//    }
+//    HICON CreateIconIndirect(PICONINFO pIconInfo)
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       ATLASSERT(pIconInfo);
+//       m_hIcon = ::CreateIconIndirect(pIconInfo);
+//       return m_hIcon;
+//    }
+//    HICON ExtractIcon(LPCTSTR lpszExeFileName, UINT nIconIndex)
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       ATLASSERT(!::IsBadStringPtr(lpszExeFileName,-1));
+//       m_hIcon = ::ExtractIcon(_Module.GetModuleInstance(), lpszExeFileName, nIconIndex);
+//       return m_hIcon;
+//    }
+//    HICON ExtractAssociatedIcon(HINSTANCE hInst, LPCTSTR lpIconPath, LPWORD lpiIcon)
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       ATLASSERT(!::IsBadStringPtr(lpIconPath,-1));
+//       ATLASSERT(lpiIcon);
+//       m_hIcon = ::ExtractAssociatedIcon(hInst, lpIconPath, lpiIcon);
+//       return m_hIcon;
+//    }
+// 
+//    // Operations
+// 
+//    BOOL DestroyIcon()
+//    {
+//       ATLASSERT(m_hIcon!=NULL);
+//       BOOL bRet = ::DestroyIcon(m_hIcon);
+//       if( bRet ) m_hIcon = NULL;
+//       return bRet;
+//    }
+//    HICON CopyIcon()
+//    {
+//       ATLASSERT(m_hIcon!=NULL);
+//       return ::CopyIcon(m_hIcon);
+//    }
+//    HICON DuplicateIcon()
+//    {
+//       ATLASSERT(m_hIcon!=NULL);
+//       return ::DuplicateIcon(NULL, m_hIcon);
+//    }
+// 
+//    BOOL DrawIcon(HDC hDC, int x, int y)
+//    {
+//       ATLASSERT(m_hIcon!=NULL);
+//       return ::DrawIcon(hDC, x, y, m_hIcon);
+//    }
+//    BOOL DrawIcon(HDC hDC, POINT pt)
+//    {
+//       ATLASSERT(m_hIcon!=NULL);
+//       return ::DrawIcon(hDC, pt.x, pt.y, m_hIcon);
+//    }
+//    BOOL DrawIconEx(HDC hDC, int x, int y, int cxWidth, int cyWidth, UINT uStepIfAniCur = 0, HBRUSH hbrFlickerFreeDraw = NULL, UINT uFlags = DI_NORMAL)
+//    {
+//       ATLASSERT(m_hIcon!=NULL);
+//       return ::DrawIconEx(hDC, x, y, m_hIcon, cxWidth, cyWidth, uStepIfAniCur, hbrFlickerFreeDraw, uFlags);
+//    }
+//    BOOL DrawIconEx(HDC hDC, POINT pt, SIZE size, UINT uStepIfAniCur = 0, HBRUSH hbrFlickerFreeDraw = NULL, UINT uFlags = DI_NORMAL)
+//    {
+//       ATLASSERT(m_hIcon!=NULL);
+//       return ::DrawIconEx(hDC, pt.x, pt.y, m_hIcon, size.cx, size.cy, uStepIfAniCur, hbrFlickerFreeDraw, uFlags);
+//    }
+// 
+//    BOOL GetIconInfo(PICONINFO pIconInfo)
+//    {
+//       ATLASSERT(m_hIcon!=NULL);
+//       ATLASSERT(pIconInfo);
+//       return ::GetIconInfo(m_hIcon, pIconInfo);
+//    }
+// };
+// 
+// typedef CIconT<true> CIcon;
+// typedef CIconT<false> CIconHandle;
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -220,338 +220,338 @@ typedef CIconT<false> CIconHandle;
    #undef CopyCursor
 #endif
 
-template< bool t_bManaged >
-class CCursorT
-{
-public:
-   HCURSOR m_hCursor;
-
-   // Constructor/destructor/operators
-
-   CCursorT(HCURSOR hCursor = NULL) : m_hCursor(hCursor)
-   { }
-
-   ~CCursorT()
-   {
-      if( t_bManaged && m_hCursor != NULL ) ::DestroyCursor(m_hCursor);
-   }
-
-   CCursorT<t_bManaged>& operator=(HCURSOR hCursor)
-   {
-      m_hCursor = hCursor;
-      return *this;
-   }
-
-   void Attach(HCURSOR hCursor)
-   {
-      if( t_bManaged && m_hCursor != NULL ) ::DestroyCursor(m_hCursor);
-      m_hCursor = hCursor;
-   }
-   HCURSOR Detach()
-   {
-      HCURSOR hCursor = m_hCursor;
-      m_hCursor = NULL;
-      return hCursor;
-   }
-
-   operator HCURSOR() const { return m_hCursor; }
-
-   bool IsNull() const { return m_hCursor == NULL; }
-
-   // Create methods
-
-   HCURSOR LoadCursor(_U_STRINGorID cursor)
-   {
-      ATLASSERT(m_hCursor==NULL);
-      m_hCursor = ::LoadCursor(_Module.GetResourceInstance(), cursor.m_lpstr);
-      return m_hCursor;
-   }
-   HCURSOR LoadOEMCursor(UINT nIDCursor) // for IDC_ types
-   {
-      ATLASSERT(m_hCursor==NULL);
-      m_hCursor = ::LoadCursor(NULL, MAKEINTRESOURCE(nIDCursor));
-      return m_hCursor;
-   }
-   HICON LoadCursor(_U_STRINGorID cursor, int cxDesired, int cyDesired, UINT fuLoad = 0)
-   {
-      ATLASSERT(m_hCursor==NULL);
-      m_hCursor = (HCURSOR) ::LoadImage(_Module.GetResourceInstance(), cursor.m_lpstr, IMAGE_CURSOR, cxDesired, cyDesired, fuLoad);
-      return m_hCursor;
-   }
-   HCURSOR LoadCursorFromFile(LPCTSTR pstrFilename)
-   {
-      ATLASSERT(m_hCursor==NULL);
-      ATLASSERT(!::IsBadStringPtr(pstrFilename,-1));
-      m_hCursor = ::LoadCursorFromFile(pstrFilename);
-      return m_hCursor;
-   }
-   HCURSOR CreateCursor(int xHotSpot, int yHotSpot, int nWidth, int nHeight, CONST VOID *pvANDPlane, CONST VOID *pvXORPlane)
-   {
-      ATLASSERT(m_hCursor==NULL);
-      m_hCursor = ::CreateCursor(_Module.GetResourceInstance(), xHotSpot, yHotSpot, nWidth, nHeight, pvANDPlane, pvXORPlane);
-      return m_hCursor;
-   }
-   HICON CreateCursorFromResource(PBYTE pBits, DWORD dwResSize, DWORD dwVersion = 0x00030000)
-   {
-      ATLASSERT(m_hIcon==NULL);
-      ATLASSERT(pBits);
-      m_hIcon = ::CreateIconFromResource(pBits, dwResSize, FALSE, dwVersion);
-      return m_hIcon;
-   }
-   HICON CreateCursorFromResourceEx(PBYTE pbBits, DWORD cbBits, DWORD dwVersion = 0x00030000, int cxDesired = 0, int cyDesired = 0, UINT uFlags = LR_DEFAULTCOLOR)
-   {
-      ATLASSERT(m_hIcon==NULL);
-      ATLASSERT(pbBits);
-      ATLASSERT(cbBits>0);
-      m_hIcon = ::CreateIconFromResourceEx(pbBits, cbBits, FALSE, dwVersion, cxDesired,  cyDesired, uFlags);
-      return m_hIcon;
-   }
-  
-   // Operations
-
-   BOOL DestroyCursor()
-   {
-      ATLASSERT(m_hCursor!=NULL);
-      BOOL bRet = ::DestroyCursor(m_hCursor);
-      if( bRet ) m_hCursor = NULL;
-      return bRet;
-   }
-
-   HCURSOR CopyCursor()
-   {
-      ATLASSERT(m_hCursor!=NULL);
-      return (HCURSOR) ::CopyIcon( (HICON) m_hCursor );
-   }
-
-#if(WINVER >= 0x0500)
-   BOOL GetCursorInfo(LPCURSORINFO pCursorInfo)
-   {
-      ATLASSERT(m_hCursor!=NULL);
-      ATLASSERT(pCursorInfo);
-      return ::GetCursorInfo(pCursorInfo);
-   }
-#endif
-};
-
-typedef CCursorT<true> CCursor;
-typedef CCursorT<false> CCursorHandle;
+// template< bool t_bManaged >
+// class CCursorT
+// {
+// public:
+//    HCURSOR m_hCursor;
+// 
+//    // Constructor/destructor/operators
+// 
+//    CCursorT(HCURSOR hCursor = NULL) : m_hCursor(hCursor)
+//    { }
+// 
+//    ~CCursorT()
+//    {
+//       if( t_bManaged && m_hCursor != NULL ) ::DestroyCursor(m_hCursor);
+//    }
+// 
+//    CCursorT<t_bManaged>& operator=(HCURSOR hCursor)
+//    {
+//       m_hCursor = hCursor;
+//       return *this;
+//    }
+// 
+//    void Attach(HCURSOR hCursor)
+//    {
+//       if( t_bManaged && m_hCursor != NULL ) ::DestroyCursor(m_hCursor);
+//       m_hCursor = hCursor;
+//    }
+//    HCURSOR Detach()
+//    {
+//       HCURSOR hCursor = m_hCursor;
+//       m_hCursor = NULL;
+//       return hCursor;
+//    }
+// 
+//    operator HCURSOR() const { return m_hCursor; }
+// 
+//    bool IsNull() const { return m_hCursor == NULL; }
+// 
+//    // Create methods
+// 
+//    HCURSOR LoadCursor(_U_STRINGorID cursor)
+//    {
+//       ATLASSERT(m_hCursor==NULL);
+//       m_hCursor = ::LoadCursor(_Module.GetResourceInstance(), cursor.m_lpstr);
+//       return m_hCursor;
+//    }
+//    HCURSOR LoadOEMCursor(UINT nIDCursor) // for IDC_ types
+//    {
+//       ATLASSERT(m_hCursor==NULL);
+//       m_hCursor = ::LoadCursor(NULL, MAKEINTRESOURCE(nIDCursor));
+//       return m_hCursor;
+//    }
+//    HICON LoadCursor(_U_STRINGorID cursor, int cxDesired, int cyDesired, UINT fuLoad = 0)
+//    {
+//       ATLASSERT(m_hCursor==NULL);
+//       m_hCursor = (HCURSOR) ::LoadImage(_Module.GetResourceInstance(), cursor.m_lpstr, IMAGE_CURSOR, cxDesired, cyDesired, fuLoad);
+//       return m_hCursor;
+//    }
+//    HCURSOR LoadCursorFromFile(LPCTSTR pstrFilename)
+//    {
+//       ATLASSERT(m_hCursor==NULL);
+//       ATLASSERT(!::IsBadStringPtr(pstrFilename,-1));
+//       m_hCursor = ::LoadCursorFromFile(pstrFilename);
+//       return m_hCursor;
+//    }
+//    HCURSOR CreateCursor(int xHotSpot, int yHotSpot, int nWidth, int nHeight, CONST VOID *pvANDPlane, CONST VOID *pvXORPlane)
+//    {
+//       ATLASSERT(m_hCursor==NULL);
+//       m_hCursor = ::CreateCursor(_Module.GetResourceInstance(), xHotSpot, yHotSpot, nWidth, nHeight, pvANDPlane, pvXORPlane);
+//       return m_hCursor;
+//    }
+//    HICON CreateCursorFromResource(PBYTE pBits, DWORD dwResSize, DWORD dwVersion = 0x00030000)
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       ATLASSERT(pBits);
+//       m_hIcon = ::CreateIconFromResource(pBits, dwResSize, FALSE, dwVersion);
+//       return m_hIcon;
+//    }
+//    HICON CreateCursorFromResourceEx(PBYTE pbBits, DWORD cbBits, DWORD dwVersion = 0x00030000, int cxDesired = 0, int cyDesired = 0, UINT uFlags = LR_DEFAULTCOLOR)
+//    {
+//       ATLASSERT(m_hIcon==NULL);
+//       ATLASSERT(pbBits);
+//       ATLASSERT(cbBits>0);
+//       m_hIcon = ::CreateIconFromResourceEx(pbBits, cbBits, FALSE, dwVersion, cxDesired,  cyDesired, uFlags);
+//       return m_hIcon;
+//    }
+//   
+//    // Operations
+// 
+//    BOOL DestroyCursor()
+//    {
+//       ATLASSERT(m_hCursor!=NULL);
+//       BOOL bRet = ::DestroyCursor(m_hCursor);
+//       if( bRet ) m_hCursor = NULL;
+//       return bRet;
+//    }
+// 
+//    HCURSOR CopyCursor()
+//    {
+//       ATLASSERT(m_hCursor!=NULL);
+//       return (HCURSOR) ::CopyIcon( (HICON) m_hCursor );
+//    }
+// 
+// #if(WINVER >= 0x0500)
+//    BOOL GetCursorInfo(LPCURSORINFO pCursorInfo)
+//    {
+//       ATLASSERT(m_hCursor!=NULL);
+//       ATLASSERT(pCursorInfo);
+//       return ::GetCursorInfo(pCursorInfo);
+//    }
+// #endif
+// };
+// 
+// typedef CCursorT<true> CCursor;
+// typedef CCursorT<false> CCursorHandle;
 
 
 /////////////////////////////////////////////////////////////////////////////
 // CAccelerator
 
-template< bool t_bManaged >
-class CAcceleratorT
-{
-public:
-   HACCEL m_hAccel;
-
-   // Constructor/destructor/operators
-
-   CAcceleratorT(HACCEL hAccel = NULL) : m_hAccel(hAccel)
-   { }
-
-   ~CAcceleratorT()
-   {
-      if( t_bManaged && m_hAccel != NULL ) ::DestroyAcceleratorTable(m_hAccel);
-   }
-
-   CAcceleratorT<t_bManaged>& operator=(HACCEL hAccel)
-   {
-      m_hAccel = hAccel;
-      return *this;
-   }
-
-   void Attach(HACCEL hAccel)
-   {
-      if( t_bManaged && m_hAccel != NULL ) ::DestroyAcceleratorTable(m_hAccel);
-      m_hAccel = hAccel;
-   }  
-   HCURSOR Detach()
-   {
-      HACCEL hAccel = m_hAccel;
-      m_hAccel = NULL;
-      return hAccel;
-   }
-
-   operator HACCEL() const { return m_hAccel; }
-
-   bool IsNull() const { return m_hAccel == NULL; }
-
-   // Create methods
-
-   HACCEL LoadAccelerators(_U_STRINGorID accel)
-   {
-      ATLASSERT(m_hAccel==NULL);
-      m_hAccel = ::LoadAccelerators(_Module.GetResourceInstance(), accel.m_lpstr);
-      return m_hAccel;
-   }
-   HACCEL CreateAcceleratorTable(LPACCEL pAccel, int cEntries)
-   {
-      ATLASSERT(m_hAccel==NULL);
-      ATLASSERT(!::IsBadReadPtr(lpAccelDst, sizeof(ACCEL)*cEntries));
-      m_hAccel = ::CreateAcceleratorTable(pAccel, cEntries);
-      return m_hAccel;
-   }
-
-   // Operations
-
-   int CopyAcceleratorTable(LPACCEL lpAccelDst, int cEntries)
-   {
-      ATLASSERT(m_hAccel!=NULL);
-      ATLASSERT(!::IsBadWritePtr(lpAccelDst, sizeof(ACCEL)*cEntries));
-      return ::CopyAcceleratorTable(m_hAccel, lpAccelDst, cEntries);
-   }
-
-   BOOL TranslateAccelerator(HWND hWnd, LPMSG pMsg)
-   {
-      ATLASSERT(m_hAccel!=NULL);
-      ATLASSERT(::IsWindow(hWnd));
-      ATLASSERT(pMsg);
-      return ::TranslateAccelerator(hWnd, m_hAccel, pMsg);
-   }
-};
-
-typedef CAcceleratorT<true> CAccelerator;
-typedef CAcceleratorT<false> CAcceleratorHandle;
+// template< bool t_bManaged >
+// class CAcceleratorT
+// {
+// public:
+//    HACCEL m_hAccel;
+// 
+//    // Constructor/destructor/operators
+// 
+//    CAcceleratorT(HACCEL hAccel = NULL) : m_hAccel(hAccel)
+//    { }
+// 
+//    ~CAcceleratorT()
+//    {
+//       if( t_bManaged && m_hAccel != NULL ) ::DestroyAcceleratorTable(m_hAccel);
+//    }
+// 
+//    CAcceleratorT<t_bManaged>& operator=(HACCEL hAccel)
+//    {
+//       m_hAccel = hAccel;
+//       return *this;
+//    }
+// 
+//    void Attach(HACCEL hAccel)
+//    {
+//       if( t_bManaged && m_hAccel != NULL ) ::DestroyAcceleratorTable(m_hAccel);
+//       m_hAccel = hAccel;
+//    }  
+//    HCURSOR Detach()
+//    {
+//       HACCEL hAccel = m_hAccel;
+//       m_hAccel = NULL;
+//       return hAccel;
+//    }
+// 
+//    operator HACCEL() const { return m_hAccel; }
+// 
+//    bool IsNull() const { return m_hAccel == NULL; }
+// 
+//    // Create methods
+// 
+//    HACCEL LoadAccelerators(_U_STRINGorID accel)
+//    {
+//       ATLASSERT(m_hAccel==NULL);
+//       m_hAccel = ::LoadAccelerators(_Module.GetResourceInstance(), accel.m_lpstr);
+//       return m_hAccel;
+//    }
+//    HACCEL CreateAcceleratorTable(LPACCEL pAccel, int cEntries)
+//    {
+//       ATLASSERT(m_hAccel==NULL);
+//       ATLASSERT(!::IsBadReadPtr(lpAccelDst, sizeof(ACCEL)*cEntries));
+//       m_hAccel = ::CreateAcceleratorTable(pAccel, cEntries);
+//       return m_hAccel;
+//    }
+// 
+//    // Operations
+// 
+//    int CopyAcceleratorTable(LPACCEL lpAccelDst, int cEntries)
+//    {
+//       ATLASSERT(m_hAccel!=NULL);
+//       ATLASSERT(!::IsBadWritePtr(lpAccelDst, sizeof(ACCEL)*cEntries));
+//       return ::CopyAcceleratorTable(m_hAccel, lpAccelDst, cEntries);
+//    }
+// 
+//    BOOL TranslateAccelerator(HWND hWnd, LPMSG pMsg)
+//    {
+//       ATLASSERT(m_hAccel!=NULL);
+//       ATLASSERT(::IsWindow(hWnd));
+//       ATLASSERT(pMsg);
+//       return ::TranslateAccelerator(hWnd, m_hAccel, pMsg);
+//    }
+// };
+// 
+// typedef CAcceleratorT<true> CAccelerator;
+// typedef CAcceleratorT<false> CAcceleratorHandle;
 
 
 /////////////////////////////////////////////////////////////////////////////
 // CLogFont
 
-class CLogFont : public LOGFONT
-{
-public:
-   CLogFont() 
-   { 
-      ::ZeroMemory( (LOGFONT*) this, sizeof(LOGFONT) );
-   }
-   CLogFont(const LOGFONT& lf) 
-   { 
-      Copy(&lf);
-   }
-   CLogFont(HFONT hFont)
-   {
-      ATLASSERT(::GetObjectType(hFont)==OBJ_FONT);
-      ::GetObject(hFont, sizeof(LOGFONT), (LOGFONT*) this);
-   }
-   HFONT CreateFontIndirect() 
-   { 
-      return ::CreateFontIndirect(this); 
-   }
-   void SetBold() 
-   { 
-      lfWeight = FW_BOLD; 
-   }
-   BOOL IsBold() const 
-   { 
-      return lfWeight >= FW_BOLD; 
-   }
-   void MakeBolder(int iScale = 1)
-   {
-      lfWeight += FW_BOLD * iScale;
-   }
-   void MakeLarger(int iScale)
-   {
-      if( lfHeight > 0 ) lfHeight += iScale; else lfHeight -= iScale;
-   }
-   void SetHeight(long PointSize, HDC hDC = NULL) 
-   { 
-      // For MM_TEXT mapping mode...
-      // NOTE: MulDiv() gives correct rounding.
-      lfHeight = -MulDiv(PointSize, ::GetDeviceCaps(hDC, LOGPIXELSY), 72); 
-   }
-   long GetHeight(HDC hDC = NULL) const
-   {
-      // For MM_TEXT mapping mode...
-      // NOTE: MulDiv() gives correct rounding.
-      return ::MulDiv(-lfHeight, 72, ::GetDeviceCaps(hDC, LOGPIXELSY));
-   }
-   long GetDeciPointHeight(HDC hDC = NULL)
-   {
-      POINT ptOrg = { 0, 0 };
-      ::DPtoLP(hDC, &ptOrg, 1);
-      POINT pt = { 0, 0 };
-      pt.y = abs(lfHeight) + ptOrg.y;
-      ::LPtoDP(hDC,&pt,1);
-      return MulDiv(pt.y, 720, ::GetDeviceCaps(hDC,LOGPIXELSY)); // 72 points/inch, 10 decipoints/point
-   }
-   void SetHeightFromDeciPoint(long DeciPtHeight, HDC hDC = NULL)
-   {
-      POINT pt;
-      pt.y = MulDiv(::GetDeviceCaps(hDC, LOGPIXELSY), DeciPtHeight, 720); // 72 points/inch, 10 decipoints/point
-      ::DPtoLP(hDC, &pt, 1);
-      POINT ptOrg = { 0, 0 };
-      ::DPtoLP(hDC, &ptOrg, 1);
-      lfHeight = -abs(pt.y - ptOrg.y);
-   }
-   void SetCaptionFont()
-   {
-      NONCLIENTMETRICS ncm = { 0 };
-      ncm.cbSize = sizeof(ncm);
-      ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
-      Copy(&ncm.lfCaptionFont);
-   }
-   void SetMenuFont()
-   {
-      NONCLIENTMETRICS ncm = { 0 };
-      ncm.cbSize = sizeof(ncm);
-      ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
-      Copy(&ncm.lfMenuFont);
-   }
-   void SetStatusFont()
-   {
-      NONCLIENTMETRICS ncm = { 0 };
-      ncm.cbSize = sizeof(ncm);
-      ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
-      Copy(&ncm.lfStatusFont);
-   }
-   void SetMessageBoxFont()
-   {
-      NONCLIENTMETRICS ncm = { 0 };
-      ncm.cbSize = sizeof(ncm);
-      ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
-      Copy(&ncm.lfMessageFont);
-   }
-   void Copy(const LOGFONT* lf)
-   {
-      ATLASSERT(lf);
-      ::CopyMemory( (LOGFONT*) this, lf, sizeof(LOGFONT) );
-   }
-   CLogFont& operator=(const CLogFont& src)
-   {
-      Copy(&src);
-      return *this;
-   }
-   CLogFont& operator=(const LOGFONT& src)
-   {
-      Copy(&src);
-      return *this;
-   }
-   CLogFont& operator=(HFONT hFont)
-   {
-      ATLASSERT(::GetObjectType(hFont)==OBJ_FONT);
-      ::GetObject(hFont, sizeof(LOGFONT), (LOGFONT*) this);
-      return *this;
-   }
-   bool operator==(const LOGFONT& logfont) const
-   {
-      return( logfont.lfHeight == lfHeight &&
-         logfont.lfWidth == lfWidth &&
-         logfont.lfEscapement == lfEscapement &&
-         logfont.lfOrientation == lfOrientation &&
-         logfont.lfWeight == lfWeight &&
-         logfont.lfItalic == lfItalic &&
-         logfont.lfUnderline == lfUnderline &&
-         logfont.lfStrikeOut == lfStrikeOut &&
-         logfont.lfCharSet == lfCharSet &&
-         logfont.lfOutPrecision == lfOutPrecision &&
-         logfont.lfClipPrecision == lfClipPrecision &&
-         logfont.lfQuality == lfQuality &&
-         logfont.lfPitchAndFamily == lfPitchAndFamily &&
-         ::lstrcmp(logfont.lfFaceName, lfFaceName) == 0 );
-   }
-};
+// class CLogFont : public LOGFONT
+// {
+// public:
+//    CLogFont() 
+//    { 
+//       ::ZeroMemory( (LOGFONT*) this, sizeof(LOGFONT) );
+//    }
+//    CLogFont(const LOGFONT& lf) 
+//    { 
+//       Copy(&lf);
+//    }
+//    CLogFont(HFONT hFont)
+//    {
+//       ATLASSERT(::GetObjectType(hFont)==OBJ_FONT);
+//       ::GetObject(hFont, sizeof(LOGFONT), (LOGFONT*) this);
+//    }
+//    HFONT CreateFontIndirect() 
+//    { 
+//       return ::CreateFontIndirect(this); 
+//    }
+//    void SetBold() 
+//    { 
+//       lfWeight = FW_BOLD; 
+//    }
+//    BOOL IsBold() const 
+//    { 
+//       return lfWeight >= FW_BOLD; 
+//    }
+//    void MakeBolder(int iScale = 1)
+//    {
+//       lfWeight += FW_BOLD * iScale;
+//    }
+//    void MakeLarger(int iScale)
+//    {
+//       if( lfHeight > 0 ) lfHeight += iScale; else lfHeight -= iScale;
+//    }
+//    void SetHeight(long PointSize, HDC hDC = NULL) 
+//    { 
+//       // For MM_TEXT mapping mode...
+//       // NOTE: MulDiv() gives correct rounding.
+//       lfHeight = -MulDiv(PointSize, ::GetDeviceCaps(hDC, LOGPIXELSY), 72); 
+//    }
+//    long GetHeight(HDC hDC = NULL) const
+//    {
+//       // For MM_TEXT mapping mode...
+//       // NOTE: MulDiv() gives correct rounding.
+//       return ::MulDiv(-lfHeight, 72, ::GetDeviceCaps(hDC, LOGPIXELSY));
+//    }
+//    long GetDeciPointHeight(HDC hDC = NULL)
+//    {
+//       POINT ptOrg = { 0, 0 };
+//       ::DPtoLP(hDC, &ptOrg, 1);
+//       POINT pt = { 0, 0 };
+//       pt.y = abs(lfHeight) + ptOrg.y;
+//       ::LPtoDP(hDC,&pt,1);
+//       return MulDiv(pt.y, 720, ::GetDeviceCaps(hDC,LOGPIXELSY)); // 72 points/inch, 10 decipoints/point
+//    }
+//    void SetHeightFromDeciPoint(long DeciPtHeight, HDC hDC = NULL)
+//    {
+//       POINT pt;
+//       pt.y = MulDiv(::GetDeviceCaps(hDC, LOGPIXELSY), DeciPtHeight, 720); // 72 points/inch, 10 decipoints/point
+//       ::DPtoLP(hDC, &pt, 1);
+//       POINT ptOrg = { 0, 0 };
+//       ::DPtoLP(hDC, &ptOrg, 1);
+//       lfHeight = -abs(pt.y - ptOrg.y);
+//    }
+//    void SetCaptionFont()
+//    {
+//       NONCLIENTMETRICS ncm = { 0 };
+//       ncm.cbSize = sizeof(ncm);
+//       ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+//       Copy(&ncm.lfCaptionFont);
+//    }
+//    void SetMenuFont()
+//    {
+//       NONCLIENTMETRICS ncm = { 0 };
+//       ncm.cbSize = sizeof(ncm);
+//       ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+//       Copy(&ncm.lfMenuFont);
+//    }
+//    void SetStatusFont()
+//    {
+//       NONCLIENTMETRICS ncm = { 0 };
+//       ncm.cbSize = sizeof(ncm);
+//       ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+//       Copy(&ncm.lfStatusFont);
+//    }
+//    void SetMessageBoxFont()
+//    {
+//       NONCLIENTMETRICS ncm = { 0 };
+//       ncm.cbSize = sizeof(ncm);
+//       ::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+//       Copy(&ncm.lfMessageFont);
+//    }
+//    void Copy(const LOGFONT* lf)
+//    {
+//       ATLASSERT(lf);
+//       ::CopyMemory( (LOGFONT*) this, lf, sizeof(LOGFONT) );
+//    }
+//    CLogFont& operator=(const CLogFont& src)
+//    {
+//       Copy(&src);
+//       return *this;
+//    }
+//    CLogFont& operator=(const LOGFONT& src)
+//    {
+//       Copy(&src);
+//       return *this;
+//    }
+//    CLogFont& operator=(HFONT hFont)
+//    {
+//       ATLASSERT(::GetObjectType(hFont)==OBJ_FONT);
+//       ::GetObject(hFont, sizeof(LOGFONT), (LOGFONT*) this);
+//       return *this;
+//    }
+//    bool operator==(const LOGFONT& logfont) const
+//    {
+//       return( logfont.lfHeight == lfHeight &&
+//          logfont.lfWidth == lfWidth &&
+//          logfont.lfEscapement == lfEscapement &&
+//          logfont.lfOrientation == lfOrientation &&
+//          logfont.lfWeight == lfWeight &&
+//          logfont.lfItalic == lfItalic &&
+//          logfont.lfUnderline == lfUnderline &&
+//          logfont.lfStrikeOut == lfStrikeOut &&
+//          logfont.lfCharSet == lfCharSet &&
+//          logfont.lfOutPrecision == lfOutPrecision &&
+//          logfont.lfClipPrecision == lfClipPrecision &&
+//          logfont.lfQuality == lfQuality &&
+//          logfont.lfPitchAndFamily == lfPitchAndFamily &&
+//          ::lstrcmp(logfont.lfFaceName, lfFaceName) == 0 );
+//    }
+// };
 
 
 /////////////////////////////////////////////////////////////////////////////
