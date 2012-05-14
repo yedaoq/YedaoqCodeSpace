@@ -156,44 +156,28 @@ protected:
 
 		// show resize arrow when cursor at the edge of grid header cell
 		SetCursor(LoadCursor(NULL, (TestMouseInColumnResizeArea(pt) != -1) ? IDC_SIZEWE : IDC_ARROW));
-		if(TestMouseInColumnResizeArea(pt) != -1)
-		{
-			SetCursor(LoadCursor(NULL,IDC_SIZEWE));
-		}
-		else
-		{
-			SetCursor(LoadCursor(NULL,IDC_ARROW));
-		}
+
 		return 0;
 	}
 
 	LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 		CPoint pt((DWORD)lParam);
-		if(pt.y<GetHeaderHeight()) {
-			CPoint ptScroll;
-			m_grid.GetScrollOffset(ptScroll);
-			pt += ptScroll;
-
-			long x = 0;
-			if(ShowLineNumbers()) x += COL_NUMWIDTH; 
-			for(long i=0;i<GetColumnCount();i++) {
-				if(m_grid.m_columns[i]->OnEdge(x,pt.x)) {
-					SetCursor(LoadCursor(NULL,IDC_SIZEWE));
-					m_grid.DoDrag(pt.x - ptScroll.x,false);
-					SetCapture();
-					m_nDragCol = i;
-					m_nDragMin = x - ptScroll.x;
-					return 0;
-				}
-				x += m_grid.m_columns[i]->m_nWidth;
-			}
+		
+		long col = TestMouseInColumnResizeArea(pt);
+		if(col != -1)
+		{
+			m_grid.DoDrag(pt.x,false);
+			SetCapture();
+			m_nDragCol = i;
+			m_nDragMin = x;
 		}
 		return 0;
 	}
 	
 	LRESULT OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 		CPoint pt((DWORD)lParam);
-		if(m_nDragCol>=0) {
+		if(m_nDragCol>=0) 
+		{
 			long x = pt.x;
 			if(x-COL_MINWIDTH<m_nDragMin) x = m_nDragMin + COL_MINWIDTH;
 
@@ -1300,9 +1284,9 @@ protected:
 			}
 		}
 		
-		bool OnEdge(long x,long cx) {
-			return cx > x + m_nWidth - 2 && cx < x + m_nWidth + 2;
-		}
+// 		bool OnEdge(long x,long cx) {
+// 			return cx > x + m_nWidth - 2 && cx < x + m_nWidth + 2;
+// 		}
 
 		bool GetReadOnly() {
 			return m_nType == EDIT_NONE || (m_grid.m_dwStyle & GS_EX_READONLY);
@@ -1514,6 +1498,44 @@ protected:
 		}
 	protected:
 		CDCHandle	m_dc;
+	};
+
+	class CEditInteractionDriverTrait_Normal
+	{
+	public:
+		CEditInteractionDriverTrait_Normal(CGrid& grid)
+			: Grid(grid)
+		{}
+
+		BEGIN_MSG_MAP(CEditInteractionDriverTrait_Normal)
+			MESSAGE_HANDLER(WM_LBUTTONDBLCLK,OnLButtonDblclk)
+			MESSAGE_HANDLER(WM_KEYDOWN,OnKeyDown)
+		END_MSG_MAP()
+
+		LRESULT OnLButtonDblclk(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) 
+		{
+			CPoint pt;
+			Grid.GetScrollOffset(pt);
+			pt.x += GET_X_LPARAM(lParam);
+			pt.y += GET_Y_LPARAM(lParam);
+
+			Grid.EditRow(Grid.GetPointRow(pt) ,Grid.GetPointColumn(pt));
+			return 0;
+		}
+
+		LRESULT OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) 
+		{
+			switch(wParam) 
+			{
+			case VK_RETURN:
+				Grid.EditRow();
+				break;
+			}
+
+			return 0;
+		}
+		
+		CGrid& Grid;
 	};
 
 
