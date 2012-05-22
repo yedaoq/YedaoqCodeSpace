@@ -279,6 +279,8 @@ protected:
 		m_grid.GetScrollOffset(ptScroll);
 		x -= ptScroll.x;
 
+		mdc.m_dc.
+
 		CRect rcClient;
 		GetClientRect(rcClient);
 		dc.FillRect(&rcClient,(HBRUSH)(COLOR_BTNFACE+1));
@@ -1500,45 +1502,6 @@ protected:
 		CDCHandle	m_dc;
 	};
 
-	class CEditInteractionDriverTrait_Normal
-	{
-	public:
-		CEditInteractionDriverTrait_Normal(CGrid& grid)
-			: Grid(grid)
-		{}
-
-		BEGIN_MSG_MAP(CEditInteractionDriverTrait_Normal)
-			MESSAGE_HANDLER(WM_LBUTTONDBLCLK,OnLButtonDblclk)
-			MESSAGE_HANDLER(WM_KEYDOWN,OnKeyDown)
-		END_MSG_MAP()
-
-		LRESULT OnLButtonDblclk(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) 
-		{
-			CPoint pt;
-			Grid.GetScrollOffset(pt);
-			pt.x += GET_X_LPARAM(lParam);
-			pt.y += GET_Y_LPARAM(lParam);
-
-			Grid.EditRow(Grid.GetPointRow(pt) ,Grid.GetPointColumn(pt));
-			return 0;
-		}
-
-		LRESULT OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) 
-		{
-			switch(wParam) 
-			{
-			case VK_RETURN:
-				Grid.EditRow();
-				break;
-			}
-
-			return 0;
-		}
-		
-		CGrid& Grid;
-	};
-
-
 	class CGrid : public CScrollWindowImpl<CGrid, CFSBWindow> {
 		typedef CScrollWindowImpl<CGrid, CFSBWindow> baseClass;
 		friend class CRow;
@@ -1556,7 +1519,6 @@ protected:
 			MESSAGE_HANDLER(WM_CREATE,OnCreate)
 			MESSAGE_HANDLER(WM_LBUTTONDOWN,OnLButtonDown)
 			MESSAGE_HANDLER(WM_RBUTTONDOWN,OnLButtonDown)
-			MESSAGE_HANDLER(WM_LBUTTONDBLCLK,OnLButtonDblclk)
 			MESSAGE_HANDLER(WM_KEYDOWN,OnKeyDown)
 			CHAIN_MSG_MAP(baseClass)
 			if(uMsg==WM_COMMAND || uMsg==WM_NOTIFY) {
@@ -1578,27 +1540,25 @@ protected:
 			return 0;
 		}
 
-		LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) {
+		LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) 
+		{
 			CPoint pt((DWORD)lParam), ptScroll;
 			GetScrollOffset(ptScroll);
 			pt += ptScroll;
 
-			long row = pt.y / GetRowHeight();
+			long row = GetPointRow(pt);
+			long col = GetPointColumn(pt);
+
 			if(row!=m_nSelectedRow) {
 				SelectRow(row);
 				SetFocus();
 			}
 
-			return 0;
-		}
-		
-		LRESULT OnLButtonDblclk(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) {
-			CPoint pt;
-			GetScrollOffset(pt);
-			pt.x += GET_X_LPARAM(lParam);
-			pt.y += GET_Y_LPARAM(lParam);
+			if(row >= 0 && col >= 0)
+			{
+				EditRow(row,col);
+			}
 
-			EditRow(GetPointRow(pt),GetPointColumn(pt));
 			return 0;
 		}
 		
