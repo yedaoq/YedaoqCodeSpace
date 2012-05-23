@@ -337,6 +337,10 @@
 			Name="DataTree"
 			>
 			<File
+				RelativePath=".\DataTree\DataTreeCleanMicro.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DataTree\DataTreeCommon.h"
 				>
 			</File>

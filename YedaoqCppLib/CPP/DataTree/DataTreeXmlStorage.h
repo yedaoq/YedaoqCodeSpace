@@ -9,56 +9,23 @@
 /* ___________________________________________________________________________*/
 #pragma once
 
+#ifdef UNICODE
+#define PUGIXML_WCHAR_MODE
+#endif
+
 #include "DataTreeCommon.h"
-#include "pugixml.hpp"
+#include "pugixml\pugixml.hpp"
 #include <fstream>
 
 namespace nsYedaoqDataTree
 {
-	class CDataTreeXmlStorage : IDataTreeStorage
+	class CDataTreeXmlStorage : public IDataTreeStorage
 	{
-		struct ScopedCurrentNode
-		{
-			ScopedCurrentNode(pugi::xml_node& node, pugi::xml_node& scopedVal)
-				: Node(node), Value(node)
-			{
-				Node = scopedVal;
-			}
-
-			~ScopedCurrentNode()
-			{
-				Node = Value;
-			}
-
-			pugi::xml_node& Node;
-			pugi::xml_node	Value;
-		};
-
 	public:
 		CDataTreeXmlStorage(pugi::xml_node& doc, const tchar* nodename)
 			: Root_(doc)
 		{
 			Current_ = GetChild(doc, nodename, true);
-		}
-
-		pugi::xml_node GetChild(pugi::xml_node& cur, const tchar* nodename, bool autoCreate = false)
-		{
-			pugi::xml_node node = cur.child(nodename);
-			if(!node && autoCreate)
-			{
-				node = cur.append_child(nodename);
-			}
-			return node;
-		}
-
-		pugi::xml_node GetNeighbour(pugi::xml_node& cur, const tchar* nodename, bool autoCreate = false)
-		{
-			pugi::xml_node node = cur.next_sibling(nodename);
-			if(!node && autoCreate)
-			{
-				node = cur.parent.append_child(nodename);
-			}
-			return node; 
 		}
 
 		virtual bool get_attr(const tchar* name, tstring& val)
@@ -85,33 +52,27 @@ namespace nsYedaoqDataTree
 
 		virtual bool get_node(const tchar* name, IDataTreeNode& node)
 		{
-			//ScopedCurrentNode tmp(Current_, Current_, GetChild(Current_, name, false));
-
 			pugi::xml_node xnode = GetChild(Current_, name, false);
 			if(xnode)
 			{
 				Current_ = xnode;
-				return node.__import(*this);
+				node.__import(*this);
 				Current_ = Current_.parent();
 			}
 
 			return false;
 		}
 
-		virtual bool set_node(const tchar* name, IDataTreeNode& node)
+		virtual bool set_node(const tchar* name, IDataTreeNode const & node)
 		{
-			//ScopedCurrentNode tmp(Current_, Current_, GetChild(Current_, name, true));
-
 			Current_ = GetChild(Current_, name, true);
-			return node.__export(*this);
+			node.__export(*this);
 			Current_ = Current_.parent();
-
+			return true;
 		}
 
 		virtual bool get_nodes(const tchar* name, IDataTreeNodeInserter& nodes)
 		{
-			//ScopedCurrentNode tmp(Current_, Current_, Current_);
-
 			for(pugi::xml_node xnode = Current_.child(name); xnode; xnode = xnode.next_sibling(name))
 			{
 				Current_ = xnode;
@@ -120,13 +81,11 @@ namespace nsYedaoqDataTree
 				Current_ = xnode.parent();
 			}
 
-			return false;
+			return true;
 		}
 
-		virtual bool set_nodes(const tchar* name, IEnumerator<IDataTreeNode&>& nodes)
+		virtual bool set_nodes(const tchar* name, IEnumerator<IDataTreeNode>& nodes)
 		{
-			//ScopedCurrentNode tmp(Current_, Current_, GetChild(Current_, name, true));
-
 			pugi::xml_node xnode = GetChild(Current_, name, true);
 			while (xnode && nodes.MoveNext())
 			{
@@ -135,12 +94,85 @@ namespace nsYedaoqDataTree
 				xnode = GetNeighbour(Current_, name, true);
 				Current_ = xnode.parent();
 			}
+			Current_.remove_child(xnode); // the last empty node
 
 			return true;
 		}
 
 	protected:
+		pugi::xml_node GetChild(pugi::xml_node& cur, const tchar* nodename, bool autoCreate = false)
+		{
+			pugi::xml_node node = cur.child(nodename);
+			if(!node && autoCreate)
+			{
+				node = cur.append_child(nodename);
+			}
+			return node;
+		}
+
+		pugi::xml_node GetNeighbour(pugi::xml_node& cur, const tchar* nodename, bool autoCreate = false)
+		{
+			pugi::xml_node node = cur.next_sibling(nodename);
+			if(!node && autoCreate)
+			{
+				node = cur.parent().append_child(nodename);
+			}
+			return node; 
+		}
+
+		CDataTreeXmlStorage& operator=(const CDataTreeXmlStorage&);
+
+	protected:
 		pugi::xml_node&		Root_;
 		pugi::xml_node		Current_;
 	};
+
+	template<typename T>
+	struct CXmlFile
+	{
+		T Object;
+
+		bool Load(tchar const* file);
+		bool Save(tchar const* file);
+	};
+
+	template<typename T>
+	bool CXmlFile<T>::Save( tchar const* file )
+	{
+		xdoc_t doc;
+		doc.append_node(Object.Serialize(&doc));
+
+		tstring content;
+		rapidxml::print(std::back_inserter(content), doc, 0);
+
+		std::locale prev_loc = std::locale::global(std::locale("chs"));
+		std::tofstream f(file, std::ios_base::out);
+
+		f<<content;
+		f.flush();
+		f.close();
+
+		return true;
+	}
+
+	template<typename T>
+	bool CXmlFile<T>::Load( tchar const* file )
+	{
+		std::locale prev_loc = std::locale::global(std::locale("chs"));
+		std::tifstream f(file, std::ios_base::in);
+
+		tstring content;
+		std::getline(f, content, EOF);
+
+		tchar* bufXml = new tchar[content.size() + 1];
+		content.copy(bufXml, content.size());
+		bufXml[content.size()] = 0;
+
+		xdoc_t doc;
+		doc.parse<0>(bufXml);
+
+		Object.Parse(doc.first_node());
+
+		return true;
+	}
 }

@@ -1,25 +1,27 @@
 #pragma once
 
-#ifndef XML_COMPLEXTYPE_BEGIN
-	#define XML_COMPLEXTYPE_BEGIN(cppname) struct cppname{ xnode_t* Serialize(xdoc_t* doc, tchar const* elename); void Parse(xnode_t& node);
+#include "DataTreeCommon.h"
+
+#ifndef BEGIN_DATATREE
+	#define BEGIN_DATATREE(cppname) struct cppname : public nsYedaoqDataTree::IDataTreeNode { virtual bool __export(nsYedaoqDataTree::IDataTreeStorage& storage) const; virtual bool __import(nsYedaoqDataTree::IDataTreeStorage& storage);
 #endif
 
-#ifndef XML_COMPLEXTYPE_END
-	#define XML_COMPLEXTYPE_END };
+#ifndef END_DATATREE
+	#define END_DATATREE };
 #endif
 
-#ifndef XML_ELE
-	#define XML_ELE(xmlname, cppname, cpptype) cpptype cppname;
+#ifndef ITEM_DATANODE
+	#define ITEM_DATANODE(nodename, cppname, cpptype) cpptype cppname;
 #endif
 
-#ifndef XML_ELES
-	#define XML_ELES(xmlname, cppname, cpptype) std::vector<cpptype> cppname;
+#ifndef ITEM_DATANODES
+	#define ITEM_DATANODES(nodename, cppname, cpptype) std::vector<cpptype> cppname;
 #endif
 
-#ifndef XML_ATTR
-	#define XML_ATTR(xmlname, cppname, cpptype) cpptype cppname;
+#ifndef ITEM_ATTR
+	#define ITEM_ATTR(nodename, cppname, cpptype) cpptype cppname;
 #endif
 
-#ifndef XML_ENUMATTR
-	#define XML_ENUMATTR(xmlname, cppname, cpptype) Enum##cpptype cppname;
+#ifndef ITEM_ENUMATTR
+	#define ITEM_ENUMATTR(xmlname, cppname, cpptype) Enum##cpptype cppname;
 #endif

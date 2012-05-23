@@ -1,41 +1,15 @@
 #pragma once
 
-#ifdef XML_COMPLEXTYPE_BEGIN
-	#undef XML_COMPLEXTYPE_BEGIN
-#endif
-#define XML_COMPLEXTYPE_BEGIN(cppname) void cppname::Parse(xnode_t& node){ xattr_t* attr; xnode_t* child;
+#include "DataTreeCleanMicro.h"
 
+#define BEGIN_DATATREE(cppname) bool cppname::__export(nsYedaoqDataTree::IDataTreeStorage& storage) const { tstring tmp;
 
-#ifdef XML_COMPLEXTYPE_END
-	#undef XML_COMPLEXTYPE_END
-#endif
-#define XML_COMPLEXTYPE_END }
+#define END_DATATREE return true; }
 
+#define ITEM_DATANODE(nodename, cppname, cpptype) storage.set_node(TEXT(#nodename), cppname);
 
-#ifdef XML_ELE
-	#undef XML_ELE
-#endif
-#define XML_ELE(xmlname, cppname, cpptype) child = node.first_node(TEXT(xmlname)); if(child){ name.Parse(*child); }
+#define ITEM_DATANODES(nodename, cppname, cpptype) storage.set_nodes(TEXT(#nodename), make_iterator_enumerator_ex<nsYedaoqDataTree::IDataTreeNode>(cppname.begin(), cppname.end()));																					
 
+#define ITEM_ATTR(attrname, cppname, cpptype) storage.set_attr(TEXT(#attrname), nsYedaoqDataTree::CSingleValueSerializer<cpptype>().Serialize(cppname));
 
-#ifdef XML_ELES
-	#undef XML_ELES
-#endif
-#define XML_ELES(xmlname, cppname, cpptype)										\
-	for(child = node.first_node(TEXT(xmlname)); child; child = child->next_sibling())	\
-	{																				\
-		cpptype sub;																\
-		sub.Parse(*child);															\
-		cppname.push_back(sub);														\
-	}
-
-
-#ifdef XML_ATTR
-	#undef XML_ATTR
-#endif
-#define XML_ATTR(xmlname, cppname, cpptype) attr = node.first_attribute(TEXT(xmlname)); if(attr){ cppname = CSingleValueSerializer<cpptype>().Parse(attr->value());}
-
-#ifdef XML_ENUMATTR
-	#undef XML_ENUMATTR
-#endif
-#define XML_ENUMATTR(t, name) attr = node.first_attribute(TEXT(#name)); if(attr){ name = t::parse(attr->value(), TEXT(" "));}
+#define ITEM_ENUMATTR(attrname, cppname, cpptype) storage.set_attr(TEXT(#attrname), cppname.str());

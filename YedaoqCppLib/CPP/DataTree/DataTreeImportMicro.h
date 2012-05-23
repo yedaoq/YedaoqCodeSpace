@@ -1,39 +1,16 @@
 #pragma once
 
-#ifdef XML_COMPLEXTYPE_BEGIN
-	#undef XML_COMPLEXTYPE_BEGIN
-#endif
-#define XML_COMPLEXTYPE_BEGIN(cppname) xnode_t* cppname::Serialize(xdoc_t* doc, tchar const* elename){ xnode_t* node = doc->allocate_node(rapidxml::node_type::node_element, TEXT(elename));
+#include "DataTreeCleanMicro.h"
 
+#define BEGIN_DATATREE(cppname) bool cppname::__import(nsYedaoqDataTree::IDataTreeStorage& storage){ tstring tmp;
 
-#ifdef XML_COMPLEXTYPE_END
-	#undef XML_COMPLEXTYPE_END
-#endif
-#define XML_COMPLEXTYPE_END return node; }
+#define END_DATATREE return true; }
 
+#define ITEM_DATANODE(nodename, cppname, cpptype) storage.get_node(TEXT(#nodename), cppname);
 
-#ifdef XML_ELE
-	#undef XML_ELE
-#endif
-#define XML_ELE(xmlname, cppname, cpptype) node.append_node(cppname.Serialize(doc, xmlname));
+#define ITEM_DATANODES(nodename, cppname, cpptype) cppname.clear(); storage.get_nodes(TEXT(#nodename), nsYedaoqDataTree::make_datanodeinserter(cppname));																					
 
+#define ITEM_ATTR(attrname, cppname, cpptype) if(storage.get_attr(TEXT(#attrname), tmp)) { cppname = nsYedaoqDataTree::CSingleValueSerializer<cpptype>().Parse(tmp); }
 
-#ifdef XML_ELES
-	#undef XML_ELES
-#endif
-#define XML_ELES(xmlname, cppname, cpptype)														\
-	for(std::vector<cpptype>::iterator iter = cppname.begin(); iter != cppname.end(); ++iter)	\
-	{																							\
-		node.append_node(iter->Serialize(doc, xmlname));										\
-	}																						
+#define ITEM_ENUMATTR(attrname, cppname, cpptype) if(storage.get_attr(TEXT(#attrname), tmp)) { cppname = Enum##cpptype::Parse(tmp); }
 
-
-#ifdef XML_ATTR
-	#undef XML_ATTR
-#endif
-#define XML_ATTR(xmlname, cppname, cpptype) node.append_attribute(doc->allocate_attribute(TEXT(xmlname), CConfigValueSerializer<cpptype>().Serialize(cppname)));
-
-#ifdef XML_ENUMATTR
-	#undef XML_ENUMATTR
-#endif
-#define XML_ENUMATTR(t, name) node.append_attribute(doc->allocate_attribute(TEXT(#name), name.str()));
