@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GridCtrl", "GridCtrl\GridCtrl.vcxproj", "{E024DD40-C04B-498F-8222-9DD2F5611113}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PropertyGrid", "PropertyGrid\PropertyGrid.vcxproj", "{8B95509F-3394-48F5-A2A8-6257B658FA16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{E024DD40-C04B-498F-8222-9DD2F5611113}.Debug|Win32.Build.0 = Debug|Win32
 		{E024DD40-C04B-498F-8222-9DD2F5611113}.Release|Win32.ActiveCfg = Release|Win32
 		{E024DD40-C04B-498F-8222-9DD2F5611113}.Release|Win32.Build.0 = Release|Win32
+		{8B95509F-3394-48F5-A2A8-6257B658FA16}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8B95509F-3394-48F5-A2A8-6257B658FA16}.Debug|Win32.Build.0 = Debug|Win32
+		{8B95509F-3394-48F5-A2A8-6257B658FA16}.Release|Win32.ActiveCfg = Release|Win32
+		{8B95509F-3394-48F5-A2A8-6257B658FA16}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

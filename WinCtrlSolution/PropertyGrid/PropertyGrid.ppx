@@ -1,0 +1,9 @@
+[propertyGrid.c]
+[Debugger]
+Watch symbols=g_lpInst,g_lpInst->fGotFocus,classname
+[main.c]
+[propertyGrid.h]
+[Windows]
+File1=main.c,88,88,756,469,0,0
+File2=propertyGrid.h,110,110,778,491,0,0
+File3=propertyGrid.c,-4,-23,895,512,1,1
