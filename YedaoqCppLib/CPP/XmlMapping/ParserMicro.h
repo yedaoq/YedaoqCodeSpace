@@ -33,7 +33,7 @@
 #ifdef XML_ATTR
 	#undef XML_ATTR
 #endif
-#define XML_ATTR(xmlname, cppname, cpptype) attr = node.first_attribute(TEXT(xmlname)); if(attr){ cppname = CXmlValueSerializer<cpptype>().Parse(attr->value());}
+#define XML_ATTR(xmlname, cppname, cpptype) attr = node.first_attribute(TEXT(xmlname)); if(attr){ cppname = CSingleValueSerializer<cpptype>().Parse(attr->value());}
 
 #ifdef XML_ENUMATTR
 	#undef XML_ENUMATTR

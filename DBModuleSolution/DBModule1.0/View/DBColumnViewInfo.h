@@ -1,6 +1,6 @@
 #pragma once
 
-#include <mytype.h>
+#include "mytype.h"
 
 interface ITextFormatSwitcher;
 interface IEditStyle;

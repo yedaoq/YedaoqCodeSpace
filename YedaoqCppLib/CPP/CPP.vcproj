@@ -333,6 +333,34 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="DataTree"
+			>
+			<File
+				RelativePath=".\DataTree\DataTreeCleanMicro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataTree\DataTreeCommon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataTree\DataTreeExportMicro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataTree\DataTreeHeaderMicro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataTree\DataTreeImportMicro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataTree\DataTreeXmlStorage.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
