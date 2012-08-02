@@ -71,7 +71,7 @@ public:
 
 	enum EnumSysExitReasonType : unsigned char { PreDefine, UserDefine = 4, Planned = 8 };
 
-	struct SysExitReason
+	struct SysExitRecord
 	{
 		union
 		{
@@ -92,11 +92,11 @@ public:
 			DWORD nonamed;
 		};
 
-		SysExitReason(EnumSysExitReasonType reason_type, EnumSysExitIssuer issuer, EnumSysExitReason reason)
+		SysExitRecord(EnumSysExitReasonType reason_type = PreDefine, EnumSysExitIssuer issuer = Application, EnumSysExitReason reason = OtherReason)
 			: ReasonType(reason_type), Issuer(issuer), Reason(reason)
 		{}
 
-		SysExitReason(unsigned char issuer, unsigned short reason)
+		SysExitRecord(unsigned char issuer, unsigned short reason)
 			: ReasonType(UserDefine), Issuer(issuer), Reason(reason)
 		{}
 	};
@@ -155,6 +155,11 @@ public:
 		}
 
 		return -1;
+	}
+
+	static bool ExitWindow(EnumSysExitAction action, EnumSysExitFlag flag, SysExitRecord record)
+	{
+		return 0 != ::ExitWindowsEx(action | flag, record.nonamed);
 	}
 };
 
