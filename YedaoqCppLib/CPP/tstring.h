@@ -11,8 +11,10 @@
 
 #ifdef UNICODE
 
+#ifndef TEXT
 	#define TEXT(x)			L##x
-	#define  tchar			wchar_t
+#endif
+	#define tchar			wchar_t
 	#define tstring			std::wstring
 
 	#define tboostregex		boost::xpressive::wsregex
@@ -39,8 +41,11 @@
 
 #else
 
+#ifndef 
 	#define TEXT(x)			x
-	#define  tchar			char
+#endif
+
+	#define tchar			char
 	#define tstring			std::string
 
 	#define tboostregex		boost::xpressive::sregex

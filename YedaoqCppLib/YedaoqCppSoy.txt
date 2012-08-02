@@ -3,7 +3,7 @@
 
 /* ___________________________________________________________________________
 @ 
-@ file - $FILE$
+@ file - $FILE_BASE$
 @ 
 @ auth - yedaoq@gmail.com          http://blog.yedaoq.info
 @ date - $YEAR$-$MONTH$-$DAY$
