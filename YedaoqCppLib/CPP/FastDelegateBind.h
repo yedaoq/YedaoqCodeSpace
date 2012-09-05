@@ -21,6 +21,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#define FASTDELEGATE_ALLOW_FUNCTION_TYPE_SYNTAX
+
 ////////////////////////////////////////////////////////////////////////////////
 //						FastDelegate bind()
 //
@@ -42,6 +44,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #ifdef FASTDELEGATE_ALLOW_FUNCTION_TYPE_SYNTAX
+
+#include "FastDelegate.h"
 
 namespace fastdelegate {
 
@@ -234,10 +238,9 @@ bind(
   return FastDelegate< RetType ( Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, Param6 p6, Param7 p7, Param8 p8 ) >(y, func);
 }
 
+} // namespace fastdelegate
 
 #endif //FASTDELEGATE_ALLOW_FUNCTION_TYPE_SYNTAX
-
-} // namespace fastdelegate
 
 #endif // !defined(FASTDELEGATEBIND_H)
 

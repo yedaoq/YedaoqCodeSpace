@@ -89,22 +89,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseXXCoder.h" />
+    <ClInclude Include="basictypes.h" />
     <ClInclude Include="CharTree.h" />
+    <ClInclude Include="Cloneable.h" />
     <ClInclude Include="CTiffWriter.h" />
-    <ClInclude Include="EnumDeclaration3x\EnumContainerDeclaration.h" />
-    <ClInclude Include="EnumDeclaration3x\EnumCppMicro.h" />
-    <ClInclude Include="EnumDeclaration3x\EnumHeaderMicro.h" />
     <ClInclude Include="Enumerator.h" />
     <ClInclude Include="FastDelegate.h" />
     <ClInclude Include="FastDelegateBind.h" />
     <ClInclude Include="functor_cast.h" />
     <ClInclude Include="functor_cmp.h" />
-    <ClInclude Include="IRefObject.h" />
     <ClInclude Include="microtype.h" />
-    <ClInclude Include="RefObjectImpl.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="Singlton.h" />
+    <ClInclude Include="task.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="tstring.h" />
+    <ClInclude Include="tuple.h" />
     <ClInclude Include="XMLite.h" />
     <ClInclude Include="EnumDeclaration2x\EnumContainerDeclaration.h" />
     <ClInclude Include="EnumDeclaration2x\EnumCppMicro.h" />
@@ -112,6 +112,19 @@
     <ClInclude Include="EnumDeclaration1x\EnumEntityCppMicro.h" />
     <ClInclude Include="EnumDeclaration1x\EnumEntityDeclaration.h" />
     <ClInclude Include="EnumDeclaration1x\EnumEntityHeaderMicro.h" />
+    <ClInclude Include="EnumDeclaration3x\EnumContainerDeclaration.h" />
+    <ClInclude Include="EnumDeclaration3x\EnumCppMicro.h" />
+    <ClInclude Include="EnumDeclaration3x\EnumHeaderMicro.h" />
+    <ClInclude Include="XmlMapping\Common.h" />
+    <ClInclude Include="XmlMapping\HeaderMicro.h" />
+    <ClInclude Include="XmlMapping\ParserMicro.h" />
+    <ClInclude Include="XmlMapping\SerialMicro.h" />
+    <ClInclude Include="DataTree\DataTreeCleanMicro.h" />
+    <ClInclude Include="DataTree\DataTreeCommon.h" />
+    <ClInclude Include="DataTree\DataTreeExportMicro.h" />
+    <ClInclude Include="DataTree\DataTreeHeaderMicro.h" />
+    <ClInclude Include="DataTree\DataTreeImportMicro.h" />
+    <ClInclude Include="DataTree\DataTreeXmlStorage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -11,7 +11,8 @@
 
 #include "tstring.h"
 #include "..\Enumerator.h"
-#include <boost\lexical_cast.hpp>
+#include <sstream>
+//#include <boost\lexical_cast.hpp>
 
 namespace nsYedaoqDataTree
 {
@@ -78,12 +79,19 @@ namespace nsYedaoqDataTree
 	{
 		tstring Serialize(const T& val) const
 		{
-			return boost::lexical_cast<tstring>(val);
+			tostringstream stream;
+			stream<<val;
+			return stream.str();
+			//return boost::lexical_cast<tstring>(val);
 		}
 
 		T Parse(tstring& val) const
 		{
-			return boost::lexical_cast<T>(val);
+			T ret;
+			tistringstream stream(val);
+			stream>>ret;
+			return ret;
+			//return boost::lexical_cast<T>(val);
 		}
 	};
 

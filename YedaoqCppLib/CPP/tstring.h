@@ -27,17 +27,17 @@
 	#define tmatch			std::tr1::wsmatch
 	#define tcmatch			std::tr1::wcmatch
 
-	#define tistream		wistream
-	#define tostream		wostream
-	#define tstream			wiostream
+	#define tistream		std::wistream
+	#define tostream		std::wostream
+	#define tstream			std::wiostream
 
-	#define tifstream		wifstream
-	#define tofstream		wofstream
-	#define tfstream		wfstream
+	#define tifstream		std::wifstream
+	#define tofstream		std::wofstream
+	#define tfstream		std::wfstream
 
-	#define tostringstream	wostringstream
-	#define tistringstream	wistringstream
-	#define tstringstream	wstringstream
+	#define tostringstream	std::wostringstream
+	#define tistringstream	std::wistringstream
+	#define tstringstream	std::wstringstream
 
 #else
 
@@ -58,16 +58,16 @@
 	#define tmatch			std::tr1::smatch
 	#define tcmatch			std::tr1::cmatch	
 
-	#define tistream		istream
-	#define tostream		ostream
-	#define tstream			iostream
+	#define tistream		std::istream
+	#define tostream		std::ostream
+	#define tstream			std::iostream
 
-	#define tifstream		ifstream
-	#define tofstream		ofstream
-	#define tfstream		fstream
+	#define tifstream		std::ifstream
+	#define tofstream		std::ofstream
+	#define tfstream		std::fstream
 
-	#define tostringstream	ostringstream
-	#define tistringstream	istringstream
-	#define tstringstream	stringstream
+	#define tostringstream	std::ostringstream
+	#define tistringstream	std::istringstream
+	#define tstringstream	std::stringstream
 
 #endif
