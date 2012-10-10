@@ -37,6 +37,7 @@ public:
 
 	vt* operator&()  { return &v_; }
 	operator vt() const { return v_; }
+	vt operator->() {return v_; }
 
 protected:
 	vt v_;

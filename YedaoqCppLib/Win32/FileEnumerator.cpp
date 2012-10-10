@@ -3,33 +3,12 @@
 #include <stdexcept>
 #include "shlwapi.h"
 
-bool CFileEnumerator::Open(const tchar* dir)
-	StrCpyN(buf, dir, MAX_PATH);
-{
-	if(!dir) { return false; }
-
-	tchar buf[MAX_PATH];
-
-	if(!PathIsDirectory(buf))
-	{
-		PathRemoveFileSpec(buf);
-		if(!PathIsDirectory(buf)) 
-		{	
-			return false; 
-		}
-	}	
-
-	Close();
-	m_Dir = buf;
-	return true;
-}
-
 bool CFileEnumerator::Open()
 {
 	TCHAR buf[MAX_PATH];
 	PathCombine(buf, m_Dir.c_str(), m_NamePattern.c_str());
 	m_FindHandle = FindFirstFile(buf, &m_FileData);
-	return m_FileDataValidaty = (m_FindHandle != INVALID_HANDLE_VALUE);
+	return m_FindHandle != INVALID_HANDLE_VALUE;
 }
 
 void CFileEnumerator::Close()
@@ -38,15 +17,17 @@ void CFileEnumerator::Close()
 	{
 		FindClose(m_FindHandle);
 		m_FindHandle = INVALID_HANDLE_VALUE;
-		//m_FileDataValidaty = false;
 	}
 }
 
 bool CFileEnumerator::MoveNext()
-{
-	if(INVALID_HANDLE_VALUE == m_FindHandle)
+{	
+	if(m_FindHandle == INVALID_HANDLE_VALUE)
 	{
-		return Open();
+		if(m_AtEnd) 
+			return false;
+		else
+			return Open();
 	}
 
 	if(m_SubEnumerator)
@@ -54,35 +35,87 @@ bool CFileEnumerator::MoveNext()
 		if(m_SubEnumerator->MoveNext())
 			return true;
 		else
-		{
-			delete m_SubEnumerator;
-			m_SubEnumerator = 0;
-		}
+			CloseSubEnumerator();
 	}
 
-	if(m_FileDataValidaty && m_FindHandle)
+	while(true)
 	{
-		m_FileDataValidaty = FindNextFile(m_FindHandle, &m_FileData);
-		if(!m_FileDataValidaty)
+		if(!FindNextFile(m_FindHandle, &m_FileData))
 		{
 			_ASSERT(ERROR_NO_MORE_FILES == GetLastError());
+			Close();
+			m_AtEnd = true;
+			break;
+		}
+
+		if(m_FileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		{
+			if(m_EnumFlag & RECUSIVE)
+			{
+				tchar buf[MAX_PATH];
+				PathCombine(buf, m_Dir.c_str(), m_FileData.cFileName);
+				m_SubEnumerator = new CFileEnumerator(buf, m_NamePattern.c_str(), m_EnumFlag);
+			}
+
+			if(m_EnumFlag & SUBDIR)
+				break;
+
+			if(m_SubEnumerator != 0 && m_SubEnumerator->MoveNext())
+				break;
+		}
+		else
+		{
+			if(m_EnumFlag & SUBFILE)
+				break;
 		}
 	}
 
-	return m_FileDataValidaty;
+	return m_FindHandle != INVALID_HANDLE_VALUE;
 }
 
 const WIN32_FIND_DATA& CFileEnumerator::Current()
 {
-	if(!m_FileDataValidaty)
-	{
-		_ASSERT(false);
-		throw std::out_of_range("Ã¶¾ÙÆ÷³¬³ö·¶Î§£¡");
-	}
-	return m_FileData;
+	_ASSERT(m_FindHandle != INVALID_HANDLE_VALUE);
+
+	if(m_SubEnumerator != 0)
+		return m_SubEnumerator->Current();
+	else
+		return m_FileData;
 }
 
-void CFileEnumerator::Reset( const tchar* dir, short enum_flag )
+void CFileEnumerator::Reset(const tchar* dir, const tchar* pattern, short enum_flag)
 {
+	Reset();
 
+	if(0 == dir || 0 == dir[0])
+		m_Dir.clear();
+	else
+		m_Dir = dir;
+
+	if(0 == pattern || 0 == pattern[0])
+		m_NamePattern = TEXT("*");
+	else
+		m_NamePattern = pattern;
+
+	m_EnumFlag = enum_flag;
+}
+
+void CFileEnumerator::Reset()
+{
+	m_AtEnd = false;
+	Close();
+	CloseSubEnumerator();
+}
+
+CFileEnumerator::CFileEnumerator( const tchar* dir, const tchar* pattern /*= 0*/, short enum_flag /*= SUBALL*/ )
+{
+	if(dir && dir[0])
+		m_Dir = dir;
+
+	if(pattern && pattern[0])
+		m_NamePattern = pattern;
+	else
+		m_NamePattern = TEXT("*");
+
+	m_EnumFlag = enum_flag;
 }

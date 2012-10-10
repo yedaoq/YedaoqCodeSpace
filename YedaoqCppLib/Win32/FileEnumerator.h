@@ -16,26 +16,16 @@
 #include "tstring.h"
 #include "initalized_num.h"
 
-class CFileEnumerator : CEnumeratorBase<WIN32_FIND_DATA>
+class CFileEnumerator : public CCloneable<CFileEnumerator, CEnumeratorBase<WIN32_FIND_DATA>>
 {
 public:
 	enum EnumFlag : short { SUBFILE = 1, SUBDIR = 2, SUBALL = 3, RECUSIVE = 4 };
 
 public:
-	~CFileEnumerator()
-	{
-		if (INVALID_HANDLE_VALUE != m_FindHandle)
-		{
-			Close();
-		}
-	}
-
+	~CFileEnumerator() { Close(); }
 	CFileEnumerator() {}
 
-	CFileEnumerator(LPCTSTR lpDir, LPCTSTR lpNamePattern = NULL)
-	{
-		Open(lpDir);
-	}
+	CFileEnumerator(const tchar* dir, const tchar* pattern = 0, short enum_flag = SUBALL);
 
 	CFileEnumerator(const CFileEnumerator& other)
 		: m_Dir(other.m_Dir)
@@ -47,38 +37,33 @@ public:
 	{
 		if(this != &other)
 		{
-			Close();
-			m_Dir = other.m_Dir;
-			m_NamePattern = other.m_NamePattern;
-			m_FileDataValidaty = false;
-			m_FindHandle = INVALID_HANDLE_VALUE;
+			Reset(other.m_Dir.c_str(), other.m_NamePattern.c_str(), other.m_EnumFlag);
 		}
 
 		return *this;
 	}
 
-	virtual bool			Open(const tchar* dir);
 	virtual const tstring&	GetDir() const { return m_Dir; }
 
-	virtual bool			CurrentValid() const { return m_FileDataValidaty; }
+	virtual bool			CurrentValid() const { return m_FindHandle != INVALID_HANDLE_VALUE; }
 
 	virtual bool			MoveNext();
 
 	virtual const WIN32_FIND_DATA& Current();
 	
-	virtual void			Reset(const tchar* dir, short enum_flag);
-	virtual void			Reset() { Close(); }
-	virtual ICloneable*		Clone() const {	return new CFileEnumerator(*this); }
+	void					Reset(const tchar* dir, const tchar* pattern = 0, short enum_flag = SUBALL);
+	virtual void			Reset();
+	//virtual ICloneable*		Clone() const {	return new CFileEnumerator(*this); }
 
 protected:
-
-	void Close();
 	bool Open();
+	void Close();
+	void CloseSubEnumerator() { if(m_SubEnumerator != 0) { delete m_SubEnumerator; m_SubEnumerator = 0; } }
 
 	tstring											m_NamePattern;
 	tstring											m_Dir;
 	initalized_num<short, SUBALL>					m_EnumFlag;
-	initalized_num<bool, false>						m_FileDataValidaty;
+	initalized_num<bool, false>						m_AtEnd;
 
 	WIN32_FIND_DATA									m_FileData;
 	initalized_num<HANDLE, INVALID_HANDLE_VALUE>	m_FindHandle;	

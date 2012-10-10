@@ -75,7 +75,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ComFile.cpp" />
-    <ClCompile Include="DirectoryEnumerator.cpp" />
+    <ClCompile Include="FileEnumerator.cpp" />
     <ClCompile Include="FileDialogST.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="NetworkAdapterManager.cpp" />
@@ -88,7 +88,7 @@
   <ItemGroup>
     <ClInclude Include="CNetworkAdapterEnumerator.h" />
     <ClInclude Include="ComFile.h" />
-    <ClInclude Include="DirectoryEnumerator.h" />
+    <ClInclude Include="FileEnumerator.h" />
     <ClInclude Include="FileDialogST.h" />
     <ClInclude Include="FileNameInfo.h" />
     <ClInclude Include="Log.h" />
