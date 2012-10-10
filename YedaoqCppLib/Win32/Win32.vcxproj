@@ -84,7 +84,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="WMI_MACAddress.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CNetworkAdapterEnumerator.h" />
@@ -98,7 +97,7 @@
     <ClInclude Include="RAII.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="WMI_MACAddress.h" />
+    <ClInclude Include="TimerEx.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />

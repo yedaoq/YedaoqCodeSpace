@@ -95,7 +95,7 @@ int CBase24Coder::encode( const byte* pData, unsigned int iDataLen, iter_t iBuf 
 {
 	byte temp, baseidx = 0;
 
-	if(!pData || iDataLen <= 0) return MYERROR_INVALID_PARA;
+	if(!pData || iDataLen <= 0) return ERROR_INVALID_PARAMETER;
 
 	const byte* pDataTmp = pData, *pDataEnd = pData + iDataLen;
 
@@ -119,7 +119,7 @@ int CBase24Coder::encode( const byte* pData, unsigned int iDataLen, iter_t iBuf,
 {
 	byte temp, baseidx = 0;
 
-	if(!pData || iDataLen <= 0) return MYERROR_INVALID_PARA;
+	if(!pData || iDataLen <= 0) return ERROR_INVALID_PARAMETER;
 
 	const byte* pDataTmp = pData, *pDataEnd = pData + iDataLen;
 
@@ -147,7 +147,7 @@ int CBase24Coder::decode( byte* pBuffer, unsigned int iBufferLen, iter_t iInStr 
 	signed char temp;
 	byte baseidx = 0;
 
-	if(!pBuffer || iBufferLen <= 0) return MYERROR_INVALID_PARA;
+	if(!pBuffer || iBufferLen <= 0) return ERROR_INVALID_PARAMETER;
 
 	byte *pBufTmp = pBuffer, *pBufEnd = pBuffer + iBufferLen;
 
@@ -157,14 +157,14 @@ int CBase24Coder::decode( byte* pBuffer, unsigned int iBufferLen, iter_t iInStr 
 		temp = DecodeCharidx[(byte)*iInStr++] - baseidx;
 		baseidx = temp & 0x07;
 
-		if(/*temp >= 16 ||*/ temp < 0) return MYERROR_INVALID_DATA;
+		if(temp >= 16 || temp < 0) return ERROR_INVALID_DATA;
 		*pBufTmp = temp << 4;
 
 		// ตอ4ฮป
 		temp = DecodeCharidx[(byte)*iInStr++] - baseidx;
 		baseidx = temp & 0x07;
 
-		if(/*temp >= 16 ||*/ temp < 0) return MYERROR_INVALID_DATA;
+		if(temp >= 16 || temp < 0) return ERROR_INVALID_DATA;
 		*pBufTmp++ |= temp;
 	}
 
@@ -177,7 +177,7 @@ int CBase24Coder::decode( byte* pBuffer, unsigned int iBufferLen, iter_t iInStr,
 	signed char temp;
 	byte baseidx = 0;
 
-	if(!pBuffer || iBufferLen <= 0) return MYERROR_INVALID_PARA;
+	if(!pBuffer || iBufferLen <= 0) return ERROR_INVALID_PARAMETER;
 
 	byte *pBufTmp = pBuffer, *pBufEnd = pBuffer + iBufferLen;
 
@@ -187,7 +187,7 @@ int CBase24Coder::decode( byte* pBuffer, unsigned int iBufferLen, iter_t iInStr,
 		temp = DecodeCharidx[(byte)*iInStr++] - baseidx;
 		baseidx = temp & 0x07;
 
-		if(temp >= 16 || temp < 0) return MYERROR_INVALID_DATA;
+		if(temp >= 16 || temp < 0) return ERROR_INVALID_DATA;
 		*pBufTmp = temp << 4;
 
 		if(iInStr == iInStrEnd) break;
@@ -196,7 +196,7 @@ int CBase24Coder::decode( byte* pBuffer, unsigned int iBufferLen, iter_t iInStr,
 		temp = DecodeCharidx[(byte)*iInStr++] - baseidx;
 		baseidx = temp & 0x07;
 
-		if(temp >= 16 || temp < 0) return MYERROR_INVALID_DATA;
+		if(temp >= 16 || temp < 0) return ERROR_INVALID_DATA;
 		*pBufTmp++ |= temp;
 	}
 
@@ -241,7 +241,7 @@ int CBase16Coder::encode( const byte* pData, unsigned int iDataLen, iter_t iBuf,
 template<typename iter_t>
 int CBase16Coder::decode( byte* pBuffer, unsigned int iBufferLen, iter_t iInStr )
 {
-	if(!pBuffer || iBufferLen <= 0) return MYERROR_INVALID_PARA;
+	if(!pBuffer || iBufferLen <= 0) return ERROR_INVALID_PARAMETER;
 
 	signed char temp;
 	byte *pBufTmp = pBuffer, *pBufEnd = pBuffer + iBufferLen;
@@ -249,11 +249,11 @@ int CBase16Coder::decode( byte* pBuffer, unsigned int iBufferLen, iter_t iInStr 
 	while(pBufTmp < pBufEnd)
 	{
 		temp = DecodeCharidx[*iInStr++];
-		if(temp < 0) return MYERROR_INVALID_DATA;
+		if(temp < 0) return ERROR_INVALID_DATA;
 		*pBufTmp = temp << 4;
 
 		temp = DecodeCharidx[*iInStr++];
-		if(temp < 0) return MYERROR_INVALID_DATA;
+		if(temp < 0) return ERROR_INVALID_DATA;
 		*pBufTmp++ |= temp;
 	}
 

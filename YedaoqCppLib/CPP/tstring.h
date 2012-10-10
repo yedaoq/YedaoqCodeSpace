@@ -23,8 +23,9 @@
 	#define tboostcmatch	boost::xpressive::wcmatch
 	#define tboostformat	boost::wformat
 
-	#define tregex			std::tr1::wsregex
-	#define tmatch			std::tr1::wsmatch
+	#define tsregex			std::tr1::wsregex
+	#define tsmatch			std::tr1::wsmatch
+	#define tcregex			std::tr1::wcregex
 	#define tcmatch			std::tr1::wcmatch
 
 	#define tistream		std::wistream

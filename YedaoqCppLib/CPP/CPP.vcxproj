@@ -93,6 +93,13 @@
     <ClInclude Include="CharTree.h" />
     <ClInclude Include="Cloneable.h" />
     <ClInclude Include="CTiffWriter.h" />
+    <ClInclude Include="DataTree1x\DataTreeCleanMicro.h" />
+    <ClInclude Include="DataTree1x\DataTreeCommon.h" />
+    <ClInclude Include="DataTree1x\DataTreeExportMicro.h" />
+    <ClInclude Include="DataTree1x\DataTreeHeaderMicro.h" />
+    <ClInclude Include="DataTree1x\DataTreeImportMicro.h" />
+    <ClInclude Include="DataTree1x\DataTreeXmlStorage.h" />
+    <ClInclude Include="DataTreeJsonStorage.h" />
     <ClInclude Include="Enumerator.h" />
     <ClInclude Include="FastDelegate.h" />
     <ClInclude Include="FastDelegateBind.h" />

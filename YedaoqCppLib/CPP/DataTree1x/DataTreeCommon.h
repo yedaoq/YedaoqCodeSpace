@@ -11,8 +11,8 @@
 #ifndef DataTreeCommon_h__
 #define DataTreeCommon_h__
 
-#include "../tstring.h"
-#include "../Enumerator.h"
+#include "tstring.h"
+#include "..\Enumerator.h"
 #include <sstream>
 
 namespace nsYedaoqDataTree
@@ -26,8 +26,8 @@ namespace nsYedaoqDataTree
 	// interface definition
 	interface IDataTreeNode
 	{
-		virtual bool __export(IDataTreeExporter& storage) const = 0;
-		virtual bool __import(IDataTreeImporter& storage) = 0;
+		virtual bool __export(IDataTreeStorage& storage) const = 0;
+		virtual bool __import(IDataTreeStorage& storage) = 0;
 	};
 
 	interface IDataTreeExporter
@@ -44,14 +44,38 @@ namespace nsYedaoqDataTree
 
 	interface IDataTreeImporter
 	{
-		virtual tstring get_attr(const tchar* name, tstring def) = 0;
-		virtual bool get_attr(const tchar* name, bool def) = 0;
-		virtual double get_attr(const tchar* name, double def) = 0;
-		virtual int get_attr(const tchar* name, int def) = 0;
-		virtual unsigned int get_attr(const tchar* name, unsigned int def) = 0;
+		virtual tstring get_attr(const tchar* name) = 0;
+		virtual bool get_attr(const tchar* name) = 0;
+		virtual double get_attr(const tchar* name) = 0;
+		virtual int get_attr(const tchar* name) = 0;
+		virtual unsigned int get_attr(const tchar* name) = 0;
 
 		virtual bool get_node(const tchar* name, IDataTreeNode& node) = 0;
 		virtual bool get_nodes(const tchar* name, IDataTreeNodeInserter& nodes) = 0;
+	};
+
+	interface IDataTreeStorage
+	{
+		virtual bool get_attr(const tchar* name, tstring& val) = 0;
+		virtual bool set_attr(const tchar* name, tstring const& val) = 0;
+
+		virtual bool get_attr(const tchar* name, bool& val) = 0;
+		virtual bool set_attr(const tchar* name, bool val) = 0;
+
+		virtual bool get_attr(const tchar* name, double& val) = 0;
+		virtual bool set_attr(const tchar* name, double val) = 0;
+
+		virtual bool get_attr(const tchar* name, int& val) = 0;
+		virtual bool set_attr(const tchar* name, int val) = 0;
+
+		virtual bool get_attr(const tchar* name, unsigned int& val) = 0;
+		virtual bool set_attr(const tchar* name, unsigned int val) = 0;
+
+		virtual bool get_node(const tchar* name, IDataTreeNode& node) = 0;
+		virtual bool set_node(const tchar* name, IDataTreeNode const & node) = 0;
+
+		virtual bool get_nodes(const tchar* name, IDataTreeNodeInserter& nodes) = 0;
+		virtual bool set_nodes(const tchar* name, IEnumerator<IDataTreeNode>& nodes) = 0;
 	};
 
 	interface IDataTreeNodeInserter
@@ -89,31 +113,6 @@ namespace nsYedaoqDataTree
 		return CDataTreeNodeInserter<T>(nodes);
 	}
 
-	// type_traits
-	template<typename T>
-	struct Serialize_TypeTrait
-	{
-		typedef T cpp_type;
-		typedef T serialize_type;
-
-		static serialize_type Default_Value() {return 0; }
-
-		static serialize_type ToSerializeType(cpp_type val) { return val; }
-		static cpp_type FromSerializeType(serialize_type val){ return val; }
-	};
-
-	template<>
-	struct Serialize_TypeTrait<tstring>
-	{
-		typedef tstring cpp_type;
-		typedef tstring serialize_type;
-
-		static serialize_type Default_Value() {return tstring(); }
-
-		static const serialize_type& ToSerializeType(const cpp_type& val) { return val; }
-		static const cpp_type& FromSerializeType(const serialize_type& val){ return val; }
-	};
-
 	template<typename T>
 	struct CSingleValueSerializer
 	{
@@ -122,6 +121,7 @@ namespace nsYedaoqDataTree
 			tostringstream stream;
 			stream<<val;
 			return stream.str();
+			//return boost::lexical_cast<tstring>(val);
 		}
 
 		T Parse(tstring& val) const
@@ -130,6 +130,7 @@ namespace nsYedaoqDataTree
 			tistringstream stream(val);
 			stream>>ret;
 			return ret;
+			//return boost::lexical_cast<T>(val);
 		}
 	};
 

@@ -8,7 +8,7 @@
 
 #include "DataTreeTest.h"
 
-#undef _CPPTEST_DATATREETEST_H_
+//#undef _CPPTEST_DATATREETEST_H_
 
 #include "DataTree/DataTreeExportMicro.h"
 

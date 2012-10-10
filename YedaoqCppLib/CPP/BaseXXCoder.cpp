@@ -1,5 +1,5 @@
 #include "BaseXXCoder.h"
-#include "ErrorCode.h"
+//#include "ErrorCode.h"
 
 using namespace std;
 
@@ -221,7 +221,7 @@ inline int encode_base24(const byte* pData, unsigned int iDataLen, IOutputString
 {
 	byte temp, baseidx = 0;
 
-	if(!pData || iDataLen <= 0 || !encodeentry) return MYERROR_INVALID_PARA;
+	if(!pData || iDataLen <= 0 || !encodeentry) return ERROR_INVALID_PARAMETER;
 
 	const byte* pDataTmp = pData, *pDataEnd = pData + iDataLen;
 
@@ -237,52 +237,8 @@ inline int encode_base24(const byte* pData, unsigned int iDataLen, IOutputString
 		++pDataTmp;
 	}
 
-	return MYERROR_SUCCESS;
+	return ERROR_SUCCESS;
 }
-
-//int CBase24Coder::decode( byte* pBuffer, unsigned int iBufferLen, const char* str )
-//{
-//	if(0 == str) return MYERROR_INVALID_PARA;
-//	int len = strnlen(str, iBufferLen * 2);
-//	return decode_base24(pBuffer, iBufferLen, str, str + len, this->DecodeCharidx);
-//}
-//
-//int CBase24Coder::decode( byte* pBuffer, unsigned int iBufferLen, const wchar_t* str )
-//{
-//	if(0 == str) return MYERROR_INVALID_PARA;
-//	int len = wcsnlen(str, iBufferLen * 2);
-//	return decode_base24(pBuffer, iBufferLen, str, str + len, this->DecodeCharidx);
-//}
-//
-//int CBase24Coder::decode( byte* pBuffer, unsigned int iBufferLen, const string& str )
-//{
-//	return decode_base24(pBuffer, iBufferLen, str.begin(), str.end(), this->DecodeCharidx);
-//}
-//
-//int CBase24Coder::decode( byte* pBuffer, unsigned int iBufferLen, const wstring& str )
-//{
-//	return decode_base24(pBuffer, iBufferLen, str.begin(), str.end(), this->DecodeCharidx);
-//}
-//
-//int CBase24Coder::encode( const byte* pData, unsigned int iDataLen, string& buf )
-//{
-//	return encode_base24(pData, iDataLen, COutputStrBufProxy(&buf), this->EncodeCharset);
-//}
-//
-//int CBase24Coder::encode( const byte* pData, unsigned int iDataLen, wstring& buf )
-//{
-//	return encode_base24(pData, iDataLen, COutputWstrBufProxy(&buf), this->EncodeCharset);
-//}
-//
-//int CBase24Coder::encode( const byte* pData, unsigned int iDataLen, char* buf )
-//{
-//	return encode_base24(pData, iDataLen, COutputCstrBufProxy(buf), this->EncodeCharset);
-//}
-//
-//int CBase24Coder::encode( const byte* pData, unsigned int iDataLen, wchar_t* buf )
-//{
-//	return encode_base24(pData, iDataLen, COutputWcstrBufProxy(buf), this->EncodeCharset);
-//}
 
 CBase24Coder::CBase24Coder( const char* charset )
 {
@@ -290,7 +246,7 @@ CBase24Coder::CBase24Coder( const char* charset )
 	{
 		if(strlen(charset) < 24)
 		{
-			throw MYERROR_INVALID_PARA;
+			throw std::invalid_argument("need 24 char for encode");
 		}
 	}
 	else
@@ -308,7 +264,7 @@ CBase24Coder::CBase24Coder( const wchar_t* charset )
 	{
 		if(wcslen(charset) < 24)
 		{
-			throw MYERROR_INVALID_PARA;
+			throw std::invalid_argument("need 24 char for encode");
 		}
 		else
 		{
@@ -330,7 +286,7 @@ void CBase24Coder::Initialize()
 	{
 		if(DecodeCharidx[EncodeCharset[i]] != -1)
 		{
-			throw MYERROR_INVALID_PARA;
+			throw std::invalid_argument("char repeat");
 		}
 		DecodeCharidx[EncodeCharset[i]] = i;
 	}
@@ -379,8 +335,6 @@ const signed char CBase16Coder::DecodeCharidx[] =
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 };
-
-
 
 CBase16Coder::CBase16Coder( bool bUpper /*= true*/ )
 {

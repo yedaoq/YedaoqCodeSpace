@@ -1,32 +1,23 @@
 /* ___________________________________________________________________________
 @ 
-@ file - DataTreeXmlStorage.h
+@ file - C:\YedaoqCodeSpace\YedaoqCppLib\CPP\DataTreeJsonStorage.h
 @ 
 @ auth - yedaoq@gmail.com          http://blog.yedaoq.info
-@ date - 2012-5-23
+@ date - 2012-9-13
 @ info -
 @     
 /* ___________________________________________________________________________*/
 
-#ifndef DataTreeXmlStorage_h__
-#define DataTreeXmlStorage_h__
+#ifndef DataTreeJsonStorage_h__
+#define DataTreeJsonStorage_h__
 
-#ifdef UNICODE
-#define PUGIXML_WCHAR_MODE
-#endif
-
-#include "CPP/tstring.h"
 #include "DataTreeCommon.h"
-#include "pugixml/pugixml.hpp"
+#include "jsoncpp/json.h"
 #include <fstream>
 
 namespace nsYedaoqDataTree
 {
-	typedef pugi::xml_node		xnode_t;
-	typedef pugi::xml_attribute	xattr_t;
-	typedef pugi::xml_document	xdoc_t;
-
-	class CDataTreeXmlStorage : public IDataTreeExporter, public IDataTreeImporter
+	class CDataTreeXmlStorage : public IDataTreeStorage
 	{
 	public:
 		CDataTreeXmlStorage(pugi::xml_node& doc, const tchar* nodename)
@@ -35,17 +26,19 @@ namespace nsYedaoqDataTree
 			Current_ = GetChild(doc, nodename, true);
 		}
 
-		virtual tstring get_attr(const tchar* name, tstring def)
+		virtual bool get_attr(const tchar* name, tstring& val)
 		{
 			pugi::xml_attribute attr = Current_.attribute(name);
 			if(attr)
 			{
-				return attr.value();
+				val = attr.value();
 			}
 			else
 			{
-				return def;
+				val.clear();
 			}
+
+			return attr;
 		}
 
 		virtual bool set_attr(const tchar* name, tstring const& val)
@@ -60,17 +53,19 @@ namespace nsYedaoqDataTree
 			return true;
 		}
 
-		virtual bool get_attr(const tchar* name, bool def)
+		virtual bool get_attr(const tchar* name, bool& val)
 		{
 			pugi::xml_attribute attr = Current_.attribute(name);
 			if(attr)
 			{
-				return attr.as_bool();
+				val = attr.as_bool();
 			}
 			else
 			{
-				return def;
+				val = false;
 			}
+
+			return attr;
 		}
 
 		virtual bool set_attr(const tchar* name, bool val)
@@ -85,17 +80,19 @@ namespace nsYedaoqDataTree
 			return true;
 		}
 
-		virtual double get_attr(const tchar* name, double def)
+		virtual bool get_attr(const tchar* name, double& val)
 		{
 			pugi::xml_attribute attr = Current_.attribute(name);
 			if(attr)
 			{
-				return attr.as_double();
+				val = attr.as_double();
 			}
 			else
 			{
-				return def;
+				val = 0;
 			}
+
+			return attr;
 		}
 
 		virtual bool set_attr(const tchar* name, double val)
@@ -107,20 +104,21 @@ namespace nsYedaoqDataTree
 			}
 
 			attr.set_value(val);
-			return true;
 		}
 
-		virtual int get_attr(const tchar* name, int def)
+		virtual bool get_attr(const tchar* name, int& val)
 		{
 			pugi::xml_attribute attr = Current_.attribute(name);
 			if(attr)
 			{
-				return attr.as_int();
+				val = attr.as_int();
 			}
 			else
 			{
-				return def;
+				val = 0;
 			}
+
+			return attr;
 		}
 
 		virtual bool set_attr(const tchar* name, int val)
@@ -132,20 +130,21 @@ namespace nsYedaoqDataTree
 			}
 
 			attr.set_value(val);
-			return true;
 		}
 
-		virtual unsigned int get_attr(const tchar* name, unsigned int def)
+		virtual bool get_attr(const tchar* name, unsigned int& val)
 		{
 			pugi::xml_attribute attr = Current_.attribute(name);
 			if(attr)
 			{
-				return attr.as_int();
+				val = attr.as_int();
 			}
 			else
 			{
-				return def;
+				val = 0;
 			}
+
+			return attr;
 		}
 
 		virtual bool set_attr(const tchar* name, unsigned int val)
@@ -157,7 +156,6 @@ namespace nsYedaoqDataTree
 			}
 
 			attr.set_value(val);
-			return true;
 		}
 
 		virtual bool get_node(const tchar* name, IDataTreeNode& node)
@@ -246,59 +244,5 @@ namespace nsYedaoqDataTree
 		pugi::xml_node		Current_;
 	};
 
-	template<typename T>
-	struct CXmlFile
-	{
-		CXmlFile(tchar const* file_path, tchar const* root_node)
-			: file_path_(file_path), root_node_(root_node)
-		{}
 
-		bool Load(T&);
-		bool Save(const T&);
-
-	protected:
-		tstring file_path_;
-		tstring root_node_;
-	};
-
-	template<typename T>
-	bool CXmlFile<T>::Save( const T& obj )
-	{
-		xdoc_t doc;
-		nsYedaoqDataTree::CDataTreeXmlStorage storage(doc, root_node_.c_str());
-		obj.__export(storage);
-
-		std::locale prev_loc = std::locale::global(std::locale("chs"));
-		tofstream f(file_path_, std::ios_base::out);
-		doc.print(f);
-
-		f.flush();
-		f.close();
-
-		return true;
-	}
-
-	template<typename T>
-	bool CXmlFile<T>::Load( T& obj )
-	{
-		std::locale prev_loc = std::locale::global(std::locale("chs"));
-		tifstream f(file_path_, std::ios_base::in);
-
-		tstring content;
-		std::getline(f, content, (tchar)EOF);
-
-		tchar* bufXml = new tchar[content.size() + 1];
-		content.copy(bufXml, content.size());
-		bufXml[content.size()] = 0;
-
-		xdoc_t doc;
-		doc.load(content.c_str());
-		nsYedaoqDataTree::CDataTreeXmlStorage storage(doc, root_node_.c_str());
-
-		obj.__import(storage);
-
-		return true;
-	}
-}
-
-#endif // DataTreeXmlStorage_h__
+#endif // DataTreeJsonStorage_h__

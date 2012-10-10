@@ -13,7 +13,7 @@
 #include "DataTreeCommon.h"
 
 #ifndef BEGIN_DATATREE
-	#define BEGIN_DATATREE(cppname) struct cppname : public nsYedaoqDataTree::IDataTreeNode { virtual bool __export(nsYedaoqDataTree::IDataTreeExporter& storage) const; virtual bool __import(nsYedaoqDataTree::IDataTreeImporter& storage);
+	#define BEGIN_DATATREE(cppname) struct cppname : public nsYedaoqDataTree::IDataTreeNode { virtual bool __export(nsYedaoqDataTree::IDataTreeStorage& storage) const; virtual bool __import(nsYedaoqDataTree::IDataTreeStorage& storage);
 #endif
 
 #ifndef END_DATATREE

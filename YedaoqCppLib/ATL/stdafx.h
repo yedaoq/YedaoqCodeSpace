@@ -12,6 +12,7 @@
 
 
 // TODO: 在此处引用程序需要的其他头文件
+#include <windows.h>
 #include <atlbase.h>
 #include <atlcomcli.h>
 /*#include <ObjBase.h>*/
