@@ -78,7 +78,6 @@
     <ClCompile Include="FileEnumerator.cpp" />
     <ClCompile Include="FileDialogST.cpp" />
     <ClCompile Include="Log.cpp" />
-    <ClCompile Include="NetworkAdapterManager.cpp" />
     <ClCompile Include="Profile.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -92,7 +91,6 @@
     <ClInclude Include="FileDialogST.h" />
     <ClInclude Include="FileNameInfo.h" />
     <ClInclude Include="Log.h" />
-    <ClInclude Include="NetworkAdapterManager.h" />
     <ClInclude Include="Profile.h" />
     <ClInclude Include="RAII.h" />
     <ClInclude Include="stdafx.h" />

@@ -43,9 +43,10 @@ public:
 		return *this;
 	}
 
-	virtual const tstring&	GetDir() const { return m_Dir; }
+	virtual const tstring&	RootDir() const { return m_Dir; }
 
 	virtual bool			CurrentValid() const { return m_FindHandle != INVALID_HANDLE_VALUE; }
+	virtual const tstring&  CurrentDir() const;
 
 	virtual bool			MoveNext();
 
