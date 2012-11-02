@@ -17,28 +17,27 @@
 
 namespace nsYedaoqDataTree
 {
-	class CDataTreeXmlStorage : public IDataTreeStorage
+	class CDataTreeJsonStorage : public IDataTreeExporter, public IDataTreeImporter
 	{
 	public:
-		CDataTreeXmlStorage(pugi::xml_node& doc, const tchar* nodename)
+		CDataTreeJsonStorage(Json::Value* doc, const tchar* nodename)
 			: Root_(doc)
 		{
-			Current_ = GetChild(doc, nodename, true);
+			Current_ = doc;
 		}
 
-		virtual bool get_attr(const tchar* name, tstring& val)
+		virtual tstring get_attr(const tchar* name, tstring def)
 		{
+			Current_->get()
 			pugi::xml_attribute attr = Current_.attribute(name);
 			if(attr)
 			{
-				val = attr.value();
+				return attr.value();
 			}
 			else
 			{
-				val.clear();
+				return def;
 			}
-
-			return attr;
 		}
 
 		virtual bool set_attr(const tchar* name, tstring const& val)
@@ -53,19 +52,17 @@ namespace nsYedaoqDataTree
 			return true;
 		}
 
-		virtual bool get_attr(const tchar* name, bool& val)
+		virtual bool get_attr(const tchar* name, bool def)
 		{
 			pugi::xml_attribute attr = Current_.attribute(name);
 			if(attr)
 			{
-				val = attr.as_bool();
+				return attr.as_bool();
 			}
 			else
 			{
-				val = false;
+				return def;
 			}
-
-			return attr;
 		}
 
 		virtual bool set_attr(const tchar* name, bool val)
@@ -80,19 +77,17 @@ namespace nsYedaoqDataTree
 			return true;
 		}
 
-		virtual bool get_attr(const tchar* name, double& val)
+		virtual double get_attr(const tchar* name, double def)
 		{
 			pugi::xml_attribute attr = Current_.attribute(name);
 			if(attr)
 			{
-				val = attr.as_double();
+				return attr.as_double();
 			}
 			else
 			{
-				val = 0;
+				return def;
 			}
-
-			return attr;
 		}
 
 		virtual bool set_attr(const tchar* name, double val)
@@ -104,21 +99,20 @@ namespace nsYedaoqDataTree
 			}
 
 			attr.set_value(val);
+			return true;
 		}
 
-		virtual bool get_attr(const tchar* name, int& val)
+		virtual int get_attr(const tchar* name, int def)
 		{
 			pugi::xml_attribute attr = Current_.attribute(name);
 			if(attr)
 			{
-				val = attr.as_int();
+				return attr.as_int();
 			}
 			else
 			{
-				val = 0;
+				return def;
 			}
-
-			return attr;
 		}
 
 		virtual bool set_attr(const tchar* name, int val)
@@ -130,21 +124,20 @@ namespace nsYedaoqDataTree
 			}
 
 			attr.set_value(val);
+			return true;
 		}
 
-		virtual bool get_attr(const tchar* name, unsigned int& val)
+		virtual unsigned int get_attr(const tchar* name, unsigned int def)
 		{
 			pugi::xml_attribute attr = Current_.attribute(name);
 			if(attr)
 			{
-				val = attr.as_int();
+				return attr.as_int();
 			}
 			else
 			{
-				val = 0;
+				return def;
 			}
-
-			return attr;
 		}
 
 		virtual bool set_attr(const tchar* name, unsigned int val)
@@ -156,6 +149,7 @@ namespace nsYedaoqDataTree
 			}
 
 			attr.set_value(val);
+			return true;
 		}
 
 		virtual bool get_node(const tchar* name, IDataTreeNode& node)
@@ -237,11 +231,11 @@ namespace nsYedaoqDataTree
 			return node; 
 		}
 
-		CDataTreeXmlStorage& operator=(const CDataTreeXmlStorage&);
+		CDataTreeJsonStorage& operator=(const CDataTreeJsonStorage&);
 
 	protected:
-		pugi::xml_node&		Root_;
-		pugi::xml_node		Current_;
+		Json::Value*		Root_;
+		Json::Value*		Current_;
 	};
 
 
