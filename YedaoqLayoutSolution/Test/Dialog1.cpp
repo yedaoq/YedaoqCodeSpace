@@ -12,7 +12,7 @@ using namespace NSYedaoqLayout;
 IMPLEMENT_DYNCREATE(CDialog1, CDHtmlDialog)
 
 CDialog1::CDialog1(CWnd* pParent /*=NULL*/)
-: CDHtmlDialog(CDialog1::IDD, CDialog1::IDH, pParent), m_GUILayout(EnumLayoutDirection::Horizon)
+: CDHtmlDialog(CDialog1::IDD, CDialog1::IDH, pParent), m_GUILayout(NSYedaoqLayout::Direction_Horizon)
 {
 
 }
@@ -37,10 +37,10 @@ BOOL CDialog1::OnInitDialog()
 	CDHtmlDialog::OnInitDialog();
 
 	CFlowLayout* pFlow = m_GUILayout.AddFlow(
-		EnumLayoutDirection::Vertical, 
-		ResizeInfo(EnumResizeMode::Fixed, 200));
+		NSYedaoqLayout::Direction_Vertical, 
+		ResizeInfo(NSYedaoqLayout::Resize_Fixed, 200));
 
-	CFlowLayout* pFlow1 = pFlow->AddFlow(EnumLayoutDirection::Horizon);
+	CFlowLayout* pFlow1 = pFlow->AddFlow(NSYedaoqLayout::Direction_Horizon);
 	
 	pFlow1->AddCtrl(m_BtnA.GetSafeHwnd());
 	pFlow1->AddCtrl(m_BtnB.GetSafeHwnd());
@@ -50,7 +50,7 @@ BOOL CDialog1::OnInitDialog()
 		ResizeInfo::FillInfo,
 		ResizeInfo::FillInfo);
 	
-	pFlow = m_GUILayout.AddFlow(EnumLayoutDirection::Vertical);
+	pFlow = m_GUILayout.AddFlow(NSYedaoqLayout::Direction_Vertical);
 	pFlow->AddZoomBlank(50,50);
 	pFlow->AddCtrl(m_BtnX.GetSafeHwnd());
 	pFlow->AddCtrl(m_BtnY.GetSafeHwnd());

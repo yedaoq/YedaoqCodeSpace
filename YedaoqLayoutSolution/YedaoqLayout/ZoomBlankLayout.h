@@ -8,7 +8,7 @@ namespace NSYedaoqLayout
 	{
 	public:
 		CZoomBlankLayout(long lPercentH = 100, long lPercentV = 100)
-			: ResizeInfoH_(EnumResizeMode::Zoomed, lPercentH), ResizeInfoV_(EnumResizeMode::Zoomed, lPercentV)
+			: ResizeInfoH_(NSYedaoqLayout::Resize_Zoomed, lPercentH), ResizeInfoV_(NSYedaoqLayout::Resize_Zoomed, lPercentV)
 		{}
 
 		virtual ILayout*			Clone() const { return new CZoomBlankLayout(ResizeInfoH_.Percent, ResizeInfoV_.Percent); }

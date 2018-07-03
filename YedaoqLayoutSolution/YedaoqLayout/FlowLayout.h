@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Layout.h"
-//#include <list>
-#include <vector>
+#include <list>
+//#include <vector>
 
 namespace NSYedaoqLayout
 {
@@ -12,13 +12,13 @@ namespace NSYedaoqLayout
 	class CFlowLayout : public ILayout
 	{
 	public:
-		typedef std::vector<ILayout*> ItemCollection;
+		typedef std::list<ILayout*> ItemCollection;
 
 	public:
 		~CFlowLayout();
 
 		CFlowLayout(EnumLayoutDirection dir)
-			: Direction_(dir), ResizeInfo_(EnumResizeMode::Auto, -1)
+			: Direction_(dir), ResizeInfo_(NSYedaoqLayout::Resize_Auto, -1)
 		{}
 
 		CFlowLayout(EnumLayoutDirection dir, const ResizeInfo& resizeInfo)
@@ -44,14 +44,14 @@ namespace NSYedaoqLayout
 											AnchorInfo anchorInfoH = AnchorInfo::AnchorFront,
 											AnchorInfo anchorInfoV = AnchorInfo::AnchorFront);
 
-		CFlowLayout*				AddFlow(EnumLayoutDirection dir, ResizeInfo resizeInfo = ResizeInfo(EnumResizeMode::Auto, 0));
+		CFlowLayout*				AddFlow(EnumLayoutDirection dir, ResizeInfo resizeInfo = ResizeInfo(NSYedaoqLayout::Resize_Auto, 0));
 		
 		CZoomBlankLayout*			AddZoomBlank(long percentH = 100, long percentV = 100);
 
 		void						Clear();
 		int							Count() const;
 
-		ILayout*					operator[](int idx) const;
+		//ILayout*					operator[](int idx) const;
 
 	protected:
 		virtual int					UpdateAutoSize();

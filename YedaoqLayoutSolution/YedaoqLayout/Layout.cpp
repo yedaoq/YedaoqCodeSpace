@@ -7,12 +7,12 @@ LayoutSize LayoutSize::Invalid(-1,-1);
 LayoutSize LayoutSize::Zero(0,0);
 LayoutPoint LayoutPoint::Zero(0,0);
 
-const ResizeInfo ResizeInfo::FillInfo( EnumResizeMode::Zoomed, 100);
-const ResizeInfo ResizeInfo::FixedInfo( EnumResizeMode::Fixed, -1);
+const ResizeInfo ResizeInfo::FillInfo( NSYedaoqLayout::Resize_Zoomed, 100);
+const ResizeInfo ResizeInfo::FixedInfo( NSYedaoqLayout::Resize_Fixed, -1);
 
-const AnchorInfo AnchorInfo::AnchorFront(EnumAnchorMode::Front, 1);
-const AnchorInfo AnchorInfo::AnchorCenter(EnumAnchorMode::Center, 1);
-const AnchorInfo AnchorInfo::AnchorBack(EnumAnchorMode::Back, 1);
+const AnchorInfo AnchorInfo::AnchorFront(NSYedaoqLayout::Anchor_Front, 1);
+const AnchorInfo AnchorInfo::AnchorCenter(NSYedaoqLayout::Anchor_Center, 1);
+const AnchorInfo AnchorInfo::AnchorBack(NSYedaoqLayout::Anchor_Back, 1);
 
 LayoutOffset::operator LayoutSize() const
 {
@@ -40,12 +40,12 @@ LayoutSize LayoutSize::operator+(const LayoutPoint& pt) const
 
 long& LayoutSize::LengthAt(EnumLayoutDirection dir) 
 {
-	return (dir == EnumLayoutDirection::Horizon) ? Width : Height; 
+	return (dir == NSYedaoqLayout::Direction_Horizon) ? Width : Height; 
 }
 
 long LayoutSize::LengthAt(EnumLayoutDirection dir) const
 {
-	return (dir == EnumLayoutDirection::Horizon) ? Width : Height; 
+	return (dir == NSYedaoqLayout::Direction_Horizon) ? Width : Height; 
 }
 
 LayoutPoint LayoutPoint::operator+(const LayoutSize& size) const
@@ -60,10 +60,10 @@ LayoutPoint LayoutPoint::operator+(const LayoutPoint& pt) const
 
 long& LayoutPoint::CoordAt(EnumLayoutDirection dir) 
 {
-	return (dir == EnumLayoutDirection::Horizon) ? X : Y; 
+	return (dir == NSYedaoqLayout::Direction_Horizon) ? X : Y; 
 }
 
 long LayoutPoint::CoordAt(EnumLayoutDirection dir) const
 {
-	return (dir == EnumLayoutDirection::Horizon) ? X : Y; 
+	return (dir == NSYedaoqLayout::Direction_Horizon) ? X : Y; 
 }

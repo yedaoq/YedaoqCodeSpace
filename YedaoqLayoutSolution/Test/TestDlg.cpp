@@ -19,7 +19,7 @@ using namespace NSYedaoqLayout;
 
 
 CTestDlg::CTestDlg(CWnd* pParent /*=NULL*/)
-: CDialog(CTestDlg::IDD, pParent), m_Layout(EnumLayoutDirection::Vertical)
+: CDialog(CTestDlg::IDD, pParent), m_Layout(NSYedaoqLayout::Direction_Vertical)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -56,7 +56,7 @@ BOOL CTestDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 	CFlowLayout* pFlowLayout = m_Layout.AddFlow(
-		EnumLayoutDirection::Horizon);
+		NSYedaoqLayout::Direction_Horizon);
 	
 	CCtrlLayout* pCtrlLayout = pFlowLayout->AddCtrl(m_CmbTest.GetSafeHwnd(),
 		ResizeInfo::FixedInfo,
@@ -69,16 +69,16 @@ BOOL CTestDlg::OnInitDialog()
 	pCtrlLayout = pFlowLayout->AddCtrl(m_BtnCancel.GetSafeHwnd());
 
 	pFlowLayout = m_Layout.AddFlow(
-		EnumLayoutDirection::Horizon, 
-		ResizeInfo(EnumResizeMode::Zoomed, 100));
+		NSYedaoqLayout::Direction_Horizon, 
+		ResizeInfo(NSYedaoqLayout::Resize_Zoomed, 100));
 
 	pCtrlLayout = pFlowLayout->AddCtrl(m_TreTest.GetSafeHwnd(),
-		ResizeInfo(EnumResizeMode::Zoomed, 30),
-		ResizeInfo(EnumResizeMode::Zoomed, 100));
+		ResizeInfo(NSYedaoqLayout::Resize_Zoomed, 30),
+		ResizeInfo(NSYedaoqLayout::Resize_Zoomed, 100));
 
 	pCtrlLayout = pFlowLayout->AddCtrl(m_LstTest.GetSafeHwnd(),
-		ResizeInfo(EnumResizeMode::Zoomed, 70),
-		ResizeInfo(EnumResizeMode::Zoomed, 100));
+		ResizeInfo(NSYedaoqLayout::Resize_Zoomed, 70),
+		ResizeInfo(NSYedaoqLayout::Resize_Zoomed, 100));
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }

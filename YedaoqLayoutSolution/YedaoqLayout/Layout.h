@@ -1,10 +1,6 @@
 #pragma once
 
-#ifndef interface
-#define interface struct
-#endif
-
-#include "Enumerator.h"
+//#include "Enumerator.h"
 
 namespace NSYedaoqLayout
 {
@@ -16,25 +12,25 @@ namespace NSYedaoqLayout
 
 	enum EnumLayoutDirection
 	{
-		Horizon = 0,
-		Vertical,
+		Direction_Horizon = 0,
+		Direction_Vertical,
 	};
 
 	enum EnumResizeMode
 	{
-		Fixed = 0,
-		Zoomed,
-		Auto,
+		Resize_Fixed = 0,
+		Resize_Zoomed,
+		Resize_Auto,
 	};
 
 	enum EnumAnchorMode
 	{
-		Front = 0,
-		Center,
-		Back,
+		Anchor_Front = 0,
+		Anchor_Center,
+		Anchor_Back,
 	};
 
-	interface ILayout : ICloneable
+	struct ILayout// : ICloneable
 	{
 		virtual ~ILayout() {}
 
@@ -118,7 +114,7 @@ namespace NSYedaoqLayout
 		long X;
 		long Y;
 
-		LayoutPoint() {}
+		LayoutPoint() : X(0), Y(0) {}
 		LayoutPoint(long x, long y)
 			: X(x), Y(y)
 		{}

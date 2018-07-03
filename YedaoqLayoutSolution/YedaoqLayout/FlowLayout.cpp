@@ -30,11 +30,11 @@ int	CFlowLayout::Layout(const LayoutPoint& ptBase, const LayoutSize& lyArea)
 		const ResizeInfo& info = (*iter)->GetResizeInfo(GetDirection());
 		switch(info.Mode)
 		{
-		case EnumResizeMode::Auto:
-		case EnumResizeMode::Fixed:
+		case NSYedaoqLayout::Resize_Auto:
+		case NSYedaoqLayout::Resize_Fixed:
 			itemSize.LengthAt(GetDirection()) = info.Fixed;
 			break;
-		case EnumResizeMode::Zoomed:
+		case NSYedaoqLayout::Resize_Zoomed:
 			itemSize.LengthAt(GetDirection()) = info.Percent * lDynamicLength / 100;
 			break;
 		default:
@@ -54,7 +54,7 @@ const ResizeInfo& CFlowLayout::GetResizeInfo(EnumLayoutDirection dir)
 {
 	static ResizeInfo riFill = ResizeInfo::FillInfo;
 
-	if(ResizeInfo_.Mode == EnumResizeMode::Auto)
+	if(ResizeInfo_.Mode == NSYedaoqLayout::Resize_Auto)
 	{
 		UpdateAutoSize();
 	}
@@ -73,22 +73,22 @@ int	CFlowLayout::UpdateAutoSize()
 {
 	LayoutOffset offset;
 	offset.Value = 0;
-	offset.Direction = (GetDirection() == EnumLayoutDirection::Horizon)
-		? EnumLayoutDirection::Vertical : EnumLayoutDirection::Horizon;
+	offset.Direction = (GetDirection() == NSYedaoqLayout::Direction_Horizon)
+		? NSYedaoqLayout::Direction_Vertical : NSYedaoqLayout::Direction_Horizon;
 
 	for(ItemCollection::iterator iter = Items_.begin(); iter != Items_.end(); ++iter)
 	{
 		const ResizeInfo& info = (*iter)->GetResizeInfo(offset.Direction);
 		switch(info.Mode)
 		{
-		case EnumResizeMode::Auto:
-		case EnumResizeMode::Fixed:
+		case NSYedaoqLayout::Resize_Auto:
+		case NSYedaoqLayout::Resize_Fixed:
 			if(offset.Value < info.Fixed)
 			{
 				offset.Value = info.Fixed;
 			}
 			break;
-		case EnumResizeMode::Zoomed:
+		case NSYedaoqLayout::Resize_Zoomed:
 			break;
 		default:
 			_ASSERT(FALSE);
@@ -108,11 +108,11 @@ long CFlowLayout::GetFixedItemsLength()
 		const ResizeInfo& info = (*iter)->GetResizeInfo(GetDirection());
 		switch(info.Mode)
 		{
-		case EnumResizeMode::Auto:
-		case EnumResizeMode::Fixed:
+		case NSYedaoqLayout::Resize_Auto:
+		case NSYedaoqLayout::Resize_Fixed:
 			lRet += info.Fixed;
 			break;
-		case EnumResizeMode::Zoomed:
+		case NSYedaoqLayout::Resize_Zoomed:
 			break;
 		default:
 			_ASSERT(FALSE);
@@ -167,7 +167,7 @@ int	CFlowLayout::Count() const
 	return Items_.size();
 }
 
-ILayout* CFlowLayout::operator[](int idx) const
-{
-	return Items_[idx];
-}
+//ILayout* CFlowLayout::operator[](int idx) const
+//{
+//	return Items_[idx];
+//}
